@@ -1,0 +1,69 @@
+# Environment and local configuration
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.local
+
+# Secrets and credentials
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.secret
+auth.json
+.npmrc
+credentials*.json
+service-account*.json
+
+# JavaScript / Vite
+node_modules/
+dist/
+dist-ssr/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# PHP / Laravel
+vendor/
+bootstrap/cache/*.php
+!bootstrap/cache/.gitignore
+storage/*.key
+storage/logs/*
+!storage/logs/.gitignore
+storage/framework/cache/data/*
+!storage/framework/cache/data/.gitignore
+storage/framework/sessions/*
+!storage/framework/sessions/.gitignore
+storage/framework/testing/*
+!storage/framework/testing/.gitignore
+storage/framework/views/*
+!storage/framework/views/.gitignore
+database/*.sqlite
+database/*.sqlite-*
+.phpunit.cache/
+.phpunit.result.cache
+phpunit.xml
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editors and operating systems
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
