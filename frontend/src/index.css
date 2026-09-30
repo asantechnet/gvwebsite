@@ -1,0 +1,98 @@
+@import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap");
+@import "tailwindcss";
+@font-face { font-family: "IRANYekan"; src: url("./assets/fonts/iranyekan/iranyekan-thin.ttf") format("truetype"); font-style: normal; font-weight: 100; font-display: swap; }
+@font-face { font-family: "IRANYekan"; src: url("./assets/fonts/iranyekan/iranyekan-light.ttf") format("truetype"); font-style: normal; font-weight: 300; font-display: swap; }
+@font-face { font-family: "IRANYekan"; src: url("./assets/fonts/iranyekan/iranyekan-regular.ttf") format("truetype"); font-style: normal; font-weight: 400; font-display: swap; }
+@font-face { font-family: "IRANYekan"; src: url("./assets/fonts/iranyekan/iranyekan-medium.ttf") format("truetype"); font-style: normal; font-weight: 500; font-display: swap; }
+@font-face { font-family: "IRANYekan"; src: url("./assets/fonts/iranyekan/iranyekan-bold.ttf") format("truetype"); font-style: normal; font-weight: 700; font-display: swap; }
+@font-face { font-family: "IRANYekan"; src: url("./assets/fonts/iranyekan/iranyekan-extra-bold.ttf") format("truetype"); font-style: normal; font-weight: 800; font-display: swap; }
+@font-face { font-family: "IRANYekan"; src: url("./assets/fonts/iranyekan/iranyekan-black.ttf") format("truetype"); font-style: normal; font-weight: 900; font-display: swap; }
+@font-face { font-family: "IRANYekan"; src: url("./assets/fonts/iranyekan/iranyekan-extra-black.ttf") format("truetype"); font-style: normal; font-weight: 950; font-display: swap; }
+@custom-variant dark (&:where(.dark, .dark *));
+@theme inline {
+  --font-dari: "IRANYekan", Tahoma, Arial, sans-serif;
+  --font-pashto: "Vazirmatn", Tahoma, Arial, sans-serif;
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-red: var(--brand-red);
+  --color-brand-white: var(--brand-white);
+  --color-background: var(--theme-background);
+  --color-surface: var(--theme-surface);
+  --color-surface-muted: var(--theme-surface-muted);
+  --color-foreground: var(--theme-foreground);
+  --color-foreground-muted: var(--theme-foreground-muted);
+  --color-border: var(--theme-border);
+  --color-primary: var(--theme-primary);
+  --color-primary-hover: var(--theme-primary-hover);
+  --color-on-primary: var(--theme-on-primary);
+  --color-secondary: var(--theme-secondary);
+  --color-secondary-hover: var(--theme-secondary-hover);
+  --color-on-secondary: var(--theme-on-secondary);
+  --color-link: var(--theme-link);
+  --color-focus: var(--theme-focus);
+}
+
+:root,
+.light {
+  color-scheme: light;
+  --brand-orange: #f59b22;
+  --brand-orange-hsl: 34 91% 55%;
+  --brand-red: #ec1f27;
+  --brand-red-hsl: 358 84% 52%;
+  --brand-white: #ffffff;
+  --theme-background: #fffaf5;
+  --theme-surface: #ffffff;
+  --theme-surface-muted: #fff1e2;
+  --theme-foreground: #291712;
+  --theme-foreground-muted: #715d55;
+  --theme-border: #ead5c9;
+  --theme-primary: var(--brand-orange);
+  --theme-primary-hover: #db7f0e;
+  --theme-on-primary: #2b1700;
+  --theme-secondary: var(--brand-red);
+  --theme-secondary-hover: #c8121a;
+  --theme-on-secondary: var(--brand-white);
+  --theme-link: #a91319;
+  --theme-focus: #c66f00;
+}
+
+.dark {
+  color-scheme: dark;
+  --theme-background: #160d0d;
+  --theme-surface: #221515;
+  --theme-surface-muted: #321d19;
+  --theme-foreground: #fff8f3;
+  --theme-foreground-muted: #d7bdb2;
+  --theme-border: #55312b;
+  --theme-primary: #f7a33a;
+  --theme-primary-hover: #ffb75c;
+  --theme-on-primary: #2b1700;
+  --theme-secondary: #f0444b;
+  --theme-secondary-hover: #ff5c62;
+  --theme-on-secondary: #ffffff;
+  --theme-link: #ffb15c;
+  --theme-focus: #ffad45;
+}
+
+:lang(fa),
+:lang(prs) {
+  font-family: var(--font-dari);
+}
+
+:lang(ps) {
+  font-family: var(--font-pashto);
+}
+
+html {
+  direction: rtl;
+  background: var(--theme-background);
+  color: var(--theme-foreground);
+  font-family: var(--font-dari);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px; min-height: 100vh; margin: 0;
+  background: var(--theme-background); color: var(--theme-foreground);
+}
+
+button, input, select, textarea { font: inherit; }
