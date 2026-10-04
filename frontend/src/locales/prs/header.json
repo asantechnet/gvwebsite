@@ -1,0 +1,42 @@
+{
+  "homeLabel": "خدمات مشورتی گلوبل ویژن، صفحه اصلی",
+  "logoAlt": "خدمات مشورتی گلوبل ویژن",
+  "primaryNavigationLabel": "ناوبری اصلی",
+  "mobileNavigationLabel": "ناوبری موبایل",
+  "searchLabel": "جستجو",
+  "searchPlaceholder": "در سایت جستجو کنید",
+  "searchSubmitLabel": "اجرای جستجو",
+  "openMenuLabel": "باز کردن فهرست",
+  "closeMenuLabel": "بستن فهرست",
+  "themeToggleLabel": "تغییر حالت روشن و تاریک",
+  "languageToggleLabel": "تغییر زبان به پشتو",
+  "languageName": "پښتو",
+  "consultationLabel": "دریافت مشاوره رایگان",
+  "navigation": {
+    "home": "خانه",
+    "opportunities": "فرصت ها",
+    "services": "خدمات",
+    "magazine": "مجله",
+    "about": "در باره ما",
+    "contact": "تماس با ما"
+  },
+  "subNavigation": {
+    "opportunities": {
+      "academic": "تحصیلی",
+      "migration": "مهاجرتی",
+      "work": "کاری",
+      "exams": "امتحانات",
+      "destinationCountry": "کشور مقصد"
+    },
+    "services": {
+      "consultation": "مشاوره",
+      "scholarshipRegistration": "ثبت نام بورسیه ها",
+      "examRegistration": "ثبت نام امتحانات",
+      "migrationRegistration": "ثبت نام مهاجرتی",
+      "documentPreparation": "آماده سازی مدارک",
+      "documentProcess": "طی مراحل اسناد",
+      "studyVisa": "ویزه تحصیلی",
+      "visaResidence": "ویزه و اقامت"
+    }
+  }
+}

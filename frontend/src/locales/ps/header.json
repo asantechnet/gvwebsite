@@ -1,0 +1,42 @@
+{
+  "homeLabel": "د ګلوبل ویژن مشورتي خدمتونه، کورپاڼه",
+  "logoAlt": "د ګلوبل ویژن مشورتي خدمتونه",
+  "primaryNavigationLabel": "اصلي لارښود",
+  "mobileNavigationLabel": "د موبایل لارښود",
+  "searchLabel": "لټون",
+  "searchPlaceholder": "په وېبپاڼه کې لټون وکړئ",
+  "searchSubmitLabel": "لټون ترسره کول",
+  "openMenuLabel": "مېنو پرانیستل",
+  "closeMenuLabel": "مېنو تړل",
+  "themeToggleLabel": "د روښانه او تیاره حالت بدلول",
+  "languageToggleLabel": "دري ته ژبه بدلول",
+  "languageName": "دری",
+  "consultationLabel": "وړیا مشوره ترلاسه کړئ",
+  "navigation": {
+    "home": "کورپاڼه",
+    "opportunities": "فرصتونه",
+    "services": "خدمتونه",
+    "magazine": "مجله",
+    "about": "زموږ په اړه",
+    "contact": "له موږ سره اړیکه"
+  },
+  "subNavigation": {
+    "opportunities": {
+      "academic": "زده کړې",
+      "migration": "مهاجرت",
+      "work": "کاري",
+      "exams": "ازموینې",
+      "destinationCountry": "د مقصد هېواد"
+    },
+    "services": {
+      "consultation": "مشوره",
+      "scholarshipRegistration": "د بورسونو ثبت نام",
+      "examRegistration": "د ازموینو ثبت نام",
+      "migrationRegistration": "د مهاجرت ثبت نام",
+      "documentPreparation": "د اسنادو چمتو کول",
+      "documentProcess": "د اسنادو پروسه",
+      "studyVisa": "د زده کړې ویزه",
+      "visaResidence": "ویزه او استوګنه"
+    }
+  }
+}

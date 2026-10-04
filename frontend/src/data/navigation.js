@@ -1,0 +1,31 @@
+export const headerNavigation = [
+  { id: 'home', href: '/' },
+  {
+    id: 'opportunities',
+    href: '/opportunities',
+    children: [
+      { id: 'academic', href: '/opportunities/academic' },
+      { id: 'migration', href: '/opportunities/migration' },
+      { id: 'work', href: '/opportunities/work' },
+      { id: 'exams', href: '/opportunities/exams' },
+      { id: 'destinationCountry', href: '/opportunities/destination-country' },
+    ],
+  },
+  {
+    id: 'services',
+    href: '/services',
+    children: [
+      { id: 'consultation', href: '/services/consultation' },
+      { id: 'scholarshipRegistration', href: '/services/scholarship-registration' },
+      { id: 'examRegistration', href: '/services/exam-registration' },
+      { id: 'migrationRegistration', href: '/services/migration-registration' },
+      { id: 'documentPreparation', href: '/services/document-preparation' },
+      { id: 'documentProcess', href: '/services/document-process' },
+      { id: 'studyVisa', href: '/services/study-visa' },
+      { id: 'visaResidence', href: '/services/visa-residence' },
+    ],
+  },
+  { id: 'magazine', href: '/magazine' },
+  { id: 'about', href: '/about' },
+  { id: 'contact', href: '/contact' },
+]

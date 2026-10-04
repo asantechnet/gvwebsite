@@ -12,6 +12,7 @@
 @theme inline {
   --font-dari: "IRANYekan", Tahoma, Arial, sans-serif;
   --font-pashto: "Vazirmatn", Tahoma, Arial, sans-serif;
+  --font-heading: "Vazirmatn", Tahoma, Arial, sans-serif;
   --color-brand-orange: var(--brand-orange);
   --color-brand-red: var(--brand-red);
   --color-brand-white: var(--brand-white);
@@ -42,7 +43,7 @@
   --theme-background: #fffaf5;
   --theme-surface: #ffffff;
   --theme-surface-muted: #fff1e2;
-  --theme-foreground: #291712;
+  --theme-foreground: #222222;
   --theme-foreground-muted: #715d55;
   --theme-border: #ead5c9;
   --theme-primary: var(--brand-orange);
@@ -57,9 +58,9 @@
 
 .dark {
   color-scheme: dark;
-  --theme-background: #160d0d;
+  --theme-background: #1f2937;
   --theme-surface: #221515;
-  --theme-surface-muted: #321d19;
+  --theme-surface-muted: #432b23;
   --theme-foreground: #fff8f3;
   --theme-foreground-muted: #d7bdb2;
   --theme-border: #55312b;
@@ -96,3 +97,4 @@ body {
 }
 
 button, input, select, textarea { font: inherit; }
+.search-field:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px transparent inset; -webkit-text-fill-color: var(--theme-foreground); }

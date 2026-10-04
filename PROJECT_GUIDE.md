@@ -4,7 +4,7 @@ This guide is the single source of truth for the Global Vision architecture, gen
 
 ## Current Status
 
-The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, and the structural `MainLayout`, `Header`, and `Footer` components are configured. Page, section, routing, reusable UI, Laravel backend, MariaDB integration, API, translation files, and CMS implementation has not started.
+The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, `MainLayout`, and responsive localized `Header` and `Footer` components are configured. The home page and its responsive hero section are implemented with Dari and Pashto content. Shared navigation data and matching localized layout translations are implemented. Routing, additional pages and sections, reusable UI, Laravel backend, MariaDB integration, API, broader translation coverage, and CMS implementation has not started.
 
 The repository currently contains:
 
@@ -27,7 +27,7 @@ Do not describe planned functionality as implemented.
 8. In mobile view, center every practical element, text block, image, control, and content group. Depart from centered alignment only where it would reduce usability, comprehension, accessibility, or form completion.
 9. Use the approved Global Vision brand colors.
 10. The website supports only Dari and Pashto and is always right to left.
-11. Use locally hosted IRANYekan for Dari and Vazirmatn for Pashto.
+11. Use locally hosted IRANYekan for Dari body text, Vazirmatn for Pashto, and the shared `font-heading` token for Persian and Pashto display headings.
 12. Route loading states must mirror the order, responsive layout, and recognizable shapes of destination sections.
 13. Every visible skeleton must use a future shared `SkeletonBlock` component for consistent shimmer and reduced motion behavior.
 14. Use Lucide React for all general interface icons. Use React Icons only for social media brand icons.
@@ -218,8 +218,8 @@ No routes or routing library are implemented yet. When routing begins:
 | Global Vision red | `#ec1f27` | Secondary accent and important actions |
 | Global Vision white | `#ffffff` | Brand neutral and clean surfaces |
 | Light background | `#fffaf5` | Light page background |
-| Light foreground | `#291712` | Light primary text |
-| Dark background | `#160d0d` | Dark page background |
+| Light foreground | `#222222` | Light primary text |
+| Dark background | `#1f2937` (`gray-800`) | Dark page background |
 | Dark foreground | `#fff8f3` | Dark primary text |
 
 Branding colors, fonts, light and dark class colors, and necessary global animation definitions live in `src/index.css`. Keep the file within 80 to 100 lines and never exceed 100. The site supports explicit `.light` and `.dark` theme classes. Components consume semantic tokens rather than hardcoded theme colors. All component, section, page-shell, and layout styling belongs in JSX through Tailwind utilities.
