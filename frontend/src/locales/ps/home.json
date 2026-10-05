@@ -1,17 +1,11 @@
 {
   "hero": {
-    "eyebrow": "له پولو هاخوا راتلونکي لپاره مشوره",
     "titleBefore": "د خپل راتلونکي لاره",
     "titleHighlight": "روښانه",
     "titleAfter": "وټاکئ",
     "description": "د مناسب فرصت له ټاکلو څخه د اسنادو تر چمتو کولو او پروسې پورې، په روښانه او مسلکي لارښوونه درسره یو.",
     "primaryAction": "وړیا مشوره ترلاسه کړئ",
     "secondaryAction": "فرصتونه وګورئ",
-    "assurances": [
-      "ګام په ګام لارښوونه",
-      "باخبره انتخاب",
-      "په ټوله لاره کې ملاتړ"
-    ],
     "visual": {
       "imageAlt": "د زده کړو، مهاجرت او مسلکي پرمختګ له نښو سره د نړۍ د کرې انځور",
       "eyebrow": "ستاسو ځانګړې لاره",
@@ -37,15 +31,13 @@
     }
   },
   "opportunities": {
-    "eyebrow": "راتلونکي لارې",
     "titleBefore": "ستاسو لپاره",
     "titleHighlight": "مناسب فرصت",
-    "description": "هر هدف خپله ځانګړې لاره لري. راتلونکي فرصتونه وګورئ او خپل بل ګام په باخبره توګه وټاکئ.",
     "viewAll": "ټول فرصتونه وګورئ",
     "cards": [
       {
         "id": "academic",
-        "number": "۰۱",
+        "number": "01",
         "title": "د زده کړو فرصتونه",
         "description": "د زده کړو د دوام، څانګې ټاکلو او مناسبې تعلیمي لارې لپاره لارښوونه ترلاسه کړئ.",
         "action": "د زده کړو فرصتونه وګورئ",
@@ -53,7 +45,7 @@
       },
       {
         "id": "migration",
-        "number": "۰۲",
+        "number": "02",
         "title": "د مهاجرت فرصتونه",
         "description": "له خپلو شرایطو او هدف سره د برابرې مهاجرتي لارې په اړه ښه پوهه ترلاسه کړئ.",
         "action": "د مهاجرت فرصتونه وګورئ",
@@ -61,11 +53,111 @@
       },
       {
         "id": "work",
-        "number": "۰۳",
+        "number": "03",
         "title": "کاري فرصتونه",
         "description": "د مسلکي راتلونکي د جوړولو لپاره خپل کاري فرصتونه او انتخابونه وڅېړئ.",
         "action": "کاري فرصتونه وګورئ",
         "href": "/opportunities/work"
+      }
+    ]
+  },
+  "destinations": {
+    "titleBefore": "تر ټولو مشهور",
+    "titleHighlight": "د سفر مقصدونه",
+    "viewAll": "ټول مقصدونه وګورئ",
+    "countries": [
+      {
+        "id": "turkiye",
+        "name": "ترکیه",
+        "image": "/destinations/turkiye.jpg",
+        "imageAlt": "د استانبول ښار او نیلي جومات منظره",
+        "flag": "/flags/tr.svg",
+        "href": "/opportunities/destination-country/turkiye",
+        "layout": "wide"
+      },
+      {
+        "id": "germany",
+        "name": "جرمني",
+        "image": "/destinations/germany.jpg",
+        "imageAlt": "په برلین کې د براندنبورګ دروازه",
+        "flag": "/flags/de.svg",
+        "href": "/opportunities/destination-country/germany",
+        "layout": "wide"
+      },
+      {
+        "id": "france",
+        "name": "فرانسه",
+        "image": "/destinations/france.jpg",
+        "imageAlt": "په پاریس کې د ایفل برج",
+        "flag": "/flags/fr.svg",
+        "href": "/opportunities/destination-country/france",
+        "layout": "standard"
+      },
+      {
+        "id": "netherlands",
+        "name": "هالنډ",
+        "image": "/destinations/netherlands.jpg",
+        "imageAlt": "د امستردام کانال او ودانۍ",
+        "flag": "/flags/nl.svg",
+        "href": "/opportunities/destination-country/netherlands",
+        "layout": "standard"
+      },
+      {
+        "id": "hungary",
+        "name": "هنګري",
+        "image": "/destinations/hungary.jpg",
+        "imageAlt": "د بوداپست ښار او د ډانیوب سیند منظره",
+        "flag": "/flags/hu.svg",
+        "href": "/opportunities/destination-country/hungary",
+        "layout": "standard"
+      },
+      {
+        "id": "italy",
+        "name": "ایټالیا",
+        "image": "/destinations/italy.jpg",
+        "imageAlt": "د وینس لوی کانال او ودانۍ",
+        "flag": "/flags/it.svg",
+        "href": "/opportunities/destination-country/italy",
+        "layout": "wide"
+      },
+      {
+        "id": "unitedKingdom",
+        "name": "انګلستان",
+        "image": "/destinations/united-kingdom.jpg",
+        "imageAlt": "د لندن ښار او د ټیمز سیند منظره",
+        "flag": "/flags/gb.svg",
+        "href": "/opportunities/destination-country/united-kingdom",
+        "layout": "wide"
+      }
+    ]
+  },
+  "process": {
+    "titleBefore": "له پرېکړې تر پایلې،",
+    "titleHighlight": "ستاسو ترڅنګ یو",
+    "steps": [
+      {
+        "id": "consultation",
+        "number": "01",
+        "title": "لومړنۍ مشوره",
+        "description": "ستاسو د هدف، شرایطو او شته انتخابونو په اړه خبرې کوو."
+      },
+      {
+        "id": "assessment",
+        "number": "02",
+        "title": "د لارې ارزونه",
+        "description": "ستاسو د شرایطو او لومړیتوبونو له مخې تر ټولو مناسبه لاره ټاکو."
+      },
+      {
+        "id": "preparation",
+        "number": "03",
+        "title": "دقیق چمتووالی",
+        "description": "اړین اسناد او پړاوونه بشپړ، منظم او د دوسیې له اړتیاوو سره سم پرمخ وړو."
+      },
+      {
+        "id": "followUp",
+        "number": "04",
+        "title": "تر پایلې تعقیب",
+        "description": "د لارې په اوږدو کې دوسیه تعقیبوو او ستاسو ترڅنګ پاتې کېږو."
       }
     ]
   }

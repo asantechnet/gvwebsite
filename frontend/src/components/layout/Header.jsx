@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Container from "@ui/Container.jsx";
 import {
   BriefcaseBusiness,
   ChevronDown,
@@ -162,7 +163,7 @@ function Header({
       className={`fixed inset-x-0 top-0 z-40 w-full ${className}`.trim()}
     >
       <div className={`w-full border-b border-border/70 bg-surface shadow-[0_8px_30px_rgba(41,23,18,0.04)] transition-transform duration-300 ease-out dark:border-gray-600 dark:bg-gray-700 ${isHeaderVisible ? "translate-y-0" : "-translate-y-full"}`}>
-        <div className="mx-auto flex min-h-20 w-full max-w-7xl items-center justify-between gap-6 px-4 py-1.5 max-md:min-h-16 max-md:py-1 sm:px-6 md:max-xl:min-h-16 md:max-xl:py-1 xl:px-8">
+        <Container className="flex min-h-20 items-center justify-between gap-6 py-1.5 max-md:min-h-16 max-md:py-1 md:max-xl:min-h-16 md:max-xl:py-1">
         <a
           href="/"
           aria-label={content.homeLabel}
@@ -292,7 +293,7 @@ function Header({
           )}
           </button>
         </div>
-        </div>
+        </Container>
       </div>
 
       <button

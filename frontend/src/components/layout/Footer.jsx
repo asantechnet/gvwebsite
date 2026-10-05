@@ -1,6 +1,7 @@
 import { ArrowLeft, BriefcaseBusiness, Wrench } from "lucide-react";
 
 import { headerNavigation } from "@/data/navigation.js";
+import Container from "@ui/Container.jsx";
 
 const focusClasses =
   "focus:outline-none focus-visible:outline-none focus-visible:border-primary focus-visible:text-primary";
@@ -41,7 +42,7 @@ function Footer({ content, navigationContent, className = "" }) {
         className="absolute -bottom-36 -inset-e-20 size-80 rounded-full bg-secondary/10 blur-3xl"
       />
 
-      <div className="relative mx-auto w-full max-w-7xl px-4 pb-0 pt-12 sm:px-6 md:pb-0 md:pt-14 xl:px-8">
+      <Container className="relative pb-0 pt-12 md:pb-0 md:pt-14">
         <div className="grid gap-10 border-b border-border pb-10 text-center dark:border-gray-500 md:grid-cols-2 md:text-right lg:grid-cols-4 lg:gap-8">
           <div className="mx-auto flex max-w-md flex-col items-center md:mx-0 md:items-start">
             <a
@@ -73,7 +74,7 @@ function Footer({ content, navigationContent, className = "" }) {
             <nav aria-labelledby="footer-quick-links-heading">
               <h2
                 id="footer-quick-links-heading"
-                className="font-heading mb-4 text-base font-extrabold text-[#333] dark:text-gray-100"
+                className="font-heading mb-4 text-base font-extrabold text-foreground dark:text-gray-100"
               >
                 {content.quickLinksHeading}
               </h2>
@@ -91,7 +92,7 @@ function Footer({ content, navigationContent, className = "" }) {
             <nav aria-labelledby="footer-opportunities-heading">
               <h2
                 id="footer-opportunities-heading"
-                className="font-heading mb-4 inline-flex items-center gap-2 text-base font-extrabold text-[#333] dark:text-gray-100"
+                className="font-heading mb-4 inline-flex items-center gap-2 text-base font-extrabold text-foreground dark:text-gray-100"
               >
                 <BriefcaseBusiness
                   aria-hidden="true"
@@ -114,7 +115,7 @@ function Footer({ content, navigationContent, className = "" }) {
           <nav aria-labelledby="footer-services-heading">
             <h2
               id="footer-services-heading"
-              className="font-heading mb-4 inline-flex items-center gap-2 text-base font-extrabold text-[#333] dark:text-gray-100"
+              className="font-heading mb-4 inline-flex items-center gap-2 text-base font-extrabold text-foreground dark:text-gray-100"
             >
               <Wrench aria-hidden="true" className="size-4 text-primary" />
               {navigationContent.navigation.services}
@@ -135,7 +136,7 @@ function Footer({ content, navigationContent, className = "" }) {
           <p>{content.copyright}</p>
           <p>{content.tagline}</p>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

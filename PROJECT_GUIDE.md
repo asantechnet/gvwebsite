@@ -4,7 +4,7 @@ This guide is the single source of truth for the Global Vision architecture, gen
 
 ## Current Status
 
-The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, `MainLayout`, and responsive localized `Header` and `Footer` components are configured. The home page and its responsive hero section are implemented with Dari and Pashto content. Shared navigation data and matching localized layout translations are implemented. Routing, additional pages and sections, reusable UI, Laravel backend, MariaDB integration, API, broader translation coverage, and CMS implementation has not started.
+The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, `MainLayout`, responsive localized `Header` and `Footer` components, and shared UI components for sections, containers, headings, action links, and repeated card patterns are configured. The home page includes responsive hero, opportunity, destination, and process sections with Dari and Pashto content. Shared navigation data and matching localized layout translations are implemented. Routing, additional pages, most reusable UI, Laravel backend, MariaDB integration, API, broader translation coverage, and CMS implementation has not started.
 
 The repository currently contains:
 
@@ -119,7 +119,7 @@ globalvision-website/
 └── PROJECT_GUIDE.md
 ```
 
-The remaining empty component subdirectories will be populated during implementation. Create data, hooks, services, API, locale, and CMS-specific subdirectories with their first implementation rather than as empty placeholders. Keep generated and local dependency folders such as `node_modules/` and `dist/` out of version control.
+Populate component subdirectories during implementation. Create data, hooks, services, API, locale, and CMS-specific subdirectories with their first implementation rather than as empty placeholders. Keep generated and local dependency folders such as `node_modules/` and `dist/` out of version control.
 
 ## Import Aliases
 
@@ -218,7 +218,7 @@ No routes or routing library are implemented yet. When routing begins:
 | Global Vision red | `#ec1f27` | Secondary accent and important actions |
 | Global Vision white | `#ffffff` | Brand neutral and clean surfaces |
 | Light background | `#fffaf5` | Light page background |
-| Light foreground | `#222222` | Light primary text |
+| Light foreground | `#333333` | Light primary text and titles |
 | Dark background | `#1f2937` (`gray-800`) | Dark page background |
 | Dark foreground | `#fff8f3` | Dark primary text |
 
@@ -234,6 +234,7 @@ Branding colors, fonts, light and dark class colors, and necessary global animat
 - Use one `h1` per page with a logical heading hierarchy.
 - Avoid excessive font weights and very small body text.
 - Avoid hyphens in page copy where natural phrasing is available.
+- Always use English digits (`0-9`) in user-facing content, including localized text and numeric labels; never use Persian or Arabic-Indic digits.
 
 ### Layout and motion
 
