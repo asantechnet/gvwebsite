@@ -23,7 +23,7 @@ function HeroVisual({ content }) {
 function HeroSection({ content }) {
   return (
     <Section padded={false} className="relative isolate overflow-hidden bg-background">
-      <Container className="grid min-h-0 items-center gap-6 pb-8 pt-0 md:gap-8 md:pb-10 md:pt-0 lg:min-h-screen lg:grid-cols-2 lg:gap-8 lg:pb-16 lg:pt-10 xl:pb-20 xl:pt-4">
+      <Container className="grid min-h-0 items-center gap-6 pb-0 pt-0 md:gap-8 md:pb-0 md:pt-0 lg:min-h-screen lg:grid-cols-2 lg:gap-8 lg:pb-6 lg:pt-10 xl:pb-8 xl:pt-4">
         <div className="order-2 mx-auto flex max-w-2xl flex-col items-center text-center lg:order-1 lg:mx-0 lg:items-start lg:text-right">
           <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-foreground dark:text-gray-50 sm:text-5xl xl:text-6xl">
             {content.titleBefore}{" "}

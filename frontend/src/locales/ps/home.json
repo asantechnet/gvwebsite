@@ -160,5 +160,81 @@
         "description": "د لارې په اوږدو کې دوسیه تعقیبوو او ستاسو ترڅنګ پاتې کېږو."
       }
     ]
+  },
+  "services": {
+    "titleBefore": "ستاسو د لارې د هر پړاو لپاره",
+    "titleHighlight": "مسلکي خدمتونه",
+    "description": "له لومړۍ پرېکړې څخه د اسنادو چمتو کولو او ویزې ترلاسه کولو پورې، اړین خدمتونه په روښانه لاره ترلاسه کړئ.",
+    "viewAll": "ټول خدمتونه وګورئ",
+    "cards": [
+      {
+        "id": "consultation",
+        "number": "01",
+        "title": "مسلکي مشوره",
+        "description": "د خپل هدف او شرایطو له مخې د مناسبې لارې لپاره کره لارښوونه ترلاسه کړئ.",
+        "action": "جزئیات وګورئ",
+        "href": "/services/consultation"
+      },
+      {
+        "id": "scholarshipRegistration",
+        "number": "02",
+        "title": "د بورس ثبت‌نام",
+        "description": "مناسب بورسونه ومومئ او د ثبت‌نام پړاوونه په ډاډه زړه پرمخ یوسئ.",
+        "action": "جزئیات وګورئ",
+        "href": "/services/scholarship-registration"
+      },
+      {
+        "id": "documentPreparation",
+        "number": "03",
+        "title": "د اسنادو چمتو کول",
+        "description": "اړین اسناد بشپړ، منظم او د غوښتنې له شرایطو سره سم چمتو کړئ.",
+        "action": "جزئیات وګورئ",
+        "href": "/services/document-preparation"
+      },
+      {
+        "id": "studyVisa",
+        "number": "04",
+        "title": "د تحصیلي ویزې خدمتونه",
+        "description": "د اسنادو له ارزونې څخه د ویزې تر غوښتنلیک پورې مرسته ترلاسه کړئ.",
+        "action": "جزئیات وګورئ",
+        "href": "/services/study-visa"
+      }
+    ]
+  },
+  "testimonials": {
+    "titleBefore": "زموږ د ملګرو",
+    "titleHighlight": "تجربې",
+    "items": [
+      {
+        "id": "student-1",
+        "quote": "له لومړۍ مشورې څخه د اسنادو تر چمتو کولو پورې، ټول پړاوونه راته روښانه او منظم وو.",
+        "name": "عرفان نورزاده",
+        "role": "منل شوې زده‌کوونکې",
+        "avatar": "/profile%20images/erfan.webp",
+        "avatarAlt": "د عرفان نورزاده د پېژندنې انځور"
+      },
+      {
+        "id": "student-2",
+        "quote": "د ټیم په کره لارښوونه مې وکولای شول خپله مناسبه تحصیلي لاره په ډاډ وټاکم.",
+        "name": "مرتضی رضوی",
+        "role": "اروپا ته د زده کړو غوښتونکی",
+        "avatar": "/profile%20images/murtaza.webp",
+        "avatarAlt": "د مرتضی رضوی د پېژندنې انځور"
+      },
+      {
+        "id": "student-3",
+        "quote": "منظمې تعقیب او چټک ځواب‌ویلو راته په ټوله لاره کې ډاډ او ارامي راکړه.",
+        "name": "نوید هوتک",
+        "role": "بریالۍ مهاجره",
+        "avatar": "/profile%20images/naveed.webp",
+        "avatarAlt": "د نوید هوتک د پېژندنې انځور"
+      }
+    ]
+  },
+  "consultation": {
+    "title": "چمتو یاست چې بل ګام واخلئ؟",
+    "description": "د یوې مسلکي مشورې له لارې خپله مناسبه لاره روښانه کړئ او د راتلونکي لپاره په ډاډ پرېکړه وکړئ.",
+    "primaryAction": "وړیا مشوره ترلاسه کړئ",
+    "secondaryAction": "فرصتونه وګورئ"
   }
 }

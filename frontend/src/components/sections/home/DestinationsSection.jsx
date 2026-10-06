@@ -8,7 +8,7 @@ function DestinationsSection({ content }) {
   return (
     <Section
       aria-labelledby="home-destinations-heading"
-      className="border-t border-border bg-background dark:border-gray-600"
+      className="bg-background"
     >
       <Container>
         <SectionHeading

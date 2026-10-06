@@ -50,7 +50,7 @@ function SearchPanel({ id, content, query, onQueryChange, onSubmit }) {
       role="search"
       data-search-popover
       onSubmit={onSubmit}
-      className="absolute end-0 top-full z-50 mt-2 w-[min(20rem,calc(100vw-2rem))] rounded-2xl border border-border bg-surface p-2.5 shadow-[0_12px_30px_rgba(41,23,18,0.14)] dark:border-gray-600 dark:bg-gray-800 dark:shadow-[0_12px_30px_rgba(0,0,0,0.3)]"
+      className="absolute inset-e-0 top-full z-50 mt-2 w-[min(20rem,calc(100vw-2rem))] rounded-2xl border border-border bg-surface p-2.5 shadow-[0_12px_30px_rgba(41,23,18,0.14)] dark:border-gray-600 dark:bg-gray-800 dark:shadow-[0_12px_30px_rgba(0,0,0,0.3)]"
     >
       <label htmlFor={`${id}-input`} className="sr-only">
         {content.searchLabel}
@@ -101,7 +101,8 @@ function Header({
   useEffect(() => {
     const updateHeaderVisibility = () => {
       const currentScrollPosition = window.scrollY;
-      const scrollDifference = currentScrollPosition - previousScrollPosition.current;
+      const scrollDifference =
+        currentScrollPosition - previousScrollPosition.current;
 
       if (currentScrollPosition < 16 || scrollDifference < -8 || isMenuOpen) {
         setIsHeaderVisible(true);
@@ -112,7 +113,9 @@ function Header({
       previousScrollPosition.current = currentScrollPosition;
     };
 
-    window.addEventListener("scroll", updateHeaderVisibility, { passive: true });
+    window.addEventListener("scroll", updateHeaderVisibility, {
+      passive: true,
+    });
     return () => window.removeEventListener("scroll", updateHeaderVisibility);
   }, [isMenuOpen]);
 
@@ -138,7 +141,8 @@ function Header({
       const target = event.target;
       if (
         target instanceof Element &&
-        (target.closest("[data-search-control]") || target.closest("[data-search-popover]"))
+        (target.closest("[data-search-control]") ||
+          target.closest("[data-search-popover]"))
       ) {
         return;
       }
@@ -146,7 +150,8 @@ function Header({
     };
 
     document.addEventListener("pointerdown", closeOnOutsideClick);
-    return () => document.removeEventListener("pointerdown", closeOnOutsideClick);
+    return () =>
+      document.removeEventListener("pointerdown", closeOnOutsideClick);
   }, [isSearchOpen]);
 
   const handleSearchSubmit = (event) => {
@@ -159,140 +164,146 @@ function Header({
   const currentPath = window.location.pathname;
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-40 w-full ${className}`.trim()}
-    >
-      <div className={`w-full border-b border-border/70 bg-surface shadow-[0_8px_30px_rgba(41,23,18,0.04)] transition-transform duration-300 ease-out dark:border-gray-600 dark:bg-gray-700 ${isHeaderVisible ? "translate-y-0" : "-translate-y-full"}`}>
+    <header className={`fixed inset-x-0 top-0 z-40 w-full ${className}`.trim()}>
+      <div
+        className={`w-full border-b border-border/70 bg-surface shadow-[0_8px_30px_rgba(41,23,18,0.04)] transition-transform duration-300 ease-out dark:border-gray-600 dark:bg-gray-700 ${isHeaderVisible ? "translate-y-0" : "-translate-y-full"}`}
+      >
         <Container className="flex min-h-20 items-center justify-between gap-6 py-1.5 max-md:min-h-16 max-md:py-1 md:max-xl:min-h-16 md:max-xl:py-1">
-        <a
-          href="/"
-          aria-label={content.homeLabel}
-          className={`m-0 shrink-0 rounded-2xl border border-transparent p-0 transition-colors ${noFocusOutline}`}
-        >
-          <img
-            src="/icon.webp"
-            alt={content.logoAlt}
-            width="1431"
-            height="974"
-            className="m-0 h-12 w-auto p-0 object-contain lg:h-14 md:max-xl:h-12"
-          />
-        </a>
-
-        <nav
-          aria-label={content.primaryNavigationLabel}
-          className="hidden items-center gap-1 xl:flex xl:gap-2"
-        >
-          {headerNavigation.map((item) => (
-            <div key={item.id} className="group relative">
-              {item.children?.length > 0 ? (
-                <span
-                  className={`${navLinkClasses} cursor-default ${isNavigationItemActive(item, currentPath) ? activeNavLinkClasses : ""}`}
-                >
-                  <NavigationIcon id={item.id} />
-                  {content.navigation[item.id]}
-                </span>
-              ) : (
-                <a
-                  href={item.href}
-                  aria-current={isNavigationItemActive(item, currentPath) ? "page" : undefined}
-                  className={`${navLinkClasses} ${isNavigationItemActive(item, currentPath) ? activeNavLinkClasses : ""}`}
-                >
-                  <NavigationIcon id={item.id} />
-                  {content.navigation[item.id]}
-                </a>
-              )}
-              {item.children?.length > 0 && (
-                <div className="invisible absolute start-0 top-full z-50 grid min-w-48 translate-y-2 gap-1 rounded-2xl border border-border bg-surface p-2 opacity-0 shadow-lg transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 dark:border-gray-600 dark:bg-gray-800">
-                  {item.children.map((child) => (
-                    <a
-                      key={child.id}
-                      href={child.href}
-                      aria-current={currentPath === child.href ? "page" : undefined}
-                      className={`rounded-lg px-3 py-2 text-right text-sm transition-colors hover:bg-surface-muted hover:text-foreground dark:hover:bg-gray-700 ${currentPath === child.href ? "font-extrabold text-primary" : "font-medium text-foreground-muted dark:text-gray-100"}`}
-                    >
-                      {content.subNavigation[item.id][child.id]}
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </nav>
-
-        <div className="flex shrink-0 items-center gap-2">
-          <div className="flex shrink-0 items-center gap-2 xl:gap-3">
-          <button
-            type="button"
-            aria-label={content.languageToggleLabel}
-            onClick={onLanguageToggle}
-            className={`inline-grid h-10 place-items-center rounded-xl border border-border bg-surface-muted px-4 text-center text-sm font-bold leading-none text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700 ${noFocusOutline}`}
-          >
-            <span lang={language}>{content.languageName}</span>
-          </button>
-          <button
-            type="button"
-            aria-label={content.themeToggleLabel}
-            aria-pressed={theme === "dark"}
-            onClick={onThemeToggle}
-            className={`${iconButtonClasses} ${noFocusOutline}`}
-          >
-            {theme === "dark" ? (
-              <Sun aria-hidden="true" className="size-5" />
-            ) : (
-              <Moon aria-hidden="true" className="size-5" />
-            )}
-          </button>
-          <div className="relative">
-            <button
-              type="button"
-              data-search-control
-              aria-label={content.searchLabel}
-              aria-expanded={isSearchOpen}
-              aria-controls="desktop-search-panel"
-              onClick={() => setIsSearchOpen((isOpen) => !isOpen)}
-              className={`${iconButtonClasses} ${noFocusOutline}`}
-            >
-              <Search aria-hidden="true" className="size-5" />
-            </button>
-            {isSearchOpen && (
-              <SearchPanel
-                id="desktop-search-panel"
-                content={content}
-                query={searchQuery}
-                onQueryChange={setSearchQuery}
-                onSubmit={handleSearchSubmit}
-              />
-            )}
-          </div>
           <a
-            href="/contact"
-            className={`hidden min-h-10 items-center justify-center rounded-xl border-2 border-primary bg-primary px-5 text-sm font-semibold text-brand-white shadow-[0_8px_20px_rgba(245,155,34,0.2)] transition-colors hover:border-primary-hover hover:bg-primary-hover dark:hover:border-[#db7f0e] dark:hover:bg-[#db7f0e] xl:inline-flex xl:px-6 xl:text-base ${noFocusOutline}`}
+            href="/"
+            aria-label={content.homeLabel}
+            className={`m-0 shrink-0 rounded-2xl border border-transparent p-0 transition-colors ${noFocusOutline}`}
           >
-            {content.consultationLabel}
+            <img
+              src="/icon.webp"
+              alt={content.logoAlt}
+              width="1431"
+              height="974"
+              className="m-0 h-12 w-auto p-0 object-contain lg:h-14 md:max-xl:h-12"
+            />
           </a>
-          </div>
 
-          <button
-          ref={menuButtonRef}
-          type="button"
-          aria-label={
-            isMenuOpen ? content.closeMenuLabel : content.openMenuLabel
-          }
-          aria-expanded={isMenuOpen}
-          aria-controls="mobile-navigation"
-          onClick={() => {
-            setIsHeaderVisible(true);
-            setIsMenuOpen((isOpen) => !isOpen);
-          }}
-          className={`grid size-10 place-items-center rounded-xl border border-border bg-surface-muted text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-600 xl:hidden ${noFocusOutline}`}
-        >
-          {isMenuOpen ? (
-            <X aria-hidden="true" className="size-5" />
-          ) : (
-            <Menu aria-hidden="true" className="size-5" />
-          )}
-          </button>
-        </div>
+          <nav
+            aria-label={content.primaryNavigationLabel}
+            className="hidden items-center gap-1 xl:flex xl:gap-2"
+          >
+            {headerNavigation.map((item) => (
+              <div key={item.id} className="group relative">
+                {item.children?.length > 0 ? (
+                  <span
+                    className={`${navLinkClasses} cursor-default ${isNavigationItemActive(item, currentPath) ? activeNavLinkClasses : ""}`}
+                  >
+                    <NavigationIcon id={item.id} />
+                    {content.navigation[item.id]}
+                  </span>
+                ) : (
+                  <a
+                    href={item.href}
+                    aria-current={
+                      isNavigationItemActive(item, currentPath)
+                        ? "page"
+                        : undefined
+                    }
+                    className={`${navLinkClasses} ${isNavigationItemActive(item, currentPath) ? activeNavLinkClasses : ""}`}
+                  >
+                    <NavigationIcon id={item.id} />
+                    {content.navigation[item.id]}
+                  </a>
+                )}
+                {item.children?.length > 0 && (
+                  <div className="invisible absolute inset-s-0 top-full z-50 grid min-w-48 translate-y-2 gap-1 rounded-2xl border border-border bg-surface p-2 opacity-0 shadow-lg transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 dark:border-gray-600 dark:bg-gray-800">
+                    {item.children.map((child) => (
+                      <a
+                        key={child.id}
+                        href={child.href}
+                        aria-current={
+                          currentPath === child.href ? "page" : undefined
+                        }
+                        className={`rounded-lg px-3 py-2 text-right text-sm transition-colors hover:bg-surface-muted hover:text-foreground dark:hover:bg-gray-700 ${currentPath === child.href ? "font-extrabold text-primary" : "font-medium text-foreground-muted dark:text-gray-100"}`}
+                      >
+                        {content.subNavigation[item.id][child.id]}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </nav>
+
+          <div className="flex shrink-0 items-center gap-2">
+            <div className="flex shrink-0 items-center gap-2 xl:gap-3">
+              <button
+                type="button"
+                aria-label={content.languageToggleLabel}
+                onClick={onLanguageToggle}
+                className={`inline-grid h-10 place-items-center rounded-xl border border-border bg-surface-muted px-4 text-center text-sm font-bold leading-none text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700 ${noFocusOutline}`}
+              >
+                <span lang={language}>{content.languageName}</span>
+              </button>
+              <button
+                type="button"
+                aria-label={content.themeToggleLabel}
+                aria-pressed={theme === "dark"}
+                onClick={onThemeToggle}
+                className={`${iconButtonClasses} ${noFocusOutline}`}
+              >
+                {theme === "dark" ? (
+                  <Sun aria-hidden="true" className="size-5" />
+                ) : (
+                  <Moon aria-hidden="true" className="size-5" />
+                )}
+              </button>
+              <div className="relative">
+                <button
+                  type="button"
+                  data-search-control
+                  aria-label={content.searchLabel}
+                  aria-expanded={isSearchOpen}
+                  aria-controls="desktop-search-panel"
+                  onClick={() => setIsSearchOpen((isOpen) => !isOpen)}
+                  className={`${iconButtonClasses} ${noFocusOutline}`}
+                >
+                  <Search aria-hidden="true" className="size-5" />
+                </button>
+                {isSearchOpen && (
+                  <SearchPanel
+                    id="desktop-search-panel"
+                    content={content}
+                    query={searchQuery}
+                    onQueryChange={setSearchQuery}
+                    onSubmit={handleSearchSubmit}
+                  />
+                )}
+              </div>
+              <a
+                href="/contact"
+                className={`hidden min-h-10 items-center justify-center rounded-xl border-2 border-primary bg-primary px-5 text-sm font-semibold text-brand-white shadow-[0_8px_20px_rgba(245,155,34,0.2)] transition-colors hover:border-primary-hover hover:bg-primary-hover dark:hover:border-[#db7f0e] dark:hover:bg-[#db7f0e] xl:inline-flex xl:px-6 xl:text-base ${noFocusOutline}`}
+              >
+                {content.consultationLabel}
+              </a>
+            </div>
+
+            <button
+              ref={menuButtonRef}
+              type="button"
+              aria-label={
+                isMenuOpen ? content.closeMenuLabel : content.openMenuLabel
+              }
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-navigation"
+              onClick={() => {
+                setIsHeaderVisible(true);
+                setIsMenuOpen((isOpen) => !isOpen);
+              }}
+              className={`grid size-10 place-items-center rounded-xl border border-border bg-surface-muted text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-600 xl:hidden ${noFocusOutline}`}
+            >
+              {isMenuOpen ? (
+                <X aria-hidden="true" className="size-5" />
+              ) : (
+                <Menu aria-hidden="true" className="size-5" />
+              )}
+            </button>
+          </div>
         </Container>
       </div>
 
@@ -318,14 +329,14 @@ function Header({
               alt={content.logoAlt}
               width="1946"
               height="490"
-            className="h-9 w-auto object-contain md:h-10"
+              className="h-9 w-auto object-contain md:h-10"
             />
           </a>
           <button
             type="button"
             aria-label={content.closeMenuLabel}
             onClick={() => setIsMenuOpen(false)}
-            className={`${iconButtonClasses} !size-8 md:!size-10 ${noFocusOutline}`}
+            className={`${iconButtonClasses} size-8! md:size-10! ${noFocusOutline}`}
           >
             <X aria-hidden="true" className="size-4 md:size-5" />
           </button>
@@ -340,7 +351,10 @@ function Header({
               const isSectionOpen = openMobileSection === item.id;
 
               return (
-                <div key={item.id} className="grid w-full justify-items-start gap-1">
+                <div
+                  key={item.id}
+                  className="grid w-full justify-items-start gap-1"
+                >
                   {hasChildren ? (
                     <button
                       type="button"
@@ -364,7 +378,11 @@ function Header({
                     <a
                       href={item.href}
                       onClick={() => setIsMenuOpen(false)}
-                      aria-current={isNavigationItemActive(item, currentPath) ? "page" : undefined}
+                      aria-current={
+                        isNavigationItemActive(item, currentPath)
+                          ? "page"
+                          : undefined
+                      }
                       className={`${navLinkClasses} w-auto justify-start px-3 text-right ${isNavigationItemActive(item, currentPath) ? activeNavLinkClasses : ""}`}
                     >
                       <NavigationIcon id={item.id} />

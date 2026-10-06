@@ -160,5 +160,81 @@
         "description": "در طول مسیر، وضعیت پرونده را پیگیری کرده و در کنار شما می‌مانیم."
       }
     ]
+  },
+  "services": {
+    "titleBefore": "خدمات تخصصی برای",
+    "titleHighlight": "هر مرحله مسیر شما",
+    "description": "از نخستین تصمیم تا آماده‌سازی اسناد و دریافت ویزا، خدمات مورد نیازتان را با یک مسیر روشن دریافت کنید.",
+    "viewAll": "مشاهده همه خدمات",
+    "cards": [
+      {
+        "id": "consultation",
+        "number": "01",
+        "title": "مشاوره تخصصی",
+        "description": "برای انتخاب مسیر متناسب با هدف و شرایط خود، راهنمایی دقیق بگیرید.",
+        "action": "مشاهده جزئیات",
+        "href": "/services/consultation"
+      },
+      {
+        "id": "scholarshipRegistration",
+        "number": "02",
+        "title": "ثبت‌نام بورسیه",
+        "description": "فرصت‌های مناسب را پیدا کنید و مراحل ثبت‌نام را با اطمینان پیش ببرید.",
+        "action": "مشاهده جزئیات",
+        "href": "/services/scholarship-registration"
+      },
+      {
+        "id": "documentPreparation",
+        "number": "03",
+        "title": "آماده‌سازی اسناد",
+        "description": "مدارک مورد نیاز را کامل، منظم و مطابق با الزامات درخواست آماده کنید.",
+        "action": "مشاهده جزئیات",
+        "href": "/services/document-preparation"
+      },
+      {
+        "id": "studyVisa",
+        "number": "04",
+        "title": "خدمات ویزای تحصیلی",
+        "description": "از بررسی مدارک تا تکمیل مراحل درخواست ویزا، همراهی دریافت کنید.",
+        "action": "مشاهده جزئیات",
+        "href": "/services/study-visa"
+      }
+    ]
+  },
+  "testimonials": {
+    "titleBefore": "تجربه مشتریان",
+    "titleHighlight": "ما",
+    "items": [
+      {
+        "id": "student-1",
+        "quote": "از اولین مشاوره تا آماده‌شدن مدارک، همه مراحل برایم روشن و منظم بود.",
+        "name": "عرفان نورزاده",
+        "role": "دانشجوی پذیرفته شده در امریکا",
+        "avatar": "/profile%20images/erfan.webp",
+        "avatarAlt": "تصویر نمایه عرفان نورزاده"
+      },
+      {
+        "id": "student-2",
+        "quote": "با راهنمایی دقیق تیم، توانستم مسیر تحصیلی مناسب خودم را با اطمینان انتخاب کنم.",
+        "name": "مرتضی رضوی",
+        "role": "متقاضی تحصیل در اروپا",
+        "avatar": "/profile%20images/murtaza.webp",
+        "avatarAlt": "تصویر نمایه مرتضی رضوی"
+      },
+      {
+        "id": "student-3",
+        "quote": "پیگیری منظم و پاسخ‌گویی سریع باعث شد در تمام مسیر احساس آرامش داشته باشم.",
+        "name": "نوید هوتک",
+        "role": "مهاجرت موفق به کانادا",
+        "avatar": "/profile%20images/naveed.webp",
+        "avatarAlt": "تصویر نمایه نوید هوتک"
+      }
+    ]
+  },
+  "consultation": {
+    "title": "آماده‌اید قدم بعدی را بردارید؟",
+    "description": "با یک مشاوره تخصصی، مسیر مناسب خود را روشن‌تر کنید و با اطمینان برای آینده تصمیم بگیرید.",
+    "primaryAction": "دریافت مشاوره رایگان",
+    "secondaryAction": "مشاهده فرصت‌ها"
   }
 }

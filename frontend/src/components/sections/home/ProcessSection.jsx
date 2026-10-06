@@ -20,7 +20,7 @@ function ProcessSection({ content }) {
   return (
     <Section
       aria-labelledby="home-process-heading"
-      className="border-t border-border bg-surface-muted/30 dark:border-gray-600 dark:bg-gray-800/30"
+      className="bg-background"
     >
       <Container>
         <div className="mx-auto max-w-2xl text-center">
@@ -29,9 +29,6 @@ function ProcessSection({ content }) {
             titleBefore={content.titleBefore}
             titleHighlight={content.titleHighlight}
           />
-          <p className="mt-4 text-sm leading-8 text-foreground-muted dark:text-gray-300 sm:text-base">
-            {content.description}
-          </p>
         </div>
 
         <div className="relative mt-10">
