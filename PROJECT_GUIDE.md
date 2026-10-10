@@ -4,7 +4,7 @@ This guide is the single source of truth for the Global Vision architecture, gen
 
 ## Current Status
 
-The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, `MainLayout`, responsive localized `Header` and `Footer` components, and shared UI components for sections, containers, headings, action links, and repeated card patterns are configured. The home page includes responsive hero, opportunity, destination, and process sections with Dari and Pashto content. Shared navigation data and matching localized layout translations are implemented. Routing, additional pages, most reusable UI, Laravel backend, MariaDB integration, API, broader translation coverage, and CMS implementation has not started.
+The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, `MainLayout`, responsive localized `Header` and `Footer` components, and shared UI components for sections, containers, headings, action links, and repeated card patterns are configured. The home page includes responsive hero, opportunity, destination, process, service, testimonial, and consultation sections with Dari and Pashto content. Shared navigation data and matching localized layout translations are implemented. Routing, additional pages, most reusable UI, Laravel backend, MariaDB integration, API, broader translation coverage, and CMS implementation has not started.
 
 The repository currently contains:
 

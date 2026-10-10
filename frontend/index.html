@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#fffaf5" />
+    <script>
+      (() => {
+        const theme = window.localStorage.getItem('globalvision-theme') || 'light'
+        document.documentElement.classList.add(theme === 'dark' ? 'dark' : 'light')
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#1f2937' : '#fffaf5')
+      })()
+    </script>
     <link rel="icon" type="image/webp" href="/icon.webp" />
     <title>خدمات مشورتی گلوبل ویژن</title>
   </head>
