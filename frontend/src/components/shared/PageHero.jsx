@@ -15,7 +15,7 @@ function PageHero({
   breadcrumbLabel = 'Breadcrumb',
 }) {
   return (
-    <Section aria-labelledby="page-hero-title" className="bg-background py-2 md:py-10 lg:py-12">
+    <Section padded={false} aria-labelledby="page-hero-title" className="bg-background py-2 md:py-10 lg:pb-20 lg:pt-12">
       <Container>
         <div className="relative isolate flex min-h-52 flex-col items-center justify-center overflow-hidden rounded-[2rem] border border-border bg-surface px-6 py-4 dark:border-gray-600 dark:bg-[#2b3442] md:min-h-56 md:px-10 md:py-6 lg:px-16">
           <div className="pointer-events-none absolute -right-16 -top-16 -z-10 size-40 rounded-full bg-brand-orange/20 md:-right-16 md:-top-24 md:size-64" />

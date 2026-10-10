@@ -3,10 +3,10 @@ import Section from '@ui/Section.jsx'
 
 function IntroductionSection({ content }) {
   return (
-    <Section aria-labelledby="about-introduction-title" className="bg-background">
+    <Section padded={false} aria-labelledby="about-introduction-title" className="bg-background pb-16 pt-0 md:pb-20">
       <Container>
         <div className="mx-auto max-w-3xl text-center">
-          <h2 id="about-introduction-title" className="font-heading text-2xl font-extrabold leading-tight text-foreground md:text-3xl lg:text-4xl">
+          <h2 id="about-introduction-title" className="font-heading text-xl font-extrabold leading-tight text-foreground md:text-2xl lg:text-3xl">
             {content.title}
           </h2>
           <p className="mt-4 text-base leading-8 text-foreground-muted md:text-lg md:leading-9">{content.description}</p>

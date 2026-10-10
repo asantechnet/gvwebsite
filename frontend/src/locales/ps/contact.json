@@ -1,0 +1,33 @@
+{
+  "hero": {
+    "eyebrow": "له موږ سره اړیکه",
+    "title": "له موږ سره اړیکه ونیسئ",
+    "breadcrumbs": [
+      { "label": "کور", "href": "/" },
+      { "label": "اړیکه" }
+    ],
+    "breadcrumbLabel": "د پاڼې مسیر"
+  },
+  "contact": {
+    "title": "موږ خبرو ته چمتو یو",
+    "description": "که پوښتنه لرئ یا لارښوونې ته اړتیا لرئ، خپل پیغام موږ ته ولېږئ.",
+    "details": [
+      { "type": "phone", "label": "ټیلیفون", "value": "+93 700 000 000" },
+      { "type": "email", "label": "برېښنالیک", "value": "info@globalvision.af" },
+      { "type": "address", "label": "پته", "value": "کابل، افغانستان" }
+    ],
+    "form": {
+      "title": "خپل پیغام راولېږئ",
+      "description": "لاندې فورمه بشپړه کړئ؛ زموږ ټیم به په لومړي فرصت کې له تاسو سره اړیکه ونیسي.",
+      "nameLabel": "ستاسو نوم",
+      "namePlaceholder": "خپل نوم ولیکئ",
+      "phoneLabel": "د اړیکې شمېره",
+      "phonePlaceholder": "د اړیکې شمېره ولیکئ",
+      "emailLabel": "برېښنالیک",
+      "emailPlaceholder": "خپل برېښنالیک ولیکئ",
+      "messageLabel": "ستاسو پیغام",
+      "messagePlaceholder": "خپل پیغام ولیکئ",
+      "submitLabel": "پیغام ولېږئ"
+    }
+  }
+}
