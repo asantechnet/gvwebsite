@@ -7,6 +7,7 @@ import HomePage from '@pages/HomePage.jsx'
 import AboutPage from '@pages/AboutPage.jsx'
 import ContactPage from '@pages/ContactPage.jsx'
 import MagazinePage from '@pages/MagazinePage.jsx'
+import BlogPostPage from '@pages/BlogPostPage.jsx'
 import dariFooterContent from '@/locales/prs/footer.json'
 import dariHeaderContent from '@/locales/prs/header.json'
 import dariHomeContent from '@/locales/prs/home.json'
@@ -34,6 +35,7 @@ function MainLayout({ children = null }) {
   const contactContent = language === 'prs' ? dariContactContent : pashtoContactContent
   const magazineContent = language === 'prs' ? dariMagazineContent : pashtoMagazineContent
   const page = window.location.pathname.replace(/\/$/, '') || '/'
+  const isBlogPost = page.startsWith('/magazine/post/')
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
@@ -58,7 +60,7 @@ function MainLayout({ children = null }) {
         onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))}
       />
       <main className="flex-1 pt-16 xl:pt-20">
-        {children ?? (page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} /> : page === '/magazine' ? <MagazinePage content={magazineContent} language={language} /> : <HomePage content={homeContent} />)}
+        {children ?? (page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} /> : isBlogPost ? <BlogPostPage post={magazineContent.news.items[0]} content={magazineContent.postDetail} relatedPosts={magazineContent.news.items.filter((relatedPost) => relatedPost.category === magazineContent.news.items[0].category).slice(1, 6)} /> : page === '/magazine' ? <MagazinePage content={magazineContent} language={language} /> : <HomePage content={homeContent} />)}
       </main>
       <Footer content={footerContent} navigationContent={headerContent} />
     </div>

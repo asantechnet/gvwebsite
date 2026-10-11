@@ -73,7 +73,7 @@ function PostCarousel({ items, category, labels, language }) {
         }}
       >
         <div className="flex gap-3 ease-out [direction:rtl]" style={{ transform: `translateX(${activeIndex * (viewportRef.current ? (viewportRef.current.clientWidth - 16 + gap) / visibleCount : 0)}px)`, transition: resetting ? 'none' : 'transform 700ms ease-out' }}>
-          {loopItems.map((item, index) => <div key={`${item.title}-${index}`} className="shrink-0" style={{ width: cardWidth }}><PostCard post={postItems[index % items.length]} language={language} /></div>)}
+          {loopItems.map((item, index) => <div key={`${item.title}-${index}`} className="shrink-0" style={{ width: cardWidth }}><PostCard post={postItems[index % items.length]} language={language} viewsLabel={labels.viewsLabel} /></div>)}
         </div>
       </div>
       <Button unstyled type="button" aria-label={labels.next} onClick={() => move(1)} className="absolute end-0 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-surface text-foreground shadow-md outline-none hover:border-primary hover:text-primary focus:outline-none focus-visible:ring-0 dark:border-gray-600 dark:bg-[#2b3442]"><ChevronLeft aria-hidden="true" size={20} /></Button>

@@ -11,6 +11,7 @@
     "nextLabel": "خبر بعدی",
     "paginationLabel": "صفحه‌های اخبار",
     "pageLabel": "موقعیت شماره",
+    "viewsLabel": "بازدید",
     "items": [
       { "category": "خبر", "date": "2026-10-11T08:00:00+04:30", "title": "آغاز فصل تازه مشاوره‌های تحصیلی", "description": "آخرین خبرها و اطلاعیه‌های گلوبل ویژن را دنبال کنید.", "image": "/destinations/united-kingdom.jpg", "href": "/magazine" },
       { "category": "خبر", "date": "2026-10-07T08:00:00+04:30", "title": "فرصت‌های جدید برای دانشجویان افغانستان", "description": "گزینه‌های تازه و مهمی برای ادامه تحصیل معرفی شده است.", "image": "/destinations/germany.jpg", "href": "/magazine" },
@@ -21,6 +22,26 @@
       { "category": "خبر", "date": "2026-08-01T08:00:00+04:30", "title": "کارگاه آنلاین آمادگی پرونده برگزار شد", "description": "در این کارگاه، مراحل مهم آماده‌سازی اسناد بررسی شد.", "image": "/destinations/hungary.jpg", "href": "/magazine" },
       { "category": "خبر", "date": "2026-07-21T08:00:00+04:30", "title": "راهنمای جدید خدمات گلوبل ویژن", "description": "جزئیات خدمات و مسیر دریافت پشتیبانی بهتر منتشر شد.", "image": "/destinations/germany.jpg", "href": "/magazine" },
       { "category": "خبر", "date": "2026-07-11T08:00:00+04:30", "title": "پاسخ به پرسش‌های متداول متقاضیان", "description": "پاسخ‌های کوتاه به پرسش‌های رایج کاربران آماده شده است.", "image": "/destinations/italy.jpg", "href": "/magazine" }
+    ]
+  },
+  "popular": {
+    "title": "محبوب ترین ها"
+  },
+  "postDetail": {
+    "magazineLabel": "مجله",
+    "dateLabel": "11 اکتوبر 2026",
+    "viewLabel": "بازدید",
+    "readTime": "3 دقیقه مطالعه",
+    "backLabel": "بازگشت به مجله",
+    "highlight": "انتخاب درست امروز، مسیر تحصیلی روشن‌تری برای فردا می‌سازد.",
+    "shareLabel": "اشتراک‌گذاری",
+    "copyLabel": "کاپی لینک",
+    "relatedLabel": "مطالب مرتبط",
+    "quickAccessLabel": "دسترسی سریع",
+    "quickLinks": { "study": "تحصیل", "work": "کار", "travel": "سفر", "life": "زندگی", "visa": "ویزه", "migration": "مهاجرت" },
+    "paragraphs": [
+      "در گلوبل ویژن باور داریم که انتخاب آگاهانه، نخستین گام برای ساختن آینده‌ای روشن است.",
+      "تیم ما با بررسی نیازهای هر متقاضی، اطلاعات دقیق و راهنمایی عملی را در اختیار شما قرار می‌دهد تا مسیر تحصیلی خود را با اطمینان بیشتری دنبال کنید."
     ]
   },
   "articles": {

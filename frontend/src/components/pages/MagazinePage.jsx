@@ -8,6 +8,7 @@ function MagazinePage({ content, language }) {
       <PageHero {...content.hero} />
       <MagazineNewsSection content={content.news} language={language} />
       <MagazineArticlesSection content={{ ...content.articles, items: content.news.items }} />
+      <MagazineNewsSection content={{ ...content.news, title: content.popular.title }} language={language} titleId="magazine-popular-title" />
     </>
   )
 }
