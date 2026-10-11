@@ -1,0 +1,41 @@
+{
+  "hero": {
+    "eyebrow": "مجله",
+    "title": "تازه‌ترین مطالب و خبرها",
+    "breadcrumbs": [{ "label": "صفحه اصلی", "href": "/" }, { "label": "مجله" }],
+    "breadcrumbLabel": "مسیر صفحه"
+  },
+  "news": {
+    "title": "آخرین اخبار",
+    "previousLabel": "خبر قبلی",
+    "nextLabel": "خبر بعدی",
+    "paginationLabel": "صفحه‌های اخبار",
+    "pageLabel": "موقعیت شماره",
+    "items": [
+      { "category": "خبر", "date": "2026-10-11T08:00:00+04:30", "title": "آغاز فصل تازه مشاوره‌های تحصیلی", "description": "آخرین خبرها و اطلاعیه‌های گلوبل ویژن را دنبال کنید.", "image": "/destinations/united-kingdom.jpg", "href": "/magazine" },
+      { "category": "خبر", "date": "2026-10-07T08:00:00+04:30", "title": "فرصت‌های جدید برای دانشجویان افغانستان", "description": "گزینه‌های تازه و مهمی برای ادامه تحصیل معرفی شده است.", "image": "/destinations/germany.jpg", "href": "/magazine" },
+      { "category": "خبر", "date": "2026-09-11T08:00:00+04:30", "title": "به‌روزرسانی خدمات پذیرش و ویزه", "description": "روندهای جدید برای آماده‌سازی بهتر پرونده‌ها.", "image": "/destinations/italy.jpg", "href": "/magazine" },
+      { "category": "خبر", "date": "2026-09-01T08:00:00+04:30", "title": "شروع برنامه‌های تازه راهنمایی", "description": "برای انتخاب مسیر مناسب، اطلاعات تازه و کاربردی آماده شده است.", "image": "/destinations/france.jpg", "href": "/magazine" },
+      { "category": "خبر", "date": "2026-08-21T08:00:00+04:30", "title": "جلسه‌های مشاوره تخصصی توسعه یافت", "description": "اکنون متقاضیان می‌توانند از راهنمایی دقیق‌تری استفاده کنند.", "image": "/destinations/netherlands.jpg", "href": "/magazine" },
+      { "category": "خبر", "date": "2026-08-11T08:00:00+04:30", "title": "نکات تازه برای انتخاب کشور مقصد", "description": "اطلاعاتی برای مقایسه بهتر گزینه‌های تحصیلی و مهاجرتی.", "image": "/destinations/turkiye.jpg", "href": "/magazine" },
+      { "category": "خبر", "date": "2026-08-01T08:00:00+04:30", "title": "کارگاه آنلاین آمادگی پرونده برگزار شد", "description": "در این کارگاه، مراحل مهم آماده‌سازی اسناد بررسی شد.", "image": "/destinations/hungary.jpg", "href": "/magazine" },
+      { "category": "خبر", "date": "2026-07-21T08:00:00+04:30", "title": "راهنمای جدید خدمات گلوبل ویژن", "description": "جزئیات خدمات و مسیر دریافت پشتیبانی بهتر منتشر شد.", "image": "/destinations/germany.jpg", "href": "/magazine" },
+      { "category": "خبر", "date": "2026-07-11T08:00:00+04:30", "title": "پاسخ به پرسش‌های متداول متقاضیان", "description": "پاسخ‌های کوتاه به پرسش‌های رایج کاربران آماده شده است.", "image": "/destinations/italy.jpg", "href": "/magazine" }
+    ]
+  },
+  "articles": {
+    "title": "آخرین نوشته‌ها و مقالات",
+    "readMore": "ادامه مطلب",
+    "items": [
+      { "category": "تحصیل", "title": "چگونه برای انتخاب دانشگاه مناسب آماده شویم؟", "description": "چند نکته کاربردی برای تصمیم‌گیری آگاهانه درباره آینده تحصیلی.", "href": "/magazine", "image": "/destinations/hungary.jpg" },
+      { "category": "مهاجرت", "title": "مدارک مهم برای شروع یک پرونده موفق", "description": "راهنمایی کوتاه برای منظم‌سازی اسناد و مراحل ابتدایی.", "href": "/magazine", "image": "/destinations/turkiye.jpg" },
+      { "category": "راهنما", "title": "از مشاوره تا رسیدن به هدف", "description": "چطور با برنامه‌ریزی درست، مسیر خود را روشن‌تر کنیم.", "href": "/magazine", "image": "/destinations/france.jpg" },
+      { "category": "تحصیل", "title": "نکته‌هایی برای آماده‌سازی بهتر", "description": "با چند گام ساده، برنامه‌ریزی و آمادگی خود را بهتر کنید.", "href": "/magazine", "image": "/destinations/netherlands.jpg" },
+      { "category": "بورسیه", "title": "چطور فرصت‌های بورسیه را پیدا کنیم؟", "description": "روش‌هایی برای جستجو و بررسی فرصت‌های مناسب تحصیلی.", "href": "/magazine", "image": "/destinations/united-kingdom.jpg" },
+      { "category": "ویزه", "title": "آمادگی برای گفت‌وگوی ویزه", "description": "چند توصیه برای حضور مطمئن‌تر در مصاحبه ویزه.", "href": "/magazine", "image": "/destinations/germany.jpg" },
+      { "category": "مهاجرت", "title": "اشتباه‌های رایج در آماده‌سازی اسناد", "description": "با شناخت خطاهای رایج، روند پرونده خود را بهتر مدیریت کنید.", "href": "/magazine", "image": "/destinations/italy.jpg" },
+      { "category": "راهنما", "title": "برنامه‌ریزی برای یک مسیر روشن", "description": "چگونه هدف‌های خود را به گام‌های عملی تبدیل کنیم.", "href": "/magazine", "image": "/destinations/france.jpg" },
+      { "category": "تجربه", "title": "درس‌هایی از تجربه متقاضیان موفق", "description": "تجربه‌هایی که می‌تواند مسیر تصمیم‌گیری شما را ساده‌تر کند.", "href": "/magazine", "image": "/destinations/hungary.jpg" }
+    ]
+  }
+}

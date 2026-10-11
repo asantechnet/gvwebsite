@@ -44,7 +44,6 @@ function HeroSection({ content }) {
           <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
             <ActionLink
               href="/contact"
-              className="min-h-13 rounded-2xl px-7 text-sm font-extrabold shadow-lg sm:text-base"
             >
               {content.primaryAction}
             </ActionLink>
@@ -52,7 +51,6 @@ function HeroSection({ content }) {
               href="/opportunities"
               variant="outline"
               icon={null}
-              className="min-h-13 rounded-2xl px-7 text-sm font-extrabold sm:text-base"
             >
               {content.secondaryAction}
             </ActionLink>

@@ -38,11 +38,11 @@ function ScrollProgress() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5 bg-transparent"
+      className="pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5 overflow-hidden rounded-full bg-transparent"
     >
       <div
-        className="h-full origin-right rounded-full bg-primary transition-transform duration-100 ease-out"
-        style={{ transform: `scaleX(${progress})` }}
+        className="absolute inset-y-0 inset-s-0 rounded-full bg-primary transition-[width] duration-100 ease-out"
+        style={{ width: `${progress * 100}%` }}
       />
     </div>
   );

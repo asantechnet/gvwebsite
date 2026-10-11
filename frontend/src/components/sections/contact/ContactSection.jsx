@@ -1,64 +1,85 @@
-import { Mail, MapPin, Phone } from 'lucide-react'
+import { Mail, MapPin, Phone, Send } from 'lucide-react'
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTelegram } from 'react-icons/fa6'
 
 import Container from '@ui/Container.jsx'
+import Button from '@ui/Button.jsx'
 import Section from '@ui/Section.jsx'
 
 function ContactSection({ content }) {
   return (
-    <Section aria-labelledby="contact-section-title" className="bg-background">
+    <Section aria-labelledby="contact-section-title" className="bg-background text-foreground">
       <Container>
-        <div className="grid gap-4 lg:grid-cols-[0.8fr_1.2fr] lg:gap-6">
-          <div className="rounded-[2rem] bg-gradient-to-br from-brand-orange to-brand-red p-7 text-center text-brand-white sm:p-9 lg:text-start">
+        <div className="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-2 lg:gap-24">
+          <div className="mx-auto w-full max-w-sm text-right lg:order-1">
             <h2 id="contact-section-title" className="font-heading text-xl font-extrabold leading-tight md:text-2xl lg:text-3xl">
               {content.title}
             </h2>
-            <p className="mt-4 text-sm leading-8 text-brand-white/85 md:text-base md:leading-9">{content.description}</p>
-
-            <div className="mt-8 grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
+            <div className="mt-10 grid gap-6 sm:grid-cols-3 lg:grid-cols-1">
               {content.details.map((detail) => {
                 const icons = { phone: Phone, email: Mail, address: MapPin }
                 const Icon = icons[detail.type]
 
                 return (
-                  <div key={detail.type} className="flex items-center justify-center gap-3 text-center lg:justify-start lg:text-start">
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-white/15 text-brand-white">
+                  <div key={detail.type} className="flex items-center justify-start gap-4 text-right">
+                    <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-primary/50 text-primary">
                       <Icon aria-hidden="true" size={20} strokeWidth={1.8} />
                     </span>
                     <div>
-                      <p className="text-xs text-brand-white/70">{detail.label}</p>
-                      <p className="mt-1 text-sm font-bold text-brand-white">{detail.value}</p>
+                      <p className="text-xs text-foreground-muted">{detail.label}</p>
+                      <p dir={detail.type === 'phone' ? 'ltr' : undefined} className={`mt-1 text-sm font-bold text-foreground ${detail.type === 'phone' ? 'whitespace-nowrap text-right' : ''}`}>{detail.value}</p>
                     </div>
                   </div>
                 )
               })}
             </div>
+            <div className="mt-10 flex items-center justify-start gap-3" aria-label={content.socialLabel}>
+              {content.socials.map((social) => {
+                const icons = { facebook: FaFacebookF, instagram: FaInstagram, linkedin: FaLinkedinIn, telegram: FaTelegram }
+                const Icon = icons[social.type]
+
+                return (
+                  <span key={social.type} aria-label={social.label} title={social.label} className="flex size-10 items-center justify-center rounded-full border border-border text-foreground-muted transition-colors hover:border-primary hover:text-primary dark:border-gray-600">
+                    <Icon aria-hidden="true" size={17} />
+                  </span>
+                )
+              })}
+            </div>
           </div>
 
-          <form className="rounded-[2rem] border border-border bg-surface p-5 dark:border-gray-600 dark:bg-[#2b3442] sm:p-8" onSubmit={(event) => event.preventDefault()}>
-            <h3 className="font-heading text-xl font-extrabold text-foreground md:text-2xl">{content.form.title}</h3>
-            <p className="mt-2 text-sm leading-7 text-foreground-muted">{content.form.description}</p>
-            <div className="mt-6 grid gap-5 sm:grid-cols-2">
-              <label className="grid gap-2 text-sm font-bold text-foreground">
+          <form className="mx-auto w-full max-w-md text-right lg:order-2" onSubmit={(event) => event.preventDefault()}>
+            <h3 className="sr-only">{content.form.title}</h3>
+            <p className="sr-only">{content.form.description}</p>
+            <div className="grid gap-5">
+              <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.nameLabel}
-                <input className="min-h-12 rounded-xl border border-border bg-background px-4 text-sm font-normal text-foreground outline-none transition-colors placeholder:text-foreground-muted focus:border-primary dark:border-gray-600 dark:bg-[#1f2937]" type="text" placeholder={content.form.namePlaceholder} />
+                <input className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-right text-sm font-light text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" type="text" />
               </label>
-              <label className="grid gap-2 text-sm font-bold text-foreground">
-                {content.form.phoneLabel}
-                <input className="min-h-12 rounded-xl border border-border bg-background px-4 text-sm font-normal text-foreground outline-none transition-colors placeholder:text-foreground-muted focus:border-primary dark:border-gray-600 dark:bg-[#1f2937]" type="tel" placeholder={content.form.phonePlaceholder} />
-              </label>
-              <label className="grid gap-2 text-sm font-bold text-foreground sm:col-span-2">
+              <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.emailLabel}
-                <input className="min-h-12 rounded-xl border border-border bg-background px-4 text-sm font-normal text-foreground outline-none transition-colors placeholder:text-foreground-muted focus:border-primary dark:border-gray-600 dark:bg-[#1f2937]" type="email" placeholder={content.form.emailPlaceholder} />
+                <input dir="ltr" className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-right text-sm font-light text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" type="email" />
               </label>
-              <label className="grid gap-2 text-sm font-bold text-foreground sm:col-span-2">
+              <label className="grid gap-2 text-sm font-medium text-foreground">
+                {content.form.subjectLabel}
+                <input className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-right text-sm font-light text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" type="text" />
+              </label>
+              <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.messageLabel}
-                <textarea className="min-h-32 resize-y rounded-xl border border-border bg-background px-4 py-3 text-sm font-normal leading-7 text-foreground outline-none transition-colors placeholder:text-foreground-muted focus:border-primary dark:border-gray-600 dark:bg-[#1f2937]" placeholder={content.form.messagePlaceholder} />
+                <textarea className="min-h-32 resize-y rounded-xl border border-border bg-surface-muted px-3 py-2 text-right text-sm font-light leading-7 text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" />
               </label>
             </div>
-            <button type="submit" className="mt-6 min-h-12 w-full rounded-xl bg-primary px-6 font-bold text-on-primary transition-colors hover:bg-primary-hover focus-visible:bg-primary-hover">
+            <Button type="submit" icon={Send} className="mt-6 min-h-10 w-full border-brand-orange bg-brand-orange px-4 text-center text-sm shadow-md shadow-brand-orange/20 hover:border-primary-hover hover:bg-primary-hover hover:shadow-lg hover:shadow-brand-orange/30 sm:w-32">
               {content.form.submitLabel}
-            </button>
+            </Button>
           </form>
+        </div>
+        <div className="mx-auto mt-12 w-full max-w-5xl overflow-hidden rounded-3xl border border-border dark:border-gray-700">
+          <iframe
+            title={content.mapTitle}
+            src="https://www.google.com/maps?q=34.529568145213474,69.17050772740252&z=15&output=embed"
+            className="h-72 w-full rounded-2xl border-0 sm:h-96"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
         </div>
       </Container>
     </Section>

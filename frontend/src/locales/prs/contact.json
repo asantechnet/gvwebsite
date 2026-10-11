@@ -9,25 +9,28 @@
     "breadcrumbLabel": "مسیر صفحه"
   },
   "contact": {
-    "title": "برای گفت‌وگو آماده‌ایم",
-    "description": "اگر پرسشی دارید یا به راهنمایی نیاز دارید، پیام خود را برای ما بفرستید.",
+    "title": "آدرس های ارتباطی ما",
+    "mapTitle": "نقشه موقعیت Global Vision در کابل",
     "details": [
       { "type": "phone", "label": "تلفن", "value": "+93 700 000 000" },
       { "type": "email", "label": "ایمیل", "value": "info@globalvision.af" },
       { "type": "address", "label": "آدرس", "value": "کابل، افغانستان" }
     ],
+    "socialLabel": "شبکه‌های اجتماعی",
+    "socials": [
+      { "type": "facebook", "label": "فیسبوک" },
+      { "type": "instagram", "label": "اینستاگرام" },
+      { "type": "linkedin", "label": "لینکدین" },
+      { "type": "telegram", "label": "تلگرام" }
+    ],
     "form": {
       "title": "پیام خود را بفرستید",
       "description": "فرم زیر را تکمیل کنید؛ تیم ما در اولین فرصت با شما تماس می‌گیرد.",
-      "nameLabel": "نام شما",
-      "namePlaceholder": "نام خود را وارد کنید",
-      "phoneLabel": "شماره تماس",
-      "phonePlaceholder": "شماره تماس خود را وارد کنید",
+      "nameLabel": "نام",
+      "subjectLabel": "موضوع",
       "emailLabel": "ایمیل",
-      "emailPlaceholder": "ایمیل خود را وارد کنید",
-      "messageLabel": "پیام شما",
-      "messagePlaceholder": "پیام خود را بنویسید",
-      "submitLabel": "ارسال پیام"
+      "messageLabel": "پیام",
+      "submitLabel": "ارسال"
     }
   }
 }
