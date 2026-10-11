@@ -24,8 +24,9 @@
     ]
   },
   "articles": {
-    "title": "آخرین نوشته‌ها و مقالات",
+    "title": "نوشته ها و مقالات",
     "readMore": "ادامه مطلب",
+    "pagination": { "navigation": "صفحه‌بندی نوشته‌ها", "first": "صفحه اول", "previous": "صفحه قبلی", "next": "صفحه بعدی", "last": "صفحه آخر", "page": "صفحه" },
     "items": [
       { "category": "تحصیل", "title": "چگونه برای انتخاب دانشگاه مناسب آماده شویم؟", "description": "چند نکته کاربردی برای تصمیم‌گیری آگاهانه درباره آینده تحصیلی.", "href": "/magazine", "image": "/destinations/hungary.jpg" },
       { "category": "مهاجرت", "title": "مدارک مهم برای شروع یک پرونده موفق", "description": "راهنمایی کوتاه برای منظم‌سازی اسناد و مراحل ابتدایی.", "href": "/magazine", "image": "/destinations/turkiye.jpg" },

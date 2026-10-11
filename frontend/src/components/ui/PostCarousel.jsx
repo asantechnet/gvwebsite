@@ -6,7 +6,7 @@ import PostCard from '@ui/PostCard.jsx'
 
 const getVisibleCount = () => typeof window === 'undefined' ? 1 : window.innerWidth >= 1536 ? 5 : window.innerWidth >= 1024 ? 4 : window.innerWidth >= 768 ? 2 : 1
 
-function PostCarousel({ items, category, labels }) {
+function PostCarousel({ items, category, labels, language }) {
   const viewportRef = useRef(null)
   const pointerStartRef = useRef(null)
   const [visibleCount, setVisibleCount] = useState(getVisibleCount)
@@ -51,9 +51,29 @@ function PostCarousel({ items, category, labels }) {
   return (
     <div className="relative" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false) }}>
       <Button unstyled type="button" aria-label={labels.previous} onClick={() => move(-1)} className="absolute start-0 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-surface text-foreground shadow-md outline-none hover:border-primary hover:text-primary focus:outline-none focus-visible:ring-0 dark:border-gray-600 dark:bg-[#2b3442]"><ChevronRight aria-hidden="true" size={20} /></Button>
-      <div ref={viewportRef} className="mx-12 overflow-hidden px-2" onPointerDown={(event) => { pointerStartRef.current = event.clientX; setPaused(true) }} onPointerUp={(event) => { const distance = event.clientX - pointerStartRef.current; if (pointerStartRef.current !== null && Math.abs(distance) > 40) move(distance > 0 ? 1 : -1); pointerStartRef.current = null; setPaused(false) }} onPointerCancel={() => { pointerStartRef.current = null; setPaused(false) }}>
+      <div
+        ref={viewportRef}
+        className="mx-12 touch-pan-y cursor-grab overflow-hidden px-2 active:cursor-grabbing"
+        onPointerDown={(event) => {
+          event.currentTarget.setPointerCapture?.(event.pointerId)
+          pointerStartRef.current = event.clientX
+          setPaused(true)
+        }}
+        onPointerUp={(event) => {
+          const distance = event.clientX - pointerStartRef.current
+          if (pointerStartRef.current !== null && Math.abs(distance) > 40) move(distance > 0 ? 1 : -1)
+          pointerStartRef.current = null
+          setPaused(false)
+          event.currentTarget.releasePointerCapture?.(event.pointerId)
+        }}
+        onPointerCancel={(event) => {
+          pointerStartRef.current = null
+          setPaused(false)
+          event.currentTarget.releasePointerCapture?.(event.pointerId)
+        }}
+      >
         <div className="flex gap-3 ease-out [direction:rtl]" style={{ transform: `translateX(${activeIndex * (viewportRef.current ? (viewportRef.current.clientWidth - 16 + gap) / visibleCount : 0)}px)`, transition: resetting ? 'none' : 'transform 700ms ease-out' }}>
-          {loopItems.map((item, index) => <div key={`${item.title}-${index}`} className="shrink-0" style={{ width: cardWidth }}><PostCard post={postItems[index % items.length]} /></div>)}
+          {loopItems.map((item, index) => <div key={`${item.title}-${index}`} className="shrink-0" style={{ width: cardWidth }}><PostCard post={postItems[index % items.length]} language={language} /></div>)}
         </div>
       </div>
       <Button unstyled type="button" aria-label={labels.next} onClick={() => move(1)} className="absolute end-0 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-surface text-foreground shadow-md outline-none hover:border-primary hover:text-primary focus:outline-none focus-visible:ring-0 dark:border-gray-600 dark:bg-[#2b3442]"><ChevronLeft aria-hidden="true" size={20} /></Button>

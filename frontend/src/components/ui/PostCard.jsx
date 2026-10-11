@@ -1,6 +1,6 @@
 import { CalendarDays } from 'lucide-react'
 
-function formatRelativeDate(value) {
+function formatRelativeDate(value, language = document.documentElement.lang) {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return value
 
@@ -14,8 +14,6 @@ function formatRelativeDate(value) {
     ['minute', 60],
   ]
   const [unit, seconds] = units.find(([, unitSeconds]) => Math.abs(differenceInSeconds) >= unitSeconds) || ['second', 1]
-  const language = document.documentElement.lang
-
   if (language === 'ps') {
     const amount = Math.abs(Math.round(differenceInSeconds / seconds))
     const pashtoDigits = String(amount).replace(/\d/g, (digit) => '۰۱۲۳۴۵۶۷۸۹'[digit])
@@ -39,7 +37,7 @@ function formatRelativeDate(value) {
   return relativeTime.format(Math.round(differenceInSeconds / seconds), unit)
 }
 
-function PostCard({ post, readMore = '', variant = 'default' }) {
+function PostCard({ post, readMore = '', variant = 'default', language }) {
   const isFeatured = variant === 'featured'
 
   return (
@@ -53,7 +51,7 @@ function PostCard({ post, readMore = '', variant = 'default' }) {
       <div className="flex h-48 flex-col p-3 md:p-4">
         <div className="flex items-center justify-between gap-3 text-xs text-foreground-muted">
           <span className="rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary">{post.category}</span>
-          {post.date && <span className="inline-flex items-center gap-1"><CalendarDays aria-hidden="true" size={14} />{formatRelativeDate(post.date)}</span>}
+          {post.date && <span className="inline-flex items-center gap-1"><CalendarDays aria-hidden="true" size={14} />{formatRelativeDate(post.date, language)}</span>}
         </div>
         <h3 className={`mt-5 line-clamp-2 font-heading font-extrabold leading-7 text-foreground ${isFeatured ? 'text-lg md:text-xl' : 'text-base md:text-lg'}`}>{post.title}</h3>
         <p className="mt-3 line-clamp-2 text-sm leading-6 text-foreground-muted">{post.description}</p>

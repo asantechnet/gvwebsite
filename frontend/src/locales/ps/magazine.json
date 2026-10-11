@@ -24,8 +24,9 @@
     ]
   },
   "articles": {
-    "title": "وروستۍ لیکنې او مقالې",
+    "title": "لیکنې او مقالې",
     "readMore": "نور ولولئ",
+    "pagination": { "navigation": "د لیکنو پاڼې", "first": "لومړۍ پاڼه", "previous": "مخکینۍ پاڼه", "next": "راتلونکې پاڼه", "last": "وروستۍ پاڼه", "page": "پاڼه" },
     "items": [
       { "category": "زده‌کړې", "title": "د مناسب پوهنتون د انتخاب لپاره څنګه چمتو شو؟", "description": "د خپل تحصیلي راتلونکي لپاره د باخبره پرېکړې څو ګټورې لارښوونې.", "href": "/magazine", "image": "/destinations/hungary.jpg" },
       { "category": "مهاجرت", "title": "د بریالۍ دوسیې لپاره مهم اسناد", "description": "د اسنادو د منظمولو او لومړنیو پړاوونو لنډه لارښود.", "href": "/magazine", "image": "/destinations/turkiye.jpg" },

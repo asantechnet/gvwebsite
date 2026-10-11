@@ -58,7 +58,7 @@ function MainLayout({ children = null }) {
         onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))}
       />
       <main className="flex-1 pt-16 xl:pt-20">
-        {children ?? (page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} /> : page === '/magazine' ? <MagazinePage content={magazineContent} /> : <HomePage content={homeContent} />)}
+        {children ?? (page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} /> : page === '/magazine' ? <MagazinePage content={magazineContent} language={language} /> : <HomePage content={homeContent} />)}
       </main>
       <Footer content={footerContent} navigationContent={headerContent} />
     </div>

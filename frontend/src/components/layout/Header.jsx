@@ -19,7 +19,7 @@ import { headerNavigation } from "@/data/navigation.js";
 
 const noFocusOutline = "focus:outline-none focus-visible:outline-none";
 const iconButtonClasses =
-  "grid size-10 place-items-center rounded-xl border border-border bg-surface-muted text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700";
+  "grid size-9 place-items-center rounded-xl border border-border bg-surface-muted text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700";
 const navIcons = {
   home: House,
   opportunities: BriefcaseBusiness,
@@ -168,7 +168,7 @@ function Header({
       <div
         className={`w-full border-b border-border/70 bg-surface shadow-[0_8px_30px_rgba(41,23,18,0.04)] transition-transform duration-300 ease-out dark:border-gray-600 dark:bg-gray-700 ${isHeaderVisible ? "translate-y-0" : "-translate-y-full"}`}
       >
-        <Container className="flex min-h-20 items-center justify-between gap-6 py-1.5 max-md:min-h-16 max-md:py-1 md:max-xl:min-h-16 md:max-xl:py-1">
+        <Container className="flex min-h-18 items-center justify-between gap-6 py-1.5 max-md:min-h-15 md:max-xl:min-h-15">
           <a
             href="/"
             aria-label={content.homeLabel}
@@ -179,7 +179,7 @@ function Header({
               alt={content.logoAlt}
               width="1431"
               height="974"
-              className="m-0 h-12 w-auto p-0 object-contain lg:h-14 md:max-xl:h-12"
+              className="m-0 h-11 w-auto p-0 object-contain lg:h-13 md:max-xl:h-11"
             />
           </a>
 
@@ -236,7 +236,7 @@ function Header({
                 type="button"
                 aria-label={content.languageToggleLabel}
                 onClick={onLanguageToggle}
-                className={`inline-grid h-10 place-items-center rounded-xl border border-border bg-surface-muted px-4 text-center text-sm font-bold leading-none text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700 ${noFocusOutline}`}
+                className={`inline-grid h-9 place-items-center rounded-xl border border-border bg-surface-muted px-3 text-center text-xs font-bold leading-none text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700 ${noFocusOutline}`}
               >
                 <span lang={language}>{content.languageName}</span>
               </button>
@@ -248,9 +248,9 @@ function Header({
                 className={`${iconButtonClasses} ${noFocusOutline}`}
               >
                 {theme === "dark" ? (
-                  <Sun aria-hidden="true" className="size-5" />
+                  <Sun aria-hidden="true" className="size-4" />
                 ) : (
-                  <Moon aria-hidden="true" className="size-5" />
+                  <Moon aria-hidden="true" className="size-4" />
                 )}
               </button>
               <div className="relative">
@@ -263,7 +263,7 @@ function Header({
                   onClick={() => setIsSearchOpen((isOpen) => !isOpen)}
                   className={`${iconButtonClasses} ${noFocusOutline}`}
                 >
-                  <Search aria-hidden="true" className="size-5" />
+                  <Search aria-hidden="true" className="size-4" />
                 </button>
                 {isSearchOpen && (
                   <SearchPanel
@@ -277,7 +277,7 @@ function Header({
               </div>
               <a
                 href="/contact"
-                className={`hidden min-h-10 items-center justify-center rounded-xl border-2 border-primary bg-primary px-5 text-sm font-semibold text-brand-white shadow-[0_8px_20px_rgba(245,155,34,0.2)] transition-colors hover:border-primary-hover hover:bg-primary-hover dark:hover:border-[#db7f0e] dark:hover:bg-[#db7f0e] xl:inline-flex xl:px-6 xl:text-base ${noFocusOutline}`}
+                className={`hidden min-h-9 items-center justify-center rounded-xl border-2 border-primary bg-primary px-4 text-sm font-semibold text-brand-white shadow-[0_8px_20px_rgba(245,155,34,0.2)] transition-colors hover:border-primary-hover hover:bg-primary-hover dark:hover:border-[#db7f0e] dark:hover:bg-[#db7f0e] xl:inline-flex xl:px-5 xl:text-sm ${noFocusOutline}`}
               >
                 {content.consultationLabel}
               </a>
