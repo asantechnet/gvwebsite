@@ -4,7 +4,7 @@ This guide is the single source of truth for the Global Vision architecture, gen
 
 ## Current Status
 
-The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, `MainLayout`, responsive localized `Header` and `Footer` components, and shared UI components for sections, containers, headings, action links, and repeated card patterns are configured. The home page includes responsive hero, opportunity, destination, process, service, testimonial, and consultation sections with Dari and Pashto content. Shared navigation data and matching localized layout translations are implemented. Routing, additional pages, most reusable UI, Laravel backend, MariaDB integration, API, broader translation coverage, and CMS implementation has not started.
+The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, `MainLayout`, responsive localized `Header` and `Footer` components, and shared UI components for sections, containers, headings, action links, and repeated card patterns are configured. The home page includes responsive hero, opportunity, destination, process, service, testimonial, and consultation sections with Dari and Pashto content. Shared navigation data, matching localized layout translations, pathname-based page selection, and slug-based magazine post routes are implemented. A routing library, Laravel backend, MariaDB integration, API, broader translation coverage, and CMS implementation have not started.
 
 The repository currently contains:
 
@@ -198,7 +198,7 @@ Use aliases across source areas and relative imports for nearby files within one
 
 ## Routing Rules
 
-No routes or routing library are implemented yet. When routing begins:
+`MainLayout` currently selects pages from `window.location.pathname` without a routing dependency. Magazine posts use stable, language-independent paths in the form `/magazine/post/:slug`; matching Dari and Pashto records must share the same slug. Every child item under Opportunities and Services is content of type post, rendered with the shared single-post layout rather than a standalone page component. These posts may use their canonical navigation path, such as `/opportunities/study`. When routing expands or a routing library is introduced:
 
 - Centralize canonical paths and navigation data.
 - Use route constants rather than repeated strings.

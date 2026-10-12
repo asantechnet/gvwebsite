@@ -4,7 +4,7 @@ export const headerNavigation = [
     id: 'opportunities',
     href: '/opportunities',
     children: [
-      { id: 'academic', href: '/opportunities/academic' },
+      { id: 'study', href: '/opportunities/study' },
       { id: 'migration', href: '/opportunities/migration' },
       { id: 'work', href: '/opportunities/work' },
       { id: 'exams', href: '/opportunities/exams' },
@@ -21,7 +21,6 @@ export const headerNavigation = [
       { id: 'migrationRegistration', href: '/services/migration-registration' },
       { id: 'documentPreparation', href: '/services/document-preparation' },
       { id: 'documentProcess', href: '/services/document-process' },
-      { id: 'studyVisa', href: '/services/study-visa' },
       { id: 'visaResidence', href: '/services/visa-residence' },
     ],
   },

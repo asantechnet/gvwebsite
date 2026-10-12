@@ -13,15 +13,15 @@
     "pageLabel": "موقعیت شماره",
     "viewsLabel": "بازدید",
     "items": [
-      { "category": "خبر", "date": "2026-10-11T08:00:00+04:30", "title": "آغاز فصل تازه مشاوره‌های تحصیلی", "description": "آخرین خبرها و اطلاعیه‌های گلوبل ویژن را دنبال کنید.", "image": "/destinations/united-kingdom.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-10-07T08:00:00+04:30", "title": "فرصت‌های جدید برای دانشجویان افغانستان", "description": "گزینه‌های تازه و مهمی برای ادامه تحصیل معرفی شده است.", "image": "/destinations/germany.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-09-11T08:00:00+04:30", "title": "به‌روزرسانی خدمات پذیرش و ویزه", "description": "روندهای جدید برای آماده‌سازی بهتر پرونده‌ها.", "image": "/destinations/italy.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-09-01T08:00:00+04:30", "title": "شروع برنامه‌های تازه راهنمایی", "description": "برای انتخاب مسیر مناسب، اطلاعات تازه و کاربردی آماده شده است.", "image": "/destinations/france.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-08-21T08:00:00+04:30", "title": "جلسه‌های مشاوره تخصصی توسعه یافت", "description": "اکنون متقاضیان می‌توانند از راهنمایی دقیق‌تری استفاده کنند.", "image": "/destinations/netherlands.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-08-11T08:00:00+04:30", "title": "نکات تازه برای انتخاب کشور مقصد", "description": "اطلاعاتی برای مقایسه بهتر گزینه‌های تحصیلی و مهاجرتی.", "image": "/destinations/turkiye.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-08-01T08:00:00+04:30", "title": "کارگاه آنلاین آمادگی پرونده برگزار شد", "description": "در این کارگاه، مراحل مهم آماده‌سازی اسناد بررسی شد.", "image": "/destinations/hungary.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-07-21T08:00:00+04:30", "title": "راهنمای جدید خدمات گلوبل ویژن", "description": "جزئیات خدمات و مسیر دریافت پشتیبانی بهتر منتشر شد.", "image": "/destinations/germany.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-07-11T08:00:00+04:30", "title": "پاسخ به پرسش‌های متداول متقاضیان", "description": "پاسخ‌های کوتاه به پرسش‌های رایج کاربران آماده شده است.", "image": "/destinations/italy.jpg", "href": "/magazine" }
+      { "slug": "new-study-consultation-season", "category": "خبر", "date": "2026-10-11T08:00:00+04:30", "title": "آغاز فصل تازه مشاوره‌های تحصیلی", "description": "آخرین خبرها و اطلاعیه‌های گلوبل ویژن را دنبال کنید.", "image": "/destinations/united-kingdom.jpg", "href": "/magazine" },
+      { "slug": "new-opportunities-afghan-students", "category": "خبر", "date": "2026-10-07T08:00:00+04:30", "title": "فرصت‌های جدید برای دانشجویان افغانستان", "description": "گزینه‌های تازه و مهمی برای ادامه تحصیل معرفی شده است.", "image": "/destinations/germany.jpg", "href": "/magazine" },
+      { "slug": "admission-visa-services-update", "category": "خبر", "date": "2026-09-11T08:00:00+04:30", "title": "به‌روزرسانی خدمات پذیرش و ویزه", "description": "روندهای جدید برای آماده‌سازی بهتر پرونده‌ها.", "image": "/destinations/italy.jpg", "href": "/magazine" },
+      { "slug": "new-guidance-programs", "category": "خبر", "date": "2026-09-01T08:00:00+04:30", "title": "شروع برنامه‌های تازه راهنمایی", "description": "برای انتخاب مسیر مناسب، اطلاعات تازه و کاربردی آماده شده است.", "image": "/destinations/france.jpg", "href": "/magazine" },
+      { "slug": "expanded-specialist-consultations", "category": "خبر", "date": "2026-08-21T08:00:00+04:30", "title": "جلسه‌های مشاوره تخصصی توسعه یافت", "description": "اکنون متقاضیان می‌توانند از راهنمایی دقیق‌تری استفاده کنند.", "image": "/destinations/netherlands.jpg", "href": "/magazine" },
+      { "slug": "choosing-destination-country", "category": "خبر", "date": "2026-08-11T08:00:00+04:30", "title": "نکات تازه برای انتخاب کشور مقصد", "description": "اطلاعاتی برای مقایسه بهتر گزینه‌های تحصیلی و مهاجرتی.", "image": "/destinations/turkiye.jpg", "href": "/magazine" },
+      { "slug": "online-application-workshop", "category": "خبر", "date": "2026-08-01T08:00:00+04:30", "title": "کارگاه آنلاین آمادگی پرونده برگزار شد", "description": "در این کارگاه، مراحل مهم آماده‌سازی اسناد بررسی شد.", "image": "/destinations/hungary.jpg", "href": "/magazine" },
+      { "slug": "global-vision-services-guide", "category": "خبر", "date": "2026-07-21T08:00:00+04:30", "title": "راهنمای جدید خدمات گلوبل ویژن", "description": "جزئیات خدمات و مسیر دریافت پشتیبانی بهتر منتشر شد.", "image": "/destinations/germany.jpg", "href": "/magazine" },
+      { "slug": "applicant-frequently-asked-questions", "category": "خبر", "date": "2026-07-11T08:00:00+04:30", "title": "پاسخ به پرسش‌های متداول متقاضیان", "description": "پاسخ‌های کوتاه به پرسش‌های رایج کاربران آماده شده است.", "image": "/destinations/italy.jpg", "href": "/magazine" }
     ]
   },
   "popular": {
@@ -38,7 +38,7 @@
     "copyLabel": "کاپی لینک",
     "relatedLabel": "مطالب مرتبط",
     "quickAccessLabel": "دسترسی سریع",
-    "media": { "label": "رسانه‌های مطلب", "imageAlt": "تصویر مرتبط با مطلب", "imageLabel": "تصویر مطلب", "audioLabel": "فایل صوتی", "audioTitle": "پادکست مروری بر شرایط و مراحل مهاجرت تحصیلی", "speakerLabel": "گوینده", "speaker": "جلال شیبانی", "duration": "3 دقیقه", "audioDuration": "03:00", "rewindLabel": "5 ثانیه به عقب", "forwardLabel": "5 ثانیه به جلو", "speedLabel": "سرعت پخش", "videoTitle": "ویدیوی معرفی مسیرهای تحصیلی", "youtubeLabel": "ویدیوی یوتیوب", "youtubeTitle": "راهنمای انتخاب مسیر تحصیلی در یوتیوب", "playLabel": "پخش رسانه", "volumeLabel": "تنظیم صدا", "captionsLabel": "زیرنویس", "settingsLabel": "تنظیمات پخش", "fullscreenLabel": "تمام صفحه" },
+    "media": { "label": "رسانه‌های مطلب", "imageAlt": "تصویر مرتبط با مطلب", "imageLabel": "تصویری از شهر لندن", "audioLabel": "فایل صوتی", "audioTitle": "پادکست مروری بر شرایط و مراحل مهاجرت تحصیلی", "speakerLabel": "گوینده", "speaker": "عرفان نورزاده", "duration": "3 دقیقه", "audioDuration": "03:00", "rewindLabel": "5 ثانیه به عقب", "forwardLabel": "5 ثانیه به جلو", "speedLabel": "سرعت پخش", "videoTitle": "ویدیوی معرفی مسیرهای تحصیلی", "youtubeLabel": "ویدیوی یوتیوب", "youtubeTitle": "راهنمای انتخاب مسیر تحصیلی در یوتیوب", "playLabel": "پخش رسانه", "volumeLabel": "تنظیم صدا", "captionsLabel": "زیرنویس", "settingsLabel": "تنظیمات پخش", "fullscreenLabel": "تمام صفحه" },
     "quickLinks": { "study": "تحصیل", "work": "کار", "travel": "سفر", "life": "زندگی", "visa": "ویزه", "migration": "مهاجرت" },
     "paragraphs": [
       "در گلوبل ویژن باور داریم که انتخاب آگاهانه، نخستین گام برای ساختن آینده‌ای روشن است.",

@@ -195,6 +195,7 @@ function Header({
                   >
                     <NavigationIcon id={item.id} />
                     {content.navigation[item.id]}
+                    <ChevronDown aria-hidden="true" className="size-4 transition-transform duration-200 group-hover:rotate-180" />
                   </span>
                 ) : (
                   <a
@@ -277,7 +278,7 @@ function Header({
               </div>
               <a
                 href="/contact"
-                className={`hidden min-h-9 items-center justify-center rounded-xl border-2 border-primary bg-primary px-4 text-sm font-semibold text-brand-white shadow-[0_8px_20px_rgba(245,155,34,0.2)] transition-colors hover:border-primary-hover hover:bg-primary-hover dark:hover:border-[#db7f0e] dark:hover:bg-[#db7f0e] xl:inline-flex xl:px-5 xl:text-sm ${noFocusOutline}`}
+                className={`hidden h-10 min-h-10 items-center justify-center rounded-xl border-2 border-primary bg-primary px-4 text-sm font-semibold text-brand-white shadow-[0_8px_20px_rgba(245,155,34,0.2)] transition-colors hover:border-primary-hover hover:bg-primary-hover dark:hover:border-[#db7f0e] dark:hover:bg-[#db7f0e] xl:inline-flex xl:px-5 xl:text-sm ${noFocusOutline}`}
               >
                 {content.consultationLabel}
               </a>

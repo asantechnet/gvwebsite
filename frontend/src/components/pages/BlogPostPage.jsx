@@ -40,7 +40,7 @@ function MediaShowcase({ post, content }) {
         <div className="pointer-events-none absolute inset-0 opacity-60 [background-image:repeating-linear-gradient(100deg,transparent_0,transparent_18px,rgba(245,155,34,0.12)_19px,transparent_20px)]" aria-hidden="true" />
         <div className="relative flex flex-col gap-6 md:flex-row-reverse md:items-center md:gap-8">
           <div className="flex shrink-0 flex-col items-center gap-2 md:w-40 md:gap-3">
-            <img src="/avatars/avatar.png" alt={content.media.speaker} className="size-20 rounded-full border-4 border-white object-cover shadow-md dark:border-gray-700 md:size-32" />
+            <img src="/profile%20images/erfan.webp" alt={content.media.speaker} className="size-20 rounded-full border-4 border-gray-300 object-cover shadow-md dark:border-gray-600 md:size-32" />
           </div>
           <div className="relative min-w-0 flex-1 text-center md:text-right">
             <h3 className="break-words font-heading text-base font-extrabold leading-7 md:text-2xl md:leading-9">{content.media.audioTitle}</h3>
@@ -113,6 +113,9 @@ function MediaShowcase({ post, content }) {
 function BlogPostPage({ post, content, relatedPosts = [] }) {
   const [isShareMenuOpen, setIsShareMenuOpen] = useState(false)
   const shareMenuRef = useRef(null)
+  const parentLabel = content.parentLabel || content.magazineLabel
+  const parentHref = content.parentHref || '/magazine'
+  const backHref = content.backHref || '/magazine'
 
   useEffect(() => {
     if (!isShareMenuOpen) return undefined
@@ -130,12 +133,12 @@ function BlogPostPage({ post, content, relatedPosts = [] }) {
       <Section padded={false} className="bg-background py-6 md:py-10 lg:py-14">
       <Container>
         <div className="mx-auto mb-5 max-w-5xl text-right text-sm text-foreground-muted">
-          <a href="/magazine" className="transition-colors hover:text-primary">{content.magazineLabel}</a>
+          <a href={parentHref} className="transition-colors hover:text-primary">{parentLabel}</a>
           <span className="mx-2 text-primary">/</span>
           <span>{post.title}</span>
         </div>
-        <article className="mx-auto max-w-5xl overflow-hidden rounded-[2rem] border border-border bg-surface shadow-sm dark:border-gray-700 dark:bg-[#2b3442]">
-          <div className="relative aspect-[16/8] overflow-hidden md:aspect-[16/7]">
+        <article className="mx-auto max-w-5xl rounded-[2rem] border border-border bg-surface shadow-sm dark:border-gray-700 dark:bg-[#2b3442]">
+          <div className="relative aspect-[16/8] overflow-hidden rounded-t-[2rem] md:aspect-[16/7]">
             <img src={post.image} alt={post.imageAlt || post.title} className="h-full w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" aria-hidden="true" />
             <div className="absolute inset-x-5 bottom-5 text-right text-white md:inset-x-10 md:bottom-10">
@@ -173,28 +176,34 @@ function BlogPostPage({ post, content, relatedPosts = [] }) {
                 </span>
               </div>
               <div className="mt-8 flex justify-center lg:justify-start">
-                <a href="/magazine" className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold !text-[#fff8f3] transition-colors hover:bg-primary-hover focus-visible:bg-primary-hover">
+                <a href={backHref} className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold !text-[#fff8f3] transition-colors hover:bg-primary-hover focus-visible:bg-primary-hover">
                   <ArrowRight aria-hidden="true" size={17} />
                   {content.backLabel}
                 </a>
               </div>
             </div>
 
-            <aside className="order-2 flex h-fit flex-row flex-wrap justify-end gap-3 border-b border-border pb-5 text-right text-sm text-foreground-muted dark:border-gray-600 lg:sticky lg:top-6 lg:order-2 lg:flex-col lg:flex-nowrap lg:items-end lg:border-b-0 lg:border-r lg:pb-0 lg:pr-6">
-              <span className="hidden w-fit self-start rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary lg:block">{post.category}</span>
-              <span className="hidden items-center gap-2 self-start lg:inline-flex"><Clock3 aria-hidden="true" size={17} />{content.readTime}</span>
-              <div className="mt-5 w-full border-t border-border pt-5 text-right dark:border-gray-600">
-                <h2 className="mb-4 text-center font-heading text-lg font-extrabold text-foreground lg:text-right">{content.quickAccessLabel}</h2>
-                <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-2">
-                  {[[GraduationCap, content.quickLinks.study], [BriefcaseBusiness, content.quickLinks.work], [Plane, content.quickLinks.travel], [House, content.quickLinks.life], [ShieldCheck, content.quickLinks.visa], [UsersRound, content.quickLinks.migration]].map(([Icon, label]) => <a key={label} href="/magazine" className="flex flex-col items-center gap-1 rounded-xl border border-border px-2 py-3 text-center text-xs text-foreground-muted transition-colors hover:border-primary hover:text-primary dark:border-gray-600"><Icon size={20} /><span className="font-bold">{label}</span></a>)}
+            <aside className="order-2 h-fit self-start border-b border-border pb-5 text-right text-sm text-foreground-muted dark:border-gray-600 lg:sticky lg:top-20 lg:order-2 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-6">
+              <div className="w-full lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:overscroll-contain lg:pe-2 lg:[scrollbar-width:none] lg:[&::-webkit-scrollbar]:hidden">
+                <div className="w-full">
+                  <div className="hidden flex-col items-start gap-3 lg:flex">
+                    <span className="w-fit rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary">{post.category}</span>
+                    <span className="inline-flex items-center gap-2"><Clock3 aria-hidden="true" size={17} />{content.readTime}</span>
+                  </div>
+                  <div className="mt-5 w-full border-t border-border pt-5 text-right dark:border-gray-600">
+                    <h2 className="mb-4 text-center font-heading text-lg font-extrabold text-foreground lg:text-right">{content.quickAccessLabel}</h2>
+                    <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-2">
+                      {[[GraduationCap, content.quickLinks.study], [BriefcaseBusiness, content.quickLinks.work], [Plane, content.quickLinks.travel], [House, content.quickLinks.life], [ShieldCheck, content.quickLinks.visa], [UsersRound, content.quickLinks.migration]].map(([Icon, label]) => <a key={label} href="/magazine" className="flex flex-col items-center gap-1 rounded-xl border border-border px-2 py-3 text-center text-xs text-foreground-muted transition-colors hover:border-primary hover:text-primary dark:border-gray-600"><Icon size={20} /><span className="font-bold">{label}</span></a>)}
+                    </div>
+                  </div>
                 </div>
+                {relatedPosts.length > 0 && <div className="mt-5 w-full border-t border-border pt-5 text-right dark:border-gray-600">
+                  <h2 className="mb-4 text-center font-heading text-lg font-extrabold text-foreground lg:text-right">{content.relatedLabel}</h2>
+                  <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-1">
+                    {relatedPosts.slice(0, 3).map((relatedPost) => <PostCard key={relatedPost.title} post={relatedPost} />)}
+                  </div>
+                </div>}
               </div>
-              {relatedPosts.length > 0 && <div className="mt-5 w-full border-t border-border pt-5 text-right dark:border-gray-600">
-                <h2 className="mb-4 text-center font-heading text-lg font-extrabold text-foreground lg:text-right">{content.relatedLabel}</h2>
-                <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-1">
-                  {relatedPosts.slice(0, 3).map((relatedPost) => <PostCard key={relatedPost.title} post={relatedPost} />)}
-                </div>
-              </div>}
             </aside>
           </div>
         </article>

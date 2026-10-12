@@ -36,12 +36,12 @@
     "viewAll": "مشاهده همه فرصت‌ها",
     "cards": [
       {
-        "id": "academic",
+        "id": "study",
         "number": "01",
         "title": "فرصت‌های تحصیلی",
         "description": "برای ادامه تحصیل، انتخاب رشته و پیدا کردن مسیر مناسب آموزشی راهنمایی بگیرید.",
         "action": "مشاهده فرصت‌های تحصیلی",
-        "href": "/opportunities/academic"
+        "href": "/opportunities/study"
       },
       {
         "id": "migration",

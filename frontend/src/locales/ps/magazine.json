@@ -13,15 +13,15 @@
     "pageLabel": "د موقعیت شمېره",
     "viewsLabel": "کتنې",
     "items": [
-      { "category": "خبر", "date": "2026-10-11T08:00:00+04:30", "title": "د تحصیلي مشورې نوی پړاو پیل شو", "description": "د ګلوبل ویژن وروستي خبرونه او خبرتیاوې تعقیب کړئ.", "image": "/destinations/united-kingdom.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-10-07T08:00:00+04:30", "title": "د افغان زده‌کوونکو لپاره نوي فرصتونه", "description": "د زده‌کړو د دوام لپاره نوي او مهم انتخابونه معرفي شوي دي.", "image": "/destinations/germany.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-09-11T08:00:00+04:30", "title": "د منلو او ویزې خدمتونو تازه بدلونونه", "description": "د دوسیو د ښه چمتو کولو لپاره نوي معلومات.", "image": "/destinations/italy.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-09-01T08:00:00+04:30", "title": "د لارښوونې د نویو پروګرامونو پیل", "description": "د مناسبې لارې د ټاکلو لپاره نوي او ګټور معلومات چمتو شوي دي.", "image": "/destinations/france.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-08-21T08:00:00+04:30", "title": "د تخصصي مشورو پراختیا", "description": "اوس غوښتونکي کولی شي له لا دقیقې لارښوونې څخه ګټه واخلي.", "image": "/destinations/netherlands.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-08-11T08:00:00+04:30", "title": "د مقصد هېواد د انتخاب لپاره نوي ټکي", "description": "د تحصیلي او مهاجرتي انتخابونو د ښه پرتله کولو معلومات.", "image": "/destinations/turkiye.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-08-01T08:00:00+04:30", "title": "د دوسیې د چمتووالي آنلاین ورکشاپ", "description": "په دې ورکشاپ کې د اسنادو مهم پړاوونه وڅېړل شول.", "image": "/destinations/hungary.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-07-21T08:00:00+04:30", "title": "د ګلوبل ویژن د خدمتونو نوی لارښود", "description": "د خدمتونو او ملاتړ د ترلاسه کولو جزئیات خپاره شول.", "image": "/destinations/germany.jpg", "href": "/magazine" },
-      { "category": "خبر", "date": "2026-07-11T08:00:00+04:30", "title": "د غوښتونکو عامو پوښتنو ته ځوابونه", "description": "د کاروونکو د عامو پوښتنو لپاره لنډ ځوابونه چمتو شوي دي.", "image": "/destinations/italy.jpg", "href": "/magazine" }
+      { "slug": "new-study-consultation-season", "category": "خبر", "date": "2026-10-11T08:00:00+04:30", "title": "د تحصیلي مشورې نوی پړاو پیل شو", "description": "د ګلوبل ویژن وروستي خبرونه او خبرتیاوې تعقیب کړئ.", "image": "/destinations/united-kingdom.jpg", "href": "/magazine" },
+      { "slug": "new-opportunities-afghan-students", "category": "خبر", "date": "2026-10-07T08:00:00+04:30", "title": "د افغان زده‌کوونکو لپاره نوي فرصتونه", "description": "د زده‌کړو د دوام لپاره نوي او مهم انتخابونه معرفي شوي دي.", "image": "/destinations/germany.jpg", "href": "/magazine" },
+      { "slug": "admission-visa-services-update", "category": "خبر", "date": "2026-09-11T08:00:00+04:30", "title": "د منلو او ویزې خدمتونو تازه بدلونونه", "description": "د دوسیو د ښه چمتو کولو لپاره نوي معلومات.", "image": "/destinations/italy.jpg", "href": "/magazine" },
+      { "slug": "new-guidance-programs", "category": "خبر", "date": "2026-09-01T08:00:00+04:30", "title": "د لارښوونې د نویو پروګرامونو پیل", "description": "د مناسبې لارې د ټاکلو لپاره نوي او ګټور معلومات چمتو شوي دي.", "image": "/destinations/france.jpg", "href": "/magazine" },
+      { "slug": "expanded-specialist-consultations", "category": "خبر", "date": "2026-08-21T08:00:00+04:30", "title": "د تخصصي مشورو پراختیا", "description": "اوس غوښتونکي کولی شي له لا دقیقې لارښوونې څخه ګټه واخلي.", "image": "/destinations/netherlands.jpg", "href": "/magazine" },
+      { "slug": "choosing-destination-country", "category": "خبر", "date": "2026-08-11T08:00:00+04:30", "title": "د مقصد هېواد د انتخاب لپاره نوي ټکي", "description": "د تحصیلي او مهاجرتي انتخابونو د ښه پرتله کولو معلومات.", "image": "/destinations/turkiye.jpg", "href": "/magazine" },
+      { "slug": "online-application-workshop", "category": "خبر", "date": "2026-08-01T08:00:00+04:30", "title": "د دوسیې د چمتووالي آنلاین ورکشاپ", "description": "په دې ورکشاپ کې د اسنادو مهم پړاوونه وڅېړل شول.", "image": "/destinations/hungary.jpg", "href": "/magazine" },
+      { "slug": "global-vision-services-guide", "category": "خبر", "date": "2026-07-21T08:00:00+04:30", "title": "د ګلوبل ویژن د خدمتونو نوی لارښود", "description": "د خدمتونو او ملاتړ د ترلاسه کولو جزئیات خپاره شول.", "image": "/destinations/germany.jpg", "href": "/magazine" },
+      { "slug": "applicant-frequently-asked-questions", "category": "خبر", "date": "2026-07-11T08:00:00+04:30", "title": "د غوښتونکو عامو پوښتنو ته ځوابونه", "description": "د کاروونکو د عامو پوښتنو لپاره لنډ ځوابونه چمتو شوي دي.", "image": "/destinations/italy.jpg", "href": "/magazine" }
     ]
   },
   "popular": {
@@ -38,7 +38,7 @@
     "copyLabel": "د لینک کاپي",
     "relatedLabel": "اړوند مطالب",
     "quickAccessLabel": "چټک لاسرسی",
-    "media": { "label": "د مطلب رسنۍ", "imageAlt": "له مطلب سره اړوند انځور", "imageLabel": "د مطلب انځور", "audioLabel": "غږیزه فایل", "audioTitle": "د تحصیلي مهاجرت د شرایطو او پړاوونو لنډه کتنه", "speakerLabel": "ویاند", "speaker": "جلال شیباني", "duration": "3 دقیقې", "audioDuration": "03:00", "rewindLabel": "5 ثانیې شاته", "forwardLabel": "5 ثانیې مخکې", "speedLabel": "د چټکتیا کچه", "videoTitle": "د تحصیلي مسیرونو د پېژندنې ویډیو", "youtubeLabel": "د یوټیوب ویډیو", "youtubeTitle": "په یوټیوب کې د تحصیلي مسیر د انتخاب لارښود", "playLabel": "رسنۍ چالانول", "volumeLabel": "د غږ تنظیم", "captionsLabel": "فرعي سرلیکونه", "settingsLabel": "د خپرولو تنظیمات", "fullscreenLabel": "بشپړه پرده" },
+    "media": { "label": "د مطلب رسنۍ", "imageAlt": "له مطلب سره اړوند انځور", "imageLabel": "د لندن ښار انځور", "audioLabel": "غږیزه فایل", "audioTitle": "د تحصیلي مهاجرت د شرایطو او پړاوونو لنډه کتنه", "speakerLabel": "ویاند", "speaker": "عرفان نورزاده", "duration": "3 دقیقې", "audioDuration": "03:00", "rewindLabel": "5 ثانیې شاته", "forwardLabel": "5 ثانیې مخکې", "speedLabel": "د چټکتیا کچه", "videoTitle": "د تحصیلي مسیرونو د پېژندنې ویډیو", "youtubeLabel": "د یوټیوب ویډیو", "youtubeTitle": "په یوټیوب کې د تحصیلي مسیر د انتخاب لارښود", "playLabel": "رسنۍ چالانول", "volumeLabel": "د غږ تنظیم", "captionsLabel": "فرعي سرلیکونه", "settingsLabel": "د خپرولو تنظیمات", "fullscreenLabel": "بشپړه پرده" },
     "quickLinks": { "study": "زده‌کړې", "work": "کار", "travel": "سفر", "life": "ژوند", "visa": "ویزه", "migration": "مهاجرت" },
     "paragraphs": [
       "موږ په ګلوبل ویژن کې باور لرو چې باخبره انتخاب د روښانه راتلونکي لپاره لومړی ګام دی.",

@@ -6,7 +6,7 @@ import Section from "@ui/Section.jsx";
 import SectionHeading from "@ui/SectionHeading.jsx";
 
 const opportunityIcons = {
-  academic: GraduationCap,
+  study: GraduationCap,
   migration: Plane,
   work: BriefcaseBusiness,
 };

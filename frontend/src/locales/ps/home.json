@@ -36,12 +36,12 @@
     "viewAll": "ټول فرصتونه وګورئ",
     "cards": [
       {
-        "id": "academic",
+        "id": "study",
         "number": "01",
         "title": "د زده کړو فرصتونه",
         "description": "د زده کړو د دوام، څانګې ټاکلو او مناسبې تعلیمي لارې لپاره لارښوونه ترلاسه کړئ.",
         "action": "د زده کړو فرصتونه وګورئ",
-        "href": "/opportunities/academic"
+        "href": "/opportunities/study"
       },
       {
         "id": "migration",

@@ -20,6 +20,8 @@ import pashtoHomeContent from '@/locales/ps/home.json'
 import pashtoAboutContent from '@/locales/ps/about.json'
 import pashtoContactContent from '@/locales/ps/contact.json'
 import pashtoMagazineContent from '@/locales/ps/magazine.json'
+import dariOpportunitiesContent from '@/locales/prs/opportunities.json'
+import pashtoOpportunitiesContent from '@/locales/ps/opportunities.json'
 
 function MainLayout({ children = null }) {
   const [theme, setTheme] = useState(() => {
@@ -34,8 +36,11 @@ function MainLayout({ children = null }) {
   const aboutContent = language === 'prs' ? dariAboutContent : pashtoAboutContent
   const contactContent = language === 'prs' ? dariContactContent : pashtoContactContent
   const magazineContent = language === 'prs' ? dariMagazineContent : pashtoMagazineContent
+  const opportunitiesContent = language === 'prs' ? dariOpportunitiesContent : pashtoOpportunitiesContent
   const page = window.location.pathname.replace(/\/$/, '') || '/'
   const isBlogPost = page.startsWith('/magazine/post/')
+  const postSlug = isBlogPost ? decodeURIComponent(page.slice('/magazine/post/'.length)) : ''
+  const selectedPost = magazineContent.news.items.find((post) => post.slug === postSlug)
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
@@ -60,7 +65,7 @@ function MainLayout({ children = null }) {
         onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))}
       />
       <main className="flex-1 pt-16 xl:pt-20">
-        {children ?? (page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} /> : isBlogPost ? <BlogPostPage post={magazineContent.news.items[0]} content={magazineContent.postDetail} relatedPosts={magazineContent.news.items.filter((relatedPost) => relatedPost.category === magazineContent.news.items[0].category).slice(1, 6)} /> : page === '/magazine' ? <MagazinePage content={magazineContent} language={language} /> : <HomePage content={homeContent} />)}
+        {children ?? (page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} /> : page === '/opportunities/study' ? <BlogPostPage post={opportunitiesContent.study.post} content={opportunitiesContent.study.postDetail} /> : isBlogPost && selectedPost ? <BlogPostPage post={selectedPost} content={magazineContent.postDetail} relatedPosts={magazineContent.news.items.filter((relatedPost) => relatedPost.slug !== selectedPost.slug && relatedPost.category === selectedPost.category).slice(0, 5)} /> : page === '/magazine' ? <MagazinePage content={magazineContent} language={language} /> : <HomePage content={homeContent} />)}
       </main>
       <Footer content={footerContent} navigationContent={headerContent} />
     </div>
