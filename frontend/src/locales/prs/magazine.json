@@ -38,6 +38,7 @@
     "copyLabel": "کاپی لینک",
     "relatedLabel": "مطالب مرتبط",
     "quickAccessLabel": "دسترسی سریع",
+    "media": { "label": "رسانه‌های مطلب", "imageAlt": "تصویر مرتبط با مطلب", "imageLabel": "تصویر مطلب", "audioLabel": "فایل صوتی", "audioTitle": "پادکست مروری بر شرایط و مراحل مهاجرت تحصیلی", "speakerLabel": "گوینده", "speaker": "جلال شیبانی", "duration": "3 دقیقه", "audioDuration": "03:00", "rewindLabel": "5 ثانیه به عقب", "forwardLabel": "5 ثانیه به جلو", "speedLabel": "سرعت پخش", "videoTitle": "ویدیوی معرفی مسیرهای تحصیلی", "youtubeLabel": "ویدیوی یوتیوب", "youtubeTitle": "راهنمای انتخاب مسیر تحصیلی در یوتیوب", "playLabel": "پخش رسانه", "volumeLabel": "تنظیم صدا", "captionsLabel": "زیرنویس", "settingsLabel": "تنظیمات پخش", "fullscreenLabel": "تمام صفحه" },
     "quickLinks": { "study": "تحصیل", "work": "کار", "travel": "سفر", "life": "زندگی", "visa": "ویزه", "migration": "مهاجرت" },
     "paragraphs": [
       "در گلوبل ویژن باور داریم که انتخاب آگاهانه، نخستین گام برای ساختن آینده‌ای روشن است.",

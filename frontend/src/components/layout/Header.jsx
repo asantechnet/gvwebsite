@@ -19,7 +19,7 @@ import { headerNavigation } from "@/data/navigation.js";
 
 const noFocusOutline = "focus:outline-none focus-visible:outline-none";
 const iconButtonClasses =
-  "grid size-9 place-items-center rounded-xl border border-border bg-surface-muted text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700";
+  "grid size-10 place-items-center rounded-xl border border-border bg-surface-muted text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700";
 const navIcons = {
   home: House,
   opportunities: BriefcaseBusiness,
@@ -236,7 +236,7 @@ function Header({
                 type="button"
                 aria-label={content.languageToggleLabel}
                 onClick={onLanguageToggle}
-                className={`inline-grid h-9 place-items-center rounded-xl border border-border bg-surface-muted px-3 text-center text-xs font-bold leading-none text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700 ${noFocusOutline}`}
+                className={`inline-grid h-10 place-items-center rounded-xl border border-border bg-surface-muted px-3 text-center text-xs font-bold leading-none text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700 ${noFocusOutline}`}
               >
                 <span lang={language}>{content.languageName}</span>
               </button>

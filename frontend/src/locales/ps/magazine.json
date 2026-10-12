@@ -38,6 +38,7 @@
     "copyLabel": "د لینک کاپي",
     "relatedLabel": "اړوند مطالب",
     "quickAccessLabel": "چټک لاسرسی",
+    "media": { "label": "د مطلب رسنۍ", "imageAlt": "له مطلب سره اړوند انځور", "imageLabel": "د مطلب انځور", "audioLabel": "غږیزه فایل", "audioTitle": "د تحصیلي مهاجرت د شرایطو او پړاوونو لنډه کتنه", "speakerLabel": "ویاند", "speaker": "جلال شیباني", "duration": "3 دقیقې", "audioDuration": "03:00", "rewindLabel": "5 ثانیې شاته", "forwardLabel": "5 ثانیې مخکې", "speedLabel": "د چټکتیا کچه", "videoTitle": "د تحصیلي مسیرونو د پېژندنې ویډیو", "youtubeLabel": "د یوټیوب ویډیو", "youtubeTitle": "په یوټیوب کې د تحصیلي مسیر د انتخاب لارښود", "playLabel": "رسنۍ چالانول", "volumeLabel": "د غږ تنظیم", "captionsLabel": "فرعي سرلیکونه", "settingsLabel": "د خپرولو تنظیمات", "fullscreenLabel": "بشپړه پرده" },
     "quickLinks": { "study": "زده‌کړې", "work": "کار", "travel": "سفر", "life": "ژوند", "visa": "ویزه", "migration": "مهاجرت" },
     "paragraphs": [
       "موږ په ګلوبل ویژن کې باور لرو چې باخبره انتخاب د روښانه راتلونکي لپاره لومړی ګام دی.",

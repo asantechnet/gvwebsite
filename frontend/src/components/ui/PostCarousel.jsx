@@ -10,6 +10,7 @@ function PostCarousel({ items, category, labels, language }) {
   const viewportRef = useRef(null)
   const pointerStartRef = useRef(null)
   const [visibleCount, setVisibleCount] = useState(getVisibleCount)
+  const [viewportWidth, setViewportWidth] = useState(0)
   const [activeIndex, setActiveIndex] = useState(getVisibleCount())
   const [paused, setPaused] = useState(false)
   const [resetting, setResetting] = useState(false)
@@ -21,7 +22,8 @@ function PostCarousel({ items, category, labels, language }) {
   const gap = 12
 
   useEffect(() => {
-    const resize = () => { const count = getVisibleCount(); setVisibleCount(count); setActiveIndex(count) }
+    const resize = () => { const count = getVisibleCount(); setVisibleCount(count); setActiveIndex(count); setViewportWidth(viewportRef.current?.clientWidth || 0) }
+    resize()
     window.addEventListener('resize', resize)
     return () => window.removeEventListener('resize', resize)
   }, [items.length])
@@ -72,7 +74,7 @@ function PostCarousel({ items, category, labels, language }) {
           event.currentTarget.releasePointerCapture?.(event.pointerId)
         }}
       >
-        <div className="flex gap-3 ease-out [direction:rtl]" style={{ transform: `translateX(${activeIndex * (viewportRef.current ? (viewportRef.current.clientWidth - 16 + gap) / visibleCount : 0)}px)`, transition: resetting ? 'none' : 'transform 700ms ease-out' }}>
+        <div className="flex gap-3 ease-out [direction:rtl]" style={{ transform: `translateX(${activeIndex * (viewportWidth ? (viewportWidth - 16 + gap) / visibleCount : 0)}px)`, transition: resetting ? 'none' : 'transform 700ms ease-out' }}>
           {loopItems.map((item, index) => <div key={`${item.title}-${index}`} className="shrink-0" style={{ width: cardWidth }}><PostCard post={postItems[index % items.length]} language={language} viewsLabel={labels.viewsLabel} /></div>)}
         </div>
       </div>
