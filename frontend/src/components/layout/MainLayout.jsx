@@ -41,6 +41,8 @@ function MainLayout({ children = null }) {
   const isBlogPost = page.startsWith('/magazine/post/')
   const postSlug = isBlogPost ? decodeURIComponent(page.slice('/magazine/post/'.length)) : ''
   const selectedPost = magazineContent.news.items.find((post) => post.slug === postSlug)
+  const opportunitySlug = page.startsWith('/opportunities/') ? page.slice('/opportunities/'.length) : ''
+  const opportunity = opportunitiesContent[opportunitySlug]
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
@@ -65,7 +67,7 @@ function MainLayout({ children = null }) {
         onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))}
       />
       <main className="flex-1 pt-16 xl:pt-20">
-        {children ?? (page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} /> : page === '/opportunities/study' ? <BlogPostPage post={opportunitiesContent.study.post} content={opportunitiesContent.study.postDetail} /> : isBlogPost && selectedPost ? <BlogPostPage post={selectedPost} content={magazineContent.postDetail} relatedPosts={magazineContent.news.items.filter((relatedPost) => relatedPost.slug !== selectedPost.slug && relatedPost.category === selectedPost.category).slice(0, 5)} /> : page === '/magazine' ? <MagazinePage content={magazineContent} language={language} /> : <HomePage content={homeContent} />)}
+        {children ?? (page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} /> : opportunity ? <BlogPostPage post={opportunity.post} content={opportunity.postDetail} /> : isBlogPost && selectedPost ? <BlogPostPage post={selectedPost} content={magazineContent.postDetail} relatedPosts={magazineContent.news.items.filter((relatedPost) => relatedPost.slug !== selectedPost.slug && relatedPost.category === selectedPost.category).slice(0, 5)} /> : page === '/magazine' ? <MagazinePage content={magazineContent} language={language} /> : <HomePage content={homeContent} />)}
       </main>
       <Footer content={footerContent} navigationContent={headerContent} />
     </div>

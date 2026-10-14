@@ -26,6 +26,18 @@ function RichPostContent({ content }) {
         {section.items?.length > 0 && <ul className="mt-4 grid gap-3 sm:grid-cols-2">{section.items.map((item) => <li key={item} className="flex items-start gap-2 rounded-xl bg-surface px-3 py-3 text-sm leading-7 text-foreground-muted dark:bg-gray-800"><span className="mt-2 size-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />{item}</li>)}</ul>}
       </section>
     })}
+    {content.countries?.length > 0 && <section className="mt-2" aria-labelledby="country-cards-heading">
+      <h2 id="country-cards-heading" className="font-heading text-xl font-extrabold text-foreground md:text-2xl">{content.countriesTitle}</h2>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        {content.countries.map((country) => <a key={country.href} href={country.href} className="group overflow-hidden rounded-2xl border border-border bg-surface transition-colors hover:border-primary dark:border-gray-600 dark:bg-gray-800">
+          <img src={country.image} alt={country.imageAlt} className="h-32 w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+          <div className="flex items-center gap-3 p-4">
+            <img src={country.flag} alt="" aria-hidden="true" className="h-6 w-9 rounded-sm object-cover" />
+            <span className="font-heading font-extrabold text-foreground group-hover:text-primary">{country.name}</span>
+          </div>
+        </a>)}
+      </div>
+    </section>}
     <section className="rounded-2xl border border-primary/30 bg-primary/10 p-5 md:p-6" aria-labelledby="official-sources-heading">
       <h2 id="official-sources-heading" className="font-heading text-xl font-extrabold text-foreground">{content.sourcesTitle}</h2>
       <p className="mt-2 text-sm leading-7 text-foreground-muted">{content.sourcesNote}</p>
@@ -81,7 +93,7 @@ function BlogPostPage({ post, content, relatedPosts = [] }) {
                 {content.highlight}
               </div>
               <RichPostContent content={content} />
-              <MediaShowcase post={post} media={content.media} />
+              {content.media && <MediaShowcase post={post} media={content.media} />}
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3 border-t border-border pt-5 dark:border-gray-600 lg:justify-end">
                 <span className="text-sm text-foreground-muted">{content.shareLabel}</span>
                 <button type="button" className="group relative flex size-9 items-center justify-center rounded-xl border border-border bg-surface text-foreground-muted transition-colors hover:border-primary hover:text-primary focus:outline-none dark:border-gray-600 dark:bg-transparent" aria-label={content.copyLabel}><LinkIcon size={16} /><span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded-lg bg-foreground px-2.5 py-1.5 text-xs font-medium text-background opacity-0 shadow-lg transition-opacity group-hover:opacity-100">{content.copyLabel}</span></button>
