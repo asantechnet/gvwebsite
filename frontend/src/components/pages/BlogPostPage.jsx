@@ -28,12 +28,18 @@ function RichPostContent({ content }) {
     })}
     {content.countries?.length > 0 && <section className="mt-2" aria-labelledby="country-cards-heading">
       <h2 id="country-cards-heading" className="font-heading text-xl font-extrabold text-foreground md:text-2xl">{content.countriesTitle}</h2>
-      <div className="mt-4 grid gap-4 sm:grid-cols-2">
-        {content.countries.map((country) => <a key={country.href} href={country.href} className="group overflow-hidden rounded-2xl border border-border bg-surface transition-colors hover:border-primary dark:border-gray-600 dark:bg-gray-800">
-          <img src={country.image} alt={country.imageAlt} className="h-32 w-full object-cover transition-transform duration-300 group-hover:scale-105" />
-          <div className="flex items-center gap-3 p-4">
-            <img src={country.flag} alt="" aria-hidden="true" className="h-6 w-9 rounded-sm object-cover" />
-            <span className="font-heading font-extrabold text-foreground group-hover:text-primary">{country.name}</span>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {content.countries.map((country) => <a key={country.href} href={country.href} aria-label={`${country.name}؛ ${content.countriesTitle}`} className="group overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-primary hover:shadow-[0_12px_28px_rgba(54,69,77,0.12)] focus-visible:border-primary focus-visible:shadow-[0_0_0_3px_rgba(245,155,34,0.22)] dark:border-gray-600 dark:bg-gray-800">
+          <div className="relative aspect-[16/9] overflow-hidden bg-surface-muted dark:bg-gray-700">
+            <img src={country.image} alt={country.imageAlt} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <span className="absolute inset-x-3 bottom-3 rounded-lg bg-black/55 px-3 py-1.5 text-right text-xs font-bold text-white backdrop-blur-sm">{country.name}</span>
+          </div>
+          <div className="flex min-h-16 items-center justify-between gap-3 p-3.5">
+            <span className="flex min-w-0 items-center gap-3">
+              <img src={country.flag} alt="" aria-hidden="true" className="h-6 w-9 shrink-0 rounded-sm object-cover shadow-sm" />
+              <span className="truncate font-heading font-extrabold text-foreground group-hover:text-primary">{country.name}</span>
+            </span>
+            <ArrowLeft aria-hidden="true" size={18} className="shrink-0 text-primary transition-transform duration-200 group-hover:-translate-x-1" />
           </div>
         </a>)}
       </div>
