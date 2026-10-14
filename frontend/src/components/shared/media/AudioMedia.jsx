@@ -71,10 +71,10 @@ function AudioMedia({ media }) {
 
   return <div className="relative w-full min-w-0 max-w-full overflow-hidden rounded-[1.4rem] border border-[#d8dce0] bg-[#fffdfa] px-5 py-6 text-[#36454d] dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 sm:px-8 sm:py-8">
     <div className="pointer-events-none absolute inset-0 opacity-60 [background-image:repeating-linear-gradient(100deg,transparent_0,transparent_18px,rgba(245,155,34,0.12)_19px,transparent_20px)]" aria-hidden="true" />
-    <div className="relative flex flex-col-reverse gap-6 md:flex-row-reverse md:items-center md:gap-8">
+    <div className="relative flex flex-col gap-6 md:flex-row-reverse md:items-center md:gap-8">
       <div className="flex shrink-0 justify-center md:order-2 md:w-32"><img src={audio.avatar || '/avatars/avatar-female.png'} alt={audio.speaker || audio.title} className="size-20 rounded-full border-4 border-white object-cover shadow-[0_8px_24px_rgba(54,69,77,0.16)] dark:border-gray-700 sm:size-24" /></div>
       <div className="relative min-w-0 flex-1 text-center md:order-1 md:text-right">
-        <h3 className="truncate font-heading text-lg font-extrabold leading-tight md:text-xl" title={audio.title}>{audio.title}</h3>
+        <h3 className="line-clamp-2 font-heading text-lg font-extrabold leading-tight md:text-xl" title={audio.title}>{audio.title}</h3>
         {audio.speaker && <p className="mt-1 text-[11px] text-foreground-muted">{audio.speakerLabel || 'صدا'}: {audio.speaker}</p>}
         <div className="mt-3 flex items-center gap-2" dir="ltr">
           <button type="button" onClick={togglePlayback} aria-label={isPlaying ? (audio.pauseLabel || 'مکث') : (audio.playLabel || 'پخش')} className="flex size-9 shrink-0 items-center justify-center rounded-full bg-[#ecad24] text-white shadow-sm outline-none transition-colors hover:bg-primary-hover focus-visible:bg-primary-hover">{isPlaying ? <Pause size={16} fill="currentColor" /> : <Play size={16} fill="currentColor" />}</button>

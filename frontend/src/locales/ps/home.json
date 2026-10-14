@@ -72,7 +72,7 @@
         "image": "/destinations/turkiye.jpg",
         "imageAlt": "د استانبول ښار او نیلي جومات منظره",
         "flag": "/flags/tr.svg",
-        "href": "/opportunities/destination-country/turkiye",
+        "href": "/opportunities/country/turkiye",
         "layout": "wide"
       },
       {
@@ -81,7 +81,7 @@
         "image": "/destinations/germany.jpg",
         "imageAlt": "په برلین کې د براندنبورګ دروازه",
         "flag": "/flags/de.svg",
-        "href": "/opportunities/destination-country/germany",
+        "href": "/opportunities/country/germany",
         "layout": "wide"
       },
       {
@@ -90,7 +90,7 @@
         "image": "/destinations/france.jpg",
         "imageAlt": "په پاریس کې د ایفل برج",
         "flag": "/flags/fr.svg",
-        "href": "/opportunities/destination-country/france",
+        "href": "/opportunities/country/france",
         "layout": "standard"
       },
       {
@@ -99,7 +99,7 @@
         "image": "/destinations/netherlands.jpg",
         "imageAlt": "د امستردام کانال او ودانۍ",
         "flag": "/flags/nl.svg",
-        "href": "/opportunities/destination-country/netherlands",
+        "href": "/opportunities/country/netherlands",
         "layout": "standard"
       },
       {
@@ -108,7 +108,7 @@
         "image": "/destinations/hungary.jpg",
         "imageAlt": "د بوداپست ښار او د ډانیوب سیند منظره",
         "flag": "/flags/hu.svg",
-        "href": "/opportunities/destination-country/hungary",
+        "href": "/opportunities/country/hungary",
         "layout": "standard"
       },
       {
@@ -117,7 +117,7 @@
         "image": "/destinations/italy.jpg",
         "imageAlt": "د وینس لوی کانال او ودانۍ",
         "flag": "/flags/it.svg",
-        "href": "/opportunities/destination-country/italy",
+        "href": "/opportunities/country/italy",
         "layout": "wide"
       },
       {
@@ -126,7 +126,7 @@
         "image": "/destinations/united-kingdom.jpg",
         "imageAlt": "د لندن ښار او د ټیمز سیند منظره",
         "flag": "/flags/gb.svg",
-        "href": "/opportunities/destination-country/united-kingdom",
+        "href": "/opportunities/country/united-kingdom",
         "layout": "wide"
       }
     ]

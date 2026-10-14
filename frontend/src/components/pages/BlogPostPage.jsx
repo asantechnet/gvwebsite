@@ -114,7 +114,14 @@ function BlogPostPage({ post, content, relatedPosts = [] }) {
                   <div className="mt-5 w-full border-t border-border pt-5 text-right dark:border-gray-600">
                     <h2 className="mb-4 text-center font-heading text-lg font-extrabold text-foreground lg:text-right">{content.quickAccessLabel}</h2>
                     <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-2">
-                      {[[GraduationCap, content.quickLinks.study], [BriefcaseBusiness, content.quickLinks.work], [Globe2, content.quickLinks.countries], [CheckSquare, content.quickLinks.exams], [ShieldCheck, content.quickLinks.visa], [UsersRound, content.quickLinks.migration]].map(([Icon, label]) => <a key={label} href="/magazine" className="flex flex-col items-center gap-1 rounded-xl border border-border px-2 py-3 text-center text-xs text-foreground-muted transition-colors hover:border-primary hover:text-primary dark:border-gray-600"><Icon size={20} /><span className="font-bold">{label}</span></a>)}
+                      {[
+                        [GraduationCap, content.quickLinks.study, '/opportunities/study'],
+                        [BriefcaseBusiness, content.quickLinks.work, '/opportunities/work'],
+                        [Globe2, content.quickLinks.countries, '/opportunities/country'],
+                        [CheckSquare, content.quickLinks.exams, '/opportunities/exams'],
+                        [ShieldCheck, content.quickLinks.visa, '/services/visa'],
+                        [UsersRound, content.quickLinks.migration, '/opportunities/migration'],
+                      ].map(([Icon, label, href]) => <a key={label} href={href} className="flex flex-col items-center gap-1 rounded-xl border border-border px-2 py-3 text-center text-xs text-foreground-muted transition-colors hover:border-primary hover:text-primary dark:border-gray-600"><Icon size={20} /><span className="font-bold">{label}</span></a>)}
                     </div>
                   </div>
                 </div>

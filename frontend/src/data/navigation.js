@@ -8,7 +8,7 @@ export const headerNavigation = [
       { id: 'migration', href: '/opportunities/migration' },
       { id: 'work', href: '/opportunities/work' },
       { id: 'exams', href: '/opportunities/exams' },
-      { id: 'destinationCountry', href: '/opportunities/destination-country' },
+      { id: 'destinationCountry', href: '/opportunities/country' },
     ],
   },
   {
@@ -21,7 +21,7 @@ export const headerNavigation = [
       { id: 'migrationRegistration', href: '/services/migration-registration' },
       { id: 'documentPreparation', href: '/services/document-preparation' },
       { id: 'documentProcess', href: '/services/document-process' },
-      { id: 'visaResidence', href: '/services/visa-residence' },
+      { id: 'visaResidence', href: '/services/visa' },
     ],
   },
   { id: 'magazine', href: '/magazine' },
