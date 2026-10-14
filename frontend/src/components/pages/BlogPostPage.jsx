@@ -1,4 +1,4 @@
-import { ArrowRight, BookOpenCheck, BriefcaseBusiness, CheckSquare, Clock3, ExternalLink, FileCheck2, Globe2, GraduationCap, Link as LinkIcon, PlaneTakeoff, Share2, ShieldCheck, UsersRound, WalletCards } from 'lucide-react'
+import { ArrowLeft, ArrowRight, BookOpenCheck, BriefcaseBusiness, CheckSquare, Clock3, ExternalLink, FileCheck2, Globe2, GraduationCap, Link as LinkIcon, PlaneTakeoff, Share2, ShieldCheck, UsersRound, WalletCards } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { FaFacebookF, FaTelegramPlane, FaWhatsapp } from 'react-icons/fa'
 import { FaInstagram, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6'
@@ -22,6 +22,7 @@ function RichPostContent({ content }) {
           <h2 className="font-heading text-xl font-extrabold text-foreground md:text-2xl">{section.title}</h2>
         </div>
         <p className="mt-4 text-base leading-8 text-foreground-muted">{section.body}</p>
+        {section.links?.length > 0 && <div className="mt-4 flex flex-wrap justify-start gap-2">{section.links.map((link) => <a key={link.href} href={link.href} className="inline-flex items-center rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-sm font-bold text-primary transition-colors hover:border-primary hover:bg-primary/20">{link.label}<ArrowLeft aria-hidden="true" size={15} className="ms-1" /></a>)}</div>}
         {section.items?.length > 0 && <ul className="mt-4 grid gap-3 sm:grid-cols-2">{section.items.map((item) => <li key={item} className="flex items-start gap-2 rounded-xl bg-surface px-3 py-3 text-sm leading-7 text-foreground-muted dark:bg-gray-800"><span className="mt-2 size-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />{item}</li>)}</ul>}
       </section>
     })}
