@@ -30,7 +30,10 @@
       "subjectLabel": "موضوع",
       "emailLabel": "ایمیل",
       "messageLabel": "پیام",
-      "submitLabel": "ارسال"
+      "submitLabel": "ارسال",
+      "sendingLabel": "در حال ارسال...",
+      "successMessage": "پیام شما آماده ثبت شد. اتصال نهایی به سرور پس از راه‌اندازی API فعال می‌شود.",
+      "requiredMessage": "لطفاً همه بخش‌ها را کامل کنید."
     }
   }
 }

@@ -39,7 +39,8 @@ function NavigationIcon({ id }) {
 function isNavigationItemActive(item, currentPath) {
   return (
     item.href === currentPath ||
-    item.children?.some((child) => child.href === currentPath)
+    (item.href !== '/' && currentPath.startsWith(`${item.href}/`)) ||
+    item.children?.some((child) => child.href === currentPath || currentPath.startsWith(`${child.href}/`))
   );
 }
 
@@ -89,7 +90,7 @@ function Header({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [openMobileSection, setOpenMobileSection] = useState(() => {
     const activeSection = headerNavigation.find((item) =>
-      item.children?.some((child) => child.href === window.location.pathname),
+      item.children?.some((child) => window.location.pathname === child.href || window.location.pathname.startsWith(`${child.href}/`)),
     );
     return activeSection?.id ?? null;
   });
@@ -218,9 +219,9 @@ function Header({
                         key={child.id}
                         href={child.href}
                         aria-current={
-                          currentPath === child.href ? "page" : undefined
+                          currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "page" : undefined
                         }
-                        className={`rounded-lg px-3 py-2 text-right text-sm transition-colors hover:bg-surface-muted hover:text-foreground dark:hover:bg-gray-700 ${currentPath === child.href ? "font-extrabold text-primary" : "font-medium text-foreground-muted dark:text-gray-100"}`}
+                        className={`rounded-lg px-3 py-2 text-right text-sm transition-colors hover:bg-surface-muted hover:text-foreground dark:hover:bg-gray-700 ${currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "font-extrabold text-primary" : "font-medium text-foreground-muted dark:text-gray-100"}`}
                       >
                         {content.subNavigation[item.id][child.id]}
                       </a>
@@ -401,9 +402,9 @@ function Header({
                           href={child.href}
                           onClick={() => setIsMenuOpen(false)}
                           aria-current={
-                            currentPath === child.href ? "page" : undefined
+                            currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "page" : undefined
                           }
-                          className={`rounded-lg px-3 py-1.5 text-right text-sm transition-colors hover:text-foreground dark:hover:text-white ${currentPath === child.href ? "font-extrabold text-primary dark:text-primary" : "text-foreground-muted dark:text-gray-300"}`}
+                          className={`rounded-lg px-3 py-1.5 text-right text-sm transition-colors hover:text-foreground dark:hover:text-white ${currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "font-extrabold text-primary dark:text-primary" : "text-foreground-muted dark:text-gray-300"}`}
                         >
                           {content.subNavigation[item.id][child.id]}
                         </a>

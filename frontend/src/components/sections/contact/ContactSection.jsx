@@ -1,11 +1,24 @@
 import { Mail, MapPin, Phone, Send } from 'lucide-react'
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTelegram } from 'react-icons/fa6'
+import { useState } from 'react'
 
 import Container from '@ui/Container.jsx'
 import Button from '@ui/Button.jsx'
 import Section from '@ui/Section.jsx'
 
 function ContactSection({ content }) {
+  const [formStatus, setFormStatus] = useState('idle')
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    if (!event.currentTarget.checkValidity()) {
+      setFormStatus('error')
+      event.currentTarget.reportValidity()
+      return
+    }
+    setFormStatus('success')
+  }
+
   return (
     <Section aria-labelledby="contact-section-title" className="bg-background text-foreground">
       <Container>
@@ -46,30 +59,31 @@ function ContactSection({ content }) {
             </div>
           </div>
 
-          <form className="mx-auto w-full max-w-md text-right lg:order-2" onSubmit={(event) => event.preventDefault()}>
+          <form className="mx-auto w-full max-w-md text-right lg:order-2" onSubmit={handleSubmit} noValidate>
             <h3 className="sr-only">{content.form.title}</h3>
             <p className="sr-only">{content.form.description}</p>
             <div className="grid gap-5">
               <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.nameLabel}
-                <input className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-right text-sm font-light text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" type="text" />
+                <input required name="name" autoComplete="name" className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-right text-sm font-light text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" type="text" />
               </label>
               <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.emailLabel}
-                <input dir="ltr" className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-right text-sm font-light text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" type="email" />
+                <input required name="email" autoComplete="email" dir="ltr" className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-right text-sm font-light text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" type="email" />
               </label>
               <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.subjectLabel}
-                <input className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-right text-sm font-light text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" type="text" />
+                <input required name="subject" className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-right text-sm font-light text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" type="text" />
               </label>
               <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.messageLabel}
-                <textarea className="min-h-32 resize-y rounded-xl border border-border bg-surface-muted px-3 py-2 text-right text-sm font-light leading-7 text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" />
+                <textarea required name="message" className="min-h-32 resize-y rounded-xl border border-border bg-surface-muted px-3 py-2 text-right text-sm font-light leading-7 text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" />
               </label>
             </div>
             <Button type="submit" icon={Send} className="mt-6 min-h-10 w-full border-brand-orange bg-brand-orange px-4 text-center text-sm shadow-md shadow-brand-orange/20 hover:border-primary-hover hover:bg-primary-hover hover:shadow-lg hover:shadow-brand-orange/30 sm:w-32">
-              {content.form.submitLabel}
+              {formStatus === 'sending' ? content.form.sendingLabel : content.form.submitLabel}
             </Button>
+            <p aria-live="polite" className={`mt-4 text-sm ${formStatus === 'error' ? 'text-brand-red' : 'text-primary'}`}>{formStatus === 'success' ? content.form.successMessage : formStatus === 'error' ? content.form.requiredMessage : ''}</p>
           </form>
         </div>
         <div className="mx-auto mt-12 w-full max-w-5xl overflow-hidden rounded-3xl border border-border dark:border-gray-700">
