@@ -40,7 +40,11 @@ function MainLayout({ children = null }) {
 
     return window.localStorage.getItem('globalvision-theme') || 'light'
   })
-  const [language, setLanguage] = useState('prs')
+  const [language, setLanguage] = useState(() => {
+    if (typeof window === 'undefined') return 'prs'
+
+    return window.localStorage.getItem('globalvision-language') || 'prs'
+  })
   const headerContent = language === 'prs' ? dariHeaderContent : pashtoHeaderContent
   const footerContent = language === 'prs' ? dariFooterContent : pashtoFooterContent
   const homeContent = language === 'prs' ? dariHomeContent : pashtoHomeContent
@@ -82,6 +86,7 @@ function MainLayout({ children = null }) {
   useEffect(() => {
     document.documentElement.lang = language
     document.documentElement.dir = 'rtl'
+    window.localStorage.setItem('globalvision-language', language)
   }, [language])
 
   useEffect(() => {
