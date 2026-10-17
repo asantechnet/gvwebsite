@@ -6,8 +6,8 @@ import Container from "@ui/Container.jsx";
 const focusClasses =
   "focus:outline-none focus-visible:outline-none focus-visible:border-primary focus-visible:text-primary";
 
-function FooterLink({ href, children }) {
-  const isActive = window.location.pathname === href;
+function FooterLink({ href, children, currentPath }) {
+  const isActive = currentPath === href;
 
   return (
     <a
@@ -20,7 +20,7 @@ function FooterLink({ href, children }) {
   );
 }
 
-function Footer({ content, navigationContent, className = "" }) {
+function Footer({ content, navigationContent, currentPath, className = "" }) {
   const opportunities = headerNavigation.find(
     (item) => item.id === "opportunities",
   );
@@ -81,7 +81,7 @@ function Footer({ content, navigationContent, className = "" }) {
               <ul className="grid justify-items-center gap-1 md:justify-items-start">
                 {primaryLinks.map((item) => (
                   <li key={item.id}>
-                    <FooterLink href={item.href}>
+                    <FooterLink href={item.href} currentPath={currentPath}>
                       {navigationContent.navigation[item.id]}
                     </FooterLink>
                   </li>
@@ -103,7 +103,7 @@ function Footer({ content, navigationContent, className = "" }) {
               <ul className="grid justify-items-center gap-1 md:justify-items-start">
                 {opportunities.children.map((item) => (
                   <li key={item.id}>
-                    <FooterLink href={item.href}>
+                    <FooterLink href={item.href} currentPath={currentPath}>
                       {navigationContent.subNavigation.opportunities[item.id]}
                     </FooterLink>
                   </li>
@@ -123,7 +123,7 @@ function Footer({ content, navigationContent, className = "" }) {
             <ul className="grid grid-cols-1 justify-items-center gap-x-5 gap-y-1 sm:grid-cols-2 md:justify-items-start lg:grid-cols-1 xl:grid-cols-2">
               {services.children.map((item) => (
                 <li key={item.id}>
-                  <FooterLink href={item.href}>
+                  <FooterLink href={item.href} currentPath={currentPath}>
                     {navigationContent.subNavigation.services[item.id]}
                   </FooterLink>
                 </li>

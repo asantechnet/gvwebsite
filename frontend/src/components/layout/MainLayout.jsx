@@ -33,8 +33,10 @@ import dariServicesContent from '@/locales/prs/services.json'
 import pashtoServicesContent from '@/locales/ps/services.json'
 import dariSearchContent from '@/locales/prs/search.json'
 import pashtoSearchContent from '@/locales/ps/search.json'
+import { getCurrentRoute, toStaticHostHref } from '@/utils/routing.js'
 
 function MainLayout({ children = null }) {
+  const [route, setRoute] = useState(getCurrentRoute)
   const [theme, setTheme] = useState(() => {
     if (typeof window === 'undefined') return 'light'
 
@@ -55,7 +57,7 @@ function MainLayout({ children = null }) {
   const guidesContent = language === 'prs' ? dariGuidesContent : pashtoGuidesContent
   const servicesContent = language === 'prs' ? dariServicesContent : pashtoServicesContent
   const searchContent = language === 'prs' ? dariSearchContent : pashtoSearchContent
-  const page = window.location.pathname.replace(/\/$/, '') || '/'
+  const page = route.pathname
   const isBlogPost = page.startsWith('/magazine/post/')
   const postSlug = isBlogPost ? decodeURIComponent(page.slice('/magazine/post/'.length)) : ''
   const selectedPost = magazineContent.news.items.find((post) => post.slug === postSlug)
@@ -70,11 +72,56 @@ function MainLayout({ children = null }) {
   const service = servicesContent.services.find((item) => item.slug === serviceSlug || item.aliases?.includes(serviceSlug))
   const serviceDirectoryItems = servicesContent.services.map((item) => ({ title: item.title, description: item.description, image: item.image, href: `/services/${item.slug}` }))
   const opportunityDirectoryItems = ['study', 'migration', 'work', 'exams', 'country'].map((slug) => ({ title: opportunitiesContent[slug].post.title, description: opportunitiesContent[slug].post.description, image: opportunitiesContent[slug].post.image, href: `/opportunities/${slug}` }))
-  const searchQuery = new URLSearchParams(window.location.search).get('q')?.trim() || ''
+  const searchQuery = route.searchParams.get('q')?.trim() || ''
   const searchableItems = [...opportunityDirectoryItems, ...serviceDirectoryItems, ...guidesContent.countries.map((item) => ({ title: item.name, description: item.summary, href: `/opportunities/country/${item.slug}` })), ...guidesContent.exams.map((item) => ({ title: item.name, description: item.summary, href: `/opportunities/exams/${item.slug}` })), ...magazineContent.news.items.map((item) => ({ title: item.title, description: item.description, href: `/magazine/post/${item.slug}` }))]
   const normalizedQuery = searchQuery.toLocaleLowerCase(language)
   const searchResults = normalizedQuery ? searchableItems.filter((item) => `${item.title} ${item.description}`.toLocaleLowerCase(language).includes(normalizedQuery)) : []
   const currentTitle = service?.title || countryGuide?.name || examGuide?.name || opportunity?.post.title || selectedPost?.title || (page === '/services' ? servicesContent.ui.indexTitle : page === '/opportunities' ? servicesContent.ui.opportunitiesTitle : page === '/search' ? searchContent.title : page === '/about' ? aboutContent.hero.title : page === '/contact' ? contactContent.hero.title : page === '/magazine' ? magazineContent.hero.title : page === '/' ? headerContent.navigation.home : searchContent.notFoundTitle)
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setRoute(getCurrentRoute())
+      window.scrollTo({ top: 0, behavior: 'auto' })
+    }
+
+    window.addEventListener('hashchange', handleRouteChange)
+    return () => window.removeEventListener('hashchange', handleRouteChange)
+  }, [])
+
+  useEffect(() => {
+    const rewriteInternalLinks = (root = document) => {
+      const links = [
+        ...(root.matches?.('a[href^="/"]') ? [root] : []),
+        ...(root.querySelectorAll?.('a[href^="/"]') ?? []),
+      ]
+      links.forEach((link) => {
+        const href = link.getAttribute('href')
+        const staticHostHref = toStaticHostHref(href)
+        if (staticHostHref !== href) link.setAttribute('href', staticHostHref)
+      })
+    }
+    const handleInternalClick = (event) => {
+      const link = event.target.closest?.('a[href^="/"]')
+      const href = link?.getAttribute('href')
+      if (!href || href.startsWith('/#') || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+
+      event.preventDefault()
+      window.location.hash = href
+    }
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => mutation.addedNodes.forEach((node) => {
+        if (node instanceof Element) rewriteInternalLinks(node)
+      }))
+    })
+
+    rewriteInternalLinks()
+    observer.observe(document.body, { childList: true, subtree: true })
+    document.addEventListener('click', handleInternalClick)
+    return () => {
+      observer.disconnect()
+      document.removeEventListener('click', handleInternalClick)
+    }
+  })
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
@@ -109,11 +156,12 @@ function MainLayout({ children = null }) {
         theme={theme}
         onLanguageToggle={() => setLanguage((currentLanguage) => (currentLanguage === 'prs' ? 'ps' : 'prs'))}
         onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))}
+        currentPath={page}
       />
       <main className="flex-1 pt-16 xl:pt-20">
         {children ?? (page === '/' ? <HomePage content={homeContent} /> : page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} /> : page === '/search' ? <SearchPage content={searchContent} query={searchQuery} results={searchResults} /> : page === '/services' ? <DirectoryPage title={servicesContent.ui.indexTitle} description={servicesContent.ui.indexDescription} homeLabel={headerContent.navigation.home} items={serviceDirectoryItems} actionLabel={servicesContent.ui.viewService} /> : page === '/opportunities' ? <DirectoryPage title={servicesContent.ui.opportunitiesTitle} description={servicesContent.ui.opportunitiesDescription} homeLabel={headerContent.navigation.home} items={opportunityDirectoryItems} actionLabel={servicesContent.ui.viewOpportunity} /> : service ? <ServicePostPage service={service} content={servicesContent} postShell={opportunitiesContent.country.postDetail} /> : countryGuide ? <GuidePostPage guide={countryGuide} content={guidesContent} type={countryMatch[2] ? 'scholarship' : 'country'} postShell={opportunitiesContent.country.postDetail} /> : examGuide ? <GuidePostPage guide={examGuide} content={guidesContent} type="exam" /> : opportunity ? <BlogPostPage post={opportunity.post} content={{ ...opportunity.postDetail, guideLinksTitle: guidesContent.ui.examGuides }} guideLinks={opportunitySlug === 'exams' ? examGuideLinks : []} /> : isBlogPost && selectedPost ? <BlogPostPage post={selectedPost} content={magazineContent.postDetail} relatedPosts={magazineContent.news.items.filter((relatedPost) => relatedPost.slug !== selectedPost.slug && relatedPost.category === selectedPost.category).slice(0, 5)} /> : page === '/magazine' ? <MagazinePage content={magazineContent} language={language} /> : <NotFoundPage content={searchContent} />)}
       </main>
-      <Footer content={footerContent} navigationContent={headerContent} />
+      <Footer content={footerContent} navigationContent={headerContent} currentPath={page} />
     </div>
   )
 }
