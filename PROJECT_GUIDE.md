@@ -92,7 +92,9 @@ Do not add a dependency when the existing stack can implement the requirement cl
 globalvision-website/
 ├── backend/                    # Future Laravel backend and API
 ├── frontend/
-│   ├── public/                 # Stable public assets such as logo and icon
+│   ├── public/
+│   │   ├── .htaccess           # Apache fallback for client-side application routes
+│   │   └── assets/             # Stable branding, image, flag, and audio assets
 │   ├── src/
 │   │   ├── components/         # All visual application layers
 │   │   │   ├── ui/             # Basic reusable UI components
@@ -276,8 +278,9 @@ Branding colors, fonts, light and dark class colors, and necessary global animat
 
 ## Asset Rules
 
-- Put stable assets such as the future site logo and icon in `frontend/public/`.
+- Put stable assets under `frontend/public/assets/`, grouped by type and purpose. Keep only deployment configuration such as `.htaccess` at the public root.
 - Reference public assets with root absolute paths such as `/assets/logo.svg`.
+- Use lowercase, hyphenated public filenames and never use spaces in asset paths.
 - Keep local fonts in `src/assets/fonts/<family>/` for Vite processing.
 - Use descriptive lowercase filenames.
 - Compress large photography before production.

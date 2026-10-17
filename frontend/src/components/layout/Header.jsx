@@ -176,7 +176,7 @@ function Header({
             className={`m-0 shrink-0 rounded-2xl border border-transparent p-0 transition-colors ${noFocusOutline}`}
           >
             <img
-              src="/icon.webp"
+              src="/assets/branding/icon.webp"
               alt={content.logoAlt}
               width="1431"
               height="974"
@@ -327,7 +327,7 @@ function Header({
             className={`flex justify-start ${noFocusOutline}`}
           >
             <img
-              src="/horizontal%20logo.webp"
+              src="/assets/branding/horizontal-logo.webp"
               alt={content.logoAlt}
               width="1946"
               height="490"

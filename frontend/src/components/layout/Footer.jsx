@@ -51,7 +51,7 @@ function Footer({ content, navigationContent, className = "" }) {
               className={`rounded-xl border border-border bg-white p-2 shadow-sm ${focusClasses}`}
             >
               <img
-                src="/horizontal%20logo.webp"
+                src="/assets/branding/horizontal-logo.webp"
                 alt={navigationContent.logoAlt}
                 width="1946"
                 height="490"

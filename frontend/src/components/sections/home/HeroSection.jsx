@@ -10,7 +10,7 @@ function HeroVisual({ content }) {
         className="absolute size-72 rounded-full bg-primary/10 blur-3xl sm:size-96"
       />
       <img
-        src="/home-hero-globe.webp"
+        src="/assets/images/home/hero-globe.webp"
         alt={content.imageAlt}
         width="1536"
         height="1536"

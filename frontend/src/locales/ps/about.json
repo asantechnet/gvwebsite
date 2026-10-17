@@ -49,11 +49,11 @@
   "team": {
     "title": "د ګلوبل ویژن ټیم",
     "members": [
-      { "name": "عرفان نورزاده", "role": "اجرائیه مدیر", "avatar": "/profile%20images/erfan.webp", "avatarAlt": "د عرفان نورزاده د پېژندنې انځور" },
-      { "name": "مرتضی رضوی", "role": "مشر سلاکار", "avatar": "/profile%20images/murtaza.webp", "avatarAlt": "د مرتضی رضوی د پېژندنې انځور" },
-      { "name": "نوید هوتک", "role": "مشر د منلو سلاکار", "avatar": "/profile%20images/naveed.webp", "avatarAlt": "د نوید هوتک د پېژندنې انځور" },
-      { "name": "عرفان نورزاده", "role": "مالي مدیر", "avatar": "/profile%20images/erfan.webp", "avatarAlt": "د عرفان نورزاده د پېژندنې انځور" },
-      { "name": "مرتضی رضوی", "role": "د رسنیو مسؤل", "avatar": "/profile%20images/murtaza.webp", "avatarAlt": "د مرتضی رضوی د پېژندنې انځور" }
+      { "name": "عرفان نورزاده", "role": "اجرائیه مدیر", "avatar": "/assets/images/team/erfan.webp", "avatarAlt": "د عرفان نورزاده د پېژندنې انځور" },
+      { "name": "مرتضی رضوی", "role": "مشر سلاکار", "avatar": "/assets/images/team/murtaza.webp", "avatarAlt": "د مرتضی رضوی د پېژندنې انځور" },
+      { "name": "نوید هوتک", "role": "مشر د منلو سلاکار", "avatar": "/assets/images/team/naveed.webp", "avatarAlt": "د نوید هوتک د پېژندنې انځور" },
+      { "name": "عرفان نورزاده", "role": "مالي مدیر", "avatar": "/assets/images/team/erfan.webp", "avatarAlt": "د عرفان نورزاده د پېژندنې انځور" },
+      { "name": "مرتضی رضوی", "role": "د رسنیو مسؤل", "avatar": "/assets/images/team/murtaza.webp", "avatarAlt": "د مرتضی رضوی د پېژندنې انځور" }
     ]
   },
   "cta": {

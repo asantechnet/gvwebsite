@@ -81,9 +81,9 @@ function CountryCards({ content }) {
     }[country.name] || country.name),
   }))
   countries.push({
-    name: isPashto ? 'البانیا' : 'آلبانیا', flag: '/flags/al.svg', image: '/destinations/italy.jpg', imageAlt: isPashto ? 'په البانیا کې منظره' : 'نمایی از آلبانیا', href: '/opportunities/country/albania',
+    name: isPashto ? 'البانیا' : 'آلبانیا', flag: '/assets/flags/al.svg', image: '/assets/images/destinations/italy.jpg', imageAlt: isPashto ? 'په البانیا کې منظره' : 'نمایی از آلبانیا', href: '/opportunities/country/albania',
   }, {
-    name: 'ایرلند', flag: '/flags/ie.svg', image: '/destinations/united-kingdom.jpg', imageAlt: isPashto ? 'په ایرلنډ کې منظره' : 'نمایی از ایرلند', href: '/opportunities/country/ireland',
+    name: 'ایرلند', flag: '/assets/flags/ie.svg', image: '/assets/images/destinations/united-kingdom.jpg', imageAlt: isPashto ? 'په ایرلنډ کې منظره' : 'نمایی از ایرلند', href: '/opportunities/country/ireland',
   })
 
   return <section aria-labelledby="country-cards-heading">

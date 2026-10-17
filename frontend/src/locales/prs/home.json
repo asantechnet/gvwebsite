@@ -69,63 +69,63 @@
       {
         "id": "turkiye",
         "name": "ترکیه",
-        "image": "/destinations/turkiye.jpg",
+        "image": "/assets/images/destinations/turkiye.jpg",
         "imageAlt": "نمای شهر استانبول و مسجد آبی",
-        "flag": "/flags/tr.svg",
+        "flag": "/assets/flags/tr.svg",
         "href": "/opportunities/country/turkiye",
         "layout": "wide"
       },
       {
         "id": "germany",
         "name": "آلمان",
-        "image": "/destinations/germany.jpg",
+        "image": "/assets/images/destinations/germany.jpg",
         "imageAlt": "دروازه براندنبورگ در برلین",
-        "flag": "/flags/de.svg",
+        "flag": "/assets/flags/de.svg",
         "href": "/opportunities/country/germany",
         "layout": "wide"
       },
       {
         "id": "france",
         "name": "فرانسه",
-        "image": "/destinations/france.jpg",
+        "image": "/assets/images/destinations/france.jpg",
         "imageAlt": "برج ایفل در پاریس",
-        "flag": "/flags/fr.svg",
+        "flag": "/assets/flags/fr.svg",
         "href": "/opportunities/country/france",
         "layout": "standard"
       },
       {
         "id": "netherlands",
         "name": "هلند",
-        "image": "/destinations/netherlands.jpg",
+        "image": "/assets/images/destinations/netherlands.jpg",
         "imageAlt": "کانال و ساختمان‌های شهر آمستردام",
-        "flag": "/flags/nl.svg",
+        "flag": "/assets/flags/nl.svg",
         "href": "/opportunities/country/netherlands",
         "layout": "standard"
       },
       {
         "id": "hungary",
         "name": "مجارستان",
-        "image": "/destinations/hungary.jpg",
+        "image": "/assets/images/destinations/hungary.jpg",
         "imageAlt": "نمای شهر بوداپست و رود دانوب",
-        "flag": "/flags/hu.svg",
+        "flag": "/assets/flags/hu.svg",
         "href": "/opportunities/country/hungary",
         "layout": "standard"
       },
       {
         "id": "italy",
         "name": "ایتالیا",
-        "image": "/destinations/italy.jpg",
+        "image": "/assets/images/destinations/italy.jpg",
         "imageAlt": "کانال بزرگ و ساختمان‌های شهر ونیز",
-        "flag": "/flags/it.svg",
+        "flag": "/assets/flags/it.svg",
         "href": "/opportunities/country/italy",
         "layout": "wide"
       },
       {
         "id": "unitedKingdom",
         "name": "انگلستان",
-        "image": "/destinations/united-kingdom.jpg",
+        "image": "/assets/images/destinations/united-kingdom.jpg",
         "imageAlt": "نمای شهر لندن و رود تیمز",
-        "flag": "/flags/gb.svg",
+        "flag": "/assets/flags/gb.svg",
         "href": "/opportunities/country/united-kingdom",
         "layout": "wide"
       }
@@ -210,7 +210,7 @@
         "quote": "از اولین مشاوره تا آماده‌شدن مدارک، همه مراحل برایم روشن و منظم بود.",
         "name": "عرفان نورزاده",
         "role": "دانشجوی پذیرفته شده در امریکا",
-        "avatar": "/profile%20images/erfan.webp",
+        "avatar": "/assets/images/team/erfan.webp",
         "avatarAlt": "تصویر نمایه عرفان نورزاده"
       },
       {
@@ -218,7 +218,7 @@
         "quote": "با راهنمایی دقیق تیم، توانستم مسیر تحصیلی مناسب خودم را با اطمینان انتخاب کنم.",
         "name": "مرتضی رضوی",
         "role": "متقاضی تحصیل در اروپا",
-        "avatar": "/profile%20images/murtaza.webp",
+        "avatar": "/assets/images/team/murtaza.webp",
         "avatarAlt": "تصویر نمایه مرتضی رضوی"
       },
       {
@@ -226,7 +226,7 @@
         "quote": "پیگیری منظم و پاسخ‌گویی سریع باعث شد در تمام مسیر احساس آرامش داشته باشم.",
         "name": "نوید هوتک",
         "role": "مهاجرت موفق به کانادا",
-        "avatar": "/profile%20images/naveed.webp",
+        "avatar": "/assets/images/team/naveed.webp",
         "avatarAlt": "تصویر نمایه نوید هوتک"
       }
     ]

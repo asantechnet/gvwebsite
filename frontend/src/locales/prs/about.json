@@ -49,11 +49,11 @@
   "team": {
     "title": "تیم گلوبل ویژن",
     "members": [
-      { "name": "عرفان نورزاده", "role": "مدیر اجرایی", "avatar": "/profile%20images/erfan.webp", "avatarAlt": "تصویر نمایه عرفان نورزاده" },
-      { "name": "مرتضی رضوی", "role": "مشاور ارشد", "avatar": "/profile%20images/murtaza.webp", "avatarAlt": "تصویر نمایه مرتضی رضوی" },
-      { "name": "نوید هوتک", "role": "افسر ارشد پذیرش", "avatar": "/profile%20images/naveed.webp", "avatarAlt": "تصویر نمایه نوید هوتک" },
-      { "name": "عرفان نورزاده", "role": "مدیر مالی", "avatar": "/profile%20images/erfan.webp", "avatarAlt": "تصویر نمایه عرفان نورزاده" },
-      { "name": "مرتضی رضوی", "role": "مسئول رسانه", "avatar": "/profile%20images/murtaza.webp", "avatarAlt": "تصویر نمایه مرتضی رضوی" }
+      { "name": "عرفان نورزاده", "role": "مدیر اجرایی", "avatar": "/assets/images/team/erfan.webp", "avatarAlt": "تصویر نمایه عرفان نورزاده" },
+      { "name": "مرتضی رضوی", "role": "مشاور ارشد", "avatar": "/assets/images/team/murtaza.webp", "avatarAlt": "تصویر نمایه مرتضی رضوی" },
+      { "name": "نوید هوتک", "role": "افسر ارشد پذیرش", "avatar": "/assets/images/team/naveed.webp", "avatarAlt": "تصویر نمایه نوید هوتک" },
+      { "name": "عرفان نورزاده", "role": "مدیر مالی", "avatar": "/assets/images/team/erfan.webp", "avatarAlt": "تصویر نمایه عرفان نورزاده" },
+      { "name": "مرتضی رضوی", "role": "مسئول رسانه", "avatar": "/assets/images/team/murtaza.webp", "avatarAlt": "تصویر نمایه مرتضی رضوی" }
     ]
   },
   "cta": {
