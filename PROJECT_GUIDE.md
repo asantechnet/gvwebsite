@@ -200,7 +200,7 @@ Use aliases across source areas and relative imports for nearby files within one
 
 ## Routing Rules
 
-`MainLayout` currently selects pages from hash routes without a routing dependency. Production URLs use the static-host-safe form `/#/route`, while route data continues to use canonical paths such as `/opportunities/study`. This avoids relying on server rewrite support. Magazine posts use stable, language-independent paths in the form `/magazine/post/:slug`; matching Dari and Pashto records must share the same slug. Every child item under Opportunities and Services is content of type post, rendered with the shared single-post layout rather than a standalone page component. When routing expands or a routing library is introduced:
+`MainLayout` currently selects pages from `window.location.pathname` without a routing dependency. Magazine posts use stable, language-independent paths in the form `/magazine/post/:slug`; matching Dari and Pashto records must share the same slug. Every child item under Opportunities and Services is content of type post, rendered with the shared single-post layout rather than a standalone page component. These posts may use their canonical navigation path, such as `/opportunities/study`. When routing expands or a routing library is introduced:
 
 - Centralize canonical paths and navigation data.
 - Use route constants rather than repeated strings.

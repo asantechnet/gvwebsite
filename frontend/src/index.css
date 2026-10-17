@@ -95,6 +95,6 @@ body {
   min-width: 320px; min-height: 100vh; margin: 0;
   background: var(--theme-background); color: var(--theme-foreground);
 }
-
 button, input, select, textarea { font: inherit; }
+@keyframes skeletonShimmerSweep { from { transform: translateX(-115%); } to { transform: translateX(115%); } }
 .search-field:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px transparent inset; -webkit-text-fill-color: var(--theme-foreground); }

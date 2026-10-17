@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import Footer from './Footer.jsx'
 import Header from './Header.jsx'
 import ScrollProgress from './ScrollProgress.jsx'
+import RouteProgress from '@shared/RouteProgress.jsx'
 import HomePage from '@pages/HomePage.jsx'
 import AboutPage from '@pages/AboutPage.jsx'
 import ContactPage from '@pages/ContactPage.jsx'
@@ -33,10 +34,14 @@ import dariServicesContent from '@/locales/prs/services.json'
 import pashtoServicesContent from '@/locales/ps/services.json'
 import dariSearchContent from '@/locales/prs/search.json'
 import pashtoSearchContent from '@/locales/ps/search.json'
-import { getCurrentRoute, toStaticHostHref } from '@/utils/routing.js'
+
+// Temporary while content is static. Replace with real API loading state when the backend is connected.
+const STATIC_SKELETON_MINIMUM_MS = 1000
 
 function MainLayout({ children = null }) {
-  const [route, setRoute] = useState(getCurrentRoute)
+  const [isRouteLoading, setIsRouteLoading] = useState(true)
+  const scrollStorageKey = `globalvision-scroll:${window.location.pathname}${window.location.search}`
+  const savedScrollPosition = useRef(Number(window.sessionStorage.getItem(scrollStorageKey)))
   const [theme, setTheme] = useState(() => {
     if (typeof window === 'undefined') return 'light'
 
@@ -57,7 +62,7 @@ function MainLayout({ children = null }) {
   const guidesContent = language === 'prs' ? dariGuidesContent : pashtoGuidesContent
   const servicesContent = language === 'prs' ? dariServicesContent : pashtoServicesContent
   const searchContent = language === 'prs' ? dariSearchContent : pashtoSearchContent
-  const page = route.pathname
+  const page = window.location.pathname.replace(/\/$/, '') || '/'
   const isBlogPost = page.startsWith('/magazine/post/')
   const postSlug = isBlogPost ? decodeURIComponent(page.slice('/magazine/post/'.length)) : ''
   const selectedPost = magazineContent.news.items.find((post) => post.slug === postSlug)
@@ -72,56 +77,38 @@ function MainLayout({ children = null }) {
   const service = servicesContent.services.find((item) => item.slug === serviceSlug || item.aliases?.includes(serviceSlug))
   const serviceDirectoryItems = servicesContent.services.map((item) => ({ title: item.title, description: item.description, image: item.image, href: `/services/${item.slug}` }))
   const opportunityDirectoryItems = ['study', 'migration', 'work', 'exams', 'country'].map((slug) => ({ title: opportunitiesContent[slug].post.title, description: opportunitiesContent[slug].post.description, image: opportunitiesContent[slug].post.image, href: `/opportunities/${slug}` }))
-  const searchQuery = route.searchParams.get('q')?.trim() || ''
+  const searchQuery = new URLSearchParams(window.location.search).get('q')?.trim() || ''
   const searchableItems = [...opportunityDirectoryItems, ...serviceDirectoryItems, ...guidesContent.countries.map((item) => ({ title: item.name, description: item.summary, href: `/opportunities/country/${item.slug}` })), ...guidesContent.exams.map((item) => ({ title: item.name, description: item.summary, href: `/opportunities/exams/${item.slug}` })), ...magazineContent.news.items.map((item) => ({ title: item.title, description: item.description, href: `/magazine/post/${item.slug}` }))]
   const normalizedQuery = searchQuery.toLocaleLowerCase(language)
   const searchResults = normalizedQuery ? searchableItems.filter((item) => `${item.title} ${item.description}`.toLocaleLowerCase(language).includes(normalizedQuery)) : []
   const currentTitle = service?.title || countryGuide?.name || examGuide?.name || opportunity?.post.title || selectedPost?.title || (page === '/services' ? servicesContent.ui.indexTitle : page === '/opportunities' ? servicesContent.ui.opportunitiesTitle : page === '/search' ? searchContent.title : page === '/about' ? aboutContent.hero.title : page === '/contact' ? contactContent.hero.title : page === '/magazine' ? magazineContent.hero.title : page === '/' ? headerContent.navigation.home : searchContent.notFoundTitle)
 
-  useEffect(() => {
-    const handleRouteChange = () => {
-      setRoute(getCurrentRoute())
-      window.scrollTo({ top: 0, behavior: 'auto' })
-    }
-
-    window.addEventListener('hashchange', handleRouteChange)
-    return () => window.removeEventListener('hashchange', handleRouteChange)
+  useLayoutEffect(() => {
+    document.documentElement.style.scrollBehavior = 'auto'
   }, [])
 
   useEffect(() => {
-    const rewriteInternalLinks = (root = document) => {
-      const links = [
-        ...(root.matches?.('a[href^="/"]') ? [root] : []),
-        ...(root.querySelectorAll?.('a[href^="/"]') ?? []),
-      ]
-      links.forEach((link) => {
-        const href = link.getAttribute('href')
-        const staticHostHref = toStaticHostHref(href)
-        if (staticHostHref !== href) link.setAttribute('href', staticHostHref)
-      })
-    }
-    const handleInternalClick = (event) => {
-      const link = event.target.closest?.('a[href^="/"]')
-      const href = link?.getAttribute('href')
-      if (!href || href.startsWith('/#') || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    const saveScrollPosition = () => window.sessionStorage.setItem(scrollStorageKey, String(window.scrollY))
+    window.addEventListener('pagehide', saveScrollPosition)
+    return () => window.removeEventListener('pagehide', saveScrollPosition)
+  }, [scrollStorageKey])
 
-      event.preventDefault()
-      window.location.hash = href
-    }
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => mutation.addedNodes.forEach((node) => {
-        if (node instanceof Element) rewriteInternalLinks(node)
-      }))
-    })
+  useEffect(() => {
+    const minimumTimer = window.setTimeout(() => setIsRouteLoading(false), STATIC_SKELETON_MINIMUM_MS)
+    return () => window.clearTimeout(minimumTimer)
+  }, [])
 
-    rewriteInternalLinks()
-    observer.observe(document.body, { childList: true, subtree: true })
-    document.addEventListener('click', handleInternalClick)
-    return () => {
-      observer.disconnect()
-      document.removeEventListener('click', handleInternalClick)
+  useLayoutEffect(() => {
+    if (isRouteLoading) return undefined
+
+    const navigationType = window.performance.getEntriesByType('navigation')[0]?.type
+    if (navigationType === 'reload' && Number.isFinite(savedScrollPosition.current)) {
+      window.scrollTo({ top: savedScrollPosition.current, behavior: 'auto' })
     }
-  })
+
+    const frame = window.requestAnimationFrame(() => document.documentElement.style.removeProperty('scroll-behavior'))
+    return () => window.cancelAnimationFrame(frame)
+  }, [isRouteLoading])
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
@@ -147,6 +134,8 @@ function MainLayout({ children = null }) {
     descriptionMeta.content = service?.description || countryGuide?.summary || examGuide?.summary || opportunity?.post.description || selectedPost?.description || searchContent.description
   }, [currentTitle, service, countryGuide, examGuide, opportunity, selectedPost, searchContent.description])
 
+  if (isRouteLoading) return <RouteProgress path={page} />
+
   return (
     <div className="flex min-h-screen flex-col bg-background text-foreground">
       <ScrollProgress />
@@ -156,12 +145,11 @@ function MainLayout({ children = null }) {
         theme={theme}
         onLanguageToggle={() => setLanguage((currentLanguage) => (currentLanguage === 'prs' ? 'ps' : 'prs'))}
         onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))}
-        currentPath={page}
       />
       <main className="flex-1 pt-16 xl:pt-20">
         {children ?? (page === '/' ? <HomePage content={homeContent} /> : page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} /> : page === '/search' ? <SearchPage content={searchContent} query={searchQuery} results={searchResults} /> : page === '/services' ? <DirectoryPage title={servicesContent.ui.indexTitle} description={servicesContent.ui.indexDescription} homeLabel={headerContent.navigation.home} items={serviceDirectoryItems} actionLabel={servicesContent.ui.viewService} /> : page === '/opportunities' ? <DirectoryPage title={servicesContent.ui.opportunitiesTitle} description={servicesContent.ui.opportunitiesDescription} homeLabel={headerContent.navigation.home} items={opportunityDirectoryItems} actionLabel={servicesContent.ui.viewOpportunity} /> : service ? <ServicePostPage service={service} content={servicesContent} postShell={opportunitiesContent.country.postDetail} /> : countryGuide ? <GuidePostPage guide={countryGuide} content={guidesContent} type={countryMatch[2] ? 'scholarship' : 'country'} postShell={opportunitiesContent.country.postDetail} /> : examGuide ? <GuidePostPage guide={examGuide} content={guidesContent} type="exam" /> : opportunity ? <BlogPostPage post={opportunity.post} content={{ ...opportunity.postDetail, guideLinksTitle: guidesContent.ui.examGuides }} guideLinks={opportunitySlug === 'exams' ? examGuideLinks : []} /> : isBlogPost && selectedPost ? <BlogPostPage post={selectedPost} content={magazineContent.postDetail} relatedPosts={magazineContent.news.items.filter((relatedPost) => relatedPost.slug !== selectedPost.slug && relatedPost.category === selectedPost.category).slice(0, 5)} /> : page === '/magazine' ? <MagazinePage content={magazineContent} language={language} /> : <NotFoundPage content={searchContent} />)}
       </main>
-      <Footer content={footerContent} navigationContent={headerContent} currentPath={page} />
+      <Footer content={footerContent} navigationContent={headerContent} />
     </div>
   )
 }

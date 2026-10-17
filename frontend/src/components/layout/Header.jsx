@@ -84,14 +84,13 @@ function Header({
   language,
   onThemeToggle,
   onLanguageToggle,
-  currentPath,
   className = "",
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [openMobileSection, setOpenMobileSection] = useState(() => {
     const activeSection = headerNavigation.find((item) =>
-      item.children?.some((child) => currentPath === child.href || currentPath.startsWith(`${child.href}/`)),
+      item.children?.some((child) => window.location.pathname === child.href || window.location.pathname.startsWith(`${child.href}/`)),
     );
     return activeSection?.id ?? null;
   });
@@ -160,8 +159,10 @@ function Header({
     event.preventDefault();
     const trimmedQuery = searchQuery.trim();
     if (!trimmedQuery) return;
-    window.location.hash = `/search?q=${encodeURIComponent(trimmedQuery)}`;
+    window.location.assign(`/search?q=${encodeURIComponent(trimmedQuery)}`);
   };
+
+  const currentPath = window.location.pathname;
 
   return (
     <header className={`fixed inset-x-0 top-0 z-40 w-full ${className}`.trim()}>
