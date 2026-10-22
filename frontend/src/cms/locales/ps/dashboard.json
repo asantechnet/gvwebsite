@@ -12,10 +12,6 @@
       { "label": "مجله", "key": "magazine" },
       { "label": "هېوادونه او لارښودونه", "key": "guides" }
     ] },
-    { "label": "اړیکې", "items": [
-      { "label": "پیغامونه", "key": "messages" },
-      { "label": "د مشورې غوښتنې", "key": "consultations" }
-    ] },
     { "label": "مدیریت", "items": [
       { "label": "رسنیز کتابتون", "key": "media" },
       { "label": "کاروونکي", "key": "users" },

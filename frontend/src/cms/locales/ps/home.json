@@ -1,0 +1,42 @@
+{
+  "breadcrumb": "د وېب‌سایټ منځپانګه",
+  "title": "اصلي پاڼه",
+  "description": "د وېب‌سایټ د اصلي پاڼې منځپانګه، ترتیب او د برخو ښودل اداره کړئ.",
+  "preview": "پاڼه وګورئ",
+  "published": "خپره شوې",
+  "status": "د پاڼې حالت",
+  "lastUpdate": "وروستی تازه کول",
+  "today": "نن",
+  "language": "د منځپانګې ژبه",
+  "currentLanguage": "پښتو",
+  "sectionsTitle": "د پاڼې جوړښت",
+  "sectionsDescription": "د سمون لپاره یوه برخه وټاکئ.",
+  "visible": "وښودل شي",
+  "hidden": "پټه ده",
+  "editSection": "برخه سمول",
+  "sectionDescription": "د دې برخې متنونه او تنظیمات بدل کړئ.",
+  "content": "منځپانګه",
+  "items": "د برخې توکي",
+  "itemsDescription": "د دې توکو جزئیات په ځانګړي سمونګر کې اداره کېږي.",
+  "manageItems": "توکي اداره کړئ",
+  "fields": {
+    "titleBefore": "د سرلیک لومړۍ برخه",
+    "titleHighlight": "د سرلیک روښانه برخه",
+    "titleAfter": "د سرلیک وروستۍ برخه",
+    "title": "سرلیک",
+    "description": "تشریح",
+    "primaryAction": "اصلي تڼۍ",
+    "secondaryAction": "دوهمه تڼۍ",
+    "viewAll": "د ټولو لیدلو متن"
+  },
+  "sections": {
+    "hero": { "label": "د پېژندنې برخه", "note": "اصلي سرلیک، تشریح او تڼۍ" },
+    "opportunities": { "label": "فرصتونه", "note": "سرلیک او د فرصت کارتونه" },
+    "destinations": { "label": "مشهور مقصدونه", "note": "هېوادونه او د مقصد انځورونه" },
+    "process": { "label": "د همکارۍ بهیر", "note": "د مراجع د لارې پړاوونه" },
+    "services": { "label": "خدمتونه", "note": "د اصلي پاڼې غوره خدمتونه" },
+    "testimonials": { "label": "د مراجعینو تجربې", "note": "نظرونه او د مراجعینو انځورونه" },
+    "consultation": { "label": "مشورې ته بلنه", "note": "وروستۍ برخه او د اقدام تڼۍ" }
+  },
+  "itemUnits": { "cards": "کارت", "countries": "هېواد", "steps": "پړاو", "items": "نظر" }
+}

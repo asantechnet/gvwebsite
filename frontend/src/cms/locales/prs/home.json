@@ -1,0 +1,42 @@
+{
+  "breadcrumb": "محتوای وب‌سایت",
+  "title": "صفحه اصلی",
+  "description": "محتوا، ترتیب و نمایش بخش‌های صفحه اصلی وب‌سایت را مدیریت کنید.",
+  "preview": "مشاهده صفحه",
+  "published": "منتشرشده",
+  "status": "وضعیت صفحه",
+  "lastUpdate": "آخرین به‌روزرسانی",
+  "today": "امروز",
+  "language": "زبان محتوا",
+  "currentLanguage": "دری",
+  "sectionsTitle": "ساختار صفحه",
+  "sectionsDescription": "برای ویرایش، یک بخش را انتخاب کنید.",
+  "visible": "نمایش داده شود",
+  "hidden": "پنهان است",
+  "editSection": "ویرایش بخش",
+  "sectionDescription": "متن‌ها و تنظیمات این بخش را ویرایش کنید.",
+  "content": "محتوا",
+  "items": "موارد این بخش",
+  "itemsDescription": "مدیریت جزئیات این موارد در ویرایشگر اختصاصی آن‌ها انجام می‌شود.",
+  "manageItems": "مدیریت موارد",
+  "fields": {
+    "titleBefore": "بخش نخست عنوان",
+    "titleHighlight": "بخش برجسته عنوان",
+    "titleAfter": "بخش پایانی عنوان",
+    "title": "عنوان",
+    "description": "توضیحات",
+    "primaryAction": "دکمه اصلی",
+    "secondaryAction": "دکمه دوم",
+    "viewAll": "متن مشاهده همه"
+  },
+  "sections": {
+    "hero": { "label": "بخش معرفی", "note": "عنوان اصلی، توضیحات و دکمه‌ها" },
+    "opportunities": { "label": "فرصت‌ها", "note": "عنوان و کارت‌های فرصت" },
+    "destinations": { "label": "مقصدهای محبوب", "note": "کشورها و تصویرهای مقصد" },
+    "process": { "label": "روند همکاری", "note": "مراحل مسیر مشتری" },
+    "services": { "label": "خدمات", "note": "خدمات برجسته صفحه اصلی" },
+    "testimonials": { "label": "تجربه مشتریان", "note": "دیدگاه‌ها و تصویر مشتریان" },
+    "consultation": { "label": "دعوت به مشاوره", "note": "بخش پایانی و دکمه‌های اقدام" }
+  },
+  "itemUnits": { "cards": "کارت", "countries": "کشور", "steps": "مرحله", "items": "دیدگاه" }
+}

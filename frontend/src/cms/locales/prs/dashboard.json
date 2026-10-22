@@ -12,10 +12,6 @@
       { "label": "مجله", "key": "magazine" },
       { "label": "کشورها و راهنماها", "key": "guides" }
     ] },
-    { "label": "ارتباطات", "items": [
-      { "label": "پیام‌ها", "key": "messages" },
-      { "label": "درخواست‌های مشاوره", "key": "consultations" }
-    ] },
     { "label": "مدیریت", "items": [
       { "label": "کتابخانه رسانه", "key": "media" },
       { "label": "کاربران", "key": "users" },
