@@ -4,7 +4,7 @@ This guide is the single source of truth for the Global Vision architecture, gen
 
 ## Current Status
 
-The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, `MainLayout`, responsive localized `Header` and `Footer` components, and shared UI components for sections, containers, headings, action links, and repeated card patterns are configured. The home page includes responsive hero, opportunity, destination, process, service, testimonial, and consultation sections with Dari and Pashto content. Shared navigation data, matching localized layout translations, pathname-based page selection, slug-based magazine post routes, opportunity and service directory routes, localized service posts, country guides, scholarship guides, IELTS/TOEFL guides, localized search results, a not-found page, dynamic page metadata, and frontend contact-form validation are implemented. A routing library, Laravel backend, MariaDB integration, API, broader translation coverage, and CMS implementation have not started.
+The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, separate website and CMS source areas, responsive localized `Header` and `Footer` components, and shared UI components for sections, containers, headings, action links, and repeated card patterns are configured. The home page includes responsive hero, opportunity, destination, process, service, testimonial, and consultation sections with Dari and Pashto content. Shared navigation data, matching localized layout translations, pathname-based page selection, slug-based magazine post routes, opportunity and service directory routes, localized service posts, country guides, scholarship guides, IELTS/TOEFL guides, localized search results, a not-found page, dynamic page metadata, and frontend contact-form validation are implemented. An initial localized CMS dashboard shell is available at `/dashboard`, with a responsive RTL sidebar, top bar, overview metrics, content status, quick actions, language switching, and theme switching. A routing library, Laravel backend, MariaDB integration, API, authentication, and functional CMS editors have not started.
 
 The repository currently contains:
 
@@ -20,7 +20,7 @@ Do not describe planned functionality as implemented.
 1. The public website and CMS frontends use React with Vite. The backend uses Laravel and persistent data uses MariaDB.
 2. All styling uses Tailwind CSS.
 3. Component, section, page, and layout styling belongs in Tailwind utility classes inside the owning JSX file.
-4. `src/index.css` is the only CSS file. It is limited to Tailwind setup, branding colors, fonts, light and dark class colors, and strictly necessary custom animations or minimal global document defaults. Keep it between 80 and 100 lines when practical and never over 100 lines.
+4. `src/index.css` owns Tailwind setup, shared branding colors, fonts, light and dark class colors, and minimal global defaults. CMS-only theme variables and primitive behavior live in `src/cms/styles.css`; detailed component styling remains in Tailwind utilities inside JSX.
 5. Repeated elements must use reusable, prop driven components.
 6. The required feature composition is `reusable components → sections → pages`. Detailed markup, styling, data presentation, and behavior belong in reusable components and sections. Pages only import and compose sections.
 7. Do not use CSS outlines or Tailwind ring utilities on clickable elements. Use accessible brand appropriate background, border, shadow, opacity, or color changes for hover and focus feedback.
@@ -31,9 +31,9 @@ Do not describe planned functionality as implemented.
 12. Route loading states must mirror the order, responsive layout, and recognizable shapes of destination sections.
 13. Every visible skeleton must use a future shared `SkeletonBlock` component for consistent shimmer and reduced motion behavior.
 14. Use Lucide React for all general interface icons. Use React Icons only for social media brand icons.
-15. Keep frontend rendering independent of backend implementation through a dedicated `src/services/api/` layer. Components, sections, and pages must never call Laravel endpoints directly.
-16. Keep all visual application layers under `src/components/`, including reusable UI, shared components, layouts, sections, and pages.
-17. Store interface translations in locale-specific JSON files. Components consume translation keys and must not embed duplicated Dari and Pashto UI copy.
+15. Keep frontend rendering independent of backend implementation through a dedicated `src/shared/services/api/` layer. Components, sections, and pages must never call Laravel endpoints directly.
+16. Keep public website code under `src/website/`, CMS code under `src/cms/`, and code genuinely reused by both applications under `src/shared/`.
+17. Store each application's interface translations in its locale-specific JSON directories. Components consume translation keys and must not embed duplicated Dari and Pashto UI copy.
 
 ## Goals
 
@@ -61,6 +61,7 @@ Do not describe planned functionality as implemented.
 | --- | --- | --- |
 | React | Component based user interface | `^19.2.8` |
 | React DOM | Browser rendering | `^19.2.8` |
+| Nivo Bar, Core, and Pie | CMS overview charts and metric visualizations | `^0.99.0` |
 | Vite | Development server and production bundler | `^8.3.0` |
 | Tailwind CSS | Utility based responsive styling | `^4.3.3` |
 | Tailwind Vite plugin | Tailwind and Vite integration | `^4.3.3` |
@@ -96,20 +97,17 @@ globalvision-website/
 │   │   ├── .htaccess           # Apache fallback for client-side application routes
 │   │   └── assets/             # Stable branding, image, flag, and audio assets
 │   ├── src/
-│   │   ├── components/         # All visual application layers
-│   │   │   ├── ui/             # Basic reusable UI components
-│   │   │   ├── shared/         # Shared compound components
-│   │   │   ├── layout/         # MainLayout, Header, Footer, navigation, and shells
-│   │   │   ├── sections/       # Website and CMS feature sections
-│   │   │   └── pages/          # Route components that only compose sections
-│   │   ├── data/               # Navigation and presentation data
-│   │   ├── hooks/              # Reusable frontend behavior
-│   │   ├── services/
-│   │   │   └── api/            # HTTP client, endpoint services, and adapters
-│   │   ├── locales/
-│   │   │   ├── prs/            # Dari JSON translation files
-│   │   │   └── ps/             # Pashto JSON translation files
+│   │   ├── website/             # Public website application
+│   │   │   ├── components/      # Website layouts, pages, sections, shared, and UI
+│   │   │   ├── data/            # Public navigation and presentation data
+│   │   │   ├── locales/         # Public Dari and Pashto translations
+│   │   │   └── utils/           # Website-only utilities
+│   │   ├── cms/                 # CMS application mounted at /dashboard
+│   │   │   ├── components/      # CMS layouts, pages, sections, and controls
+│   │   │   └── locales/         # CMS Dari and Pashto translations
+│   │   ├── shared/              # Cross-application hooks, services, and utilities
 │   │   ├── assets/fonts/       # Bundled local fonts
+│   │   ├── App.jsx             # Website/CMS application boundary
 │   │   ├── index.css           # Tailwind, tokens, fonts, global defaults
 │   │   └── main.jsx            # React bootstrap
 │   ├── index.html
@@ -128,39 +126,40 @@ Populate component subdirectories during implementation. Create data, hooks, ser
 | Alias | Location |
 | --- | --- |
 | `@` | `frontend/src` |
-| `@components` | `frontend/src/components` |
-| `@ui` | `frontend/src/components/ui` |
-| `@shared` | `frontend/src/components/shared` |
-| `@sections` | `frontend/src/components/sections` |
-| `@pages` | `frontend/src/components/pages` |
-| `@layout` | `frontend/src/components/layout` |
-| `@services` | `frontend/src/services` |
+| `@website` | `frontend/src/website` |
+| `@cms` | `frontend/src/cms` |
+| `@components` | `frontend/src/website/components` |
+| `@ui` | `frontend/src/website/components/ui` |
+| `@shared` | `frontend/src/website/components/shared` |
+| `@sections` | `frontend/src/website/components/sections` |
+| `@pages` | `frontend/src/website/components/pages` |
+| `@layout` | `frontend/src/website/components/layout` |
+| `@services` | `frontend/src/shared/services` |
 
-Use aliases across source areas and relative imports for nearby files within one feature. The visual dependency direction is `MainLayout → pages → sections → shared/ui`. Lower component layers must not import higher layers. Presentation code may consume hooks or services, while service modules must never import components.
+Use aliases across source areas and relative imports for nearby files within one feature. The visual dependency direction inside each application is `layout → pages → sections → shared/ui`. Website and CMS presentation modules must not import each other; only the root application boundary and shared non-application modules may connect them. Lower component layers must not import higher layers.
 
 ## Architecture Rules
 
 ### Application layer
 
-- `main.jsx` imports global CSS, mounts React, and renders `MainLayout` directly.
-- `src/components/layout/MainLayout.jsx` is the application root and performs the role otherwise commonly assigned to `App.jsx`.
-- `MainLayout` composes the shared `Header`, main content region, and `Footer`.
-- Route decisions belong in `MainLayout` or a dedicated router imported by it when routing is implemented.
+- `main.jsx` imports global CSS, mounts React, and renders `App`.
+- `src/App.jsx` is the application boundary: `/dashboard` and `/dashboard/*` render the CMS, while `/` and all other public routes render the website.
+- `WebsiteLayout` composes the public `Header`, main content region, and `Footer`; `DashboardLayout` composes the CMS sidebar, top bar, and content region.
+- Route decisions within each application belong in its layout or a dedicated router when routing is implemented.
 - Do not put page markup, content collections, or UI behavior in `main.jsx`.
 
 ### Pages and sections
 
 - One page component represents one route.
 - Pages only import and compose sections. They must not contain detailed UI markup, styling, API calls, content arrays, or feature behavior.
-- Page specific sections belong in `src/components/sections/<page-name>/`.
+- Page-specific sections belong under the owning application's `components/sections/` directory.
 - Sections use reusable components for repeated cards, buttons, headings, links, and media.
 - Split a section when it contains independently understandable or reusable parts.
 
 ### Components and layout
 
-- Generic visual components belong in `src/components/ui/`.
-- Reusable compound components belong in `src/components/shared/`.
-- Site wide components belong in `src/components/layout/`.
+- Application-specific UI, compound components, and layouts belong under the owning application's `components/` directory.
+- Cross-application components are added under `src/shared/components/` only when both applications actively use them.
 - Supply changeable content, images, links, icons, states, colors, and behavior through props.
 - Prefer `children` where composition creates a clearer API.
 - Support `className` where consumers need controlled visual extension.
@@ -170,16 +169,16 @@ Use aliases across source areas and relative imports for nearby files within one
 
 ### Hooks and data
 
-- Reusable stateful behavior belongs in `src/hooks/`; hook names begin with `use`.
+- Reusable stateful behavior belongs in the owning application's hooks directory, or `src/shared/hooks/` when both applications use it; hook names begin with `use`.
 - Hooks return the smallest useful API and clean up listeners, timers, and observers.
-- Website content arrays and navigation belong in `src/data/`.
-- Shared visual patterns belong in `src/components/shared/`; nonvisual shared logic belongs in an appropriate hook, service, data, or utility module outside the component tree.
+- Website content arrays and navigation belong in `src/website/data/`.
+- Nonvisual shared logic belongs under `src/shared/`; application-only logic stays under its owning application.
 - Define routes once and reuse their constants.
 - Do not duplicate navigation, service, project, publication, or team data.
 
 ### Backend integration boundary
 
-- Treat `src/services/api/` as the frontend integration layer between React and Laravel. It serves the middleware-like role of isolating transport and backend contracts from presentation files.
+- Treat `src/shared/services/api/` as the frontend integration layer between React and Laravel. It serves the middleware-like role of isolating transport and backend contracts from presentation files.
 - Keep the base URL, credentials policy, headers, request execution, response parsing, normalized errors, cancellation, and authentication handling in the API service infrastructure.
 - Group endpoint operations into domain service modules such as content, projects, publications, contact, authentication, and CMS services.
 - Components and sections consume hooks or service functions; they never call `fetch`, Axios, or Laravel URLs directly.
@@ -189,7 +188,7 @@ Use aliases across source areas and relative imports for nearby files within one
 
 ### Translation architecture
 
-- Store translations as JSON under `src/locales/prs/` for Dari and `src/locales/ps/` for Pashto.
+- Store website translations under `src/website/locales/` and CMS translations under `src/cms/locales/`, each with matching `prs/` and `ps/` directories.
 - Use matching filenames and matching translation-key structures in both language directories.
 - Split large translations by stable feature or namespace rather than maintaining one oversized file.
 - Use stable semantic keys, not full source sentences as keys.
@@ -200,7 +199,9 @@ Use aliases across source areas and relative imports for nearby files within one
 
 ## Routing Rules
 
-`MainLayout` currently selects pages from `window.location.pathname` without a routing dependency. Magazine posts use stable, language-independent paths in the form `/magazine/post/:slug`; matching Dari and Pashto records must share the same slug. Every child item under Opportunities and Services is content of type post, rendered with the shared single-post layout rather than a standalone page component. These posts may use their canonical navigation path, such as `/opportunities/study`. When routing expands or a routing library is introduced:
+`App.jsx` selects the website or CMS from `window.location.pathname` without a routing dependency. `WebsiteLayout` currently selects public pages the same way. Magazine posts use stable, language-independent paths in the form `/magazine/post/:slug`; matching Dari and Pashto records must share the same slug. Every child item under Opportunities and Services is content of type post, rendered with the shared single-post layout rather than a standalone page component. These posts may use their canonical navigation path, such as `/opportunities/study`. When routing expands or a routing library is introduced:
+
+The CMS shell starts at `/dashboard`. Paths below `/dashboard/*` are reserved for CMS content areas and currently render the dashboard shell until their editors are implemented.
 
 - Centralize canonical paths and navigation data.
 - Use route constants rather than repeated strings.
@@ -224,7 +225,7 @@ Use aliases across source areas and relative imports for nearby files within one
 | Dark background | `#1f2937` (`gray-800`) | Dark page background |
 | Dark foreground | `#fff8f3` | Dark primary text |
 
-Branding colors, fonts, light and dark class colors, and necessary global animation definitions live in `src/index.css`. Keep the file within 80 to 100 lines and never exceed 100. The site supports explicit `.light` and `.dark` theme classes. Components consume semantic tokens rather than hardcoded theme colors. All component, section, page-shell, and layout styling belongs in JSX through Tailwind utilities.
+Shared branding colors, fonts, light and dark class colors, and necessary global animation definitions live in `src/index.css`. CMS-only administrative tokens and primitive behaviors live in `src/cms/styles.css` and remain scoped to `.cms-root`. The site supports explicit `.light` and `.dark` theme classes. Components consume semantic tokens rather than hardcoded theme colors. Detailed component, section, page-shell, and layout styling belongs in JSX through Tailwind utilities.
 
 ### Language and typography
 
@@ -346,7 +347,7 @@ Before completing a code or design change:
 When backend or content management work begins:
 
 - Build the backend with Laravel and use MariaDB as its database.
-- Load dynamic content through the dedicated `src/services/api/` layer rather than scattered component requests.
+- Load dynamic content through the dedicated `src/shared/services/api/` layer rather than scattered component requests.
 - Let the backend own validation, authorization, business rules, serialization, uploads, and database access.
 - Use migrations for every schema change.
 - Limit public responses to required fields.

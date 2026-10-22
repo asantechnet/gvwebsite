@@ -3,13 +3,15 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@ui/*": ["src/components/ui/*"],
-      "@shared/*": ["src/components/shared/*"],
-      "@sections/*": ["src/components/sections/*"],
-      "@pages/*": ["src/components/pages/*"],
-      "@layout/*": ["src/components/layout/*"],
-      "@services/*": ["src/services/*"]
+      "@website/*": ["src/website/*"],
+      "@cms/*": ["src/cms/*"],
+      "@components/*": ["src/website/components/*"],
+      "@ui/*": ["src/website/components/ui/*"],
+      "@shared/*": ["src/website/components/shared/*"],
+      "@sections/*": ["src/website/components/sections/*"],
+      "@pages/*": ["src/website/components/pages/*"],
+      "@layout/*": ["src/website/components/layout/*"],
+      "@services/*": ["src/shared/services/*"]
     }
   },
   "exclude": ["dist", "node_modules"]

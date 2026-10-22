@@ -14,31 +14,31 @@ import ServicePostPage from '@pages/ServicePostPage.jsx'
 import DirectoryPage from '@pages/DirectoryPage.jsx'
 import SearchPage from '@pages/SearchPage.jsx'
 import NotFoundPage from '@pages/NotFoundPage.jsx'
-import dariFooterContent from '@/locales/prs/footer.json'
-import dariHeaderContent from '@/locales/prs/header.json'
-import dariHomeContent from '@/locales/prs/home.json'
-import dariAboutContent from '@/locales/prs/about.json'
-import dariContactContent from '@/locales/prs/contact.json'
-import dariMagazineContent from '@/locales/prs/magazine.json'
-import pashtoFooterContent from '@/locales/ps/footer.json'
-import pashtoHeaderContent from '@/locales/ps/header.json'
-import pashtoHomeContent from '@/locales/ps/home.json'
-import pashtoAboutContent from '@/locales/ps/about.json'
-import pashtoContactContent from '@/locales/ps/contact.json'
-import pashtoMagazineContent from '@/locales/ps/magazine.json'
-import dariOpportunitiesContent from '@/locales/prs/opportunities.json'
-import pashtoOpportunitiesContent from '@/locales/ps/opportunities.json'
-import dariGuidesContent from '@/locales/prs/guides.json'
-import pashtoGuidesContent from '@/locales/ps/guides.json'
-import dariServicesContent from '@/locales/prs/services.json'
-import pashtoServicesContent from '@/locales/ps/services.json'
-import dariSearchContent from '@/locales/prs/search.json'
-import pashtoSearchContent from '@/locales/ps/search.json'
+import dariFooterContent from '@website/locales/prs/footer.json'
+import dariHeaderContent from '@website/locales/prs/header.json'
+import dariHomeContent from '@website/locales/prs/home.json'
+import dariAboutContent from '@website/locales/prs/about.json'
+import dariContactContent from '@website/locales/prs/contact.json'
+import dariMagazineContent from '@website/locales/prs/magazine.json'
+import pashtoFooterContent from '@website/locales/ps/footer.json'
+import pashtoHeaderContent from '@website/locales/ps/header.json'
+import pashtoHomeContent from '@website/locales/ps/home.json'
+import pashtoAboutContent from '@website/locales/ps/about.json'
+import pashtoContactContent from '@website/locales/ps/contact.json'
+import pashtoMagazineContent from '@website/locales/ps/magazine.json'
+import dariOpportunitiesContent from '@website/locales/prs/opportunities.json'
+import pashtoOpportunitiesContent from '@website/locales/ps/opportunities.json'
+import dariGuidesContent from '@website/locales/prs/guides.json'
+import pashtoGuidesContent from '@website/locales/ps/guides.json'
+import dariServicesContent from '@website/locales/prs/services.json'
+import pashtoServicesContent from '@website/locales/ps/services.json'
+import dariSearchContent from '@website/locales/prs/search.json'
+import pashtoSearchContent from '@website/locales/ps/search.json'
 
 // Temporary while content is static. Replace with real API loading state when the backend is connected.
 const STATIC_SKELETON_MINIMUM_MS = 1000
 
-function MainLayout({ children = null }) {
+function WebsiteLayout({ children = null }) {
   const [isRouteLoading, setIsRouteLoading] = useState(true)
   const scrollStorageKey = `globalvision-scroll:${window.location.pathname}${window.location.search}`
   const savedScrollPosition = useRef(Number(window.sessionStorage.getItem(scrollStorageKey)))
@@ -154,4 +154,4 @@ function MainLayout({ children = null }) {
   )
 }
 
-export default MainLayout
+export default WebsiteLayout

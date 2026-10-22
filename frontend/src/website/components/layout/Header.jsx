@@ -15,7 +15,7 @@ import {
   X,
 } from "lucide-react";
 
-import { headerNavigation } from "@/data/navigation.js";
+import { headerNavigation } from "@website/data/navigation.js";
 
 const noFocusOutline = "focus:outline-none focus-visible:outline-none";
 const iconButtonClasses =

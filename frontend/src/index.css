@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap");
 @import "tailwindcss";
+@import "./cms/styles.css";
 @font-face { font-family: "IRANYekan"; src: url("./assets/fonts/iranyekan/iranyekan-thin.ttf") format("truetype"); font-style: normal; font-weight: 100; font-display: swap; }
 @font-face { font-family: "IRANYekan"; src: url("./assets/fonts/iranyekan/iranyekan-light.ttf") format("truetype"); font-style: normal; font-weight: 300; font-display: swap; }
 @font-face { font-family: "IRANYekan"; src: url("./assets/fonts/iranyekan/iranyekan-regular.ttf") format("truetype"); font-style: normal; font-weight: 400; font-display: swap; }
@@ -30,6 +31,15 @@
   --color-on-secondary: var(--theme-on-secondary);
   --color-link: var(--theme-link);
   --color-focus: var(--theme-focus);
+  --color-admin-brand: var(--admin-brand);
+  --color-admin-brand-soft: var(--admin-brand-soft);
+  --color-admin-heading: var(--admin-heading);
+  --color-admin-muted: var(--admin-muted);
+  --color-admin-border: var(--admin-border);
+  --color-admin-card: var(--admin-card);
+  --color-admin-page: var(--admin-page);
+  --color-admin-control: var(--admin-control);
+  --color-admin-control-soft: var(--admin-control-soft);
 }
 
 :root,

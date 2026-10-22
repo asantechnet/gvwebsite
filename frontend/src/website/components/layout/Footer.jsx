@@ -1,6 +1,6 @@
 import { ArrowLeft, BriefcaseBusiness, Wrench } from "lucide-react";
 
-import { headerNavigation } from "@/data/navigation.js";
+import { headerNavigation } from "@website/data/navigation.js";
 import Container from "@ui/Container.jsx";
 
 const focusClasses =
