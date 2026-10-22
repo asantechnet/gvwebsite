@@ -38,5 +38,6 @@
     "testimonials": { "label": "د مراجعینو تجربې", "note": "نظرونه او د مراجعینو انځورونه" },
     "consultation": { "label": "مشورې ته بلنه", "note": "وروستۍ برخه او د اقدام تڼۍ" }
   },
-  "itemUnits": { "cards": "کارت", "countries": "هېواد", "steps": "پړاو", "items": "نظر" }
+  "itemUnits": { "cards": "کارت", "countries": "هېواد", "steps": "پړاو", "items": "نظر" },
+  "fieldGroups": { "heading": "د برخې سرلیک", "body": "متن او تشریح", "actions": "د اقدام تڼۍ" }
 }

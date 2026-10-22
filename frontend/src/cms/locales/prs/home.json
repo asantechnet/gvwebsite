@@ -38,5 +38,6 @@
     "testimonials": { "label": "تجربه مشتریان", "note": "دیدگاه‌ها و تصویر مشتریان" },
     "consultation": { "label": "دعوت به مشاوره", "note": "بخش پایانی و دکمه‌های اقدام" }
   },
-  "itemUnits": { "cards": "کارت", "countries": "کشور", "steps": "مرحله", "items": "دیدگاه" }
+  "itemUnits": { "cards": "کارت", "countries": "کشور", "steps": "مرحله", "items": "دیدگاه" },
+  "fieldGroups": { "heading": "عنوان بخش", "body": "متن و توضیحات", "actions": "دکمه‌های اقدام" }
 }
