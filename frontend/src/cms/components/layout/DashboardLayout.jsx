@@ -13,7 +13,6 @@ import dariContent from '@cms/locales/prs/dashboard.json'
 import pashtoContent from '@cms/locales/ps/dashboard.json'
 import dariMagazineContent from '@website/locales/prs/magazine.json'
 import dariServicesContent from '@website/locales/prs/services.json'
-import dariGuidesContent from '@website/locales/prs/guides.json'
 import dariMessagesContent from '@cms/locales/prs/messages.json'
 import pashtoMessagesContent from '@cms/locales/ps/messages.json'
 import dariProfileContent from '@cms/locales/prs/profile.json'
@@ -22,6 +21,7 @@ import dariHomeEditorContent from '@cms/locales/prs/home.json'
 import pashtoHomeEditorContent from '@cms/locales/ps/home.json'
 import dariHomeContent from '@website/locales/prs/home.json'
 import pashtoHomeContent from '@website/locales/ps/home.json'
+import dariGuidesContent from '@website/locales/prs/guides.json'
 
 function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
