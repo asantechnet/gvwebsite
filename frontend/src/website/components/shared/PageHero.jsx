@@ -5,7 +5,6 @@ import Container from "@ui/Container.jsx";
 import Section from "@ui/Section.jsx";
 
 function PageHero({
-  eyebrow,
   title,
   description,
   breadcrumbs = [],
@@ -13,12 +12,15 @@ function PageHero({
   imageAlt = "",
   primaryAction,
   breadcrumbLabel = "Breadcrumb",
+  className = "",
+  style,
 }) {
   return (
     <Section
       padded={false}
       aria-labelledby="page-hero-title"
-      className="bg-background py-6 md:py-10 lg:pb-20 lg:pt-12"
+      className={`bg-background py-6 md:py-10 lg:pb-[6.25rem] lg:pt-12 ${className}`.trim()}
+      style={style}
     >
       <Container>
         <div className="relative isolate flex min-h-52 flex-col items-center justify-center overflow-hidden rounded-4xl border border-border bg-surface px-6 py-4 dark:border-gray-600 dark:bg-[#2b3442] md:min-h-56 md:px-10 md:py-6 lg:px-16">
@@ -34,11 +36,6 @@ function PageHero({
           )}
 
           <div className="relative order-1 mx-auto w-full max-w-2xl text-center lg:order-2">
-            {eyebrow && (
-              <p className="mb-2 text-sm font-bold tracking-wide text-brand-red md:text-base">
-                {eyebrow}
-              </p>
-            )}
             <h1
               id="page-hero-title"
               className="font-heading text-2xl font-extrabold leading-tight text-foreground md:text-3xl lg:text-4xl"
