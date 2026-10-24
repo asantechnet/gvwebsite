@@ -10,7 +10,7 @@ function DestinationCard({ item }) {
   return (
     <a
       href={item.href}
-      className={`group relative block h-56 overflow-hidden rounded-2xl border border-transparent bg-surface shadow-sm transition-all hover:border-primary hover:shadow-lg md:h-60 ${cardLayoutClasses[item.layout]} ${focusClasses}`}
+      className={`group relative block h-56 overflow-hidden rounded-2xl border border-transparent bg-surface shadow-sm transition-all hover:shadow-lg md:h-60 ${cardLayoutClasses[item.layout]} ${focusClasses}`}
     >
       <img src={item.image} alt={item.imageAlt} width="1400" height="934" loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
       <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/10 to-black/20" />

@@ -8,13 +8,40 @@ function DeleteConfirmation({ children }) {
   const confirm = useCallback((options = {}) => new Promise((resolve) => { resolver.current = resolve; setRequest(options) }), [])
   const close = useCallback((confirmed) => { resolver.current?.(confirmed); resolver.current = null; setRequest(null) }, [])
   useEffect(() => { window.cmsConfirmDelete = confirm; return () => { delete window.cmsConfirmDelete } }, [confirm])
+  useEffect(() => {
+    if (!request) return undefined
+    const previousBodyOverflow = document.body.style.overflow
+    const previousDocumentOverflow = document.documentElement.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    document.documentElement.classList.add('cms-modal-open')
+    return () => { document.body.style.overflow = previousBodyOverflow; document.documentElement.style.overflow = previousDocumentOverflow; document.documentElement.classList.remove('cms-modal-open') }
+  }, [request])
   return <>{children}{request && <DeleteDialog request={request} onClose={close} />}</>
 }
 
 function DeleteDialog({ request, onClose }) {
   const cancelRef = useRef(null)
-  useEffect(() => { cancelRef.current?.focus(); const keydown = (event) => { if (event.key === 'Escape') onClose(false) }; document.addEventListener('keydown', keydown); return () => document.removeEventListener('keydown', keydown) }, [onClose])
-  return createPortal(<div className="fixed inset-0 z-[150] grid place-items-center p-4"><div className="absolute inset-0 bg-[rgb(8_12_20/.62)] backdrop-blur-[7px]" onClick={() => onClose(false)} /><section role="alertdialog" aria-modal="true" className="relative w-full max-w-[27rem] overflow-hidden rounded-3xl border border-admin-border bg-admin-card shadow-[0_28px_90px_rgb(0_0_0/.3)]"><div className="relative flex flex-col items-center bg-[radial-gradient(ellipse_at_top,color-mix(in_srgb,var(--admin-brand)_10%,transparent),transparent_70%)] px-7 pt-8 pb-7 text-center"><button type="button" className="absolute top-3 right-3 grid size-8 place-items-center rounded-full text-admin-muted transition hover:bg-admin-control-soft hover:text-admin-heading" aria-label="Cancel deletion" onClick={() => onClose(false)}><X size={17} /></button><span className="mb-5 grid size-16 place-items-center rounded-2xl border border-red-500/15 bg-red-500/10 text-red-600"><Trash2 size={27} strokeWidth={1.65} /></span><h2 className="m-0 font-heading text-xl font-semibold tracking-tight text-admin-heading">{request.title || 'این مورد حذف شود؟'}</h2><p className="mt-3 mb-0 max-w-xs text-[.8125rem] leading-relaxed break-words text-admin-muted">{request.description || 'این عملیات قابل بازگشت نیست.'}</p></div><div className="flex items-center justify-end gap-3 border-t border-admin-border bg-(--editor-field) px-6 py-4"><button ref={cancelRef} type="button" className="inline-flex min-h-10 flex-1 items-center justify-center rounded-xl border border-admin-border bg-admin-control px-4 text-xs font-semibold text-admin-heading transition hover:bg-admin-control-soft" onClick={() => onClose(false)}>لغو</button><button type="button" className="inline-flex min-h-10 flex-1 items-center justify-center gap-2 rounded-xl border border-red-600 bg-red-600 px-4 text-xs font-semibold text-white transition hover:border-red-700 hover:bg-red-700" onClick={() => onClose(true)}><Trash2 size={15} />حذف</button></div></section></div>, document.body)
+  const [closing, setClosing] = useState(false)
+  const close = useCallback((confirmed) => { setClosing(true); window.setTimeout(() => onClose(confirmed), 180) }, [onClose])
+  useEffect(() => { cancelRef.current?.focus(); const keydown = (event) => { if (event.key === 'Escape') close(false) }; document.addEventListener('keydown', keydown); return () => document.removeEventListener('keydown', keydown) }, [close])
+  return createPortal(
+    <div className={`cms-modal-backdrop fixed inset-0 z-[150] isolate grid place-items-center p-4 sm:p-6 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onClick={() => close(false)}>
+      <section role="alertdialog" aria-modal="true" aria-labelledby="delete-dialog-title" aria-describedby="delete-dialog-description" className={`relative z-10 w-full max-w-xl rounded-2xl border border-admin-border bg-admin-card p-5 shadow-2xl sm:p-6 ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`} style={{ backgroundColor: 'var(--admin-card)', borderColor: 'var(--admin-border)', opacity: 1 }} onClick={(event) => event.stopPropagation()}>
+        <div className="relative flex flex-col items-center bg-transparent text-center">
+          <button type="button" className="absolute top-0 left-0 grid size-9 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-control-soft hover:text-admin-heading focus-visible:border-admin-brand focus-visible:shadow-[0_0_0_2px_rgb(245_155_34_/.2)]" aria-label="Cancel deletion" onClick={() => close(false)}><X size={17} /></button>
+          <span className="mb-4 grid size-14 place-items-center rounded-2xl border border-red-500/20 bg-red-500/10 text-red-600 shadow-[0_8px_20px_rgb(239_68_68/.1)] sm:mb-5 sm:size-16"><Trash2 size={26} strokeWidth={1.65} /></span>
+          <h2 id="delete-dialog-title" className="m-0 font-heading text-lg font-semibold tracking-tight text-admin-heading sm:text-xl">{request.title || 'این مورد حذف شود؟'}</h2>
+          <p id="delete-dialog-description" className="mt-2.5 mb-0 max-w-xs text-[.75rem] leading-7 break-words text-admin-muted sm:mt-3 sm:text-[.8125rem]">{request.description || 'این عملیات قابل بازگشت نیست.'}</p>
+        </div>
+        <div className="mt-6 grid grid-cols-2 gap-2.5 bg-transparent sm:gap-3">
+          <button ref={cancelRef} type="button" className="inline-flex min-h-11 items-center justify-center rounded-xl border border-admin-border bg-admin-control px-4 text-xs font-semibold text-admin-heading transition hover:border-admin-brand hover:bg-admin-control-soft hover:text-admin-brand focus-visible:border-admin-brand focus-visible:shadow-[0_0_0_2px_rgb(245_155_34_/.2)]" onClick={() => close(false)}>لغو</button>
+          <button type="button" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-red-600 bg-red-600 px-4 text-xs font-semibold text-white transition hover:border-red-700 hover:bg-red-700 focus-visible:border-red-700 focus-visible:shadow-[0_0_0_2px_rgb(239_68_68/.25)]" onClick={() => close(true)}><Trash2 size={15} />حذف</button>
+        </div>
+      </section>
+    </div>,
+    document.querySelector('.cms-root') || document.body,
+  )
 }
 
 export default DeleteConfirmation

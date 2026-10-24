@@ -1,0 +1,31 @@
+import { useEffect, useState } from 'react'
+import { X } from 'lucide-react'
+import IconPicker from '@cms/components/IconPicker.jsx'
+import CountryPicker from '@cms/components/CountryPicker.jsx'
+import MediaUploadField from '@cms/components/MediaUploadField.jsx'
+
+function AddCollectionItemModal({ content, item, isCountry = false, isProcess = false, countryOptions = [], onClose, onSave }) {
+  const [draft, setDraft] = useState({ title: '', description: '', action: '', href: '', icon: '', image: '' })
+  const [closing, setClosing] = useState(false)
+  const close = () => { setClosing(true); window.setTimeout(onClose, 180) }
+  const save = () => onSave({ ...(item?.name !== undefined ? { name: draft.title } : { title: draft.title }), ...(isCountry ? { image: draft.image, href: draft.href } : { description: draft.description, action: draft.action, href: draft.href, icon: draft.icon }), id: `cms-${Date.now()}` })
+
+  useEffect(() => {
+    const previousBodyOverflow = document.body.style.overflow
+    const previousDocumentOverflow = document.documentElement.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    document.documentElement.classList.add('cms-modal-open')
+    return () => { document.body.style.overflow = previousBodyOverflow; document.documentElement.style.overflow = previousDocumentOverflow; document.documentElement.classList.remove('cms-modal-open') }
+  }, [])
+
+  return <div className={`cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-4 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onClick={close}>
+    <section role="dialog" aria-modal="true" aria-labelledby="add-collection-item-title" className={`relative z-10 w-full max-w-xl rounded-2xl border border-admin-border bg-admin-card p-5 shadow-2xl sm:p-6 ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`} style={{ backgroundColor: 'var(--admin-card)', borderColor: 'var(--admin-border)' }} onClick={(event) => event.stopPropagation()}>
+      <header className="flex items-start justify-between gap-4"><div><span className="text-[.625rem] font-semibold tracking-[.12em] text-admin-brand">{content.manageItems}</span><h2 id="add-collection-item-title" className="mt-1 font-heading text-lg text-admin-heading">{content.addItemTitle || content.manageItems}</h2></div><button type="button" onClick={close} className="grid size-9 place-items-center rounded-lg border border-admin-border text-admin-muted hover:border-admin-brand hover:text-admin-brand" aria-label={content.close}><X size={17} /></button></header>
+      <div className="mt-5 grid gap-4 sm:grid-cols-2">{isCountry ? <><label className="text-xs font-semibold text-admin-heading"><span>{content.countryName}</span><CountryPicker label={content.countryName} value={draft.title} options={countryOptions} onChange={(country) => setDraft((current) => ({ ...current, title: country.name }))} /></label><label className="text-xs font-semibold text-admin-heading"><span>{content.itemLink}</span><input dir="ltr" type="url" className="mt-2 min-h-11 w-full rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3.5 text-left text-sm font-normal outline-none focus:border-admin-brand" value={draft.href} onChange={(event) => setDraft((current) => ({ ...current, href: event.target.value }))} /></label><MediaUploadField content={{ ...content, countryImage: content.countryImage, choose: content.chooseImage, drop: content.dropImage, replace: content.replaceImage, remove: content.removeImage }} value={draft.image} onChange={(image) => setDraft((current) => ({ ...current, image }))} /></> : <><label className="text-xs font-semibold text-admin-heading"><span>{content.itemTitle}</span><input autoFocus className="mt-2 min-h-11 w-full rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3.5 text-sm font-normal outline-none focus:border-admin-brand" value={draft.title} onChange={(event) => setDraft((current) => ({ ...current, title: event.target.value }))} /></label><label className="text-xs font-semibold text-admin-heading"><span>{content.itemIcon}</span><IconPicker label={content.itemIcon} value={draft.icon} onChange={(icon) => setDraft((current) => ({ ...current, icon }))} /></label><label className="sm:col-span-2 text-xs font-semibold text-admin-heading"><span>{content.itemDescription}</span><textarea rows={4} className="mt-2 w-full resize-y rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3.5 py-3 text-sm font-normal leading-6 outline-none focus:border-admin-brand" value={draft.description} onChange={(event) => setDraft((current) => ({ ...current, description: event.target.value }))} /></label>{!isProcess && <><label className="text-xs font-semibold text-admin-heading"><span>{content.itemAction}</span><input className="mt-2 min-h-11 w-full rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3.5 text-sm font-normal outline-none focus:border-admin-brand" value={draft.action} onChange={(event) => setDraft((current) => ({ ...current, action: event.target.value }))} /></label><label className="text-xs font-semibold text-admin-heading"><span>{content.itemLink}</span><input dir="ltr" type="url" className="mt-2 min-h-11 w-full rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3.5 text-left text-sm font-normal outline-none focus:border-admin-brand" value={draft.href} onChange={(event) => setDraft((current) => ({ ...current, href: event.target.value }))} /></label></>}</>}</div>
+      <footer className="mt-6 flex justify-end gap-2"><button type="button" onClick={close} className="min-h-10 rounded-lg border border-admin-border bg-admin-control px-4 text-xs font-semibold text-admin-muted hover:border-admin-brand hover:text-admin-brand">{content.cancel}</button><button type="button" onClick={save} disabled={!draft.title.trim()} className="min-h-10 rounded-lg bg-admin-brand px-4 text-xs font-semibold text-white hover:bg-orange-500 disabled:cursor-not-allowed disabled:opacity-50">{content.save}</button></footer>
+    </section>
+  </div>
+}
+
+export default AddCollectionItemModal

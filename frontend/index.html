@@ -13,6 +13,13 @@
     </script>
     <link rel="icon" type="image/webp" href="/assets/branding/icon.webp" />
     <title>خدمات مشورتی گلوبل ویژن</title>
+    <script>
+      if (window.location.pathname === '/dashboard' || window.location.pathname.startsWith('/dashboard/')) {
+        document.title = window.localStorage.getItem('globalvision-language') === 'ps'
+          ? 'د ګلوبل ویژن وېب‌سایټ مدیریت'
+          : 'مدیریت وبسایت گلوبل ویژن'
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -39,10 +39,24 @@ function DashboardLayout() {
     document.documentElement.classList.toggle('light', theme === 'light')
     document.documentElement.lang = language
     document.documentElement.dir = 'rtl'
-    document.title = `${content.page.eyebrow} | Global Vision`
+    document.title = content.documentTitle
     window.localStorage.setItem('globalvision-theme', theme)
     window.localStorage.setItem('globalvision-language', language)
-  }, [content.page.eyebrow, language, theme])
+  }, [content.documentTitle, language, theme])
+
+  useEffect(() => {
+    if (!sidebarOpen) return undefined
+
+    const previousBodyOverflow = document.body.style.overflow
+    const previousDocumentOverflow = document.documentElement.style.overflow
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow
+      document.documentElement.style.overflow = previousDocumentOverflow
+    }
+  }, [sidebarOpen])
 
   const toggleSidebar = () => setSidebarCollapsed((current) => { window.localStorage.setItem('globalvision-cms-sidebar-collapsed', String(!current)); return !current })
 

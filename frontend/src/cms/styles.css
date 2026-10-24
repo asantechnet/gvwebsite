@@ -5,7 +5,7 @@
   --sidebar-border: #d9e0eb; --sidebar-hover: #edf1f6; --admin-page: #edf1f6; --admin-control: #ffffff;
   --admin-control-soft: #f3f5f9; --admin-topbar: rgb(255 255 255 / .88); --header-control: #ffffff;
   --header-control-hover: #f7f9fc; --header-control-border: #dfe4ed; --primary-action-bg: #ffffff;
-  --primary-action-text: #172033; --editor-field: #f7f9fc; --editor-input: #ffffff; --editor-field-border: #dce2ec; --admin-editor-group-bg: #f8fafc; --admin-editor-group-border: #d6deea; --admin-tab-active-bg: #ffffff; --admin-tab-bar-border: #c4cedc; --admin-chart-track: #d7dee9; --sidebar-width: 17rem;
+  --primary-action-text: #172033; --editor-field: #f7f9fc; --editor-input: #f3f6fa; --editor-field-border: #cfd8e5; --admin-editor-group-bg: #f8fafc; --admin-editor-group-border: #d6deea; --admin-tab-active-bg: #ffffff; --admin-tab-bar-border: #c4cedc; --admin-chart-track: #d7dee9; --sidebar-width: 17rem;
   min-height: 100vh; color: var(--admin-muted); background-color: var(--admin-page); font-family: IRANYekan, Vazirmatn, Tahoma, sans-serif; font-size: .8125rem; line-height: 1.5;
   background-image: radial-gradient(circle at 12% -10%, color-mix(in srgb, var(--admin-brand) 7%, transparent), transparent 28rem);
   background-attachment: fixed; font-synthesis: none;
@@ -29,6 +29,30 @@
 }
 .cms-root .sidebar-scroll-nav { scrollbar-width: none; }
 .cms-root .sidebar-scroll-nav::-webkit-scrollbar { width: 0; height: 0; }
+.cms-root .cms-tabs-scroll { direction: rtl; scrollbar-width: thin; scrollbar-color: var(--admin-brand) var(--admin-control-soft); -webkit-overflow-scrolling: touch; touch-action: pan-x; }
+.cms-root .cms-tabs-scroll::-webkit-scrollbar { display: block !important; width: 4px !important; height: 4px !important; }
+.cms-root .cms-tabs-scroll::-webkit-scrollbar-track { background: var(--admin-control-soft) !important; border-radius: 999px !important; }
+.cms-root .cms-tabs-scroll::-webkit-scrollbar-thumb { background: var(--admin-brand) !important; border: 1px solid transparent !important; background-clip: padding-box !important; border-radius: 999px !important; }
+.cms-root .cms-tabs-scroll::-webkit-scrollbar-thumb:hover { background: var(--admin-brand) !important; }
+.cms-root .cms-icon-picker-options { scrollbar-width: thin; scrollbar-color: var(--admin-brand) transparent; scrollbar-gutter: stable; }
+.cms-root .cms-icon-picker-options::-webkit-scrollbar { width: 5px; height: 5px; }
+.cms-root .cms-icon-picker-options::-webkit-scrollbar-track { margin-block: .45rem; border-radius: 999px; background: transparent; }
+.cms-root .cms-icon-picker-options::-webkit-scrollbar-thumb { border: 1px solid transparent; border-radius: 999px; background: color-mix(in srgb, var(--admin-brand) 78%, var(--admin-muted)); background-clip: padding-box; }
+.cms-root .cms-icon-picker-options::-webkit-scrollbar-thumb:hover { background: var(--admin-brand); }
+.cms-root .cms-tabs-scroll > button { direction: rtl; flex: 0 0 auto; }
+.cms-root .cms-tabs-scroll { scrollbar-width: none; }
+.cms-root .cms-tabs-scroll::-webkit-scrollbar { display: none !important; }
+.cms-root .cms-tabs-indicator { position: relative; height: 3px; margin: 0 .5rem .35rem; overflow: hidden; border-radius: 999px; background: var(--admin-control-soft); direction: rtl; }
+.cms-root .cms-tabs-indicator > span { position: absolute; top: 0; height: 100%; border-radius: 999px; background: var(--admin-brand); }
+.cms-modal-backdrop { background: rgb(8 12 20 / .62); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); }
+@keyframes cms-modal-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes cms-modal-backdrop-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes cms-modal-panel-in { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes cms-modal-panel-out { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(10px) scale(.98); } }
+.cms-root .animate-cms-modal-backdrop-in { animation: cms-modal-backdrop-in .18s ease-out both; }
+.cms-root .animate-cms-modal-backdrop-out { animation: cms-modal-backdrop-out .18s ease-in both; }
+.cms-root .animate-cms-modal-panel-in { animation: cms-modal-panel-in .18s ease-out both; }
+.cms-root .animate-cms-modal-panel-out { animation: cms-modal-panel-out .18s ease-in both; }
 .cms-root .sidebar-custom-scrollbar { position: absolute; top: 0; left: 2px; width: 4px; border-radius: 999px; background: var(--sidebar-border); cursor: grab; touch-action: none; }
 .cms-root .sidebar-custom-scrollbar:active { cursor: grabbing; }
 .cms-clock-separator { width: .45em; animation: cms-clock-blink 2s steps(1, end) infinite; }
