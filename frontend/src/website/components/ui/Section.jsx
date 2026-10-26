@@ -1,7 +1,7 @@
 function Section({ className = "", padded = true, children, ...props }) {
   return (
     <section
-      className={`${padded ? "py-16 md:py-20" : ""} ${className}`.trim()}
+      className={`${padded ? "py-12.5" : ""} ${className}`.trim()}
       {...props}
     >
       {children}

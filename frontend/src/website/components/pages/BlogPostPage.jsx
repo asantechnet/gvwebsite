@@ -102,8 +102,9 @@ function CountryCards({ content }) {
   </section>
 }
 
-function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [] }) {
+function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideHero = false, hideMeta = false, hideBreadcrumb = false }) {
   const [isShareMenuOpen, setIsShareMenuOpen] = useState(false)
+  const [isLinkCopied, setIsLinkCopied] = useState(false)
   const shareMenuRef = useRef(null)
   const parentLabel = content.parentLabel || content.magazineLabel
   const parentHref = content.parentHref || '/magazine'
@@ -113,7 +114,33 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [] }) {
   const encodedShareTitle = encodeURIComponent(post.title)
 
   const copyPostLink = async () => {
-    if (navigator.clipboard) await navigator.clipboard.writeText(shareUrl)
+    let copied = false
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl)
+        copied = true
+      }
+    } catch {
+      copied = false
+    }
+
+    if (!copied) {
+      const textArea = document.createElement('textarea')
+      textArea.value = shareUrl
+      textArea.setAttribute('readonly', '')
+      textArea.style.position = 'fixed'
+      textArea.style.opacity = '0'
+      document.body.appendChild(textArea)
+      textArea.select()
+      copied = document.execCommand('copy')
+      document.body.removeChild(textArea)
+    }
+
+    if (copied) {
+      setIsLinkCopied(true)
+      window.setTimeout(() => setIsLinkCopied(false), 1800)
+    }
   }
 
   useEffect(() => {
@@ -131,23 +158,23 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [] }) {
     <>
       <Section padded={false} className="bg-background py-6 md:py-10 lg:py-14">
       <Container>
-        <div className="mx-auto mb-5 max-w-5xl text-right text-sm text-foreground-muted">
+        {!hideBreadcrumb && <div className="mx-auto mb-5 max-w-5xl text-right text-sm text-foreground-muted">
           <a href={parentHref} className="transition-colors hover:text-primary">{parentLabel}</a>
           <span className="mx-2 text-primary">/</span>
           <span>{post.title}</span>
-        </div>
+        </div>}
         <article className="mx-auto max-w-5xl rounded-[2rem] border border-border bg-surface shadow-sm dark:border-gray-700 dark:bg-[#2b3442]">
-          <div className="relative aspect-[16/8] overflow-hidden rounded-t-[2rem] md:aspect-[16/7]">
+          {!hideHero && <div className="relative aspect-[16/8] overflow-hidden rounded-t-[2rem] md:aspect-[16/7]">
             <img src={post.image} alt={post.imageAlt || post.title} className="h-full w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" aria-hidden="true" />
             <div className="absolute inset-x-5 bottom-5 text-right text-white md:inset-x-10 md:bottom-10">
               <h1 className="mt-4 max-w-3xl font-heading text-2xl font-extrabold leading-tight md:text-4xl lg:text-5xl">{post.title}</h1>
             </div>
-          </div>
-          <div className="flex items-center justify-start gap-4 px-5 pt-5 text-sm text-foreground-muted lg:hidden">
+          </div>}
+          {!hideMeta && <div className="flex items-center justify-start gap-4 px-5 pt-5 text-sm text-foreground-muted lg:hidden">
             <span className="rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary">{post.category}</span>
             <span className="inline-flex items-center gap-2"><Clock3 aria-hidden="true" size={17} />{content.readTime}</span>
-          </div>
+          </div>}
 
           <div className="grid gap-8 p-5 md:p-10 lg:grid-cols-[minmax(0,1fr)_15rem] lg:p-14">
             <div className="order-1 min-w-0 text-right lg:order-1">
@@ -161,7 +188,7 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [] }) {
               {content.media && <MediaShowcase post={post} media={content.media} />}
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3 border-t border-border pt-5 dark:border-gray-600 lg:justify-end">
                 <span className="text-sm text-foreground-muted">{content.shareLabel}</span>
-                <button type="button" onClick={copyPostLink} className="group relative flex size-9 items-center justify-center rounded-xl border border-border bg-surface text-foreground-muted transition-colors hover:border-primary hover:text-primary focus:outline-none dark:border-gray-600 dark:bg-transparent" aria-label={content.copyLabel}><LinkIcon size={16} /><span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded-lg bg-foreground px-2.5 py-1.5 text-xs font-medium text-background opacity-0 shadow-lg transition-opacity group-hover:opacity-100">{content.copyLabel}</span></button>
+                <button type="button" onClick={copyPostLink} className="group relative flex size-9 items-center justify-center rounded-xl border border-border bg-surface text-foreground-muted transition-colors hover:border-primary hover:text-primary focus:outline-none dark:border-gray-600 dark:bg-transparent" aria-label={isLinkCopied ? (content.copySuccess || 'کاپی شد') : content.copyLabel}><LinkIcon size={16} /><span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded-lg bg-foreground px-2.5 py-1.5 text-xs font-medium text-background opacity-0 shadow-lg transition-opacity group-hover:opacity-100">{isLinkCopied ? (content.copySuccess || 'کاپی شد') : content.copyLabel}</span></button>
                 <span ref={shareMenuRef} className="group relative">
                   <button type="button" aria-label={content.shareLabel} aria-expanded={isShareMenuOpen} onClick={() => setIsShareMenuOpen((isOpen) => !isOpen)} className="flex size-9 items-center justify-center rounded-xl border border-border bg-surface text-foreground-muted transition-colors hover:border-primary hover:text-primary focus:outline-none dark:border-gray-600 dark:bg-transparent"><Share2 size={16} /></button>
                   <span className={`absolute bottom-full left-0 flex translate-y-1 gap-1 rounded-xl border border-border bg-surface p-1.5 shadow-lg transition-all group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 dark:border-gray-600 ${isShareMenuOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none opacity-0'}`}>
@@ -185,11 +212,11 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [] }) {
             <aside className="order-2 h-fit self-start border-b border-border pb-5 text-right text-sm text-foreground-muted dark:border-gray-600 lg:sticky lg:top-20 lg:order-2 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-6">
               <div className="w-full lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto lg:overscroll-contain lg:pe-2 lg:[scrollbar-width:none] lg:[&::-webkit-scrollbar]:hidden">
                 <div className="w-full">
-                  <div className="hidden flex-col items-start gap-3 lg:flex">
+                  {!hideMeta && <div className="hidden flex-col items-start gap-3 lg:flex">
                     <span className="w-fit rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary">{post.category}</span>
                     <span className="inline-flex items-center gap-2"><Clock3 aria-hidden="true" size={17} />{content.readTime}</span>
-                  </div>
-                  <div className="mt-5 w-full border-t border-border pt-5 text-right dark:border-gray-600">
+                  </div>}
+                  <div className={`${hideMeta ? '' : 'mt-5 border-t pt-5'} w-full border-border text-right dark:border-gray-600`}>
                     <h2 className="mb-4 text-center font-heading text-lg font-extrabold text-foreground lg:text-right">{content.quickAccessLabel}</h2>
                     <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-2">
                       {[
