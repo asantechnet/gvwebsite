@@ -11,11 +11,12 @@
   "themeToggleLabel": "تغییر حالت روشن و تاریک",
   "languageToggleLabel": "تغییر زبان به پشتو",
   "languageName": "پښتو",
-  "consultationLabel": "دریافت مشاوره رایگان",
+  "consultationLabel": "مشاوره رایگان",
   "navigation": {
     "home": "صفحه اصلی",
     "opportunities": "فرصت ها",
     "services": "خدمات",
+    "scholarships": "بورسیه‌ها",
     "magazine": "مجله",
     "about": "در باره ما",
     "contact": "تماس با ما"

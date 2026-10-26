@@ -24,6 +24,7 @@ export const headerNavigation = [
       { id: 'visaResidence', href: '/services/visa' },
     ],
   },
+  { id: 'scholarships', href: '/services/scholarship-registration' },
   { id: 'magazine', href: '/magazine' },
   { id: 'about', href: '/about' },
   { id: 'contact', href: '/contact' },

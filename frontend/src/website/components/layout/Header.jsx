@@ -3,6 +3,7 @@ import Container from "@ui/Container.jsx";
 import {
   BriefcaseBusiness,
   ChevronDown,
+  GraduationCap,
   House,
   Info,
   Menu,
@@ -24,6 +25,7 @@ const navIcons = {
   home: House,
   opportunities: BriefcaseBusiness,
   services: Wrench,
+  scholarships: GraduationCap,
   magazine: Newspaper,
   about: Info,
   contact: Phone,
