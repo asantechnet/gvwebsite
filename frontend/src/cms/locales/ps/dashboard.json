@@ -31,6 +31,6 @@
   "activity": { "title": "وروستي فعالیتونه", "description": "د منځپانګې بدلونونه به دلته ښکاره شي.", "emptyTitle": "تر اوسه فعالیت نشته", "emptyDescription": "ساتل شوي بدلونونه او نوې غوښتنې به په دې برخه کې ښکاره شي." },
   "inbox": { "eyebrow": "پیغامونه", "title": "وروستي پیغامونه", "description": "له وېب‌سایټ څخه وروستۍ غوښتنې", "empty": "تر اوسه نوی پیغام نشته.", "view": "ټول پیغامونه وګورئ" },
   "quick": { "title": "چټک لاسرسی", "description": "ډېر سمېدونکو برخو ته لاړ شئ.", "items": ["د مجلې مطلب زیاتول", "خدمتونه سمول", "د مقصد هېوادونه اداره کول"] },
-  "opportunities": { "settings": "د فرصتونو پاڼې تنظیمات", "pageTitle": "د پاڼې سرلیک", "postCategory": "د لیکنو کټګوري", "allCategories": "ټولې کټګورۍ" },
+  "opportunities": { "settings": "د فرصتونو پاڼې تنظیمات", "pageTitle": "د پاڼې سرلیک", "postCategory": "د لیکنو کټګوري", "allCategories": "ټولې کټګورۍ", "status": "د فرصتونو پاڼې حالت", "pageStatus": "د پاڼې حالت", "published": "خپور شوی", "lastUpdate": "وروستی تازه کول", "today": "نن", "contentLanguage": "د منځپانګې ژبه", "dari": "دري", "heroSettings": "د اصلي بنر تنظیمات", "heroTitle": "د اصلي بنر سرلیک" },
   "logout": "وتل"
 }
