@@ -11,7 +11,7 @@ function TeamSection({ content }) {
 
         <div className="mx-auto mt-12 grid max-w-7xl grid-cols-2 gap-2 md:grid-cols-3 md:gap-4 lg:grid-cols-5">
           {content.members.map((member, index) => (
-            <article key={member.role} className="group relative overflow-hidden rounded-[2rem] border border-border bg-surface pb-6 text-center [perspective:800px] dark:border-gray-600 dark:bg-[#2b3442] md:pb-7">
+            <article key={`${member.name}-${member.role}-${index}`} className="group relative overflow-hidden rounded-[2rem] border border-border bg-surface pb-6 text-center [perspective:800px] dark:border-gray-600 dark:bg-[#2b3442] md:pb-7">
               <div className={`h-2 ${index % 2 === 0 ? 'bg-brand-orange' : 'bg-brand-red'}`} />
               <div className="relative mx-auto -mt-1 flex size-28 items-center justify-center overflow-hidden rounded-full bg-white p-2 shadow-md shadow-black/10 dark:bg-[#374151] dark:shadow-black/25 md:size-32">
                 <img

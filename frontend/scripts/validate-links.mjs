@@ -33,7 +33,7 @@ function collectStrings(value, key = '', results = []) {
 
 function validInternalRoute(route, data) {
   const pathname = route.split(/[?#]/)[0].replace(/\/$/, '') || '/'
-  const exactRoutes = ['/', '/about', '/contact', '/scholarships', '/magazine', '/services', '/opportunities', '/search']
+  const exactRoutes = ['/', '/about', '/contact', '/scholarships', '/magazine', '/search']
   if (exactRoutes.includes(pathname)) return true
   if (pathname === '/dashboard' || pathname.startsWith('/dashboard/')) return true
   if (/^\/opportunities\/(study|work|migration|country|exams)$/.test(pathname)) return true

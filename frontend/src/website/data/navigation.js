@@ -2,7 +2,6 @@ export const headerNavigation = [
   { id: 'home', href: '/' },
   {
     id: 'opportunities',
-    href: '/opportunities',
     children: [
       { id: 'study', href: '/opportunities/study' },
       { id: 'migration', href: '/opportunities/migration' },
@@ -13,7 +12,6 @@ export const headerNavigation = [
   },
   {
     id: 'services',
-    href: '/services',
     children: [
       { id: 'consultation', href: '/services/consultation' },
       { id: 'scholarshipRegistration', href: '/services/scholarship-registration' },

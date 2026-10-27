@@ -7,8 +7,8 @@ import MediaUploadField from '@cms/components/MediaUploadField.jsx'
 function AddCollectionItemModal({ content, item, isCountry = false, isProcess = false, countryOptions = [], onClose, onSave }) {
   const [draft, setDraft] = useState({ title: '', description: '', action: '', href: '', icon: '', image: '' })
   const [closing, setClosing] = useState(false)
-  const close = () => { setClosing(true); window.setTimeout(onClose, 180) }
-  const save = () => onSave({ ...(item?.name !== undefined ? { name: draft.title } : { title: draft.title }), ...(isCountry ? { image: draft.image, href: draft.href } : { description: draft.description, action: draft.action, href: draft.href, icon: draft.icon }), id: `cms-${Date.now()}` })
+  const close = () => { if (closing) return; setClosing(true); window.setTimeout(onClose, 200) }
+  const save = () => { if (closing) return; const savedItem = { ...(item?.name !== undefined ? { name: draft.title } : { title: draft.title }), ...(isCountry ? { image: draft.image, href: draft.href } : { description: draft.description, action: draft.action, href: draft.href, icon: draft.icon }), id: `cms-${Date.now()}` }; setClosing(true); window.setTimeout(() => onSave(savedItem), 200) }
 
   useEffect(() => {
     const previousBodyOverflow = document.body.style.overflow

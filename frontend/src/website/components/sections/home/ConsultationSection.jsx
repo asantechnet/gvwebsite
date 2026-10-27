@@ -37,7 +37,7 @@ function ConsultationSection({ content }) {
                 {content.primaryAction}
               </ActionLink>
               <ActionLink
-                href="/opportunities"
+                href="/opportunities/study"
                 variant="outline"
                 icon={null}
                 className="min-h-12 rounded-xl px-6"

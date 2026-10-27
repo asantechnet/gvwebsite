@@ -60,6 +60,6 @@
     "title": "خپله راتلونکې په پوهاوي پیل کړئ",
     "description": "د ګلوبل ویژن د لا پېژندنې یا د یوې روښانه خبرې د پیل لپاره خپل بل ګام واخلئ.",
     "primaryAction": { "label": "اړیکه ونیسئ", "href": "/contact" },
-    "secondaryAction": { "label": "فرصتونه وګورئ", "href": "/opportunities" }
+    "secondaryAction": { "label": "د زده‌کړې فرصتونه وګورئ", "href": "/opportunities/study" }
   }
 }

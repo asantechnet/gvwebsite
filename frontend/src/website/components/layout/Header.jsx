@@ -40,8 +40,8 @@ function NavigationIcon({ id }) {
 
 function isNavigationItemActive(item, currentPath) {
   return (
-    item.href === currentPath ||
-    (item.href !== '/' && currentPath.startsWith(`${item.href}/`)) ||
+    (item.href && item.href === currentPath) ||
+    (item.href && item.href !== '/' && currentPath.startsWith(`${item.href}/`)) ||
     item.children?.some((child) => child.href === currentPath || currentPath.startsWith(`${child.href}/`))
   );
 }

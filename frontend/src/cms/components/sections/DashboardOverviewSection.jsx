@@ -3,13 +3,14 @@ import { ArrowUpLeft, BookOpenText, BriefcaseBusiness, Clock3, Flag, MessageSqua
 import OverviewCharts, { MetricMiniChart } from '@cms/components/OverviewCharts.jsx'
 import PageContainer from '@cms/components/PageContainer.jsx'
 import PageHeading from '@cms/components/PageHeading.jsx'
+import { EditorPreviewLink } from '@cms/components/EditorPrimitives.jsx'
 
 const metricIcons = { posts: BookOpenText, services: BriefcaseBusiness, guides: Flag, messages: MessageSquare }
 
 function DashboardOverviewSection({ content, counts }) {
   const metrics = content.metrics.map((metric) => ({ ...metric, value: counts[metric.key], chartValue: metric.key === 'messages' ? 0 : 1, chartTotal: counts[metric.key] }))
   return <PageContainer>
-    <PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.overview }]} action={<a href="/" target="_blank" rel="noreferrer" className="mb-2 inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-[.7rem] border border-admin-border bg-(--primary-action-bg) px-3 py-2 text-[.6875rem] font-semibold text-(--primary-action-text) shadow-[0_8px_20px_rgba(15,23,42,.07)] transition hover:-translate-y-0.5 hover:border-admin-brand hover:text-admin-brand hover:shadow-[0_12px_26px_rgba(15,23,42,.11)] sm:w-auto">{content.topbar.website}<ArrowUpLeft size={15} /></a>} />
+    <PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.overview }]} action={<EditorPreviewLink>{content.topbar.website}</EditorPreviewLink>} />
     <section className="grid gap-4 min-[701px]:grid-cols-2 xl:grid-cols-4" aria-label={content.overview}>{metrics.map(({ label, value, key, note, chartValue, chartTotal }) => { const Icon = metricIcons[key]; return <article className="group relative flex min-h-[11.5rem] flex-col overflow-hidden rounded-[1.1rem] border border-admin-border bg-admin-card p-5 shadow-[0_1px_2px_rgba(15,23,42,.04),0_12px_34px_rgba(15,23,42,.055)] transition hover:-translate-y-0.5 hover:border-admin-brand/40 hover:shadow-[0_2px_4px_rgba(15,23,42,.05),0_18px_42px_rgba(15,23,42,.09)]" key={key}><div className="flex items-center gap-3"><span className="grid size-10 shrink-0 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand"><Icon size={19} /></span><p className="m-0 text-xs font-medium leading-snug text-admin-muted">{label}</p></div><div className="flex flex-1 items-center justify-center py-2"><MetricMiniChart value={chartValue} total={chartTotal} label={label} displayValue={value} /></div><small className="block text-center text-[.6875rem] leading-[1.45] text-slate-400">{note}</small></article> })}</section>
     <OverviewCharts counts={counts} content={content.analytics} />
     <div className="grid gap-4 lg:grid-cols-[1.1fr_.9fr]">

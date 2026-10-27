@@ -60,6 +60,6 @@
     "title": "آینده‌تان را با آگاهی آغاز کنید",
     "description": "برای آشنایی بیشتر با گلوبل ویژن یا شروع یک گفت‌وگوی روشن، قدم بعدی را بردارید.",
     "primaryAction": { "label": "تماس با ما", "href": "/contact" },
-    "secondaryAction": { "label": "مشاهده فرصت‌ها", "href": "/opportunities" }
+    "secondaryAction": { "label": "مشاهده فرصت‌های تحصیلی", "href": "/opportunities/study" }
   }
 }

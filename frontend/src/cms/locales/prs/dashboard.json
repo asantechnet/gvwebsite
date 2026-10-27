@@ -8,6 +8,8 @@
   "groups": [
     { "label": "محتوای وب‌سایت", "items": [
       { "label": "صفحه اصلی", "key": "home" },
+      { "label": "درباره ما", "key": "about" },
+      { "label": "تماس با ما", "key": "contact" },
       { "label": "فرصت‌ها", "key": "opportunities" },
       { "label": "خدمات", "key": "services" },
       { "label": "مجله", "key": "magazine" },

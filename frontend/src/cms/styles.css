@@ -49,17 +49,23 @@
 @keyframes cms-modal-backdrop-out { from { opacity: 1; } to { opacity: 0; } }
 @keyframes cms-modal-panel-in { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes cms-modal-panel-out { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(10px) scale(.98); } }
-.cms-root .animate-cms-modal-backdrop-in { animation: cms-modal-backdrop-in .18s ease-out both; }
-.cms-root .animate-cms-modal-backdrop-out { animation: cms-modal-backdrop-out .18s ease-in both; }
-.cms-root .animate-cms-modal-panel-in { animation: cms-modal-panel-in .18s ease-out both; }
-.cms-root .animate-cms-modal-panel-out { animation: cms-modal-panel-out .18s ease-in both; }
+.cms-root .animate-cms-modal-backdrop-in { animation: cms-modal-backdrop-in .22s cubic-bezier(.22, 1, .36, 1) both; }
+.cms-root .animate-cms-modal-backdrop-out { animation: cms-modal-backdrop-out .2s ease-in both; }
+.cms-root .animate-cms-modal-panel-in { animation: cms-modal-panel-in .22s cubic-bezier(.22, 1, .36, 1) both; }
+.cms-root .animate-cms-modal-panel-out { animation: cms-modal-panel-out .2s ease-in both; }
+@media (prefers-reduced-motion: reduce) {
+  .cms-root .animate-cms-modal-backdrop-in,
+  .cms-root .animate-cms-modal-backdrop-out,
+  .cms-root .animate-cms-modal-panel-in,
+  .cms-root .animate-cms-modal-panel-out { animation-duration: 1ms; }
+}
 .cms-root .sidebar-custom-scrollbar { position: absolute; top: 0; left: 2px; width: 4px; border-radius: 999px; background: var(--sidebar-border); cursor: grab; touch-action: none; }
 .cms-root .sidebar-custom-scrollbar:active { cursor: grabbing; }
-.cms-root .overflow-y-auto { scrollbar-width: thin; scrollbar-color: var(--admin-brand) var(--admin-control-soft); }
-.cms-root .overflow-y-auto::-webkit-scrollbar { width: 9px; }
-.cms-root .overflow-y-auto::-webkit-scrollbar-track { margin-block: .35rem; border-radius: 999px; background: var(--admin-control-soft); }
-.cms-root .overflow-y-auto::-webkit-scrollbar-thumb { min-height: 3rem; border: 2px solid var(--admin-control-soft); border-radius: 999px; background: var(--admin-brand); }
-.cms-root .overflow-y-auto::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--admin-brand) 82%, var(--admin-heading)); }
+.cms-root .overflow-y-auto:not(.sidebar-scroll-nav) { scrollbar-width: thin; scrollbar-color: var(--admin-brand) var(--admin-control-soft); }
+.cms-root .overflow-y-auto:not(.sidebar-scroll-nav)::-webkit-scrollbar { width: 9px; }
+.cms-root .overflow-y-auto:not(.sidebar-scroll-nav)::-webkit-scrollbar-track { margin-block: .35rem; border-radius: 999px; background: var(--admin-control-soft); }
+.cms-root .overflow-y-auto:not(.sidebar-scroll-nav)::-webkit-scrollbar-thumb { min-height: 3rem; border: 2px solid var(--admin-control-soft); border-radius: 999px; background: var(--admin-brand); }
+.cms-root .overflow-y-auto:not(.sidebar-scroll-nav)::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--admin-brand) 82%, var(--admin-heading)); }
 .cms-clock-separator { width: .45em; animation: cms-clock-blink 2s steps(1, end) infinite; }
 .cms-root form > .profile-card:first-child label > input { min-height: 3.15rem; }
 @keyframes cms-clock-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: .18; } }

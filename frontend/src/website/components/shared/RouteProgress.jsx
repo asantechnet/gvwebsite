@@ -50,10 +50,6 @@ function AboutSkeleton() {
   </>
 }
 
-function DirectorySkeleton({ count }) {
-  return <><PageHero /><section className="bg-background px-4 pb-20 md:px-6"><div className="mx-auto max-w-7xl"><div className="mb-8 flex min-h-32 flex-col justify-between gap-5 rounded-[2rem] border border-primary/20 bg-primary/10 p-6 md:flex-row md:items-center md:p-8"><div className="flex items-center gap-4"><SkeletonBlock className="size-12 rounded-2xl bg-primary/25" /><div className="space-y-2"><SkeletonBlock className="h-3 w-24" /><SkeletonBlock className="h-7 w-48" /></div></div><div className="w-full max-w-xl"><Lines /></div></div><div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">{list(count).map((item) => <div key={item} className="min-h-[25rem]"><Card /></div>)}</div></div></section></>
-}
-
 function ScholarshipDirectorySkeleton() {
   return <div className="relative bg-[#fff4e8] px-4 pb-7 pt-12 dark:bg-gray-800 md:px-6 md:pt-8 lg:pt-10"><div className="mx-auto max-w-6xl">
     <SkeletonBlock className="mx-auto h-9 w-52 rounded-full bg-primary/15" />
@@ -97,8 +93,6 @@ function Content({ path }) {
   if (path === '/contact') return <ContactSkeleton />
   if (path === '/scholarships') return <ScholarshipDirectorySkeleton />
   if (path === '/magazine') return <MagazineSkeleton />
-  if (path === '/services') return <DirectorySkeleton count={7} />
-  if (path === '/opportunities') return <DirectorySkeleton count={5} />
   if (path === '/search') return <SearchSkeleton />
   if (['/opportunities/study', '/opportunities/work', '/opportunities/migration', '/opportunities/country'].includes(path)) return <OpportunityDirectorySkeleton />
   if (path === '/opportunities/exams') return <OpportunityDirectorySkeleton count={6} />

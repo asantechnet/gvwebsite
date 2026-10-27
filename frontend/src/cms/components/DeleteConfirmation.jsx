@@ -23,7 +23,7 @@ function DeleteConfirmation({ children }) {
 function DeleteDialog({ request, onClose }) {
   const cancelRef = useRef(null)
   const [closing, setClosing] = useState(false)
-  const close = useCallback((confirmed) => { setClosing(true); window.setTimeout(() => onClose(confirmed), 180) }, [onClose])
+  const close = useCallback((confirmed) => { if (closing) return; setClosing(true); window.setTimeout(() => onClose(confirmed), 200) }, [closing, onClose])
   useEffect(() => { cancelRef.current?.focus(); const keydown = (event) => { if (event.key === 'Escape') close(false) }; document.addEventListener('keydown', keydown); return () => document.removeEventListener('keydown', keydown) }, [close])
   return createPortal(
     <div className={`cms-modal-backdrop fixed inset-0 z-[150] isolate grid place-items-center p-4 sm:p-6 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onClick={() => close(false)}>

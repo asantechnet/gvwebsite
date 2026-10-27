@@ -27,7 +27,7 @@ function FaqSection({ content }) {
                   aria-expanded={isOpen}
                   aria-controls={`about-faq-answer-${index}`}
                   onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="flex min-h-16 w-full items-center justify-between gap-4 px-5 py-4 text-start font-heading text-sm font-extrabold text-foreground md:px-6 md:text-base"
+                  className="flex min-h-12 w-full items-center justify-between gap-4 px-5 py-2 text-start font-heading text-sm font-extrabold text-foreground md:px-6 md:py-2.5 md:text-base"
                 >
                   <span>{item.question}</span>
                   <ChevronDown aria-hidden="true" className={`shrink-0 text-primary transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} size={20} />

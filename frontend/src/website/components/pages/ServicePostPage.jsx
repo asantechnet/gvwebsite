@@ -7,9 +7,9 @@ function ServicePostPage({ service, content, postShell }) {
     countries: undefined,
     countriesTitle: undefined,
     parentLabel: content.ui.services,
-    parentHref: '/services',
+    parentHref: '/#services',
     backLabel: content.ui.back,
-    backHref: '/services',
+    backHref: '/#services',
     highlight: content.ui.important,
     sections: [
       { title: content.ui.whoFor, body: service.audience },
