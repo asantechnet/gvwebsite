@@ -33,15 +33,15 @@ function FilterSelect({ label, value, options, allLabel, onChange, icon: Icon, i
     <span className="mb-1 flex items-center gap-1.5 text-[10px] font-bold text-foreground-muted"><Icon aria-hidden="true" size={13} className="text-primary" />{label}</span>
     <button type="button" aria-label={label} aria-haspopup="listbox" aria-expanded={isOpen} onClick={() => onToggle(!isOpen)} className={`flex min-h-9 w-full items-center justify-between gap-2 rounded-xl border bg-white/90 px-2.5 text-right text-[11px] font-bold shadow-[0_2px_8px_rgba(54,69,77,0.05)] transition-all hover:border-primary/60 hover:shadow-[0_4px_12px_rgba(245,155,34,0.1)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(245,155,34,0.18)] dark:bg-gray-700/90 ${isOpen ? 'border-primary' : 'border-[#eadfce] dark:border-gray-600'}`}>
       <span className={value ? 'text-foreground' : 'text-foreground-muted'}>{selectedLabel}</span>
-      <ChevronDown aria-hidden="true" size={15} className={`shrink-0 text-primary transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+      <ChevronDown aria-hidden="true" size={15} className={`shrink-0 text-primary transition-transform duration-200 motion-reduce:transition-none ${isOpen ? 'rotate-180' : ''}`} />
     </button>
-    {isOpen && <div role="listbox" aria-label={label} className="absolute inset-x-0 top-full z-50 mt-1 overflow-hidden rounded-md border border-border bg-surface p-0 text-right shadow-[0_8px_18px_rgba(54,69,77,0.14)] dark:border-gray-600 dark:bg-gray-800">
+    <div role="listbox" aria-label={label} aria-hidden={!isOpen} inert={!isOpen} className={`absolute inset-x-0 top-full z-50 mt-1 overflow-hidden rounded-md border border-border bg-surface p-0 text-right shadow-[0_8px_18px_rgba(54,69,77,0.14)] transition-all duration-200 motion-reduce:transition-none dark:border-gray-600 dark:bg-gray-800 ${isOpen ? 'visible translate-y-0 opacity-100' : 'invisible pointer-events-none translate-y-2 opacity-0'}`}>
       {[allLabel, ...options].map((option) => {
         const optionValue = option === allLabel ? '' : option
         const selected = value === optionValue
         return <button type="button" role="option" aria-selected={selected} key={option} onClick={() => { onChange(optionValue); onToggle(false) }} style={{ fontSize: '14px', lineHeight: '22px', minHeight: '32px', paddingBlock: '5px' }} className={`block w-full rounded-md px-2.5 text-right transition-colors ${selected ? 'bg-primary/10 font-extrabold text-primary' : 'font-semibold text-foreground hover:bg-primary/10 hover:text-primary'}`}>{option}</button>
       })}
-    </div>}
+    </div>
   </div>
 }
 
