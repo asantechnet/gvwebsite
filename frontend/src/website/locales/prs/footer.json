@@ -1,6 +1,13 @@
 {
   "description": "با مشاوره تخصصی و راهنمایی روشن، مسیر تحصیل، مهاجرت و پیشرفت حرفه‌ای شما را آسان‌تر می‌سازیم.",
   "consultationLabel": "مشاوره رایگان",
+  "serviceLinks": [
+    { "label": "مشاوره رایگان", "href": "/services/consultation" },
+    { "label": "درخواست", "href": "/services/migration-registration" },
+    { "label": "پروسس اسناد", "href": "/services/document-process" },
+    { "label": "ثبت نام بورسیه ها", "href": "/services/scholarship-registration" },
+    { "label": "ویزه و اقامت", "href": "/services/visa" }
+  ],
   "quickLinksHeading": "دسترسی سریع",
   "copyright": "خدمات مشورتی گلوبل ویژن. تمام حقوق محفوظ است.",
   "tagline": "دید روشن، آینده بهتر"

@@ -1,10 +1,6 @@
-import { BriefcaseBusiness, CheckSquare, ClipboardCheck, FileText, GraduationCap, Globe2, Landmark, MessageCircle, ShieldCheck, UsersRound } from 'lucide-react'
-
 import Container from '@ui/Container.jsx'
+import ContentSidebar from '@ui/ContentSidebar.jsx'
 import Section from '@ui/Section.jsx'
-
-const quickItems = [[GraduationCap, 'study', '/opportunities/study'], [BriefcaseBusiness, 'work', '/opportunities/work'], [Globe2, 'countries', '/opportunities/country'], [CheckSquare, 'exams', '/opportunities/exams'], [ShieldCheck, 'visa', '/services/visa'], [UsersRound, 'migration', '/opportunities/migration']]
-const serviceCards = [[MessageCircle, 'مشاوره', '/services/consultation'], [FileText, 'درخواست', '/services/application'], [ClipboardCheck, 'پروسس اسناد', '/services/document-process'], [Landmark, 'ویزه/سفارت', '/services/visa'], [GraduationCap, 'ثبت نام بورسیه ها', '/services/scholarship-registration'], [UsersRound, 'هماهنگی', '/services/coordination']]
 
 function OpportunityCard({ card }) {
   const Icon = card.icon
@@ -12,7 +8,26 @@ function OpportunityCard({ card }) {
 }
 
 function OpportunityDirectorySection({ content, cards, title }) {
-  return <Section padded={false} className="bg-background py-6 md:py-10 lg:py-14"><Container><article className="mx-auto max-w-6xl rounded-4xl"><div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:p-8"><main className="order-1 min-w-0 text-right"><section aria-label={title}><h1 className="mb-4 text-right font-heading text-lg font-extrabold text-foreground">{title}</h1><div className="grid grid-cols-2 gap-2 md:grid-cols-3">{cards.map((card) => <OpportunityCard key={card.href} card={card} />)}</div></section></main><aside className="order-2 h-fit self-start border-t border-border pt-5 text-right text-sm text-foreground-muted dark:border-gray-600 lg:border-r lg:border-t-0 lg:pr-6 lg:pt-0"><h2 className="mb-4 text-center font-heading text-lg font-extrabold text-foreground lg:text-right">{content.quickAccessLabel}</h2><div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-2">{quickItems.map(([Icon, key, href]) => <a key={key} href={href} className="flex flex-col items-center gap-1 rounded-xl border border-border px-2 py-3 text-center text-xs text-foreground-muted transition-colors hover:border-primary hover:text-primary dark:border-gray-600"><Icon size={20} /><span className="font-bold">{content.quickLinks?.[key]}</span></a>)}</div><div className="mt-6 pt-6"><h2 className="mb-4 text-center font-heading text-lg font-extrabold text-foreground lg:text-right">خدمات ما</h2><div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-2">{serviceCards.map(([Icon, label, href]) => <a key={label} href={href} className="flex flex-col items-center gap-1 rounded-xl border border-border px-2 py-3 text-center text-xs text-foreground-muted transition-colors hover:border-primary hover:text-primary dark:border-gray-600"><Icon size={20} /><span className="font-bold">{label}</span></a>)}</div></div></aside></div></article></Container></Section>
+  return (
+    <Section padded={false} className="bg-background py-6 md:py-10 lg:py-14">
+      <Container>
+        <article className="mx-auto max-w-6xl rounded-4xl">
+          <div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:p-8">
+            <main className="order-1 h-fit min-w-0 self-start text-right">
+              <section aria-label={title}>
+                <h1 className="mb-4 text-right font-heading text-lg font-extrabold text-foreground">{title}</h1>
+                <div className="grid grid-cols-2 gap-2 md:grid-cols-3">
+                  {cards.map((card) => <OpportunityCard key={card.cardKey || card.href} card={card} />)}
+                </div>
+              </section>
+            </main>
+
+            <ContentSidebar content={content} className="border-t border-border pt-5 dark:border-gray-600 lg:border-t-0 lg:pt-0" />
+          </div>
+        </article>
+      </Container>
+    </Section>
+  )
 }
 
 export default OpportunityDirectorySection

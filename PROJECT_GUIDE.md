@@ -4,7 +4,11 @@ This guide is the single source of truth for the Global Vision architecture, gen
 
 ## Current Status
 
+The public navigation includes a dedicated `/scholarships` directory with localized country, degree, and funding filters, responsive scholarship cards, and slug-based scholarship detail routes rendered through the shared single-post design. Scholarship records are currently static localized seed data and are not yet connected to the backend.
+
 The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, separate website and CMS source areas, responsive localized `Header` and `Footer` components, and shared UI components for sections, containers, headings, action links, and repeated card patterns are configured. The home page includes responsive hero, opportunity, destination, process, service, testimonial, and consultation sections with Dari and Pashto content. Shared navigation data, matching localized layout translations, pathname-based page selection, slug-based magazine post routes, opportunity and service directory routes, localized service posts, country guides, scholarship guides, IELTS/TOEFL guides, localized search results, a not-found page, dynamic page metadata, and frontend contact-form validation are implemented. A localized CMS dashboard shell is available at `/dashboard`, with a responsive RTL sidebar, top bar, overview metrics, content status, quick actions, language switching, and theme switching. A frontend-only home page editor design is available at `/dashboard/home`, including section navigation, visibility controls, localized content fields, and collection summaries; persistence is not yet connected. A routing library, Laravel backend, MariaDB integration, API, authentication, and persistent CMS editing have not started.
+
+The frontend includes dependency-free Node tests for localized catalog search and scholarship filtering plus a static validator for localized internal links, external URL syntax, and public asset references.
 
 The repository currently contains:
 
@@ -113,6 +117,8 @@ globalvision-website/
 │   ├── index.html
 │   ├── jsconfig.json           # Editor alias support
 │   ├── package.json
+│   ├── scripts/                 # Frontend validation scripts
+│   ├── tests/                   # Dependency-free Node tests
 │   ├── eslint.config.js
 │   └── vite.config.js
 ├── AGENTS.md
@@ -319,6 +325,8 @@ Run commands from `frontend/`:
 ```bash
 npm install
 npm run dev
+npm test
+npm run test:links
 npm run lint
 npm run build
 npm run preview

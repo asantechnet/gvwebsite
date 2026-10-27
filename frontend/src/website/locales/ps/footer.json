@@ -1,6 +1,13 @@
 {
   "description": "په مسلکي مشوره او روښانه لارښوونه، ستاسو د زده کړو، مهاجرت او کاري پرمختګ لاره اسانه کوو.",
   "consultationLabel": "وړیا مشوره",
+  "serviceLinks": [
+    { "label": "وړیا مشوره", "href": "/services/consultation" },
+    { "label": "غوښتنلیک", "href": "/services/migration-registration" },
+    { "label": "د اسنادو پروسس", "href": "/services/document-process" },
+    { "label": "د بورسونو ثبت نام", "href": "/services/scholarship-registration" },
+    { "label": "ویزه او استوګنه", "href": "/services/visa" }
+  ],
   "quickLinksHeading": "چټک لاسرسی",
   "copyright": "د ګلوبل ویژن مشورتي خدمتونه. ټول حقونه خوندي دي.",
   "tagline": "روښانه لید، غوره راتلونکی"

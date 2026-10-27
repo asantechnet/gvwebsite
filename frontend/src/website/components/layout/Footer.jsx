@@ -24,7 +24,6 @@ function Footer({ content, navigationContent, className = "" }) {
   const opportunities = headerNavigation.find(
     (item) => item.id === "opportunities",
   );
-  const services = headerNavigation.find((item) => item.id === "services");
   const primaryLinks = headerNavigation.filter(
     (item) => !item.children?.length,
   );
@@ -120,11 +119,11 @@ function Footer({ content, navigationContent, className = "" }) {
               <Wrench aria-hidden="true" className="size-4 text-primary" />
               {navigationContent.navigation.services}
             </h2>
-            <ul className="grid grid-cols-1 justify-items-center gap-x-5 gap-y-1 sm:grid-cols-2 md:justify-items-start lg:grid-cols-1 xl:grid-cols-2">
-              {services.children.map((item) => (
-                <li key={item.id}>
+            <ul className="grid grid-cols-1 justify-items-center gap-y-1 md:justify-items-start">
+              {content.serviceLinks.map((item) => (
+                <li key={item.href}>
                   <FooterLink href={item.href}>
-                    {navigationContent.subNavigation.services[item.id]}
+                    {item.label}
                   </FooterLink>
                 </li>
               ))}

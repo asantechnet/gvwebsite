@@ -20,7 +20,7 @@ function ContactSection({ content }) {
   }
 
   return (
-    <Section aria-labelledby="contact-section-title" className="bg-background text-foreground">
+    <Section padded={false} aria-labelledby="contact-section-title" className="bg-background pb-12.5 pt-0 text-foreground">
       <Container>
         <div className="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-2 lg:gap-24">
           <div className="mx-auto w-full max-w-sm text-right lg:order-1">
