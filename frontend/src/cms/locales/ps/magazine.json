@@ -1,0 +1,17 @@
+{
+  "breadcrumb": "د وېب‌سایټ منځپانګه",
+  "title": "د مجلې پاڼه",
+  "preview": "پاڼه کتل",
+  "sectionsTitle": "د مجلې پاڼې برخې",
+  "editItem": "مطلب سمول",
+  "itemModalDescription": "د دې مطلب معلومات سم کړئ.",
+  "save": "خوندي کول",
+  "cancel": "لغوه کول",
+  "close": "بندول",
+  "chooseImage": "انځور ټاکل",
+  "dropImage": "انځور دلته راکش کړئ یا د ټاکلو لپاره کلیک وکړئ",
+  "replaceImage": "بدلول",
+  "removeImage": "انځور حذفول",
+  "sections": { "hero": { "label": "د مجلې بنر" }, "news": { "label": "وروستي خبرونه" }, "articles": { "label": "لیکنې او مقالې" } },
+  "fields": { "heroEyebrow": "د سرلیک پورته متن", "heroTitle": "د پاڼې اصلي سرلیک", "sectionTitle": "د برخې سرلیک", "itemTitle": "د مطلب سرلیک", "category": "کټګوري", "description": "د مطلب لنډیز", "image": "د مطلب انځور" }
+}

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import DashboardPage from '@cms/components/pages/DashboardPage.jsx'
 import HomePage from '@cms/components/pages/HomePage.jsx'
 import AboutPage from '@cms/components/pages/AboutPage.jsx'
+import MagazinePage from '@cms/components/pages/MagazinePage.jsx'
 import ContactPage from '@cms/components/pages/ContactPage.jsx'
 import OpportunitiesPage from '@cms/components/pages/OpportunitiesPage.jsx'
 import MessagesPage from '@cms/components/pages/MessagesPage.jsx'
@@ -28,6 +29,9 @@ import dariAboutEditorContent from '@cms/locales/prs/about.json'
 import pashtoAboutEditorContent from '@cms/locales/ps/about.json'
 import dariAboutContent from '@website/locales/prs/about.json'
 import pashtoAboutContent from '@website/locales/ps/about.json'
+import dariMagazineEditorContent from '@cms/locales/prs/magazine.json'
+import pashtoMagazineEditorContent from '@cms/locales/ps/magazine.json'
+import pashtoMagazineContent from '@website/locales/ps/magazine.json'
 import dariContactEditorContent from '@cms/locales/prs/contact.json'
 import pashtoContactEditorContent from '@cms/locales/ps/contact.json'
 import dariContactContent from '@website/locales/prs/contact.json'
@@ -49,6 +53,8 @@ function DashboardLayout() {
   const homeContent = language === 'prs' ? dariHomeContent : pashtoHomeContent
   const aboutEditorContent = language === 'prs' ? dariAboutEditorContent : pashtoAboutEditorContent
   const aboutContent = language === 'prs' ? dariAboutContent : pashtoAboutContent
+  const magazineEditorContent = language === 'prs' ? dariMagazineEditorContent : pashtoMagazineEditorContent
+  const magazineContent = language === 'prs' ? dariMagazineContent : pashtoMagazineContent
   const contactEditorContent = language === 'prs' ? dariContactEditorContent : pashtoContactEditorContent
   const contactContent = language === 'prs' ? dariContactContent : pashtoContactContent
   const opportunitiesContent = language === 'prs' ? dariOpportunitiesContent : pashtoOpportunitiesContent
@@ -86,7 +92,7 @@ function DashboardLayout() {
     <DashboardSidebar content={content} open={sidebarOpen} collapsed={sidebarCollapsed} onCollapseToggle={toggleSidebar} onClose={() => setSidebarOpen(false)} />
     <div className={`admin-shell min-h-screen transition-[padding] duration-250 lg:pr-(--sidebar-width) ${sidebarCollapsed ? 'lg:pr-21' : ''}`}>
       <DashboardTopbar content={content.topbar} language={language} theme={theme} onMenuOpen={() => setSidebarOpen(true)} onThemeToggle={() => setTheme((current) => current === 'light' ? 'dark' : 'light')} onLanguageToggle={() => setLanguage((current) => current === 'prs' ? 'ps' : 'prs')} />
-      <main id="dashboard-content" className="min-h-[calc(100vh-5rem)] px-4 pt-6 pb-28 sm:px-8 sm:pt-8">{window.location.pathname === '/dashboard' ? <DashboardPage content={content} counts={counts} /> : window.location.pathname.startsWith('/dashboard/home') ? <HomePage key={language} content={homeEditorContent} initialContent={homeContent} /> : window.location.pathname.startsWith('/dashboard/about') ? <AboutPage key={language} content={aboutEditorContent} initialContent={aboutContent} /> : window.location.pathname.startsWith('/dashboard/contact') ? <ContactPage key={language} content={contactEditorContent} initialContent={contactContent} /> : window.location.pathname.startsWith('/dashboard/opportunities') ? <OpportunitiesPage key={language} content={content} opportunities={opportunitiesContent} exams={guidesContent.exams} /> : window.location.pathname.startsWith('/dashboard/messages') ? <MessagesPage content={{ ...messagesContent, dashboard: content.overview }} /> : window.location.pathname.startsWith('/dashboard/profile') ? <ProfilePage content={profileContent} /> : <PlaceholderPage content={content} pageKey={window.location.pathname.split('/')[2]} />}</main><UnsavedChangesBar sidebarCollapsed={sidebarCollapsed} />
+      <main id="dashboard-content" className="min-h-[calc(100vh-5rem)] px-4 pt-6 pb-28 sm:px-8 sm:pt-8">{window.location.pathname === '/dashboard' ? <DashboardPage content={content} counts={counts} /> : window.location.pathname.startsWith('/dashboard/home') ? <HomePage key={language} content={homeEditorContent} initialContent={homeContent} /> : window.location.pathname.startsWith('/dashboard/about') ? <AboutPage key={language} content={aboutEditorContent} initialContent={aboutContent} /> : window.location.pathname.startsWith('/dashboard/contact') ? <ContactPage key={language} content={contactEditorContent} initialContent={contactContent} /> : window.location.pathname.startsWith('/dashboard/magazine') ? <MagazinePage key={language} content={magazineEditorContent} initialContent={magazineContent} /> : window.location.pathname.startsWith('/dashboard/opportunities') ? <OpportunitiesPage key={language} content={content} opportunities={opportunitiesContent} exams={guidesContent.exams} /> : window.location.pathname.startsWith('/dashboard/messages') ? <MessagesPage content={{ ...messagesContent, dashboard: content.overview }} /> : window.location.pathname.startsWith('/dashboard/profile') ? <ProfilePage content={profileContent} /> : <PlaceholderPage content={content} pageKey={window.location.pathname.split('/')[2]} />}</main><UnsavedChangesBar sidebarCollapsed={sidebarCollapsed} />
     </div>
   </div></DeleteConfirmation>
 }

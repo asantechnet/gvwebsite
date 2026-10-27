@@ -1,0 +1,17 @@
+{
+  "breadcrumb": "محتوای وب‌سایت",
+  "title": "صفحه مجله",
+  "preview": "مشاهده صفحه",
+  "sectionsTitle": "بخش‌های صفحه مجله",
+  "editItem": "ویرایش مطلب",
+  "itemModalDescription": "اطلاعات این مطلب را ویرایش کنید.",
+  "save": "ذخیره",
+  "cancel": "انصراف",
+  "close": "بستن",
+  "chooseImage": "انتخاب تصویر",
+  "dropImage": "تصویر را اینجا رها کنید یا برای انتخاب کلیک کنید",
+  "replaceImage": "جایگزین کردن",
+  "removeImage": "حذف تصویر",
+  "sections": { "hero": { "label": "بنر مجله" }, "news": { "label": "آخرین خبرها" }, "articles": { "label": "نوشته‌ها و مقالات" } },
+  "fields": { "heroEyebrow": "متن بالای عنوان", "heroTitle": "عنوان اصلی صفحه", "sectionTitle": "عنوان بخش", "itemTitle": "عنوان مطلب", "category": "دسته‌بندی", "description": "خلاصه مطلب", "image": "تصویر مطلب" }
+}
