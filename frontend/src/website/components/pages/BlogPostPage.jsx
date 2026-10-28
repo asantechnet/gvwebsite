@@ -169,7 +169,7 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
         </div>}
         <article className="mx-auto max-w-6xl rounded-[2rem] border border-border bg-surface shadow-sm dark:border-gray-700 dark:bg-[#2b3442]">
           {!hideHero && <div className="relative aspect-[16/8] overflow-hidden rounded-t-[2rem] md:aspect-[16/7]">
-            <img src={post.image} alt={post.imageAlt || post.title} className="h-full w-full object-cover" />
+            <img src={post.image} alt={post.imageAlt || post.title} className="absolute inset-0 size-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" aria-hidden="true" />
             <div className="absolute inset-x-5 bottom-5 text-right text-white md:inset-x-10 md:bottom-10">
               <h1 className="mt-4 max-w-3xl font-heading text-2xl font-extrabold leading-tight md:text-4xl lg:text-5xl">{post.title}</h1>

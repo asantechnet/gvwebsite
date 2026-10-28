@@ -11,6 +11,7 @@
       { "label": "زموږ په اړه", "key": "about" },
       { "label": "له موږ سره اړیکه", "key": "contact" },
       { "label": "فرصتونه", "key": "opportunities" },
+      { "label": "بورسونه", "key": "scholarships" },
       { "label": "خدمتونه", "key": "services" },
       { "label": "مجله", "key": "magazine" },
       { "label": "هېوادونه او لارښودونه", "key": "guides" }

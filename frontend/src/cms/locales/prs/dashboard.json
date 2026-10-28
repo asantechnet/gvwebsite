@@ -11,6 +11,7 @@
       { "label": "درباره ما", "key": "about" },
       { "label": "تماس با ما", "key": "contact" },
       { "label": "فرصت‌ها", "key": "opportunities" },
+      { "label": "بورسیه‌ها", "key": "scholarships" },
       { "label": "خدمات", "key": "services" },
       { "label": "مجله", "key": "magazine" },
       { "label": "کشورها و راهنماها", "key": "guides" }
