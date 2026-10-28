@@ -1,0 +1,76 @@
+{
+  "breadcrumb": "Website Content",
+  "title": "About us page",
+  "preview": "View page",
+  "sectionsTitle": "Sections of the About Us page",
+  "visible": "be displayed",
+  "mission": "mission",
+  "vision": "the landscape",
+  "itemsDescription": "Add, edit or delete items in this section.",
+  "addItem": "Add item",
+  "addItemTitle": "Add new item",
+  "editItem": "Edit item",
+  "editItemTitle": "Edit item",
+  "deleteItem": "Delete the item",
+  "deleteItemTitle": "Delete this item?",
+  "deleteItemDescription": "This operation cannot be reversed.",
+  "itemModalDescription": "Complete the information of this item.",
+  "save": "save",
+  "cancel": "opt out",
+  "close": "to close",
+  "chooseImage": "Select image",
+  "dropImage": "Drop image here or click to select",
+  "replaceImage": "to replace",
+  "removeImage": "Delete image",
+  "sections": {
+    "hero": {
+      "label": "Page banner"
+    },
+    "introduction": {
+      "label": "Introduction and values"
+    },
+    "missionVision": {
+      "label": "Mission and vision"
+    },
+    "story": {
+      "label": "our story"
+    },
+    "faq": {
+      "label": "Common questions"
+    },
+    "team": {
+      "label": "team"
+    },
+    "cta": {
+      "label": "A call to action"
+    }
+  },
+  "fieldGroups": {
+    "heading": "Title of the section",
+    "body": "Text and description",
+    "actions": "Action buttons"
+  },
+  "items": {
+    "introduction": "Global Vision values",
+    "story": "Stages of the story",
+    "faq": "Questions and answers",
+    "team": "Team members"
+  },
+  "fields": {
+    "eyebrow": "Text above the title",
+    "title": "title",
+    "sectionTitle": "Title of the section",
+    "description": "Description",
+    "imageAlt": "Image alt text",
+    "primaryAction": "Main button text",
+    "primaryActionHref": "Main button link",
+    "secondaryAction": "The text of the second button",
+    "secondaryActionHref": "Link to the second button",
+    "question": "question",
+    "answer": "answer",
+    "name": "Member name",
+    "role": "Member position",
+    "avatar": "member's picture",
+    "avatarAlt": "Image alt text"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "description": "With expert advice and clear guidance, we make your education, immigration and professional development easier.",
+  "consultationLabel": "Free consultation",
+  "serviceLinks": [
+    {
+      "label": "Free consultation",
+      "href": "/services/consultation"
+    },
+    {
+      "label": "request",
+      "href": "/services/migration-registration"
+    },
+    {
+      "label": "Document processing",
+      "href": "/services/document-process"
+    },
+    {
+      "label": "Registration of scholarships",
+      "href": "/services/scholarship-registration"
+    },
+    {
+      "label": "Visa and residence",
+      "href": "/services/visa"
+    }
+  ],
+  "quickLinksHeading": "Quick access",
+  "copyright": "Global Vision Consulting Services. All rights reserved.",
+  "tagline": "Clear vision, better future"
+}

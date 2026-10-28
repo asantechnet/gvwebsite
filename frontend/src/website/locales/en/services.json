@@ -1,0 +1,199 @@
+{
+  "ui": {
+    "services": "Services",
+    "indexTitle": "Global Vision specialized services",
+    "indexDescription": "Choose the services you need from initial consultation to preparation of documents, registration and visa.",
+    "viewService": "View service details",
+    "opportunitiesTitle": "Opportunities",
+    "opportunitiesDescription": "Check out guides to study, work, immigration, exams and destination countries.",
+    "viewOpportunity": "View the guide",
+    "whoFor": "Who is this service suitable for?",
+    "included": "Items include service",
+    "process": "Work steps",
+    "prepare": "Prepare before you start",
+    "processIntro": "The steps vary by case type, but the general service path includes the following.",
+    "prepareIntro": "Organize relevant information and documents from scratch for a more accurate assessment.",
+    "important": "No application, acceptance or visa result is guaranteed. The final decision rests with the university, examination authority or government authority.",
+    "back": "Return to service"
+  },
+  "services": [
+    {
+      "slug": "consultation",
+      "title": "Expert advice",
+      "description": "Review the goal, conditions, budget, and realistic options to build a clear path.",
+      "image": "/assets/images/destinations/germany.jpg",
+      "audience": "For people who decide between several educational, work or immigration paths or need an evaluation to start a case.",
+      "included": [
+        "Purpose and background check",
+        "Compare suitable options",
+        "Identification of risks and necessary documents",
+        "Suggest next steps"
+      ],
+      "process": [
+        "Get basic information",
+        "Evaluation session",
+        "Summary of options",
+        "Providing a suggested route"
+      ],
+      "prepare": [
+        "Passport or identity document",
+        "Educational and work records",
+        "Language result if available",
+        "Budget and desired schedule"
+      ]
+    },
+    {
+      "slug": "scholarship-registration",
+      "title": "Registration of scholarships",
+      "description": "Choosing the right scholarship and regularly preparing the application based on the official requirements.",
+      "image": "/assets/images/destinations/hungary.jpg",
+      "audience": "For applicants who have the basic conditions of the scholarship and want to make a complete and trackable application.",
+      "included": [
+        "Check the conditions of the scholarship",
+        "Setting the list of documents",
+        "Review the application form",
+        "Deadline control and submission"
+      ],
+      "process": [
+        "Scholarship selection",
+        "Match conditions",
+        "Application preparation",
+        "Registration and tracking"
+      ],
+      "prepare": [
+        "Academic documents",
+        "resume",
+        "letter of motivation",
+        "Recommendation letter and language certificate"
+      ]
+    },
+    {
+      "slug": "exam-registration",
+      "title": "Registration for exams",
+      "description": "Guidance for choosing and registering for the required language or admission test.",
+      "image": "/assets/images/destinations/france.jpg",
+      "audience": "For applicants who need to coordinate their exam type, center, date or registration information with their destination.",
+      "included": [
+        "Check the type of test",
+        "Choose date and center",
+        "Identity information control",
+        "Results submission guide"
+      ],
+      "process": [
+        "Confirmation of accepted test",
+        "Choose the right time",
+        "Record information",
+        "Maintenance of receipts and results"
+      ],
+      "prepare": [
+        "Valid passport",
+        "The name according to the identity document",
+        "destination score condition",
+        "Valid payment method"
+      ]
+    },
+    {
+      "slug": "migration-registration",
+      "title": "Immigration registration",
+      "description": "Step-by-step adjustment of immigration requests based on route and official reference.",
+      "image": "/assets/images/destinations/united-kingdom.jpg",
+      "audience": "For people who have a clear legal path and want help in setting up documents, forms and scheduling.",
+      "included": [
+        "Checking the selected route",
+        "List of documents",
+        "Review of forms",
+        "Control of registration and receipts"
+      ],
+      "process": [
+        "Assess the situation",
+        "Completion of documents",
+        "Request registration",
+        "Follow up on answers"
+      ],
+      "prepare": [
+        "Identity documents",
+        "Educational and work records",
+        "Financial documents",
+        "Related family documents"
+      ]
+    },
+    {
+      "slug": "document-preparation",
+      "title": "Preparation of documents",
+      "description": "Set up, name and control documents for admission, scholarship, work or visa.",
+      "image": "/assets/images/destinations/netherlands.jpg",
+      "audience": "For every applicant who needs a complete, legible file according to the official destination list.",
+      "included": [
+        "Making a list of documents",
+        "Quality control of files",
+        "Translation and verification guide",
+        "Setting up the digital edition"
+      ],
+      "process": [
+        "Get the official checklist",
+        "Collecting documents",
+        "Eliminate deficiencies",
+        "Final control"
+      ],
+      "prepare": [
+        "Original documents",
+        "Available translations",
+        "Destination checklist",
+        "Application deadline"
+      ]
+    },
+    {
+      "slug": "document-process",
+      "title": "During the documentation process",
+      "description": "Guidance for translation, verification, certification and administrative procedures of documents.",
+      "image": "/assets/images/destinations/italy.jpg",
+      "audience": "For cases whose documents require official translation, administrative approval or consular procedures.",
+      "included": [
+        "Identify the necessary steps",
+        "Arrangement of translation and verification",
+        "Credit control",
+        "Track receipts"
+      ],
+      "process": [
+        "Checking the destination of the document",
+        "Determination of necessary references",
+        "Execute the steps in order",
+        "Final version control"
+      ],
+      "prepare": [
+        "The original document is sound",
+        "Identity copy",
+        "destination reference name",
+        "Deadline and number of copies"
+      ]
+    },
+    {
+      "slug": "visa",
+      "aliases": [
+        "study-visa"
+      ],
+      "title": "Visa and residence",
+      "description": "Preparation of visa and residence application based on admission, purpose of travel and destination regulations.",
+      "image": "/assets/images/destinations/turkiye.jpg",
+      "audience": "For applicants who have an acceptance, invitation or legal basis for travel and need to prepare their visa file.",
+      "included": [
+        "Checking the visa checklist",
+        "Arrangement of financial and residency documents",
+        "Review the form",
+        "Preparation for an appointment or interview"
+      ],
+      "process": [
+        "Verification of visa type",
+        "Collecting documents",
+        "Time registration and request",
+        "Follow up result"
+      ],
+      "prepare": [
+        "passport",
+        "acceptance or invitation",
+        "Financial documents",
+        "Insurance and accommodation"
+      ]
+    }
+  ]
+}

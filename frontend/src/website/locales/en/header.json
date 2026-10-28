@@ -1,0 +1,53 @@
+{
+  "homeLabel": "Global Vision Consulting Services, home page",
+  "logoAlt": "Global Vision Consulting Services",
+  "primaryNavigationLabel": "Main navigation",
+  "mobileNavigationLabel": "Mobile navigation",
+  "searchLabel": "Search",
+  "searchPlaceholder": "Search the site",
+  "searchSubmitLabel": "Run a search",
+  "openMenuLabel": "Open list",
+  "closeMenuLabel": "Close list",
+  "themeToggleLabel": "Change light and dark mode",
+  "languageToggleLabel": "Change language",
+  "languageName": "English",
+  "consultationLabel": "Free consultation",
+  "navigation": {
+    "home": "Home",
+    "opportunities": "Opportunities",
+    "services": "Services",
+    "scholarships": "Scholarships",
+    "tourism": "Tourism",
+    "magazine": "Magazine",
+    "more": "More",
+    "about": "About Us",
+    "contact": "Contact Us"
+  },
+  "subNavigation": {
+    "opportunities": {
+      "study": "Study",
+      "migration": "Migration",
+      "work": "Work",
+      "investment": "Investment"
+    },
+    "tourism": {
+      "afghanistan": "Afghanistan",
+      "world": "World",
+      "exams": "Exams"
+    },
+    "more": {
+      "about": "About Us",
+      "contact": "Contact Us"
+    },
+    "services": {
+      "consultation": "Counseling",
+      "scholarshipRegistration": "Registration of scholarships",
+      "examRegistration": "Registration for exams",
+      "migrationRegistration": "Immigration registration",
+      "documentPreparation": "Preparation of documents",
+      "documentProcess": "During the documentation process",
+      "studyVisa": "Study visa",
+      "visaResidence": "Visa and residence"
+    }
+  }
+}

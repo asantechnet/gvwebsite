@@ -1,0 +1,240 @@
+{
+  "hero": {
+    "titleBefore": "Your future path",
+    "titleHighlight": "brighter",
+    "titleAfter": "choose",
+    "description": "From choosing the right opportunity to preparing documents and going through the steps, we are by your side with clear and expert guidance.",
+    "primaryAction": "Get a free consultation",
+    "secondaryAction": "View study opportunities",
+    "visual": {
+      "imageAlt": "Illustration of the globe with symbols of education, migration and professional development",
+      "eyebrow": "Your own path",
+      "title": "From decision to arrival",
+      "steps": [
+        {
+          "id": "study",
+          "title": "education",
+          "description": "Discover opportunities that fit your purpose"
+        },
+        {
+          "id": "migration",
+          "title": "immigration",
+          "description": "Detailed preparation for a clear path"
+        },
+        {
+          "id": "career",
+          "title": "Professional development",
+          "description": "Safe move towards a better future"
+        }
+      ],
+      "closing": "Step by step by your side"
+    }
+  },
+  "opportunities": {
+    "titleBefore": "right opportunity",
+    "titleHighlight": "For your purpose",
+    "viewAll": "View study opportunities",
+    "cards": [
+      {
+        "id": "study",
+        "number": "01",
+        "title": "Educational opportunities",
+        "description": "Get guidance to continue your studies, choose a field and find the right educational path.",
+        "action": "View study opportunities",
+        "href": "/opportunities/study"
+      },
+      {
+        "id": "migration",
+        "number": "02",
+        "title": "Immigration opportunities",
+        "description": "By knowing the options better, find the migration path that suits your conditions and purpose.",
+        "action": "View immigration opportunities",
+        "href": "/opportunities/migration"
+      },
+      {
+        "id": "work",
+        "number": "03",
+        "title": "Work opportunities",
+        "description": "Explore the career opportunities and choices ahead of you to build your professional future.",
+        "action": "View job opportunities",
+        "href": "/opportunities/work"
+      }
+    ]
+  },
+  "destinations": {
+    "titleBefore": "Most popular destinations",
+    "titleHighlight": "travel",
+    "viewAll": "View all destinations",
+    "countries": [
+      {
+        "id": "turkiye",
+        "name": "Türkiye",
+        "image": "/assets/images/destinations/turkiye.jpg",
+        "imageAlt": "View of the city of Istanbul and the Blue Mosque",
+        "flag": "/assets/flags/tr.svg",
+        "href": "/opportunities/study/turkiye",
+        "layout": "wide"
+      },
+      {
+        "id": "germany",
+        "name": "Germany",
+        "image": "/assets/images/destinations/germany.jpg",
+        "imageAlt": "Brandenburg Gate in Berlin",
+        "flag": "/assets/flags/de.svg",
+        "href": "/opportunities/study/germany",
+        "layout": "wide"
+      },
+      {
+        "id": "france",
+        "name": "France",
+        "image": "/assets/images/destinations/france.jpg",
+        "imageAlt": "The Eiffel Tower in Paris",
+        "flag": "/assets/flags/fr.svg",
+        "href": "/opportunities/study/france",
+        "layout": "standard"
+      },
+      {
+        "id": "netherlands",
+        "name": "Netherlands",
+        "image": "/assets/images/destinations/netherlands.jpg",
+        "imageAlt": "Canal and buildings of the city of Amsterdam",
+        "flag": "/assets/flags/nl.svg",
+        "href": "/opportunities/study/netherlands",
+        "layout": "standard"
+      },
+      {
+        "id": "hungary",
+        "name": "Hungary",
+        "image": "/assets/images/destinations/hungary.jpg",
+        "imageAlt": "Budapest city view and Danube river",
+        "flag": "/assets/flags/hu.svg",
+        "href": "/opportunities/study/hungary",
+        "layout": "standard"
+      },
+      {
+        "id": "italy",
+        "name": "Italy",
+        "image": "/assets/images/destinations/italy.jpg",
+        "imageAlt": "The Grand Canal and the buildings of the city of Venice",
+        "flag": "/assets/flags/it.svg",
+        "href": "/opportunities/study/italy",
+        "layout": "wide"
+      },
+      {
+        "id": "unitedKingdom",
+        "name": "England",
+        "image": "/assets/images/destinations/united-kingdom.jpg",
+        "imageAlt": "View of the city of London and the River Thames",
+        "flag": "/assets/flags/gb.svg",
+        "href": "/opportunities/study/united-kingdom",
+        "layout": "wide"
+      }
+    ]
+  },
+  "process": {
+    "titleBefore": "from decision to outcome,",
+    "titleHighlight": "We are with you",
+    "steps": [
+      {
+        "id": "consultation",
+        "number": "01",
+        "title": "Initial consultation",
+        "description": "We discuss your goals, conditions, and options."
+      },
+      {
+        "id": "assessment",
+        "number": "02",
+        "title": "Path evaluation",
+        "description": "We determine the most suitable route based on your conditions and priorities."
+      },
+      {
+        "id": "preparation",
+        "number": "03",
+        "title": "Detailed preparation",
+        "description": "We carry out the necessary documents and procedures regularly, completely and according to the needs of the case."
+      },
+      {
+        "id": "followUp",
+        "number": "04",
+        "title": "Follow up to results",
+        "description": "Along the way, we will follow up the status of the case and stay by your side."
+      }
+    ]
+  },
+  "services": {
+    "titleBefore": "Specialized services for",
+    "titleHighlight": "Every step of your way",
+    "description": "From the first decision to the preparation of documents and getting a visa, get the services you need with a clear path.",
+    "viewAll": "See expert advice",
+    "cards": [
+      {
+        "id": "consultation",
+        "number": "01",
+        "title": "Expert advice",
+        "description": "Get detailed guidance to choose the path that suits your purpose and conditions.",
+        "action": "View details",
+        "href": "/services/consultation"
+      },
+      {
+        "id": "scholarshipRegistration",
+        "number": "02",
+        "title": "Scholarship registration",
+        "description": "Find the right opportunities and go through the registration process with confidence.",
+        "action": "View details",
+        "href": "/services/scholarship-registration"
+      },
+      {
+        "id": "documentPreparation",
+        "number": "03",
+        "title": "Preparation of documents",
+        "description": "Prepare the required documents complete, orderly and in accordance with the requirements of the application.",
+        "action": "View details",
+        "href": "/services/document-preparation"
+      },
+      {
+        "id": "studyVisa",
+        "number": "04",
+        "title": "Study visa services",
+        "description": "Get assistance from checking the documents to completing the visa application process.",
+        "action": "View details",
+        "href": "/services/study-visa"
+      }
+    ]
+  },
+  "testimonials": {
+    "titleBefore": "Customer experience",
+    "titleHighlight": "we",
+    "items": [
+      {
+        "id": "student-1",
+        "quote": "From the first consultation to the preparation of the documents, all the steps were clear and orderly for me.",
+        "name": "Irfan Noorzadeh",
+        "role": "Accepted student in America",
+        "avatar": "/assets/images/team/erfan.webp",
+        "avatarAlt": "Profile picture of Irfan Noorzadeh"
+      },
+      {
+        "id": "student-2",
+        "quote": "With the careful guidance of the team, I was able to confidently choose the right study path for me.",
+        "name": "Morteza Razavi",
+        "role": "Applicant to study in Europe",
+        "avatar": "/assets/images/team/murtaza.webp",
+        "avatarAlt": "Profile picture of Morteza Razavi"
+      },
+      {
+        "id": "student-3",
+        "quote": "The regular follow-up and quick response made me feel at ease the whole way.",
+        "name": "Navid Hotak",
+        "role": "Successful immigration to Canada",
+        "avatar": "/assets/images/team/naveed.webp",
+        "avatarAlt": "Navid Hotak's profile picture"
+      }
+    ]
+  },
+  "consultation": {
+    "title": "Ready to take the next step?",
+    "description": "With an expert consultation, clarify your right path and make a confident decision for the future.",
+    "primaryAction": "Get a free consultation",
+    "secondaryAction": "View study opportunities"
+  }
+}

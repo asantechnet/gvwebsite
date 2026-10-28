@@ -1,0 +1,11 @@
+{
+  "title": "search",
+  "description": "Search opportunities, services, countries, exams and magazine content.",
+  "resultsFor": "Results for",
+  "empty": "No results found. Try a shorter or different phrase.",
+  "prompt": "Enter the desired term in the search section at the top of the page.",
+  "view": "View article",
+  "notFoundTitle": "Page not found",
+  "notFoundDescription": "The address entered does not exist or has been changed.",
+  "home": "Return to the main page"
+}

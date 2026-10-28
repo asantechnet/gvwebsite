@@ -22,7 +22,7 @@ const fieldMap = {
 const collectionKeys = { opportunities: 'cards', destinations: 'countries', process: 'steps', services: 'cards', testimonials: 'items' }
 const textareaFields = new Set(['description'])
 const linkFields = new Set(['primaryActionHref', 'secondaryActionHref', 'viewAllHref'])
-const defaultActionLinks = { hero: { primaryActionHref: '/contact', secondaryActionHref: '/opportunities/study' }, opportunities: { viewAllHref: '/opportunities/study' }, destinations: { viewAllHref: '/opportunities/country' }, services: { viewAllHref: '/services/consultation' }, consultation: { primaryActionHref: '/contact', secondaryActionHref: '/opportunities/study' } }
+const defaultActionLinks = { hero: { primaryActionHref: '/contact', secondaryActionHref: '/opportunities/study' }, opportunities: { viewAllHref: '/opportunities/study' }, destinations: { viewAllHref: '/opportunities/study' }, services: { viewAllHref: '/services/consultation' }, consultation: { primaryActionHref: '/contact', secondaryActionHref: '/opportunities/study' } }
 const fieldGroupMap = { heading: ['titleBefore', 'titleHighlight', 'titleAfter', 'title'], body: ['description', 'viewAll', 'viewAllHref'], actions: ['primaryAction', 'primaryActionHref', 'secondaryAction', 'secondaryActionHref'] }
 
 function HomeEditorSection({ content, initialContent }) {

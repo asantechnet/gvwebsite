@@ -39,7 +39,7 @@ function ContactSection({ content }) {
                     </span>
                     <div>
                       <p className="text-xs text-foreground-muted">{detail.label}</p>
-                      <p dir={detail.type === 'phone' ? 'ltr' : undefined} className={`mt-1 text-sm font-bold text-foreground ${detail.type === 'phone' ? 'whitespace-nowrap text-right' : ''}`}>{detail.value}</p>
+                      {detail.type === 'phone' || detail.type === 'email' ? <a href={detail.type === 'phone' ? `tel:${detail.value.replaceAll(' ', '')}` : `mailto:${detail.value}`} dir="ltr" className={`mt-1 block text-sm font-bold text-foreground transition-colors hover:text-primary ${detail.type === 'phone' ? 'whitespace-nowrap text-right' : ''}`}>{detail.value}</a> : <p className="mt-1 text-sm font-bold text-foreground">{detail.value}</p>}
                     </div>
                   </div>
                 )
@@ -51,7 +51,7 @@ function ContactSection({ content }) {
                 const Icon = icons[social.type] || Music2
 
                 return (
-                  <span key={social.type} aria-label={social.label} title={social.label} className="flex size-10 items-center justify-center rounded-full border border-border text-foreground-muted transition-colors hover:border-primary hover:text-primary dark:border-gray-600">
+                  <span key={social.type} title={social.label} className="flex size-10 items-center justify-center rounded-full border border-border text-foreground-muted dark:border-gray-600">
                     <Icon aria-hidden="true" size={17} />
                   </span>
                 )

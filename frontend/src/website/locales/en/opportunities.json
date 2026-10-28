@@ -1,0 +1,672 @@
+{
+  "study": {
+    "post": {
+      "slug": "study-opportunities",
+      "category": "Educational opportunities",
+      "title": "Educational opportunities for Afghan students",
+      "description": "Guidance to know study options, scholarships and prepare a clear path to continue studying abroad.",
+      "image": "/assets/images/destinations/germany.jpg",
+      "imageAlt": "Students in a modern educational environment"
+    },
+    "postDetail": {
+      "parentLabel": "Opportunities",
+      "parentHref": "/opportunities/study",
+      "backLabel": "Back to opportunities",
+      "backHref": "/opportunities/study",
+      "readTime": "15 minutes of study",
+      "highlight": "For an Afghan applicant, the study path starts from the evaluation of the goal, budget, grades and language and continues until the choice of destination, admission, visa and the beginning of student life. Double-check any terms and conditions at the destination's official source.",
+      "shareLabel": "sharing",
+      "copyLabel": "copy link",
+      "relatedLabel": "Related content",
+      "quickAccessLabel": "Quick access",
+      "media": {
+        "label": "Content media",
+        "imageAlt": "University campus in Germany",
+        "imageLabel": "Some popular study destinations in Europe",
+        "gallery": [
+          {
+            "src": "/assets/images/destinations/germany.jpg",
+            "alt": "A view of the urban and university atmosphere of Germany",
+            "label": "Germany; Destination of academic programs and DAAD scholarships"
+          },
+          {
+            "src": "/assets/images/destinations/united-kingdom.jpg",
+            "alt": "A view of the city of London in the United Kingdom",
+            "label": "Britain; Admission and visa with separate official regulations"
+          },
+          {
+            "src": "/assets/images/destinations/france.jpg",
+            "alt": "A view of the city of Paris in France",
+            "label": "France; One of the destinations of the European higher education network"
+          }
+        ],
+        "audio": {
+          "title": "Podcast: 5 tips for students applying to study abroad",
+          "speaker": "Irfan Noorzadeh",
+          "speakerLabel": "sound",
+          "duration": "The real episode",
+          "avatar": "/assets/images/team/erfan.webp",
+          "description": "A real episode of the IELTS Podcast about preparing to study abroad. Try the play, pause, seek and volume controls.",
+          "src": "/assets/audio/testimonial.mp3",
+          "type": "audio/mpeg",
+          "source": "https://www.ieltspodcast.com/audio-tutorials/5-tips-for-studying-abroad/",
+          "sourceLabel": "Podcast source",
+          "unsupportedLabel": "Your browser does not support audio playback."
+        },
+        "video": {
+          "youtubeId": "xMNdhnVMGCk",
+          "title": "How to study in Europe; Official video of the European Commission",
+          "credit": "\"How to study in Europe\" video from the European Commission",
+          "source": "https://www.youtube.com/watch?v=xMNdhnVMGCk",
+          "sourceLabel": "View source"
+        }
+      },
+      "quickLinks": {
+        "study": "education",
+        "work": "work",
+        "countries": "Countries",
+        "exams": "Exams",
+        "visa": "visa",
+        "migration": "immigration"
+      },
+      "sections": [
+        {
+          "title": "1. Assess your circumstances and goals",
+          "body": "Before searching for a university, specify the course, field, start date and the result you want to achieve. Don't think of the budget as just tuition; Also consider the cost of application, translation, language test, travel, insurance, accommodation and living. If budget is tight, list low-cost programs and scholarship options first.",
+          "links": [
+            {
+              "label": "Educational opportunities",
+              "href": "/opportunities/study"
+            },
+            {
+              "label": "Initial consultation",
+              "href": "/services/consultation"
+            }
+          ],
+          "items": [
+            "Specify section, field and desired start date",
+            "Write the first year budget and emergency reserve separately",
+            "Clarify the career goal and the reason for choosing the field",
+            "For each option, record the formal condition and deadline"
+          ]
+        },
+        {
+          "title": "2. Compare the country, field and university",
+          "body": "Create three to six real applications and compare the language of instruction, GPA requirement, course prerequisites, degree credit, tuition, city fees, student work opportunities, and visa path separately. Read the official page of the university and the program itself; Rank or promotion alone is not enough reason to choose.",
+          "links": [
+            {
+              "label": "View global destinations",
+              "href": "/tourism/world"
+            }
+          ],
+          "items": [
+            "Save the official link, deadline and cost of each program",
+            "Match the prerequisites with your academic background",
+            "Compare the actual cost of the first year with the affordability",
+            "Have one main choice and two backup options"
+          ]
+        },
+        {
+          "title": "3. Plan the necessary language and exams",
+          "body": "Find out if the university accepts IELTS, TOEFL, PTE or other tests and what the minimum overall score and score for each skill is. Some programs also require an internal test, interview, GRE, GMAT, or portfolio. Coordinate the time of the test and receiving the result with the admission deadline.",
+          "links": [
+            {
+              "label": "Registration for exams",
+              "href": "/services/exam-registration"
+            },
+            {
+              "label": "Exam opportunities",
+              "href": "/opportunities/exams"
+            }
+          ],
+          "items": [
+            "Check the language requirements of the same program",
+            "Allow time to prepare and repeat the test",
+            "Write the minimum total score and each skill separately",
+            "Keep the official result and its validity date"
+          ]
+        },
+        {
+          "title": "4. Prepare standard and traceable documents",
+          "body": "The usual list includes passport, identity document, diploma, report card, graduation certificate, official translation, resume, motivation letter and recommendation letter; The final list is determined by the university. The name, date of birth and the order of education must be the same in all documents. Keep originals, translations, scans and shipping receipts organized.",
+          "links": [
+            {
+              "label": "Preparation of documents",
+              "href": "/services/document-preparation"
+            },
+            {
+              "label": "During the documentation process",
+              "href": "/services/document-process"
+            }
+          ],
+          "items": [
+            "Make a separate checklist for each university",
+            "Start translation and verification before the deadline",
+            "Personalize the motivation letter for the same major",
+            "Do not submit incomplete documents or incorrect information"
+          ]
+        },
+        {
+          "title": "5. Track admission and scholarship separately",
+          "body": "Submit the admission application from the official portal and keep your application number, payment receipt and email. University acceptance is not automatically a scholarship. For each scholarship, read tuition coverage, stipend, insurance, accommodation, payment period and deadline; Some scholarships are applied for at the same time as admission and some after.",
+          "links": [
+            {
+              "label": "Scholarship registration",
+              "href": "/services/scholarship-registration"
+            }
+          ],
+          "items": [
+            "Review the form and files before the deadline",
+            "Read the conditions of conditional admission carefully",
+            "Calculate the amount and costs not covered",
+            "Don't pay for a promise of acceptance or scholarship through an anonymous broker"
+          ]
+        },
+        {
+          "title": "6. Plan your visa and start your student life",
+          "body": "Once accepted, check the program name, start date, tuition, remaining requirements, and approval deadline. Then get the list of visa, financial ability, insurance, translation and residence only from the official website of the embassy or immigration office. University acceptance does not guarantee visa issuance and no false documents or false information is acceptable.",
+          "links": [
+            {
+              "label": "Visa services",
+              "href": "/services/visa"
+            },
+            {
+              "label": "Immigration opportunities",
+              "href": "/opportunities/migration"
+            }
+          ],
+          "items": [
+            "Record the deadline for confirmation of acceptance and payment of the deposit",
+            "Prepare financial documents and source of money according to regulations",
+            "Keep the original documents and their digital copies",
+            "Read the embassy's official conditions again before proceeding"
+          ]
+        },
+        {
+          "title": "7. Be prepared before traveling and after arrival",
+          "body": "Check accommodation, insurance, tickets, reception, university registration, bank account and transportation before you travel. After entering, do residence registration, final registration, unit selection and introduction meeting according to the university's instructions. For the first month, keep an emergency budget and the necessary numbers of the destination ready.",
+          "links": [
+            {
+              "label": "Travel advice and route",
+              "href": "/services/consultation"
+            }
+          ],
+          "items": [
+            "Match the address of the university and the place of residence with the travel time",
+            "Keep backups of documents and insurance online",
+            "Read the student work conditions from the official source",
+            "Record university deadlines in the calendar"
+          ]
+        }
+      ],
+      "sourcesTitle": "Official and verifiable sources",
+      "sourcesNote": "This guide was revised on October 12, 2026 with the following references. Terms, deadlines and amounts are subject to change; Always double-check your chosen program page.",
+      "sources": [
+        {
+          "label": "Education USA; 5 steps of studying in America",
+          "href": "https://educationusa.state.gov/your-5-steps-us-study"
+        },
+        {
+          "label": "Erasmus Mundus; Joint masters and scholarships",
+          "href": "https://erasmus-plus.ec.europa.eu/opportunities/individuals/students/erasmus-mundus-joint-masters"
+        },
+        {
+          "label": "DAAD; The official scholarship search database",
+          "href": "https://www2.daad.de/deutschland/stipendium/datenbank/en/21148-scholarship-database/"
+        },
+        {
+          "label": "Erasmus+; Conditions for studying abroad",
+          "href": "https://erasmus-plus.ec.europa.eu/opportunities/individuals/students/studying-abroad"
+        },
+        {
+          "label": "GO2TR; Study abroad guide and roadmap",
+          "href": "https://go2tr.com/study"
+        }
+      ]
+    }
+  },
+  "migration": {
+    "post": {
+      "slug": "migration-opportunities",
+      "category": "Immigration opportunities",
+      "title": "migration routes; From choosing the way to staying",
+      "description": "A practical guide to comparing educational, work and family immigration, preparing your case and distinguishing valid information from false promises.",
+      "image": "/assets/images/destinations/united-kingdom.jpg",
+      "imageAlt": "A view of an immigrant-friendly city"
+    },
+    "postDetail": {
+      "parentLabel": "Opportunities",
+      "parentHref": "/opportunities/migration",
+      "backLabel": "Back to opportunities",
+      "backHref": "/opportunities/migration",
+      "readTime": "12 minutes of study",
+      "highlight": "Immigration is a legal and financial decision, not an immediate promise. First, determine the purpose and the legal route, then compare the official conditions of the destination country, cost, time, documents and the risk of rejection with your case.",
+      "shareLabel": "sharing",
+      "copyLabel": "copy link",
+      "relatedLabel": "Related content",
+      "quickAccessLabel": "Quick access",
+      "quickLinks": {
+        "study": "education",
+        "work": "work",
+        "countries": "Countries",
+        "exams": "Exams",
+        "visa": "visa",
+        "migration": "immigration"
+      },
+      "sections": [
+        {
+          "title": "1. Determine your goal and legal path",
+          "body": "Education, work, joining the family and investment are not the same conditions. Enter your purpose, age, education, work experience, language, budget and family status and check only the routes that exist in the law of the destination country.",
+          "links": [
+            {
+              "label": "Immigration advice",
+              "href": "/services/migration-registration"
+            },
+            {
+              "label": "Educational opportunities",
+              "href": "/opportunities/study"
+            }
+          ],
+          "items": [
+            "Specify the type of accommodation and the expected result",
+            "Make the official page of the immigration office of the destination the main source",
+            "Do not apply for illegal routes or log in with false information",
+            "Check the possible cost and time before paying"
+          ]
+        },
+        {
+          "title": "2. Adjust conditions, points and documents",
+          "body": "In each program, the language requirement, education, work experience, job offer, financial ability, medical examination and bad history may be different. Create a table of documents and verify each item from an official source or authorized representative.",
+          "links": [
+            {
+              "label": "During the documentation process",
+              "href": "/services/document-process"
+            },
+            {
+              "label": "Global destinations",
+              "href": "/tourism/world"
+            }
+          ],
+          "items": [
+            "Check the official translation and validity of the documents",
+            "Check the validity date of your passport and certificates",
+            "Keep original and digital copies of documents",
+            "Get a written receipt from the consultant about the contract, cost and service scope"
+          ]
+        },
+        {
+          "title": "3. Understand the application, visa and residence separately",
+          "body": "Registering a profile, receiving an invitation or acceptance, applying for residence and issuing a visa are different steps. Receiving a letter of acceptance or a job offer does not guarantee a visa. Fill out forms completely and honestly, keep receipts and use only official time and payment channels.",
+          "links": [
+            {
+              "label": "Visa services",
+              "href": "/services/visa"
+            }
+          ],
+          "items": [
+            "Record the case number and response deadline",
+            "Check the email and portal to request additional documents",
+            "Avoid guaranteeing acceptance or visa with immediate payment",
+            "Read the negative decision and the way to protest from the official letter"
+          ]
+        },
+        {
+          "title": "4. After logging in, save your status",
+          "body": "After arrival, take address registration, insurance, extension of stay, working conditions, taxes and family obligations seriously. Read the law of work, education or change of employer from an official source; Ignoring the extension deadline can jeopardize the residence status.",
+          "links": [
+            {
+              "label": "Consulting services",
+              "href": "/services/consultation"
+            }
+          ],
+          "items": [
+            "Record the renewal deadline and terms of stay in the calendar",
+            "Archive official documents and correspondence",
+            "Refrain from working or studying outside the residence permit",
+            "Check again for updated information from the destination government"
+          ]
+        }
+      ],
+      "sourcesTitle": "Official sources",
+      "sourcesNote": "Immigration conditions change based on the country, type of residence and date of application; The official source of the destination government is the final reference.",
+      "sources": [
+        {
+          "label": "EU Immigration Portal; Work, education and family reunification",
+          "href": "https://immigration-portal.ec.europa.eu/index_en"
+        },
+        {
+          "label": "UNHCR; Information on asylum and international protection",
+          "href": "https://help.unhcr.org/"
+        },
+        {
+          "label": "Canada; The official tool for reviewing immigration applications",
+          "href": "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada.html"
+        }
+      ]
+    }
+  },
+  "work": {
+    "post": {
+      "slug": "work-opportunities",
+      "category": "Work opportunities",
+      "title": "work abroad; From resume preparation to work permit",
+      "description": "A practical guide to find legal work, evaluate a job offer, prepare documents and understand the responsibilities of a migrant worker.",
+      "image": "/assets/images/destinations/united-kingdom.jpg",
+      "imageAlt": "International work environment"
+    },
+    "postDetail": {
+      "parentLabel": "Opportunities",
+      "parentHref": "/opportunities/work",
+      "backLabel": "Back to opportunities",
+      "backHref": "/opportunities/work",
+      "readTime": "11 minutes of reading",
+      "highlight": "A job offer alone is not a work or residence permit. Check destination country, job, employer, contract, language, skills and license type before paying or leaving your country.",
+      "shareLabel": "sharing",
+      "copyLabel": "copy link",
+      "relatedLabel": "Related content",
+      "quickAccessLabel": "Quick access",
+      "quickLinks": {
+        "study": "education",
+        "work": "work",
+        "countries": "Countries",
+        "exams": "Exams",
+        "visa": "visa",
+        "migration": "immigration"
+      },
+      "sections": [
+        {
+          "title": "1. Choose the right job and country",
+          "body": "Specify your job title, technical skills, background, language and professional qualifications. Market demand and professional licensing requirements for doctors, nurses, engineers and regulated professions are different from general professions.",
+          "links": [
+            {
+              "label": "Global destinations",
+              "href": "/tourism/world"
+            },
+            {
+              "label": "Business advice",
+              "href": "/services/consultation"
+            }
+          ],
+          "items": [
+            "Match the resume to the actual job description",
+            "Check the professional degree and the possibility of equivalence",
+            "Extract the job language level from the official advertisement or law",
+            "Compare salary after tax and cost of living"
+          ]
+        },
+        {
+          "title": "2. Verify the job offer",
+          "body": "Check the employer's legal name, address, contract, gross and net salary, hours, location, insurance, vacation, probationary period and hiring costs. A real employer usually has a formal process and a clear contract for legal employment; Paying money to \"guarantee a job\" is a serious warning.",
+          "links": [
+            {
+              "label": "Preparation of documents",
+              "href": "/services/document-preparation"
+            }
+          ],
+          "items": [
+            "Ask for a written and translatable contract",
+            "Separate costs paid by the employer or the applicant",
+            "Do not leave the passport to an intermediary",
+            "Match the ad and email with the employer's official domain"
+          ]
+        },
+        {
+          "title": "3. Get work permit and visa from official source",
+          "body": "License conditions may be dependent on a job offer, skill shortage list, minimum salary, language test, quota or employer approval. Job offer, entry permit, work permit and residence are separate processes and no intermediary can guarantee the government's result.",
+          "links": [
+            {
+              "label": "Visa services",
+              "href": "/services/visa"
+            },
+            {
+              "label": "Immigration opportunities",
+              "href": "/opportunities/migration"
+            }
+          ],
+          "items": [
+            "Record the license code and type accurately",
+            "Read the employer, job and workplace restrictions",
+            "Get the list of official documents and fees from the destination government",
+            "Finalize the insurance and contract before the trip"
+          ]
+        },
+        {
+          "title": "4. Know your rights and responsibilities",
+          "body": "Once you start working, learn about minimum wage, hours, safety, insurance, taxes, and the grievance procedure. Do not jeopardize your residence status by changing your job or unemployment and notify the relevant department of any change according to the law.",
+          "links": [
+            {
+              "label": "Immigration registration",
+              "href": "/services/migration-registration"
+            }
+          ],
+          "items": [
+            "Keep the pay slip and the contract",
+            "Save emergency and work department numbers",
+            "Do not accept informal work and the promise of salary without a contract",
+            "Record the license renewal deadline in the calendar"
+          ]
+        }
+      ],
+      "sourcesTitle": "Official sources",
+      "sourcesNote": "Working conditions depend on the country and occupation; Reference the official page of the destination government and valid contract.",
+      "sources": [
+        {
+          "label": "EU Immigration Portal; Career paths in Europe",
+          "href": "https://immigration-portal.ec.europa.eu/index_en"
+        },
+        {
+          "label": "ILO; Rights of migrant workers",
+          "href": "https://www.ilo.org/topics/labour-migration"
+        },
+        {
+          "label": "Canada; Work permits",
+          "href": "https://www.canada.ca/en/immigration-refugees-citizenship/services/work-canada.html"
+        }
+      ]
+    }
+  },
+  "investment": {
+    "post": {
+      "slug": "investment-opportunities",
+      "category": "Investment opportunities",
+      "title": "investment abroad; From assessment to legal action",
+      "description": "A practical guide for comparing investment routes, assessing risk, reviewing documents and choosing the right destination.",
+      "image": "/assets/images/destinations/germany.jpg",
+      "imageAlt": "A view of an international economic center"
+    },
+    "postDetail": {
+      "parentLabel": "Opportunities",
+      "parentHref": "/opportunities/investment",
+      "backLabel": "Back to opportunities",
+      "backHref": "/opportunities/investment",
+      "readTime": "10 minutes of study",
+      "highlight": "Investment and residence are not the same concept. Check the type of capital, source of money, business risk, taxes and residency requirements separately from official sources.",
+      "shareLabel": "sharing",
+      "copyLabel": "copy link",
+      "relatedLabel": "Related content",
+      "quickAccessLabel": "Quick access",
+      "quickLinks": {
+        "study": "education",
+        "work": "work",
+        "countries": "Countries",
+        "exams": "Exams",
+        "visa": "visa",
+        "migration": "immigration"
+      },
+      "sections": [
+        {
+          "title": "1. Determine the goal, budget and risk tolerance",
+          "body": "Make it clear whether your goal is to build a business, buy shares, develop a business, or explore a residency path. Calculate the required capital, side costs and emergency reserve before choosing the country.",
+          "items": [
+            "Write down the purpose of the investment",
+            "Separate the operating budget from the cost of living",
+            "Weigh the exchange rate risk and loss",
+            "Don't pay for the promise of a profit or a guaranteed stay"
+          ]
+        },
+        {
+          "title": "2. Compare country and program from official source",
+          "body": "The minimum capital, type of company, job creation, management history, legal source of money, tax and examination period are different in each country. Read the regulations from the destination's official investment, tax and immigration office.",
+          "links": [
+            {
+              "label": "Global destinations",
+              "href": "/tourism/world"
+            },
+            {
+              "label": "Counseling",
+              "href": "/services/consultation"
+            }
+          ],
+          "items": [
+            "Write the terms and costs in a table",
+            "Check the license and agent validity",
+            "Translate and evaluate the contract before signing",
+            "Determine the exit route from the investment"
+          ]
+        },
+        {
+          "title": "3. Do an independent legal and financial review",
+          "body": "Ownership, debt, license, bank account, tax and contract obligations should be reviewed by an independent and qualified professional. Transfer money only through legal and traceable channels.",
+          "links": [
+            {
+              "label": "During the documentation process",
+              "href": "/services/document-process"
+            },
+            {
+              "label": "Visa services",
+              "href": "/services/visa"
+            }
+          ],
+          "items": [
+            "Document the source of the money and receipts",
+            "Verify the identity of the seller and the company",
+            "Calculate the cost of taxes and maintenance",
+            "Consider the residence decision separately from the business decision"
+          ]
+        }
+      ],
+      "sourcesTitle": "Official sources",
+      "sourcesNote": "Investment and residence rules change; The final authority is the official offices of the destination country and licensed consultants.",
+      "sources": [
+        {
+          "label": "World Bank; Business and investment environment",
+          "href": "https://www.worldbank.org/en/programs/business-enabling-environment"
+        },
+        {
+          "label": "OECD; Investment policies",
+          "href": "https://www.oecd.org/investment/"
+        }
+      ]
+    }
+  },
+  "exams": {
+    "post": {
+      "slug": "exam-opportunities",
+      "category": "Exams",
+      "title": "Language and admission exams; The right choice and targeted preparation",
+      "description": "A guide to choosing a test, knowing the difference between language tests and preparing an acceptable result for university, work or visa.",
+      "image": "/assets/images/destinations/france.jpg",
+      "imageAlt": "Student preparing for the exam"
+    },
+    "postDetail": {
+      "parentLabel": "Opportunities",
+      "parentHref": "/opportunities/exams",
+      "backLabel": "Back to opportunities",
+      "backHref": "/opportunities/exams",
+      "readTime": "10 minutes of study",
+      "highlight": "Choose the right test based on the purpose and acceptance of the destination. Confirm the exam name, academic or general type, minimum score of each skill, validity date and result submission method from the university or official office.",
+      "shareLabel": "sharing",
+      "copyLabel": "copy link",
+      "relatedLabel": "Related content",
+      "quickAccessLabel": "Quick access",
+      "quickLinks": {
+        "study": "education",
+        "work": "work",
+        "countries": "Countries",
+        "exams": "Exams",
+        "visa": "visa",
+        "migration": "immigration"
+      },
+      "sections": [
+        {
+          "title": "1. Choose the test based on the objective",
+          "body": "An Academic test is usually required for university, while some work or immigration paths require a public test or a test approved by the Immigration Department. IELTS, TOEFL, PTE and destination country language tests are not automatically equivalent; Read the list of accepted tests of the same program.",
+          "links": [
+            {
+              "label": "Registration for exams",
+              "href": "/services/exam-registration"
+            },
+            {
+              "label": "study guide",
+              "href": "/opportunities/study"
+            }
+          ],
+          "items": [
+            "Purpose: Specify study, work or visa",
+            "Do not confuse Academic and General",
+            "Record the minimum total score and each skill",
+            "Ask the destination organization to accept the online result"
+          ]
+        },
+        {
+          "title": "2. Know the format and grading",
+          "body": "IELTS Academic has four sections: Listening, Reading, Writing and Speaking, and the test time is 2 hours and 45 minutes; But the format and time of other tests are different. Don't just practice the test by memorizing the answers: practice timing, question order, writing and speaking with an official sample.",
+          "links": [
+            {
+              "label": "Exam registration service",
+              "href": "/services/exam-registration"
+            }
+          ],
+          "items": [
+            "Learn the time and type of questions for each section",
+            "Solve the official sample test before registering",
+            "Record your mistakes in the follow-up notebook",
+            "Do not make a memorized and unnatural answer for Speaking"
+          ]
+        },
+        {
+          "title": "3. Make a preparation and registration plan",
+          "body": "Measure the current level with a mock test and create a weekly plan based on the distance to the target score. Do not make the test date so close to the university deadline that the opportunity to repeat or send the result is lost. Read the rules of the center, ID card and allowed equipment before the test day.",
+          "items": [
+            "Record the target score and submission deadline in the calendar",
+            "Practice all four skills every week",
+            "Save time to receive the result and retake the test",
+            "Match the ID card and registration details"
+          ]
+        },
+        {
+          "title": "4. Send the result correctly and check its validity",
+          "body": "The name and date of birth of the result must be the same as the passport. Send the result from the official system to the university or the relevant department and avoid sending the manipulated image. Check separately the validity of the result, the required score and the possibility of using the online test for visa.",
+          "links": [
+            {
+              "label": "Visa services",
+              "href": "/services/visa"
+            }
+          ],
+          "items": [
+            "Keep the result number and delivery receipt",
+            "Compare the validity date with the program start time",
+            "If the score is low, read the protest or repetition rule",
+            "For visa, choose only the exam accepted by the relevant department"
+          ]
+        }
+      ],
+      "sourcesTitle": "Official sources of the test",
+      "sourcesNote": "The type of test and the minimum score are determined by the destination organization; Results and formats may change.",
+      "sources": [
+        {
+          "label": "IELTS; Types of tests",
+          "href": "https://www.ielts.org/take-a-test/test-types"
+        },
+        {
+          "label": "IELTS Academic; Exam format",
+          "href": "https://www.ielts.org/take-a-test/test-types/ielts-academic-test"
+        },
+        {
+          "label": "IELTS; Grading",
+          "href": "https://www.ielts.org/take-a-test/your-results/ielts-scoring-in-detail"
+        }
+      ]
+    }
+  }
+}

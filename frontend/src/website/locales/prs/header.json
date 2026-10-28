@@ -17,7 +17,9 @@
     "opportunities": "فرصت ها",
     "services": "خدمات",
     "scholarships": "بورسیه‌ها",
+    "tourism": "سیاحت",
     "magazine": "مجله",
+    "more": "بیشتر",
     "about": "در باره ما",
     "contact": "تماس با ما"
   },
@@ -26,8 +28,16 @@
       "study": "تحصیلی",
       "migration": "مهاجرتی",
       "work": "کاری",
-      "exams": "امتحانات",
-      "destinationCountry": "کشور مقصد"
+      "investment": "سرمایه گذاری"
+    },
+    "tourism": {
+      "afghanistan": "افغانستان",
+      "world": "جهان",
+      "exams": "امتحانات"
+    },
+    "more": {
+      "about": "در باره ما",
+      "contact": "تماس با ما"
     },
     "services": {
       "consultation": "مشاوره",

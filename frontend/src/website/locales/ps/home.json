@@ -72,7 +72,7 @@
         "image": "/assets/images/destinations/turkiye.jpg",
         "imageAlt": "د استانبول ښار او نیلي جومات منظره",
         "flag": "/assets/flags/tr.svg",
-        "href": "/opportunities/country/turkiye",
+        "href": "/opportunities/study/turkiye",
         "layout": "wide"
       },
       {
@@ -81,7 +81,7 @@
         "image": "/assets/images/destinations/germany.jpg",
         "imageAlt": "په برلین کې د براندنبورګ دروازه",
         "flag": "/assets/flags/de.svg",
-        "href": "/opportunities/country/germany",
+        "href": "/opportunities/study/germany",
         "layout": "wide"
       },
       {
@@ -90,7 +90,7 @@
         "image": "/assets/images/destinations/france.jpg",
         "imageAlt": "په پاریس کې د ایفل برج",
         "flag": "/assets/flags/fr.svg",
-        "href": "/opportunities/country/france",
+        "href": "/opportunities/study/france",
         "layout": "standard"
       },
       {
@@ -99,7 +99,7 @@
         "image": "/assets/images/destinations/netherlands.jpg",
         "imageAlt": "د امستردام کانال او ودانۍ",
         "flag": "/assets/flags/nl.svg",
-        "href": "/opportunities/country/netherlands",
+        "href": "/opportunities/study/netherlands",
         "layout": "standard"
       },
       {
@@ -108,7 +108,7 @@
         "image": "/assets/images/destinations/hungary.jpg",
         "imageAlt": "د بوداپست ښار او د ډانیوب سیند منظره",
         "flag": "/assets/flags/hu.svg",
-        "href": "/opportunities/country/hungary",
+        "href": "/opportunities/study/hungary",
         "layout": "standard"
       },
       {
@@ -117,7 +117,7 @@
         "image": "/assets/images/destinations/italy.jpg",
         "imageAlt": "د وینس لوی کانال او ودانۍ",
         "flag": "/assets/flags/it.svg",
-        "href": "/opportunities/country/italy",
+        "href": "/opportunities/study/italy",
         "layout": "wide"
       },
       {
@@ -126,7 +126,7 @@
         "image": "/assets/images/destinations/united-kingdom.jpg",
         "imageAlt": "د لندن ښار او د ټیمز سیند منظره",
         "flag": "/assets/flags/gb.svg",
-        "href": "/opportunities/country/united-kingdom",
+        "href": "/opportunities/study/united-kingdom",
         "layout": "wide"
       }
     ]

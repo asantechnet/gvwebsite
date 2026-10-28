@@ -7,6 +7,7 @@ import PostCard from '@ui/PostCard.jsx'
 const getVisibleCount = () => typeof window === 'undefined' ? 1 : window.innerWidth >= 1536 ? 5 : window.innerWidth >= 1024 ? 4 : window.innerWidth >= 768 ? 2 : 1
 
 function PostCarousel({ items, category, labels, language }) {
+  const isLtr = language === 'en'
   const viewportRef = useRef(null)
   const pointerStartRef = useRef(null)
   const [visibleCount, setVisibleCount] = useState(getVisibleCount)
@@ -70,7 +71,7 @@ function PostCarousel({ items, category, labels, language }) {
           setPaused(false)
         }}
       >
-        <div className="flex gap-3 ease-out [direction:rtl]" style={{ transform: `translateX(${activeIndex * (viewportWidth ? (viewportWidth - 16 + gap) / visibleCount : 0)}px)`, transition: resetting ? 'none' : 'transform 700ms ease-out' }}>
+        <div className="flex gap-3 ease-out" style={{ transform: `translateX(${(isLtr ? -1 : 1) * activeIndex * (viewportWidth ? (viewportWidth - 16 + gap) / visibleCount : 0)}px)`, transition: resetting ? 'none' : 'transform 700ms ease-out' }}>
           {loopItems.map((item, index) => <div key={`${item.slug || item.title}-${index}`} className="shrink-0" style={{ width: cardWidth }}><PostCard post={{ ...item, category: category || item.category }} language={language} viewsLabel={labels.viewsLabel} /></div>)}
         </div>
       </div>

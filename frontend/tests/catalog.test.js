@@ -3,6 +3,7 @@ import test from 'node:test'
 
 import dariScholarships from '../src/website/locales/prs/scholarships.json' with { type: 'json' }
 import pashtoScholarships from '../src/website/locales/ps/scholarships.json' with { type: 'json' }
+import englishScholarships from '../src/website/locales/en/scholarships.json' with { type: 'json' }
 import { filterScholarships, normalizeSearchText, searchCatalog } from '../src/website/utils/catalog.js'
 
 test('search ignores surrounding whitespace and Arabic/Persian character variants', () => {
@@ -16,7 +17,7 @@ test('an empty search query returns no results', () => {
   assert.deepEqual(searchCatalog([{ title: 'بورسیه', description: '' }], '   '), [])
 })
 
-for (const [language, content] of [['Dari', dariScholarships], ['Pashto', pashtoScholarships]]) {
+for (const [language, content] of [['Dari', dariScholarships], ['Pashto', pashtoScholarships], ['English', englishScholarships]]) {
   test(`${language} scholarship options map to actual records`, () => {
     for (const option of content.options.countries) {
       assert.ok(filterScholarships(content.items, { country: option }).length > 0, `No country record for ${option}`)

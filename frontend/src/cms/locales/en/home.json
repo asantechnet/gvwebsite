@@ -1,0 +1,103 @@
+{
+  "breadcrumb": "Website Content",
+  "title": "Main page",
+  "description": "Manage the content, layout, and display of website homepage sections.",
+  "preview": "View page",
+  "published": "published",
+  "status": "page status",
+  "lastUpdate": "Latest update",
+  "today": "today",
+  "language": "Content language",
+  "currentLanguage": "a door",
+  "sectionsTitle": "Page structure",
+  "sectionsDescription": "Select a section to edit.",
+  "visible": "be displayed",
+  "hidden": "is hidden",
+  "editSection": "Edit section",
+  "sectionDescription": "Edit the texts and settings of this section.",
+  "items": "Items in this section",
+  "itemsDescription": "The details of these items are managed in their dedicated editor.",
+  "manageItems": "Case management",
+  "addItemTitle": "Add new item",
+  "editItem": "Edit item",
+  "editItemTitle": "Edit item",
+  "itemTitle": "title",
+  "itemDescription": "Description",
+  "itemAction": "button label",
+  "itemLink": "Link button",
+  "itemIcon": "icon",
+  "countryName": "Country name",
+  "countryImage": "The image of the country",
+  "chooseImage": "Select image",
+  "dropImage": "Drop image here or click to select",
+  "replaceImage": "to replace",
+  "removeImage": "Delete image",
+  "save": "save",
+  "cancel": "cancel",
+  "close": "to close",
+  "deleteItem": "Delete the item",
+  "deleteItemTitle": "Delete this item?",
+  "deleteItemDescription": "This operation cannot be reversed.",
+  "media": {
+    "title": "Introduction media section",
+    "description": "Choose an image or video for the introduction section.",
+    "choose": "Select image or video",
+    "drop": "Drop the file here or click to select",
+    "replace": "to replace",
+    "remove": "Remove media"
+  },
+  "fields": {
+    "primaryActionHref": "Main button link",
+    "secondaryActionHref": "Link to the second button",
+    "viewAllHref": "View all button link",
+    "titleBefore": "The first part of the title",
+    "titleHighlight": "The prominent part of the title",
+    "titleAfter": "The final part of the title",
+    "title": "title",
+    "description": "Description",
+    "primaryAction": "Main button",
+    "secondaryAction": "Second button",
+    "viewAll": "View all text"
+  },
+  "sections": {
+    "hero": {
+      "label": "Introduction section",
+      "note": "Main title, description and buttons"
+    },
+    "opportunities": {
+      "label": "Opportunities",
+      "note": "Title and opportunity cards"
+    },
+    "destinations": {
+      "label": "Popular destinations",
+      "note": "Countries and destination images"
+    },
+    "process": {
+      "label": "Cooperation process",
+      "note": "Stages of the customer journey"
+    },
+    "services": {
+      "label": "Services",
+      "note": "Featured home page services"
+    },
+    "testimonials": {
+      "label": "Customer experience",
+      "note": "Customers' views and image"
+    },
+    "consultation": {
+      "label": "Invitation to consultation",
+      "note": "Final section and action buttons"
+    }
+  },
+  "itemUnits": {
+    "cards": "card",
+    "countries": "the country",
+    "steps": "stage",
+    "items": "point of view"
+  },
+  "fieldGroups": {
+    "heading": "Title of the section",
+    "body": "Text and description",
+    "actions": "Action buttons"
+  }
+}

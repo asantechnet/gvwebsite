@@ -1,0 +1,72 @@
+{
+  "hero": {
+    "eyebrow": "contact us",
+    "title": "Contact us",
+    "breadcrumbs": [
+      {
+        "label": "home",
+        "href": "/"
+      },
+      {
+        "label": "contact us"
+      }
+    ],
+    "breadcrumbLabel": "page path"
+  },
+  "contact": {
+    "title": "Our contact addresses",
+    "mapTitle": "Location map of Global Vision in Kabul",
+    "details": [
+      {
+        "type": "phone",
+        "label": "phone",
+        "value": "+93 700 000 000"
+      },
+      {
+        "type": "email",
+        "label": "Email",
+        "value": "info@globalvision.af"
+      },
+      {
+        "type": "address",
+        "label": "address",
+        "value": "Kabul, Afghanistan"
+      }
+    ],
+    "socialLabel": "Social networks",
+    "socials": [
+      {
+        "type": "facebook",
+        "label": "Facebook"
+      },
+      {
+        "type": "instagram",
+        "label": "Instagram"
+      },
+      {
+        "type": "linkedin",
+        "label": "LinkedIn"
+      },
+      {
+        "type": "telegram",
+        "label": "Telegram"
+      }
+    ],
+    "form": {
+      "title": "Send your message",
+      "description": "Complete the form below; Our team will contact you as soon as possible.",
+      "nameLabel": "name",
+      "namePlaceholder": "Enter your name",
+      "subjectLabel": "subject",
+      "subjectPlaceholder": "Enter the subject of the message",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email",
+      "messageLabel": "message",
+      "messagePlaceholder": "Write your message",
+      "submitLabel": "send",
+      "sendingLabel": "Sending...",
+      "successMessage": "Your message is ready to be recorded. The final connection to the server is enabled after the API is initialized.",
+      "requiredMessage": "Please complete all sections."
+    }
+  }
+}

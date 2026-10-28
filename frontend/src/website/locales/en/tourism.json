@@ -1,0 +1,180 @@
+{
+  "afghanistan": {
+    "id": "afghanistan",
+    "cardsTitle": "Afghanistan tourist destinations",
+    "cards": [
+      {
+        "slug": "bamyan",
+        "name": "Bamiyan",
+        "description": "Historical valleys, Band Amir and mountain views of Bamyan.",
+        "image": "/assets/images/destinations/hungary.jpg",
+        "imageAlt": "Mountain landscape of Bamyan",
+        "highlights": [
+          "Band Amir",
+          "Bamyan Valley",
+          "Historical heritage",
+          "Mountain nature"
+        ]
+      },
+      {
+        "slug": "herat",
+        "name": "Herat",
+        "description": "Historical architecture, Akhtaruddin Castle and urban culture of Herat.",
+        "image": "/assets/images/destinations/turkiye.jpg",
+        "imageAlt": "Historical architecture of Herat",
+        "highlights": [
+          "Akhtaruddin Castle",
+          "Grand Mosque",
+          "Local markets",
+          "Culture and art"
+        ]
+      },
+      {
+        "slug": "kabul",
+        "name": "Cable",
+        "description": "Museums, gardens, markets and cultural heritage of the capital of Afghanistan.",
+        "image": "/assets/images/destinations/germany.jpg",
+        "imageAlt": "Urban view of Kabul",
+        "highlights": [
+          "Babar garden",
+          "National Museum",
+          "Kabul markets",
+          "Urban landscapes"
+        ]
+      },
+      {
+        "slug": "panjshir",
+        "name": "Panjshir",
+        "description": "Valley, river and natural scenery of Panjshir for planned trips.",
+        "image": "/assets/images/destinations/netherlands.jpg",
+        "imageAlt": "The natural landscape of Panjshir Valley",
+        "highlights": [
+          "Panjshir Valley",
+          "the river",
+          "the mountain",
+          "Responsible nature tourism"
+        ]
+      }
+    ],
+    "post": {
+      "slug": "afghanistan-tourism",
+      "category": "tourism",
+      "title": "Tourism in Afghanistan",
+      "description": "A guide to getting to know Afghanistan's natural, historical and cultural attractions and responsible travel planning.",
+      "image": "/assets/images/home/hero-globe.webp",
+      "imageAlt": "A symbolic view of travel and geography"
+    },
+    "postDetail": {
+      "parentLabel": "tourism",
+      "parentHref": "/tourism/afghanistan",
+      "backLabel": "Return to tourism",
+      "backHref": "/tourism/afghanistan",
+      "shareLabel": "sharing",
+      "copyLabel": "copy link",
+      "relatedLabel": "Related content",
+      "quickAccessLabel": "Quick access",
+      "highlight": "Before traveling, check the security situation, transportation routes, weather and local regulations from reliable sources.",
+      "sections": [
+        {
+          "title": "Discover Afghanistan consciously",
+          "body": "Afghanistan has historical heritage, diverse nature and rich local cultures. Determine the destination, season, route and accommodation before departure and respect the culture, environment and safety recommendations of each region.",
+          "items": [
+            "Check the road and weather conditions",
+            "Bring the necessary documents and equipment with you",
+            "Respect local customs and society",
+            "Avoid unplanned trips in unfamiliar areas"
+          ]
+        }
+      ]
+    }
+  },
+  "world": {
+    "id": "world",
+    "cardsTitle": "World tourist destinations",
+    "cards": [
+      {
+        "slug": "italy",
+        "name": "Italy",
+        "description": "Historical cities, art, architecture and cultural diversity of Italy.",
+        "image": "/assets/images/destinations/italy.jpg",
+        "imageAlt": "A view of Italy",
+        "highlights": [
+          "Rome",
+          "Florence",
+          "Venice",
+          "Cultural heritage"
+        ]
+      },
+      {
+        "slug": "france",
+        "name": "France",
+        "description": "Museums, architecture, nature and cultural experiences of France.",
+        "image": "/assets/images/destinations/france.jpg",
+        "imageAlt": "A view of France",
+        "highlights": [
+          "Paris",
+          "Museums",
+          "Beaches",
+          "Local culture"
+        ]
+      },
+      {
+        "slug": "turkiye",
+        "name": "Türkiye",
+        "description": "Linking history, nature and culture in different cities and regions of Türkiye.",
+        "image": "/assets/images/destinations/turkiye.jpg",
+        "imageAlt": "A view of Türkiye",
+        "highlights": [
+          "Istanbul",
+          "Cappadocia",
+          "Beaches",
+          "Historical markets"
+        ]
+      },
+      {
+        "slug": "netherlands",
+        "name": "Holland",
+        "description": "Holland's walkable cities, museums, and peaceful landscapes.",
+        "image": "/assets/images/destinations/netherlands.jpg",
+        "imageAlt": "A view of Holland",
+        "highlights": [
+          "Amsterdam",
+          "Museums",
+          "Channels",
+          "Rural scenery"
+        ]
+      }
+    ],
+    "post": {
+      "slug": "world-tourism",
+      "category": "tourism",
+      "title": "travel around the world",
+      "description": "A guide to destination selection, budgeting and preparation for responsible international travel.",
+      "image": "/assets/images/destinations/italy.jpg",
+      "imageAlt": "A view of a global tourist destination"
+    },
+    "postDetail": {
+      "parentLabel": "tourism",
+      "parentHref": "/tourism/world",
+      "backLabel": "Return to tourism",
+      "backHref": "/tourism/world",
+      "shareLabel": "sharing",
+      "copyLabel": "copy link",
+      "relatedLabel": "Related content",
+      "quickAccessLabel": "Quick access",
+      "highlight": "Conditions of entry, visa, insurance and regulations of each destination can change; Get the final information from official sources.",
+      "sections": [
+        {
+          "title": "Prepare international travel step by step",
+          "body": "Choose the destination according to the season, budget, language, entry conditions and purpose of travel. Calculate the cost of flight, accommodation, transportation, insurance and emergency reserve separately.",
+          "items": [
+            "Check passport validity and visa requirements",
+            "Get insurance and valid accommodation",
+            "Consider an emergency budget",
+            "Read the rules and culture of the destination before traveling"
+          ]
+        }
+      ]
+    }
+  }
+}

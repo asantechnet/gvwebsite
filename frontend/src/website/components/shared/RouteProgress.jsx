@@ -1,11 +1,12 @@
 import SkeletonBlock from '@ui/SkeletonBlock.jsx'
+import { headerNavigation } from '@website/data/navigation.js'
 
 const list = (count) => Array.from({ length: count }, (_, index) => index)
 const Lines = () => <div className="space-y-3"><SkeletonBlock className="h-3.5 w-full" /><SkeletonBlock className="h-3.5 w-[90%]" /><SkeletonBlock className="h-3.5 w-[68%]" /></div>
 const Heading = ({ start = false }) => <div className={`flex max-w-2xl flex-col gap-4 ${start ? 'items-start' : 'mx-auto items-center'}`}><SkeletonBlock className="h-3 w-28 bg-primary/20" /><SkeletonBlock className="h-9 w-3/4" /><SkeletonBlock className="h-4 w-2/3" /></div>
 
 function HeaderSkeleton() {
-  return <header className="h-15 border-b border-border bg-surface xl:h-18"><div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 xl:px-8"><SkeletonBlock className="h-11 w-16 shrink-0 rounded-2xl bg-primary/20 xl:h-13 xl:w-19" /><div className="hidden items-center gap-2 xl:flex">{list(6).map((item) => <SkeletonBlock key={item} className="h-10 w-20 rounded-xl" />)}</div><div className="flex shrink-0 items-center gap-2 xl:gap-3"><SkeletonBlock className="h-10 w-14 rounded-xl" /><SkeletonBlock className="size-10 rounded-xl" /><SkeletonBlock className="size-10 rounded-xl" /><SkeletonBlock className="hidden h-10 w-28 rounded-xl bg-primary/20 xl:block" /><SkeletonBlock className="size-10 rounded-xl xl:hidden" /></div></div></header>
+  return <header className="h-15 border-b border-border bg-surface xl:h-18"><div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 xl:px-8"><SkeletonBlock className="h-11 w-16 shrink-0 rounded-2xl bg-primary/20 xl:h-13 xl:w-19" /><div className="hidden items-center gap-2 xl:flex">{list(headerNavigation.length).map((item) => <SkeletonBlock key={item} className="h-10 w-20 rounded-xl" />)}</div><div className="flex shrink-0 items-center gap-2 xl:gap-3"><SkeletonBlock className="h-10 w-14 rounded-xl" /><SkeletonBlock className="size-10 rounded-xl" /><SkeletonBlock className="size-10 rounded-xl" /><SkeletonBlock className="hidden h-10 w-28 rounded-xl bg-primary/20 xl:block" /><SkeletonBlock className="size-10 rounded-xl xl:hidden" /></div></div></header>
 }
 
 function FooterSkeleton() {
@@ -60,7 +61,7 @@ function ScholarshipDirectorySkeleton() {
 }
 
 function OpportunityDirectorySkeleton({ count = 7 }) {
-  return <section className="bg-background px-4 py-6 md:px-6 md:py-10 lg:py-14"><div className="mx-auto max-w-6xl"><div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:p-8"><main><SkeletonBlock className="mb-4 h-7 w-56" /><div className="grid grid-cols-2 gap-2 md:grid-cols-3">{list(count).map((item) => <SkeletonBlock key={item} className="aspect-video rounded-2xl border border-border" />)}</div></main><aside className="space-y-5 border-t border-border pt-5 lg:border-t-0 lg:border-r lg:pt-0 lg:pr-6"><SkeletonBlock className="h-7 w-28 rounded-full bg-primary/15" /><SkeletonBlock className="h-px rounded-none" /><SkeletonBlock className="h-6 w-36" /><div className="grid grid-cols-2 gap-2">{list(6).map((item) => <SkeletonBlock key={item} className="h-16 rounded-xl" />)}</div></aside></div></div></section>
+  return <section className="bg-background px-4 py-6 md:px-6 md:py-10 lg:py-14"><div className="mx-auto max-w-6xl"><div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:p-8"><main><SkeletonBlock className="mb-4 h-7 w-56" /><div className="grid grid-cols-2 gap-2 md:grid-cols-3">{list(count).map((item) => <SkeletonBlock key={item} className="aspect-video rounded-2xl border border-border" />)}</div></main><aside className="space-y-5 border-t border-border pt-5 lg:border-t-0 lg:border-r lg:pt-0 lg:pr-6 ltr:lg:border-r-0 ltr:lg:border-l ltr:lg:pr-0 ltr:lg:pl-6"><SkeletonBlock className="h-7 w-28 rounded-full bg-primary/15" /><SkeletonBlock className="h-px rounded-none" /><SkeletonBlock className="h-6 w-36" /><div className="grid grid-cols-2 gap-2">{list(6).map((item) => <SkeletonBlock key={item} className="h-16 rounded-xl" />)}</div></aside></div></div></section>
 }
 
 function ContactSkeleton() {
@@ -75,32 +76,34 @@ function MagazineSkeleton() {
   return <><PageHero /><Carousel /><section className="bg-surface-muted px-4 py-16 md:px-6 lg:py-24"><div className="mx-auto max-w-7xl"><SkeletonBlock className="mx-auto mb-8 h-8 w-48" /><div className="grid gap-3 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">{list(9).map((item) => <Card key={item} compact />)}</div></div></section><Carousel /></>
 }
 
-function SearchSkeleton() {
-  return <><PageHero /><section className="bg-background px-4 pb-20 md:px-6"><div className="mx-auto max-w-5xl"><SkeletonBlock className="h-7 w-64" /><div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{list(6).map((item) => <Card key={item} media={false} />)}</div></div></section></>
+function SearchSkeleton({ hasQuery, resultCount }) {
+  return <><PageHero /><section className="bg-background px-4 pb-20 md:px-6"><div className="mx-auto max-w-5xl"><SkeletonBlock className="h-7 w-64" />{hasQuery && resultCount === 0 ? <SkeletonBlock className="mt-8 h-44 w-full rounded-3xl border border-border" /> : <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{list(resultCount).map((item) => <Card key={item} media={false} />)}</div>}</div></section></>
 }
 
 function ArticleSkeleton() {
-  return <section className="bg-background px-4 py-6 md:px-6 md:py-10 lg:py-14"><div className="mx-auto max-w-6xl"><SkeletonBlock className="mb-5 h-4 w-52" /><div className="overflow-hidden rounded-[2rem] border border-border bg-surface"><SkeletonBlock className="aspect-[16/8] w-full rounded-none md:aspect-[16/7]" /><div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:p-8"><div className="space-y-8"><SkeletonBlock className="h-7 w-full" /><Lines /><SkeletonBlock className="h-24 w-full rounded-2xl bg-primary/10" />{list(4).map((item) => <div key={item} className="space-y-4 border-b border-border pb-8"><div className="flex gap-3"><SkeletonBlock className="size-11 rounded-xl bg-primary/15" /><SkeletonBlock className="h-8 w-1/2" /></div><Lines /><div className="grid gap-3 sm:grid-cols-2"><SkeletonBlock className="h-12" /><SkeletonBlock className="h-12" /></div></div>)}</div><aside className="space-y-5 border-b border-border pb-5 lg:border-b-0 lg:border-r lg:pr-6"><SkeletonBlock className="h-7 w-24 rounded-full" /><SkeletonBlock className="h-px rounded-none" /><SkeletonBlock className="h-6 w-32" /><div className="grid grid-cols-2 gap-2">{list(6).map((item) => <SkeletonBlock key={item} className="h-16 rounded-xl" />)}</div></aside></div></div></div></section>
+  return <section className="bg-background px-4 py-6 md:px-6 md:py-10 lg:py-14"><div className="mx-auto max-w-6xl"><SkeletonBlock className="mb-5 h-4 w-52" /><div className="overflow-hidden rounded-[2rem] border border-border bg-surface"><SkeletonBlock className="aspect-[16/8] w-full rounded-none md:aspect-[16/7]" /><div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:p-8"><div className="space-y-8"><SkeletonBlock className="h-7 w-full" /><Lines /><SkeletonBlock className="h-24 w-full rounded-2xl bg-primary/10" />{list(4).map((item) => <div key={item} className="space-y-4 border-b border-border pb-8"><div className="flex gap-3"><SkeletonBlock className="size-11 rounded-xl bg-primary/15" /><SkeletonBlock className="h-8 w-1/2" /></div><Lines /><div className="grid gap-3 sm:grid-cols-2"><SkeletonBlock className="h-12" /><SkeletonBlock className="h-12" /></div></div>)}</div><aside className="space-y-5 border-b border-border pb-5 lg:border-b-0 lg:border-r lg:pr-6 ltr:lg:border-r-0 ltr:lg:border-l ltr:lg:pr-0 ltr:lg:pl-6"><SkeletonBlock className="h-7 w-24 rounded-full" /><SkeletonBlock className="h-px rounded-none" /><SkeletonBlock className="h-6 w-32" /><div className="grid grid-cols-2 gap-2">{list(6).map((item) => <SkeletonBlock key={item} className="h-16 rounded-xl" />)}</div></aside></div></div></div></section>
 }
 
 function NotFoundSkeleton() {
   return <section className="bg-background px-4 py-16 md:px-6 lg:py-24"><div className="mx-auto flex max-w-2xl flex-col items-center rounded-4xl border border-border bg-surface p-10"><SkeletonBlock className="h-20 w-36 bg-primary/15" /><SkeletonBlock className="mt-5 h-10 w-3/4" /><SkeletonBlock className="mt-4 h-4 w-full" /><SkeletonBlock className="mt-2 h-4 w-2/3" /><SkeletonBlock className="mt-7 h-12 w-36" /></div></section>
 }
 
-function Content({ path }) {
+function Content({ path, hasSearchQuery, searchResultCount, directoryItemCount }) {
   if (path === '/') return <HomeSkeleton />
   if (path === '/about') return <AboutSkeleton />
   if (path === '/contact') return <ContactSkeleton />
   if (path === '/scholarships') return <ScholarshipDirectorySkeleton />
   if (path === '/magazine') return <MagazineSkeleton />
-  if (path === '/search') return <SearchSkeleton />
-  if (['/opportunities/study', '/opportunities/work', '/opportunities/migration', '/opportunities/country'].includes(path)) return <OpportunityDirectorySkeleton />
-  if (path === '/opportunities/exams') return <OpportunityDirectorySkeleton count={6} />
+  if (path === '/services') return <OpportunityDirectorySkeleton count={directoryItemCount} />
+  if (path === '/tourism/afghanistan' || path === '/tourism/world') return <OpportunityDirectorySkeleton count={directoryItemCount} />
+  if (path === '/search') return <SearchSkeleton hasQuery={hasSearchQuery} resultCount={searchResultCount} />
+  if (['/opportunities/study', '/opportunities/work', '/opportunities/migration', '/opportunities/investment'].includes(path)) return <OpportunityDirectorySkeleton count={directoryItemCount} />
+  if (path === '/opportunities/exams') return <OpportunityDirectorySkeleton count={directoryItemCount} />
   if (path.startsWith('/opportunities/exams/')) return <ArticleSkeleton />
-  if (path.startsWith('/services/') || path.startsWith('/opportunities/') || path.startsWith('/scholarships/') || path.startsWith('/magazine/post/')) return <ArticleSkeleton />
+  if (path.startsWith('/services/') || path.startsWith('/opportunities/') || path.startsWith('/tourism/') || path.startsWith('/scholarships/') || path.startsWith('/magazine/post/')) return <ArticleSkeleton />
   return <NotFoundSkeleton />
 }
 
-export default function RouteProgress({ path }) {
-  return <div className="overflow-hidden bg-background" role="status" aria-live="polite" aria-busy="true" aria-label="در حال بارگذاری محتوای وب‌سایت"><span className="sr-only">در حال بارگذاری محتوای وب‌سایت</span><HeaderSkeleton /><Content path={path} /><FooterSkeleton /></div>
+export default function RouteProgress({ path, hasSearchQuery = false, searchResultCount = 0, directoryItemCount = 0 }) {
+  return <div className="overflow-hidden bg-background" role="status" aria-live="polite" aria-busy="true" aria-label="در حال بارگذاری محتوای وب‌سایت"><span className="sr-only">در حال بارگذاری محتوای وب‌سایت</span><HeaderSkeleton /><Content path={path} hasSearchQuery={hasSearchQuery} searchResultCount={searchResultCount} directoryItemCount={directoryItemCount} /><FooterSkeleton /></div>
 }

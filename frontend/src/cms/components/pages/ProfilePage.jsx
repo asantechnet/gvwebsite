@@ -4,7 +4,7 @@ import { Camera, KeyRound, Laptop, Mail, Save, ShieldCheck, Trash2, X } from 'lu
 import Breadcrumbs from '@cms/components/Breadcrumbs.jsx'
 
 function ProfilePage({ content }) {
-  const [companyName, setCompanyName] = useState('گلوبل ویژن')
+  const [companyName, setCompanyName] = useState(document.documentElement.lang === 'en' ? 'Global Vision' : 'گلوبل ویژن')
   const [dirty, setDirty] = useState(false)
   const [modal, setModal] = useState(null)
   const save = () => setDirty(false)

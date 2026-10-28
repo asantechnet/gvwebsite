@@ -29,7 +29,7 @@
 }
 .cms-root .sidebar-scroll-nav { scrollbar-width: none; }
 .cms-root .sidebar-scroll-nav::-webkit-scrollbar { width: 0; height: 0; }
-.cms-root .cms-tabs-scroll { direction: rtl; scrollbar-width: thin; scrollbar-color: var(--admin-brand) var(--admin-control-soft); -webkit-overflow-scrolling: touch; touch-action: pan-x; }
+.cms-root .cms-tabs-scroll { direction: inherit; scrollbar-width: thin; scrollbar-color: var(--admin-brand) var(--admin-control-soft); -webkit-overflow-scrolling: touch; touch-action: pan-x; }
 .cms-root .cms-tabs-scroll::-webkit-scrollbar { display: block !important; width: 4px !important; height: 4px !important; }
 .cms-root .cms-tabs-scroll::-webkit-scrollbar-track { background: var(--admin-control-soft) !important; border-radius: 999px !important; }
 .cms-root .cms-tabs-scroll::-webkit-scrollbar-thumb { background: var(--admin-brand) !important; border: 1px solid transparent !important; background-clip: padding-box !important; border-radius: 999px !important; }
@@ -39,10 +39,10 @@
 .cms-root .cms-icon-picker-options::-webkit-scrollbar-track { margin-block: .45rem; border-radius: 999px; background: transparent; }
 .cms-root .cms-icon-picker-options::-webkit-scrollbar-thumb { border: 1px solid transparent; border-radius: 999px; background: color-mix(in srgb, var(--admin-brand) 78%, var(--admin-muted)); background-clip: padding-box; }
 .cms-root .cms-icon-picker-options::-webkit-scrollbar-thumb:hover { background: var(--admin-brand); }
-.cms-root .cms-tabs-scroll > button { direction: rtl; flex: 0 0 auto; }
+.cms-root .cms-tabs-scroll > button { direction: inherit; flex: 0 0 auto; }
 .cms-root .cms-tabs-scroll { scrollbar-width: none; }
 .cms-root .cms-tabs-scroll::-webkit-scrollbar { display: none !important; }
-.cms-root .cms-tabs-indicator { position: relative; height: 3px; margin: 0 .5rem .35rem; overflow: hidden; border-radius: 999px; background: var(--admin-control-soft); direction: rtl; }
+.cms-root .cms-tabs-indicator { position: relative; height: 3px; margin: 0 .5rem .35rem; overflow: hidden; border-radius: 999px; background: var(--admin-control-soft); direction: inherit; }
 .cms-root .cms-tabs-indicator > span { position: absolute; top: 0; height: 100%; border-radius: 999px; background: var(--admin-brand); }
 .cms-modal-backdrop { background: rgb(8 12 20 / .62); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); }
 @keyframes cms-modal-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
@@ -59,7 +59,7 @@
   .cms-root .animate-cms-modal-panel-in,
   .cms-root .animate-cms-modal-panel-out { animation-duration: 1ms; }
 }
-.cms-root .sidebar-custom-scrollbar { position: absolute; top: 0; left: 2px; width: 4px; border-radius: 999px; background: var(--sidebar-border); cursor: grab; touch-action: none; }
+.cms-root .sidebar-custom-scrollbar { position: absolute; top: 0; inset-inline-end: 2px; width: 4px; border-radius: 999px; background: var(--sidebar-border); cursor: grab; touch-action: none; }
 .cms-root .sidebar-custom-scrollbar:active { cursor: grabbing; }
 .cms-root .overflow-y-auto:not(.sidebar-scroll-nav) { scrollbar-width: thin; scrollbar-color: var(--admin-brand) var(--admin-control-soft); }
 .cms-root .overflow-y-auto:not(.sidebar-scroll-nav)::-webkit-scrollbar { width: 9px; }

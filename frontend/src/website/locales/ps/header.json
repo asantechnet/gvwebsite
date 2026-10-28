@@ -17,7 +17,9 @@
     "opportunities": "فرصتونه",
     "services": "خدمتونه",
     "scholarships": "بورسیې",
+    "tourism": "سیاحت",
     "magazine": "مجله",
+    "more": "نور",
     "about": "زموږ په اړه",
     "contact": "له موږ سره اړیکه"
   },
@@ -26,8 +28,16 @@
       "study": "زده کړې",
       "migration": "مهاجرت",
       "work": "کاري",
-      "exams": "ازموینې",
-      "destinationCountry": "د مقصد هېواد"
+      "investment": "پانګونه"
+    },
+    "tourism": {
+      "afghanistan": "افغانستان",
+      "world": "نړۍ",
+      "exams": "ازموینې"
+    },
+    "more": {
+      "about": "زموږ په اړه",
+      "contact": "له موږ سره اړیکه"
     },
     "services": {
       "consultation": "مشوره",

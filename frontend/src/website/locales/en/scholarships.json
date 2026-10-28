@@ -1,0 +1,284 @@
+{
+  "hero": {
+    "eyebrow": "New educational opportunities",
+    "title": "Find the right scholarship for you",
+    "description": "Filter and compare opportunities by country, stage and type of sponsorship."
+  },
+  "filters": {
+    "title": "Scholarship filter",
+    "country": "destination country",
+    "degree": "degree",
+    "funding": "Type of financial support",
+    "deadline": "Application deadline",
+    "all": "everyone",
+    "reset": "Clear filters",
+    "showFilters": "Show filters",
+    "hideFilters": "Close the filters"
+  },
+  "results": {
+    "title": "Announced scholarships",
+    "count": "Available opportunity",
+    "emptyTitle": "No scholarship found",
+    "emptyDescription": "Change your search terms or filters.",
+    "showing": "show",
+    "of": "from",
+    "opportunities": "Scholarship opportunity",
+    "view": "View details",
+    "deadline": "Application deadline",
+    "provider": "Presenter",
+    "featured": "Special offer",
+    "active": "active"
+  },
+  "pagination": {
+    "navigation": "Pagination of scholarships",
+    "first": "first page",
+    "previous": "previous page",
+    "next": "Next page",
+    "last": "last page",
+    "page": "Page"
+  },
+  "detail": {
+    "parentLabel": "Scholarships",
+    "backLabel": "Back to scholarships",
+    "highlight": "The conditions, deadlines and documents of each scholarship may change. Before proceeding, double check the details on the official website of the provider.",
+    "overview": "Scholarship introduction",
+    "eligibility": "Application conditions",
+    "benefits": "Scholarship benefits",
+    "documents": "Required documents",
+    "officialSources": "Official source",
+    "officialNote": "For the latest conditions and dates, just refer to the official source of the scholarship.",
+    "officialSite": "View the official website"
+  },
+  "options": {
+    "countries": [
+      "Germany",
+      "Britain",
+      "Türkiye",
+      "Hungary",
+      "Italy",
+      "Ireland"
+    ],
+    "degrees": [
+      "Bachelor's degree",
+      "Masters",
+      "Ph.D"
+    ],
+    "funding": [
+      "Full financing",
+      "financial aid",
+      "Exemption from fees"
+    ],
+    "deadlines": [
+      "today",
+      "three days",
+      "this week",
+      "this month"
+    ]
+  },
+  "items": [
+    {
+      "slug": "daad-graduate-scholarships",
+      "title": "DAAD Postgraduate Scholarships",
+      "provider": "DAAD",
+      "country": "Germany",
+      "degree": "Masters",
+      "funding": "Full financing",
+      "deadline": "25 Scorpio 1405",
+      "deadlineFilter": "this month",
+      "status": "active",
+      "featured": true,
+      "image": "/assets/images/destinations/germany.jpg",
+      "summary": "Various opportunities for continuing education and research in German universities with a focus on international applicants.",
+      "overview": "DAAD offers a range of scholarship programs for various fields and universities in Germany. The exact conditions depend on the selected program.",
+      "eligibility": [
+        "Relevant degree",
+        "Appropriate academic or professional background",
+        "Language certificate according to the program",
+        "Accepting or selecting an eligible program"
+      ],
+      "benefits": [
+        "Monthly allowance",
+        "Insurance support in selected programs",
+        "Travel assistance in some programs",
+        "Research or educational support"
+      ],
+      "documents": [
+        "resume",
+        "letter of motivation",
+        "Documents and transcripts",
+        "Language certificate and recommendation letter"
+      ],
+      "officialHref": "https://www.daad.de/en/studying-in-germany/scholarships/"
+    },
+    {
+      "slug": "chevening-scholarship",
+      "title": "UK Chevening Scholarship",
+      "provider": "Chevening",
+      "country": "Britain",
+      "degree": "Masters",
+      "funding": "Full financing",
+      "deadline": "3 Arc 1405",
+      "deadlineFilter": "this week",
+      "status": "active",
+      "featured": true,
+      "image": "/assets/images/destinations/united-kingdom.jpg",
+      "summary": "Master's scholarship for applicants with leadership capacity and a clear plan for professional and social impact.",
+      "overview": "Chevening is the British government's international scholarship program for one-year master's studies at eligible universities.",
+      "eligibility": [
+        "Nationality of eligible country",
+        "Bachelor's degree",
+        "Work history according to regulations",
+        "Committing to return after studying"
+      ],
+      "benefits": [
+        "University tuition",
+        "Living allowance",
+        "Travel expenses",
+        "Certain visa-related fees"
+      ],
+      "documents": [
+        "Academic documents",
+        "Work records",
+        "Application essays",
+        "Reagents and university selection"
+      ],
+      "officialHref": "https://www.chevening.org/scholarships/"
+    },
+    {
+      "slug": "turkiye-scholarships",
+      "title": "Turkish government scholarship",
+      "provider": "Turkey Scholarships",
+      "country": "Türkiye",
+      "degree": "Bachelor's degree",
+      "funding": "Full financing",
+      "deadline": "10 Jedi 1405",
+      "deadlineFilter": "three days",
+      "status": "active",
+      "featured": false,
+      "image": "/assets/images/destinations/turkiye.jpg",
+      "summary": "Turkish government program for various degrees with educational coverage and living support for international students.",
+      "overview": "This program provides the possibility of applying for selected universities and fields in Türkiye through a central system.",
+      "eligibility": [
+        "Age requirements of the section",
+        "Minimum academic grades",
+        "Lack of registration at the same time in Türkiye",
+        "Complete the application within the official deadline"
+      ],
+      "benefits": [
+        "tuition fee",
+        "Monthly allowance",
+        "Accommodation and insurance",
+        "Turkish language course"
+      ],
+      "documents": [
+        "proof of identity",
+        "Academic documents",
+        "Test result if needed",
+        "Letter of motivation or research plan"
+      ],
+      "officialHref": "https://www.turkiyeburslari.gov.tr/"
+    },
+    {
+      "slug": "stipendium-hungaricum",
+      "title": "Stipendium Hungaricum scholarship",
+      "provider": "Tempus Public Foundation",
+      "country": "Hungary",
+      "degree": "Masters",
+      "funding": "Full financing",
+      "deadline": "18 Aquarius 1405",
+      "deadlineFilter": "this month",
+      "status": "active",
+      "featured": false,
+      "image": "/assets/images/destinations/hungary.jpg",
+      "summary": "The opportunity to study in Hungarian universities for different levels through the international educational cooperation program.",
+      "overview": "Stipendium Hungaricum is the Hungarian government's scholarship program, and the fields available vary by sending country.",
+      "eligibility": [
+        "Introduction from the sender's country if needed",
+        "Previous degree",
+        "Program language condition",
+        "Choose a qualified field"
+      ],
+      "benefits": [
+        "Tuition waiver",
+        "Monthly allowance",
+        "Accommodation assistance",
+        "health insurance"
+      ],
+      "documents": [
+        "Online form",
+        "letter of motivation",
+        "Academic documents",
+        "Language certificate and health certificate"
+      ],
+      "officialHref": "https://stipendiumhungaricum.hu/"
+    },
+    {
+      "slug": "invest-your-talent-italy",
+      "title": "Invest Your Talent in Italy scholarship",
+      "provider": "Government of Italy",
+      "country": "Italy",
+      "degree": "Masters",
+      "funding": "financial aid",
+      "deadline": "2 Pisces 1405",
+      "deadlineFilter": "today",
+      "status": "active",
+      "featured": false,
+      "image": "/assets/images/destinations/italy.jpg",
+      "summary": "Study and internship program for selected master's programs in Italian universities.",
+      "overview": "This program combines university studies with internship experience in Italian companies for eligible countries.",
+      "eligibility": [
+        "Nationality of eligible country",
+        "Admission to the selected program",
+        "A related bachelor's degree",
+        "Language skills required"
+      ],
+      "benefits": [
+        "periodic allowance",
+        "Tuition waiver in selected universities",
+        "Internship opportunity",
+        "Professional networking experience"
+      ],
+      "documents": [
+        "passport",
+        "Academic documents",
+        "Resume and introduction video",
+        "language certificate"
+      ],
+      "officialHref": "https://investyourtalentapplication.esteri.it/"
+    },
+    {
+      "slug": "government-of-ireland-postgraduate",
+      "title": "Irish Government Postgraduate Scholarship",
+      "provider": "Research Ireland",
+      "country": "Ireland",
+      "degree": "Ph.D",
+      "funding": "Exemption from fees",
+      "deadline": "15 Hamel 1406",
+      "deadlineFilter": "this week",
+      "status": "active",
+      "featured": false,
+      "image": "/assets/images/destinations/united-kingdom.jpg",
+      "summary": "Competitive support for postgraduate researchers in eligible Irish disciplines and institutions.",
+      "overview": "This program supports independent and high-quality research in research stages, and its application is coordinated with the host institution.",
+      "eligibility": [
+        "Bright research project",
+        "Eligible professor or host institution",
+        "Strong academic background",
+        "Compliance with the program's research regulations"
+      ],
+      "benefits": [
+        "Annual allowance",
+        "Education cost share",
+        "Direct research funding",
+        "Professional development support"
+      ],
+      "documents": [
+        "Research proposal",
+        "Scientific resume",
+        "Academic documents",
+        "Confirmation of professor and supervisors"
+      ],
+      "officialHref": "https://research.ie/funding/goipg/"
+    }
+  ]
+}

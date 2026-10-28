@@ -1,0 +1,160 @@
+{
+  "brand": "Global Vision Management",
+  "documentTitle": "Managing the Global Vision website",
+  "role": "Website manager",
+  "overview": "Overview",
+  "expand": "Open the sidebar",
+  "collapse": "Close the sidebar",
+  "groups": [
+    {
+      "label": "Website Content",
+      "items": [
+        {
+          "label": "Main page",
+          "key": "home"
+        },
+        {
+          "label": "about us",
+          "key": "about"
+        },
+        {
+          "label": "contact us",
+          "key": "contact"
+        },
+        {
+          "label": "Opportunities",
+          "key": "opportunities"
+        },
+        {
+          "label": "Scholarships",
+          "key": "scholarships"
+        },
+        {
+          "label": "Services",
+          "key": "services"
+        },
+        {
+          "label": "Magazine",
+          "key": "magazine"
+        },
+        {
+          "label": "Countries and guides",
+          "key": "guides"
+        }
+      ]
+    },
+    {
+      "label": "Management",
+      "items": [
+        {
+          "label": "Media library",
+          "key": "media"
+        },
+        {
+          "label": "Users",
+          "key": "users"
+        },
+        {
+          "label": "Settings",
+          "key": "settings"
+        }
+      ]
+    }
+  ],
+  "topbar": {
+    "menu": "Open list",
+    "search": "Search in management...",
+    "searchEmpty": "No results found.",
+    "website": "View website",
+    "theme": "Change format",
+    "language": "Pashto",
+    "notifications": "Notifications",
+    "profile": "Open profile"
+  },
+  "page": {
+    "eyebrow": "Dashboard",
+    "title": "Good morning, Director of Global Vision",
+    "description": "Manage website content, messages and services from one place.",
+    "newPost": "New post"
+  },
+  "metrics": [
+    {
+      "label": "Magazine contents",
+      "note": "Published news and articles",
+      "key": "posts"
+    },
+    {
+      "label": "Services",
+      "note": "Active Global Vision Services",
+      "key": "services"
+    },
+    {
+      "label": "Guides",
+      "note": "Countries and exam guides",
+      "key": "guides"
+    },
+    {
+      "label": "New messages",
+      "note": "Need review and answer",
+      "key": "messages"
+    }
+  ],
+  "analytics": {
+    "label": "Website statistics",
+    "contentEyebrow": "Content statistics",
+    "contentTitle": "Content distribution",
+    "contentDescription": "Content published in the main sections of the website.",
+    "itemUnit": "item",
+    "contentEmpty": "Add content to view statistics.",
+    "categories": [
+      "Magazine",
+      "Services",
+      "Guides"
+    ],
+    "inboxEyebrow": "Statistics of messages",
+    "inboxTitle": "Message status",
+    "inboxDescription": "Quick view of requests received from the website.",
+    "messageUnit": "message",
+    "inboxEmpty": "New website messages are displayed here.",
+    "read": "read",
+    "unread": "unread"
+  },
+  "activity": {
+    "title": "Recent activities",
+    "description": "Content changes are displayed here.",
+    "emptyTitle": "There is no activity yet",
+    "emptyDescription": "Saved changes and new requests will appear in this section."
+  },
+  "inbox": {
+    "eyebrow": "Message box",
+    "title": "Recent messages",
+    "description": "Latest requests received from the website",
+    "empty": "No new message has been registered yet.",
+    "view": "View all messages"
+  },
+  "quick": {
+    "title": "Quick access",
+    "description": "Skip to the most edited sections.",
+    "items": [
+      "Add magazine content",
+      "Editing services",
+      "Management of destination countries"
+    ]
+  },
+  "opportunities": {
+    "settings": "Opportunities page settings",
+    "pageTitle": "Page title",
+    "postCategory": "Category of posts",
+    "allCategories": "All categories",
+    "status": "Opportunities page status",
+    "pageStatus": "page status",
+    "published": "published",
+    "lastUpdate": "Latest update",
+    "today": "today",
+    "contentLanguage": "Content language",
+    "dari": "a door",
+    "heroSettings": "Main banner settings",
+    "heroTitle": "Main banner title"
+  },
+  "logout": "departure"
+}

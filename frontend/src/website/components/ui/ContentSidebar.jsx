@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, CheckSquare, ClipboardCheck, FileText, GraduationCap, Globe2, Landmark, MessageCircle, ShieldCheck, UsersRound } from 'lucide-react'
+import { BriefcaseBusiness, CheckSquare, ClipboardCheck, FileText, GraduationCap, Landmark, MessageCircle, PiggyBank, ShieldCheck, UsersRound } from 'lucide-react'
 
 import PostCard from '@ui/PostCard.jsx'
 import useBottomStickySidebar from '@website/hooks/useBottomStickySidebar.js'
@@ -6,18 +6,24 @@ import useBottomStickySidebar from '@website/hooks/useBottomStickySidebar.js'
 const quickLinks = [
   [GraduationCap, 'study', '/opportunities/study'],
   [BriefcaseBusiness, 'work', '/opportunities/work'],
-  [Globe2, 'countries', '/opportunities/country'],
+  [PiggyBank, 'investment', '/opportunities/investment'],
   [CheckSquare, 'exams', '/opportunities/exams'],
   [UsersRound, 'migration', '/opportunities/migration'],
   [ShieldCheck, 'visa', '/services/visa'],
 ]
 
 const quickLabels = {
-  prs: { study: 'تحصیل', work: 'کار', countries: 'کشورها', exams: 'امتحانات', migration: 'مهاجرت', visa: 'ویزه' },
-  ps: { study: 'زده‌کړې', work: 'کار', countries: 'هېوادونه', exams: 'ازموینې', migration: 'مهاجرت', visa: 'ویزه' },
+  prs: { study: 'تحصیل', work: 'کار', investment: 'سرمایه گذاری', exams: 'امتحانات', migration: 'مهاجرت', visa: 'ویزه' },
+  ps: { study: 'زده‌کړې', work: 'کار', investment: 'پانګونه', exams: 'ازموینې', migration: 'مهاجرت', visa: 'ویزه' },
+  en: { study: 'Study', work: 'Work', investment: 'Investment', exams: 'Exams', migration: 'Migration', visa: 'Visa' },
 }
 
-const serviceCards = [[MessageCircle, 'مشاوره', '/services/consultation'], [FileText, 'درخواست', '/services/application'], [ClipboardCheck, 'پروسس اسناد', '/services/document-process'], [Landmark, 'ویزه/سفارت', '/services/visa'], [GraduationCap, 'ثبت نام بورسیه ها', '/services/scholarship-registration'], [UsersRound, 'هماهنگی', '/services/coordination']]
+const serviceCardLabels = {
+  prs: ['مشاوره', 'درخواست', 'پروسس اسناد', 'ویزه/سفارت', 'ثبت نام بورسیه ها', 'هماهنگی'],
+  ps: ['مشوره', 'غوښتنلیک', 'د اسنادو پروسه', 'ویزه/سفارت', 'د بورسونو ثبت نام', 'همغږي'],
+  en: ['Consultation', 'Application', 'Document process', 'Visa/Embassy', 'Scholarship registration', 'Coordination'],
+}
+const serviceCardDefinitions = [[MessageCircle, '/services/consultation'], [FileText, '/services/application'], [ClipboardCheck, '/services/document-process'], [Landmark, '/services/visa'], [GraduationCap, '/services/scholarship-registration'], [UsersRound, '/services/coordination']]
 
 function SidebarCardGrid({ items }) {
   return (
@@ -34,18 +40,19 @@ function SidebarCardGrid({ items }) {
 
 function ContentSidebar({ content, category, relatedPosts = [], className = '' }) {
   const sidebarRef = useBottomStickySidebar()
-  const language = content.quickAccessLabel === 'چټک لاسرسی' ? 'ps' : 'prs'
+  const language = document.documentElement.lang === 'en' ? 'en' : content.quickAccessLabel === 'چټک لاسرسی' ? 'ps' : 'prs'
   const localizedQuickLinks = quickLinks.map(([Icon, key, href]) => [Icon, quickLabels[language][key], href])
+  const serviceCards = serviceCardDefinitions.map(([Icon, href], index) => [Icon, serviceCardLabels[language][index], href])
 
   return (
-    <aside ref={sidebarRef} className={`order-2 h-fit self-start text-right text-sm text-foreground-muted lg:sticky lg:top-[calc(100vh-var(--sidebar-height)-1.5rem)] lg:border-r lg:pr-6 ${className}`.trim()}>
+    <aside ref={sidebarRef} className={`order-2 h-fit self-start text-right text-sm text-foreground-muted lg:sticky lg:top-[calc(100vh-var(--sidebar-height)-1.5rem)] lg:border-r lg:pr-6 ltr:lg:border-r-0 ltr:lg:border-l ltr:lg:pr-0 ltr:lg:pl-6 ${className}`.trim()}>
       <div className="w-full">
         {category && <div className="flex flex-col items-start gap-3"><span className="w-fit rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary">{category}</span></div>}
         <div className={`${category ? 'mt-5 border-t border-border pt-5 dark:border-gray-600' : ''} w-full text-right`.trim()}>
           <h2 className="mb-4 text-center font-heading text-lg font-extrabold text-foreground lg:text-right">{content.quickAccessLabel}</h2>
           <SidebarCardGrid items={localizedQuickLinks} />
           <div className="mt-4 pt-2">
-            <h2 className="mb-4 text-center font-heading text-lg font-extrabold text-foreground lg:text-right">خدمات ما</h2>
+            <h2 className="mb-4 text-center font-heading text-lg font-extrabold text-foreground lg:text-right">{language === 'en' ? 'Our services' : language === 'ps' ? 'زموږ خدمتونه' : 'خدمات ما'}</h2>
             <SidebarCardGrid items={serviceCards} />
           </div>
         </div>

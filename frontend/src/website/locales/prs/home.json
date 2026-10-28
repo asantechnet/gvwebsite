@@ -72,7 +72,7 @@
         "image": "/assets/images/destinations/turkiye.jpg",
         "imageAlt": "نمای شهر استانبول و مسجد آبی",
         "flag": "/assets/flags/tr.svg",
-        "href": "/opportunities/country/turkiye",
+        "href": "/opportunities/study/turkiye",
         "layout": "wide"
       },
       {
@@ -81,7 +81,7 @@
         "image": "/assets/images/destinations/germany.jpg",
         "imageAlt": "دروازه براندنبورگ در برلین",
         "flag": "/assets/flags/de.svg",
-        "href": "/opportunities/country/germany",
+        "href": "/opportunities/study/germany",
         "layout": "wide"
       },
       {
@@ -90,7 +90,7 @@
         "image": "/assets/images/destinations/france.jpg",
         "imageAlt": "برج ایفل در پاریس",
         "flag": "/assets/flags/fr.svg",
-        "href": "/opportunities/country/france",
+        "href": "/opportunities/study/france",
         "layout": "standard"
       },
       {
@@ -99,7 +99,7 @@
         "image": "/assets/images/destinations/netherlands.jpg",
         "imageAlt": "کانال و ساختمان‌های شهر آمستردام",
         "flag": "/assets/flags/nl.svg",
-        "href": "/opportunities/country/netherlands",
+        "href": "/opportunities/study/netherlands",
         "layout": "standard"
       },
       {
@@ -108,7 +108,7 @@
         "image": "/assets/images/destinations/hungary.jpg",
         "imageAlt": "نمای شهر بوداپست و رود دانوب",
         "flag": "/assets/flags/hu.svg",
-        "href": "/opportunities/country/hungary",
+        "href": "/opportunities/study/hungary",
         "layout": "standard"
       },
       {
@@ -117,7 +117,7 @@
         "image": "/assets/images/destinations/italy.jpg",
         "imageAlt": "کانال بزرگ و ساختمان‌های شهر ونیز",
         "flag": "/assets/flags/it.svg",
-        "href": "/opportunities/country/italy",
+        "href": "/opportunities/study/italy",
         "layout": "wide"
       },
       {
@@ -126,7 +126,7 @@
         "image": "/assets/images/destinations/united-kingdom.jpg",
         "imageAlt": "نمای شهر لندن و رود تیمز",
         "flag": "/assets/flags/gb.svg",
-        "href": "/opportunities/country/united-kingdom",
+        "href": "/opportunities/study/united-kingdom",
         "layout": "wide"
       }
     ]

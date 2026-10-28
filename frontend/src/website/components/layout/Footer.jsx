@@ -42,7 +42,7 @@ function Footer({ content, navigationContent, className = "" }) {
       />
 
       <Container className="relative pb-0 pt-12 md:pb-0 md:pt-14">
-        <div className="grid gap-10 border-b border-border pb-10 text-center dark:border-gray-500 md:grid-cols-2 md:text-right lg:grid-cols-4 lg:gap-8">
+        <div className="grid gap-10 border-b border-border pb-10 text-center dark:border-gray-500 md:grid-cols-2 md:text-start lg:grid-cols-4 lg:gap-8">
           <div className="mx-auto flex max-w-md flex-col items-center md:mx-0 md:items-start">
             <a
               href="/"
@@ -131,7 +131,7 @@ function Footer({ content, navigationContent, className = "" }) {
           </nav>
         </div>
 
-        <div className="flex flex-col items-center justify-between gap-3 py-4 text-center text-xs leading-6 text-foreground-muted dark:text-gray-300 sm:text-sm md:flex-row md:text-right">
+        <div className="flex flex-col items-center justify-between gap-3 py-4 text-center text-xs leading-6 text-foreground-muted dark:text-gray-300 sm:text-sm md:flex-row md:text-start">
           <p>{content.copyright}</p>
           <p>{content.tagline}</p>
         </div>

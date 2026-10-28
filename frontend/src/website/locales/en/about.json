@@ -1,0 +1,131 @@
+{
+  "hero": {
+    "eyebrow": "about us",
+    "title": "Your companion for a bright future",
+    "breadcrumbs": [
+      {
+        "label": "home",
+        "href": "/"
+      },
+      {
+        "label": "about us"
+      }
+    ],
+    "breadcrumbLabel": "page path",
+    "imageAlt": "Iconic image of Global Vision"
+  },
+  "introduction": {
+    "title": "Global Vision; A companion for informed choices",
+    "description": "We believe that important decisions are made better with clear information and reliable companionship.",
+    "values": [
+      {
+        "title": "Human companionship",
+        "description": "We listen carefully to the conditions and goals of each person."
+      },
+      {
+        "title": "Trust and transparency",
+        "description": "We share information with you clearly and responsibly."
+      },
+      {
+        "title": "Looking to the future",
+        "description": "We think about choices that have lasting value."
+      }
+    ]
+  },
+  "missionVision": {
+    "sectionTitle": "The mission and vision of Global Vision",
+    "mission": {
+      "title": "Our mission",
+      "description": "Providing clear information and responsible companionship to help people make informed decisions about their future."
+    },
+    "vision": {
+      "title": "Our vision",
+      "description": "Creating a reliable experience where every person can confidently choose the right path for the future."
+    }
+  },
+  "story": {
+    "title": "The story of Global Vision",
+    "milestones": [
+      {
+        "title": "A clear goal",
+        "description": "We started by believing in the importance of correct information and responsible guidance."
+      },
+      {
+        "title": "Growth with experience",
+        "description": "By better understanding people's needs, we continuously improved our approach."
+      },
+      {
+        "title": "Moving to the future",
+        "description": "Today, we are still working to build a better and more reliable experience."
+      }
+    ]
+  },
+  "faq": {
+    "title": "Frequently asked questions about Global Vision",
+    "items": [
+      {
+        "question": "What kind of collection is Global Vision?",
+        "answer": "Global Vision is a consulting group that focuses on providing clear information and responsible partnership."
+      },
+      {
+        "question": "What is Global Vision's approach in working with people?",
+        "answer": "We first listen to each person's goals and circumstances, then explain the information and options in a clear and orderly manner."
+      },
+      {
+        "question": "How do you maintain trust and transparency?",
+        "answer": "By providing accurate information, clearly explaining expectations and treating people's information responsibly."
+      },
+      {
+        "question": "How to contact Global Vision?",
+        "answer": "You can visit our contact page to contact our team."
+      }
+    ]
+  },
+  "team": {
+    "title": "Global Vision team",
+    "members": [
+      {
+        "name": "Irfan Noorzadeh",
+        "role": "executive director",
+        "avatar": "/assets/images/team/erfan.webp",
+        "avatarAlt": "Profile picture of Irfan Noorzadeh"
+      },
+      {
+        "name": "Morteza Razavi",
+        "role": "Senior consultant",
+        "avatar": "/assets/images/team/murtaza.webp",
+        "avatarAlt": "Profile picture of Morteza Razavi"
+      },
+      {
+        "name": "Navid Hotak",
+        "role": "Chief Admissions Officer",
+        "avatar": "/assets/images/team/naveed.webp",
+        "avatarAlt": "Navid Hotak's profile picture"
+      },
+      {
+        "name": "Irfan Noorzadeh",
+        "role": "Financial manager",
+        "avatar": "/assets/images/team/erfan.webp",
+        "avatarAlt": "Profile picture of Irfan Noorzadeh"
+      },
+      {
+        "name": "Morteza Razavi",
+        "role": "media officer",
+        "avatar": "/assets/images/team/murtaza.webp",
+        "avatarAlt": "Profile picture of Morteza Razavi"
+      }
+    ]
+  },
+  "cta": {
+    "title": "Start your future with awareness",
+    "description": "To learn more about Global Vision or start an open conversation, take the next step.",
+    "primaryAction": {
+      "label": "contact us",
+      "href": "/contact"
+    },
+    "secondaryAction": {
+      "label": "View study opportunities",
+      "href": "/opportunities/study"
+    }
+  }
+}

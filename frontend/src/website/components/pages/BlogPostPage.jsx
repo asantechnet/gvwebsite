@@ -9,6 +9,7 @@ import Section from '@ui/Section.jsx'
 import MediaShowcase from '@shared/media/MediaShowcase.jsx'
 import dariPostContent from '@website/locales/prs/post.json'
 import pashtoPostContent from '@website/locales/ps/post.json'
+import englishPostContent from '@website/locales/en/post.json'
 
 const sectionIcons = [BookOpenCheck, WalletCards, FileCheck2, PlaneTakeoff]
 const linkReplacements = {
@@ -21,12 +22,13 @@ function getValidHref(href) {
 }
 
 function BidiLabel({ label }) {
+  const isRtl = document.documentElement.dir === 'rtl'
   const separatorIndex = label.indexOf('؛')
   const firstPart = separatorIndex === -1 ? '' : label.slice(0, separatorIndex).trim()
   const secondPart = separatorIndex === -1 ? '' : label.slice(separatorIndex + 1).trim()
-  const normalizedLabel = /^[A-Za-z]/.test(firstPart) && secondPart ? `${secondPart} ${firstPart}؛` : label
+  const normalizedLabel = isRtl && /^[A-Za-z]/.test(firstPart) && secondPart ? `${secondPart} ${firstPart}؛` : label
 
-  return <span dir="rtl" className="block text-right">{normalizedLabel}</span>
+  return <span className="block text-start">{normalizedLabel}</span>
 }
 
 function RichPostContent({ content }) {
@@ -41,7 +43,7 @@ function RichPostContent({ content }) {
           <h2 className="font-heading text-xl font-extrabold text-foreground md:text-2xl">{section.title}</h2>
         </div>
         <p className="mt-4 text-base leading-8 text-foreground-muted">{section.body}</p>
-        {section.links?.length > 0 && <div dir="rtl" className="mt-4 flex flex-wrap justify-start gap-2">{section.links.map((link) => <a key={link.href} href={getValidHref(link.href)} dir="rtl" className="inline-flex items-center rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-right text-sm font-bold text-primary transition-colors hover:border-primary hover:bg-primary/20"><BidiLabel label={link.label} /><ArrowLeft aria-hidden="true" size={15} className="ms-1 shrink-0" /></a>)}</div>}
+        {section.links?.length > 0 && <div className="mt-4 flex flex-wrap justify-start gap-2">{section.links.map((link) => <a key={link.href} href={getValidHref(link.href)} className="inline-flex items-center rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-start text-sm font-bold text-primary transition-colors hover:border-primary hover:bg-primary/20"><BidiLabel label={link.label} /><ArrowLeft aria-hidden="true" size={15} className="ms-1 shrink-0" /></a>)}</div>}
         {section.items?.length > 0 && <ul className="mt-4 grid gap-3 sm:grid-cols-2">{section.items.map((item) => <li key={item} className="flex items-start gap-2 rounded-xl bg-surface px-3 py-3 text-sm leading-7 text-foreground-muted dark:bg-gray-800"><span className="mt-2 size-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />{item}</li>)}</ul>}
       </section>
     })}
@@ -66,7 +68,7 @@ function RichPostContent({ content }) {
     {content.sources?.length > 0 && <section className="rounded-2xl border border-primary/30 bg-primary/10 p-5 md:p-6" aria-labelledby="official-sources-heading">
       <h2 id="official-sources-heading" className="font-heading text-xl font-extrabold text-foreground">{content.sourcesTitle}</h2>
       <p className="mt-2 text-sm leading-7 text-foreground-muted">{content.sourcesNote}</p>
-      <ul dir="rtl" className="mt-4 grid gap-3 sm:grid-cols-2">{content.sources.map((source) => <li key={source.href}><a href={getValidHref(source.href)} target="_blank" rel="noreferrer" dir="rtl" className="flex h-full items-center justify-between gap-3 rounded-xl border border-border bg-surface p-4 text-right font-bold text-foreground transition-colors hover:border-primary hover:text-primary focus-visible:border-primary dark:border-gray-600 dark:bg-gray-800"><span dir="rtl" className="min-w-0 flex-1 text-right"><BidiLabel label={source.label} /></span><ExternalLink aria-hidden="true" size={17} className="shrink-0" /></a></li>)}</ul>
+      <ul className="mt-4 grid gap-3 sm:grid-cols-2">{content.sources.map((source) => <li key={source.href}><a href={getValidHref(source.href)} target="_blank" rel="noreferrer" className="flex h-full items-center justify-between gap-3 rounded-xl border border-border bg-surface p-4 text-start font-bold text-foreground transition-colors hover:border-primary hover:text-primary focus-visible:border-primary dark:border-gray-600 dark:bg-gray-800"><span className="min-w-0 flex-1 text-start"><BidiLabel label={source.label} /></span><ExternalLink aria-hidden="true" size={17} className="shrink-0" /></a></li>)}</ul>
     </section>}
   </div>
 }
@@ -84,9 +86,9 @@ function CountryCards({ content }) {
     }[country.name] || country.name),
   }))
   countries.push({
-    name: isPashto ? 'البانیا' : 'آلبانیا', flag: '/assets/flags/al.svg', image: '/assets/images/destinations/italy.jpg', imageAlt: isPashto ? 'په البانیا کې منظره' : 'نمایی از آلبانیا', href: '/opportunities/country/albania',
+    name: isPashto ? 'البانیا' : 'آلبانیا', flag: '/assets/flags/al.svg', image: '/assets/images/destinations/italy.jpg', imageAlt: isPashto ? 'په البانیا کې منظره' : 'نمایی از آلبانیا', href: '/opportunities/study/albania',
   }, {
-    name: 'ایرلند', flag: '/assets/flags/ie.svg', image: '/assets/images/destinations/united-kingdom.jpg', imageAlt: isPashto ? 'په ایرلنډ کې منظره' : 'نمایی از ایرلند', href: '/opportunities/country/ireland',
+    name: 'ایرلند', flag: '/assets/flags/ie.svg', image: '/assets/images/destinations/united-kingdom.jpg', imageAlt: isPashto ? 'په ایرلنډ کې منظره' : 'نمایی از ایرلند', href: '/opportunities/study/ireland',
   })
 
   return <section aria-labelledby="country-cards-heading">
@@ -109,7 +111,7 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
   const [isShareMenuOpen, setIsShareMenuOpen] = useState(false)
   const [isLinkCopied, setIsLinkCopied] = useState(false)
   const shareMenuRef = useRef(null)
-  const copySuccessLabel = content.copySuccess || (document.documentElement.lang === 'ps' ? pashtoPostContent.copySuccess : dariPostContent.copySuccess)
+  const copySuccessLabel = content.copySuccess || (document.documentElement.lang === 'en' ? englishPostContent.copySuccess : document.documentElement.lang === 'ps' ? pashtoPostContent.copySuccess : dariPostContent.copySuccess)
   const parentLabel = content.parentLabel || content.magazineLabel
   const parentHref = content.parentHref || '/magazine'
   const backHref = content.backHref || '/magazine'

@@ -1,0 +1,62 @@
+{
+  "breadcrumb": "Website Content",
+  "title": "Scholarships page",
+  "preview": "View the official source",
+  "sectionsTitle": "Scholarships page sections",
+  "sections": {
+    "hero": {
+      "label": "Page banner"
+    },
+    "scholarships": {
+      "label": "Scholarships"
+    }
+  },
+  "listTitle": "Available scholarships",
+  "add": "Add scholarship",
+  "edit": "Scholarship editing",
+  "delete": "Removal of scholarship",
+  "featured": "Special offer",
+  "search": "Searching for scholarships...",
+  "all": "All scholarships",
+  "status": "Publication status",
+  "actions": "Operation",
+  "empty": "No scholarship found.",
+  "reset": "Clear filters",
+  "filters": {
+    "all": "everyone",
+    "country": "the country",
+    "degree": "section",
+    "funding": "financial support",
+    "deadline": "deadline"
+  },
+  "activeValue": "active",
+  "published": "published",
+  "draft": "draft",
+  "addTitle": "Add new scholarship",
+  "editTitle": "Scholarship editing",
+  "modalDescription": "Manage the original information and image of the scholarship.",
+  "deleteTitle": "Should this scholarship be removed?",
+  "deleteDescription": "This operation cannot be reversed.",
+  "save": "save",
+  "cancel": "opt out",
+  "close": "to close",
+  "chooseImage": "Select image",
+  "dropImage": "Drop image here or click to select",
+  "replaceImage": "to replace",
+  "removeImage": "Delete image",
+  "fields": {
+    "heroEyebrow": "Banner label text",
+    "heroTitle": "The main title of the page",
+    "heroDescription": "Page description",
+    "itemTitle": "Scholarship title",
+    "provider": "Presenter",
+    "country": "the country",
+    "degree": "degree",
+    "funding": "Type of financial support",
+    "deadline": "Application deadline",
+    "status": "Publication status",
+    "officialHref": "Official source link",
+    "summary": "Summary of the scholarship",
+    "image": "Scholarship image"
+  }
+}

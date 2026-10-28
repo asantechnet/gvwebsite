@@ -1,0 +1,35 @@
+{
+  "breadcrumb": "Website Content",
+  "title": "Magazine page",
+  "preview": "View page",
+  "sectionsTitle": "Magazine page sections",
+  "editItem": "Edit the article",
+  "itemModalDescription": "Edit this information.",
+  "save": "save",
+  "cancel": "opt out",
+  "close": "to close",
+  "chooseImage": "Select image",
+  "dropImage": "Drop image here or click to select",
+  "replaceImage": "to replace",
+  "removeImage": "Delete image",
+  "sections": {
+    "hero": {
+      "label": "Magazine banner"
+    },
+    "news": {
+      "label": "Latest news"
+    },
+    "articles": {
+      "label": "Writings and articles"
+    }
+  },
+  "fields": {
+    "heroEyebrow": "Text above the title",
+    "heroTitle": "The main title of the page",
+    "sectionTitle": "Title of the section",
+    "itemTitle": "The title of the article",
+    "category": "categorization",
+    "description": "Summary of the article",
+    "image": "Post image"
+  }
+}

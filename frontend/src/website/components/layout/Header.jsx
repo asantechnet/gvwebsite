@@ -6,10 +6,12 @@ import {
   GraduationCap,
   House,
   Info,
+  MapPinned,
   Menu,
   Moon,
   Newspaper,
   Phone,
+  Ellipsis,
   Search,
   Sun,
   Wrench,
@@ -17,6 +19,7 @@ import {
 } from "lucide-react";
 
 import { headerNavigation } from "@website/data/navigation.js";
+import LanguageSwitcher from "@ui/LanguageSwitcher.jsx";
 
 const noFocusOutline = "focus:outline-none focus-visible:outline-none";
 const iconButtonClasses =
@@ -27,15 +30,17 @@ const navIcons = {
   services: Wrench,
   scholarships: GraduationCap,
   magazine: Newspaper,
+  tourism: MapPinned,
+  more: Ellipsis,
   about: Info,
   contact: Phone,
 };
-const navLinkClasses = `relative flex min-h-10 items-center gap-1.5 rounded-xl border border-transparent px-2 text-sm font-bold text-foreground-muted transition-colors after:absolute after:inset-x-2 after:bottom-0.5 after:h-0.5 after:origin-right after:scale-x-0 after:rounded-full after:bg-primary after:transition-transform after:duration-300 hover:text-foreground hover:after:scale-x-100 dark:text-gray-100 xl:px-3 ${noFocusOutline}`;
+const navLinkClasses = `relative flex min-h-10 items-center gap-1.5 rounded-xl border border-transparent px-2 text-sm font-bold whitespace-nowrap text-foreground-muted transition-colors after:absolute after:inset-x-2 after:bottom-0.5 after:h-0.5 after:origin-right after:scale-x-0 after:rounded-full after:bg-primary after:transition-transform after:duration-300 hover:text-foreground hover:after:scale-x-100 ltr:after:origin-left ltr:font-semibold dark:text-gray-100 rtl:gap-2.5 rtl:px-2 rtl:text-[0.9375rem] 2xl:gap-2 2xl:px-3 2xl:text-base rtl:2xl:gap-3 rtl:2xl:px-3 rtl:2xl:text-base max-xl:text-base max-xl:!font-semibold ltr:max-md:!text-sm ltr:max-md:!font-medium rtl:max-md:!text-sm rtl:max-md:!font-semibold ${noFocusOutline}`;
 const activeNavLinkClasses = "text-primary after:scale-x-100";
 
 function NavigationIcon({ id }) {
   const Icon = navIcons[id];
-  return <Icon aria-hidden="true" className="size-4" />;
+  return <Icon aria-hidden="true" className="hidden size-4 2xl:block" />;
 }
 
 function isNavigationItemActive(item, currentPath) {
@@ -85,7 +90,7 @@ function Header({
   theme,
   language,
   onThemeToggle,
-  onLanguageToggle,
+  onLanguageChange,
   className = "",
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -171,7 +176,7 @@ function Header({
       <div
         className={`w-full border-b border-border/70 bg-surface shadow-[0_8px_30px_rgba(41,23,18,0.04)] transition-transform duration-300 ease-out dark:border-gray-600 dark:bg-gray-700 ${isHeaderVisible ? "translate-y-0" : "-translate-y-full"}`}
       >
-        <Container className="flex min-h-18 items-center justify-between gap-6 py-1.5 max-md:min-h-15 md:max-xl:min-h-15">
+        <Container className="flex min-h-18 items-center justify-between gap-3 py-1.5 max-md:min-h-15 md:max-xl:min-h-15 ltr:xl:px-0 ltr:2xl:px-2 2xl:max-w-[96rem] ltr:2xl:max-w-none 2xl:gap-5">
           <a
             href="/"
             aria-label={content.homeLabel}
@@ -182,13 +187,13 @@ function Header({
               alt={content.logoAlt}
               width="1431"
               height="974"
-              className="m-0 h-11 w-auto p-0 object-contain lg:h-13 md:max-xl:h-11"
+              className="m-0 h-10 w-auto p-0 object-contain md:max-xl:h-11 2xl:h-13"
             />
           </a>
 
           <nav
             aria-label={content.primaryNavigationLabel}
-            className="hidden items-center gap-1 xl:flex xl:gap-2"
+            className="hidden min-w-0 items-center gap-0.5 xl:flex xl:gap-2 2xl:gap-3"
           >
             {headerNavigation.map((item) => (
               <div key={item.id} className="group relative">
@@ -234,16 +239,9 @@ function Header({
             ))}
           </nav>
 
-          <div className="flex shrink-0 items-center gap-2">
-            <div className="flex shrink-0 items-center gap-2 xl:gap-2">
-              <button
-                type="button"
-                aria-label={content.languageToggleLabel}
-                onClick={onLanguageToggle}
-                className={`inline-grid h-10 place-items-center rounded-xl border border-border bg-surface-muted px-3 text-center text-xs font-bold leading-none text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700 ${noFocusOutline}`}
-              >
-                <span lang={language}>{content.languageName}</span>
-              </button>
+          <div className="flex shrink-0 items-center gap-1.5 2xl:gap-2">
+            <div className="flex shrink-0 items-center gap-1.5 2xl:gap-2">
+              <LanguageSwitcher language={language} onChange={onLanguageChange} />
               <button
                 type="button"
                 aria-label={content.themeToggleLabel}
@@ -281,7 +279,7 @@ function Header({
               </div>
               <a
                 href="/contact"
-                className={`hidden h-10 min-h-10 items-center justify-center rounded-xl border-2 border-primary bg-primary px-4 text-sm font-semibold text-brand-white shadow-[0_8px_20px_rgba(245,155,34,0.2)] transition-colors hover:border-primary-hover hover:bg-primary-hover dark:hover:border-[#db7f0e] dark:hover:bg-[#db7f0e] xl:inline-flex xl:px-5 xl:text-sm ${noFocusOutline}`}
+                className={`hidden h-10 min-h-10 shrink-0 items-center justify-center rounded-xl border-2 border-primary bg-primary px-3 text-xs font-semibold leading-none whitespace-nowrap text-brand-white shadow-[0_8px_20px_rgba(245,155,34,0.2)] transition-colors hover:border-primary-hover hover:bg-primary-hover dark:hover:border-[#db7f0e] dark:hover:bg-[#db7f0e] xl:inline-flex 2xl:px-5 2xl:text-sm ${noFocusOutline}`}
               >
                 {content.consultationLabel}
               </a>
@@ -319,7 +317,7 @@ function Header({
       />
       <div
         id="mobile-navigation"
-        className={`${isMenuOpen ? "translate-x-0" : "pointer-events-none translate-x-full"} fixed inset-y-0 right-0 z-50 grid w-3/4 grid-rows-[auto_1fr] border-l border-border bg-surface p-5 shadow-[0_20px_60px_rgba(41,23,18,0.16)] transition-transform duration-300 ease-out md:w-1/2 xl:hidden dark:border-gray-600 dark:bg-gray-800 dark:shadow-[0_20px_60px_rgba(0,0,0,0.4)]`}
+        className={`${isMenuOpen ? "translate-x-0" : "pointer-events-none translate-x-full ltr:-translate-x-full"} fixed inset-y-0 right-0 z-50 grid w-3/4 grid-rows-[auto_1fr] border-l border-border bg-surface p-5 shadow-[0_20px_60px_rgba(41,23,18,0.16)] transition-transform duration-300 ease-out ltr:left-0 ltr:right-auto ltr:border-l-0 ltr:border-r md:w-1/2 xl:hidden dark:border-gray-600 dark:bg-gray-800 dark:shadow-[0_20px_60px_rgba(0,0,0,0.4)]`}
       >
         <div className="mb-5 flex items-center justify-between border-b border-foreground/10 pb-4">
           <a
@@ -349,7 +347,7 @@ function Header({
           aria-label={content.mobileNavigationLabel}
           className="min-h-0 w-full overflow-y-auto overscroll-contain pb-2 text-right"
         >
-          <div className="grid content-start justify-items-start gap-2">
+          <div className="grid content-start justify-items-start gap-2 max-md:gap-1">
             {headerNavigation.map((item) => {
               const hasChildren = item.children?.length > 0;
               const isSectionOpen = openMobileSection === item.id;
@@ -396,7 +394,7 @@ function Header({
                   {hasChildren && isSectionOpen && (
                     <div
                       id={`mobile-${item.id}-submenu`}
-                      className="mr-5 grid justify-items-start gap-1 border-r border-border/60 pr-3 dark:border-gray-600"
+                      className="mr-5 grid justify-items-start gap-1 border-r border-border/60 pr-3 ltr:mr-0 ltr:ml-5 ltr:border-r-0 ltr:border-l ltr:pr-0 ltr:pl-3 dark:border-gray-600"
                     >
                       {item.children.map((child) => (
                         <a

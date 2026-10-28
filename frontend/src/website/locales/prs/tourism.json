@@ -1,0 +1,26 @@
+{
+  "afghanistan": {
+    "id": "afghanistan",
+    "cardsTitle": "مقاصد گردشگری افغانستان",
+    "cards": [
+      { "slug": "bamyan", "name": "بامیان", "description": "دره‌های تاریخی، بند امیر و چشم‌اندازهای کوهستانی بامیان.", "image": "/assets/images/destinations/hungary.jpg", "imageAlt": "چشم‌انداز کوهستانی بامیان", "highlights": ["بند امیر", "دره بامیان", "میراث تاریخی", "طبیعت کوهستانی"] },
+      { "slug": "herat", "name": "هرات", "description": "معماری تاریخی، قلعه اختیارالدین و فرهنگ شهری هرات.", "image": "/assets/images/destinations/turkiye.jpg", "imageAlt": "معماری تاریخی هرات", "highlights": ["قلعه اختیارالدین", "مسجد جامع", "بازارهای محلی", "فرهنگ و هنر"] },
+      { "slug": "kabul", "name": "کابل", "description": "موزه‌ها، باغ‌ها، بازارها و میراث فرهنگی پایتخت افغانستان.", "image": "/assets/images/destinations/germany.jpg", "imageAlt": "نمای شهری کابل", "highlights": ["باغ بابر", "موزه ملی", "بازارهای کابل", "چشم‌اندازهای شهری"] },
+      { "slug": "panjshir", "name": "پنجشیر", "description": "دره، رودخانه و مناظر طبیعی پنجشیر برای سفرهای برنامه‌ریزی‌شده.", "image": "/assets/images/destinations/netherlands.jpg", "imageAlt": "منظره طبیعی دره پنجشیر", "highlights": ["دره پنجشیر", "رودخانه", "کوهستان", "طبیعت‌گردی مسئولانه"] }
+    ],
+    "post": { "slug": "afghanistan-tourism", "category": "سیاحت", "title": "سیاحت در افغانستان", "description": "راهنمای آشنایی با جاذبه‌های طبیعی، تاریخی و فرهنگی افغانستان و برنامه‌ریزی مسئولانه سفر.", "image": "/assets/images/home/hero-globe.webp", "imageAlt": "نمایی نمادین از سفر و جغرافیا" },
+    "postDetail": { "parentLabel": "سیاحت", "parentHref": "/tourism/afghanistan", "backLabel": "بازگشت به سیاحت", "backHref": "/tourism/afghanistan", "shareLabel": "اشتراک‌گذاری", "copyLabel": "کاپی لینک", "relatedLabel": "مطالب مرتبط", "quickAccessLabel": "دسترسی سریع", "highlight": "پیش از سفر، وضعیت امنیتی، راه‌های رفت‌وآمد، آب‌وهوا و مقررات محلی را از منابع معتبر بررسی کنید.", "sections": [{ "title": "افغانستان را آگاهانه کشف کنید", "body": "افغانستان میراث تاریخی، طبیعت متنوع و فرهنگ‌های محلی غنی دارد. مقصد، فصل، مسیر و محل اقامت را پیش از حرکت مشخص کنید و به فرهنگ، محیط زیست و توصیه‌های ایمنی هر منطقه احترام بگذارید.", "items": ["وضعیت مسیر و آب‌وهوا را بررسی کنید", "مدارک و وسایل ضروری را همراه داشته باشید", "به رسوم و جامعه محلی احترام بگذارید", "از سفرهای بدون برنامه در مناطق ناآشنا خودداری کنید"] }] }
+  },
+  "world": {
+    "id": "world",
+    "cardsTitle": "مقاصد گردشگری جهان",
+    "cards": [
+      { "slug": "italy", "name": "ایتالیا", "description": "شهرهای تاریخی، هنر، معماری و تنوع فرهنگی ایتالیا.", "image": "/assets/images/destinations/italy.jpg", "imageAlt": "نمایی از ایتالیا", "highlights": ["رم", "فلورانس", "ونیز", "میراث فرهنگی"] },
+      { "slug": "france", "name": "فرانسه", "description": "موزه‌ها، معماری، طبیعت و تجربه‌های فرهنگی فرانسه.", "image": "/assets/images/destinations/france.jpg", "imageAlt": "نمایی از فرانسه", "highlights": ["پاریس", "موزه‌ها", "سواحل", "فرهنگ محلی"] },
+      { "slug": "turkiye", "name": "ترکیه", "description": "پیوند تاریخ، طبیعت و فرهنگ در شهرها و مناطق مختلف ترکیه.", "image": "/assets/images/destinations/turkiye.jpg", "imageAlt": "نمایی از ترکیه", "highlights": ["استانبول", "کاپادوکیه", "سواحل", "بازارهای تاریخی"] },
+      { "slug": "netherlands", "name": "هالند", "description": "شهرهای قابل پیاده‌روی، موزه‌ها و مناظر آرام هالند.", "image": "/assets/images/destinations/netherlands.jpg", "imageAlt": "نمایی از هالند", "highlights": ["آمستردام", "موزه‌ها", "کانال‌ها", "مناظر روستایی"] }
+    ],
+    "post": { "slug": "world-tourism", "category": "سیاحت", "title": "سیاحت در جهان", "description": "راهنمای انتخاب مقصد، بودجه‌بندی و آماده‌سازی برای سفرهای بین‌المللی مسئولانه.", "image": "/assets/images/destinations/italy.jpg", "imageAlt": "نمایی از یک مقصد گردشگری جهانی" },
+    "postDetail": { "parentLabel": "سیاحت", "parentHref": "/tourism/world", "backLabel": "بازگشت به سیاحت", "backHref": "/tourism/world", "shareLabel": "اشتراک‌گذاری", "copyLabel": "کاپی لینک", "relatedLabel": "مطالب مرتبط", "quickAccessLabel": "دسترسی سریع", "highlight": "شرایط ورود، ویزه، بیمه و مقررات هر مقصد می‌تواند تغییر کند؛ اطلاعات نهایی را از منابع رسمی بگیرید.", "sections": [{ "title": "سفر بین‌المللی را مرحله‌به‌مرحله آماده کنید", "body": "مقصد را با توجه به فصل، بودجه، زبان، شرایط ورود و هدف سفر انتخاب کنید. هزینه پرواز، اقامت، حمل‌ونقل، بیمه و ذخیره اضطراری را جداگانه محاسبه کنید.", "items": ["اعتبار پاسپورت و شرایط ویزه را بررسی کنید", "بیمه و محل اقامت معتبر تهیه کنید", "بودجه اضطراری در نظر بگیرید", "قوانین و فرهنگ مقصد را پیش از سفر بخوانید"] }] }
+  }
+}

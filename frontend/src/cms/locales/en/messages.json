@@ -1,0 +1,29 @@
+{
+  "dashboard": "Dashboard",
+  "website": "View the website",
+  "title": "Messages",
+  "description": "Review and manage consultation requests and messages received from the website.",
+  "search": "Search messages...",
+  "categories": {
+    "all": "everyone",
+    "seen": "read",
+    "unread": "unread"
+  },
+  "inbox": "Message box",
+  "unread": "unread",
+  "empty": "Your inbox is empty.",
+  "noMatches": "No message was found with this search.",
+  "select": "Select a message",
+  "selectDescription": "Select a request from the list to view and manage it.",
+  "noMessages": "There are no messages yet",
+  "noMessagesDescription": "New consultation requests from the website are displayed here.",
+  "loading": "Loading messages...",
+  "messageCategory": "Request for advice",
+  "service": "service",
+  "timeline": "timing",
+  "notSpecified": "not specified",
+  "markRead": "read",
+  "markUnread": "unread",
+  "delete": "Delete message",
+  "reply": "Reply by email"
+}

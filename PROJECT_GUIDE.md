@@ -4,9 +4,9 @@ This guide is the single source of truth for the Global Vision architecture, gen
 
 ## Current Status
 
-The public navigation includes a dedicated `/scholarships` directory with localized country, degree, and funding filters, responsive scholarship cards, and slug-based scholarship detail routes rendered through the shared single-post design. Scholarship records are currently static localized seed data and are not yet connected to the backend.
+The public navigation includes dedicated opportunity, tourism, scholarship, magazine, services, and supporting-information entries. The opportunities group includes a localized investment directory and country-specific investment routes. Tourism includes localized Afghanistan and world directories with destination cards and detail routes. The independent `/services` directory presents all service posts as cards. The `/scholarships` directory provides localized country, degree, and funding filters, responsive scholarship cards, and slug-based scholarship detail routes rendered through the shared single-post design. Scholarship records are currently static localized seed data and are not yet connected to the backend.
 
-The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, separate website and CMS source areas, responsive localized `Header` and `Footer` components, and shared UI components for sections, containers, headings, action links, and repeated card patterns are configured. The home page includes responsive hero, opportunity, destination, process, service, testimonial, and consultation sections with Dari and Pashto content. Shared navigation data, matching localized layout translations, pathname-based page selection, slug-based magazine post routes, opportunity category routes, localized service posts, country guides, scholarship guides, IELTS/TOEFL guides, localized search results, a not-found page, dynamic page metadata, and frontend contact-form validation are implemented. A localized CMS dashboard shell is available at `/dashboard`, with a responsive RTL sidebar, top bar, overview metrics, content status, quick actions, language switching, and theme switching. Frontend-only home, about, contact, magazine, and scholarships page editors are available under their matching `/dashboard/*` routes; persistence is not yet connected. Shared CMS editor primitives own preview actions, tab bars, section headers, field groups, fields, and visibility controls, while the shared editor-tabs hook owns tab restoration and scroll-reset behavior. A routing library, Laravel backend, MariaDB integration, API, authentication, and persistent CMS editing have not started.
+The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, separate website and CMS source areas, responsive localized `Header` and `Footer` components, and shared UI components for sections, containers, headings, action links, and repeated card patterns are configured. The home page includes responsive hero, opportunity, destination, process, service, testimonial, and consultation sections with Dari and Pashto content. Shared navigation data, matching localized layout translations, pathname-based page selection, slug-based magazine post routes, opportunity category and country-specific opportunity routes, localized service posts, IELTS/TOEFL guides, localized search results, a not-found page, dynamic page metadata, and frontend contact-form validation are implemented. A localized CMS dashboard shell is available at `/dashboard`, with a responsive RTL sidebar, top bar, overview metrics, content status, quick actions, language switching, and theme switching. Frontend-only home, about, contact, magazine, and scholarships page editors are available under their matching `/dashboard/*` routes; persistence is not yet connected. Shared CMS editor primitives own preview actions, tab bars, section headers, field groups, fields, and visibility controls, while the shared editor-tabs hook owns tab restoration and scroll-reset behavior. A routing library, Laravel backend, MariaDB integration, API, authentication, and persistent CMS editing have not started.
 
 The frontend includes dependency-free Node tests for localized catalog search and scholarship filtering plus a static validator for localized internal links, external URL syntax, and public asset references.
 
@@ -30,19 +30,19 @@ Do not describe planned functionality as implemented.
 7. Do not use CSS outlines or Tailwind ring utilities on clickable elements. Use accessible brand appropriate background, border, shadow, opacity, or color changes for hover and focus feedback.
 8. In mobile view, center every practical element, text block, image, control, and content group. Depart from centered alignment only where it would reduce usability, comprehension, accessibility, or form completion.
 9. Use the approved Global Vision brand colors.
-10. The website supports only Dari and Pashto and is always right to left.
-11. Use locally hosted IRANYekan for Dari body text, Vazirmatn for Pashto, and the shared `font-heading` token for Persian and Pashto display headings.
+10. The website and CMS support Dari, Pashto, and English. Dari and Pashto are right to left; English is left to right.
+11. Use locally hosted IRANYekan for Dari body text, Vazirmatn for Pashto, Poppins for English, and the shared `font-heading` token for display headings.
 12. Route loading states must mirror the order, responsive layout, and recognizable shapes of destination sections.
 13. Every visible skeleton must use a future shared `SkeletonBlock` component for consistent shimmer and reduced motion behavior.
 14. Use Lucide React for all general interface icons. Use React Icons only for social media brand icons.
 15. Keep frontend rendering independent of backend implementation through a dedicated `src/shared/services/api/` layer. Components, sections, and pages must never call Laravel endpoints directly.
 16. Keep public website code under `src/website/`, CMS code under `src/cms/`, and code genuinely reused by both applications under `src/shared/`.
-17. Store each application's interface translations in its locale-specific JSON directories. Components consume translation keys and must not embed duplicated Dari and Pashto UI copy.
+17. Store each application's interface translations in its locale-specific JSON directories. Components consume translation keys and must not embed duplicated Dari, Pashto, and English UI copy.
 
 ## Goals
 
 - Present Global Vision through a modern, responsive, accessible website.
-- Deliver a high quality Dari and Pashto experience at every supported viewport.
+- Deliver a high quality Dari, Pashto, and English experience at every supported viewport.
 - Keep the codebase modular and maintainable.
 - Reuse components and structured content instead of duplicating markup.
 - Maintain consistent branding, interactions, typography, and spacing.
@@ -104,11 +104,11 @@ globalvision-website/
 │   │   ├── website/             # Public website application
 │   │   │   ├── components/      # Website layouts, pages, sections, shared, and UI
 │   │   │   ├── data/            # Public navigation and presentation data
-│   │   │   ├── locales/         # Public Dari and Pashto translations
+│   │   │   ├── locales/         # Public Dari, Pashto, and English translations
 │   │   │   └── utils/           # Website-only utilities
 │   │   ├── cms/                 # CMS application mounted at /dashboard
 │   │   │   ├── components/      # CMS layouts, pages, sections, and controls
-│   │   │   └── locales/         # CMS Dari and Pashto translations
+│   │   │   └── locales/         # CMS Dari, Pashto, and English translations
 │   │   ├── shared/              # Cross-application hooks, services, and utilities
 │   │   ├── assets/fonts/       # Bundled local fonts
 │   │   ├── App.jsx             # Website/CMS application boundary
@@ -195,12 +195,12 @@ Use aliases across source areas and relative imports for nearby files within one
 
 ### Translation architecture
 
-- Store website translations under `src/website/locales/` and CMS translations under `src/cms/locales/`, each with matching `prs/` and `ps/` directories.
+- Store website translations under `src/website/locales/` and CMS translations under `src/cms/locales/`, each with matching `prs/`, `ps/`, and `en/` directories.
 - Use matching filenames and matching translation-key structures in both language directories.
 - Split large translations by stable feature or namespace rather than maintaining one oversized file.
 - Use stable semantic keys, not full source sentences as keys.
 - Dari (`prs`) is the default and fallback language. Pashto uses `ps`.
-- Language switching changes content and the document `lang` value but never changes the RTL direction.
+- Language switching changes content, the document `lang` value, and direction: `prs` and `ps` use RTL while `en` uses LTR.
 - Reusable components receive translated strings through props or a translation interface; they must not duplicate literal UI copy for both languages.
 - Keep backend content fields and frontend translation keys distinct: CMS-managed content comes from the API, while fixed interface labels come from JSON translation files.
 
@@ -208,7 +208,7 @@ Use aliases across source areas and relative imports for nearby files within one
 
 `App.jsx` selects the website or CMS from `window.location.pathname` without a routing dependency. `WebsiteLayout` currently selects public pages the same way. Magazine posts use stable, language-independent paths in the form `/magazine/post/:slug`; matching Dari and Pashto records must share the same slug. Every child item under Opportunities and Services is content of type post, rendered with the shared single-post layout rather than a standalone page component. These posts may use their canonical navigation path, such as `/opportunities/study`. When routing expands or a routing library is introduced:
 
-`/opportunities` and `/services` are intentionally not public routes. Their header labels are non-navigating dropdown triggers; only their child routes are navigable.
+`/opportunities` is intentionally not a public route. Its header label is a non-navigating dropdown trigger; only its child routes are navigable. `/services` is an independent directory route, and its cards link to service detail routes.
 
 The CMS shell starts at `/dashboard`. Paths below `/dashboard/*` are reserved for CMS content areas and currently render the dashboard shell until their editors are implemented.
 
@@ -238,8 +238,8 @@ Shared branding colors, fonts, light and dark class colors, and necessary global
 
 ### Language and typography
 
-- Support Dari and Pashto only.
-- Keep the document and all page layouts right to left.
+- Support Dari, Pashto, and English only.
+- Keep Dari and Pashto right to left and render English layouts, text, and directional interactions left to right.
 - Dari is the initial document language and uses IRANYekan.
 - Pashto uses Vazirmatn and must use `lang="ps"`.
 - Use `lang="fa"` or `lang="prs"` where Dari context must be explicit.
@@ -283,7 +283,7 @@ Shared branding colors, fonts, light and dark class colors, and necessary global
 - Use `aria-current="page"` for active navigation and breadcrumbs.
 - Never remove visible focus feedback without a clear replacement.
 - Maintain sufficient text and control contrast.
-- Use accurate Dari and Pashto language attributes.
+- Use accurate Dari, Pashto, and English language attributes.
 - Preserve logical DOM and keyboard order in RTL layouts.
 
 ## Asset Rules
@@ -319,7 +319,7 @@ Shared branding colors, fonts, light and dark class colors, and necessary global
 - Use stable IDs or unique keys for lists.
 - Keep navigation wording synchronized with section headings.
 - Do not leave placeholder links in completed work.
-- Treat final Dari and Pashto copy as distinct authored content.
+- Treat final Dari, Pashto, and English copy as distinct authored content.
 
 ## Development Commands
 
@@ -349,7 +349,7 @@ Before completing a code or design change:
 6. Verify changed links and anchors.
 7. Test keyboard navigation and focus feedback.
 8. Confirm images load, retain proportions, and do not overflow.
-9. Verify Dari and Pashto fonts, RTL layout, and language attributes.
+9. Verify Dari and Pashto fonts and RTL layout, plus English fonts and LTR layout and all language attributes.
 10. Confirm no duplicated data or reusable markup.
 11. Verify relevant motion with reduced motion enabled.
 

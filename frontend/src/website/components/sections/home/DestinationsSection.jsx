@@ -26,7 +26,7 @@ function DestinationsSection({ content }) {
 
         <div className="mt-8 flex justify-center">
           <ActionLink
-            href="/opportunities/country"
+            href="/opportunities/study"
             variant="secondary"
             className="min-h-12"
           >

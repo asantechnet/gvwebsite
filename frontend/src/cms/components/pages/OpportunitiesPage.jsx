@@ -7,7 +7,7 @@ import RichTextEditor from '@cms/components/RichTextEditor.jsx'
 import MediaUploadField from '@cms/components/MediaUploadField.jsx'
 import { EditorField, EditorFieldGroup, EditorPreviewLink } from '@cms/components/EditorPrimitives.jsx'
 
-const opportunityKeys = ['study', 'migration', 'work', 'exams', 'country']
+const opportunityKeys = ['study', 'migration', 'work', 'investment', 'exams']
 
 function OpportunitiesPage({ content, opportunities, exams }) {
   const label = content.groups?.flatMap((group) => group.items || []).find((item) => item.key === 'opportunities')?.label || 'فرصت‌ها'

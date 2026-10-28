@@ -1,0 +1,232 @@
+{
+  "ui": {
+    "opportunities": "Opportunities",
+    "countries": "Countries",
+    "facts": "General information",
+    "currency": "currency unit",
+    "languages": "languages",
+    "population": "Approximate population",
+    "capital": "the capital",
+    "scholarships": "Recognized scholarships",
+    "scholarshipGuide": "Guide to scholarships",
+    "viewScholarships": "View scholarships",
+    "important": "Important point",
+    "disclaimer": "The terms, amount, deadline and criteria of scholarships change. Before proceeding, check the official page of the university or the offering institution.",
+    "backCountries": "Return to countries",
+    "examGuides": "Test guide",
+    "examIntro": "Before registering, confirm the type of test and required score directly from the destination university or department.",
+    "officialSite": "Official website"
+  },
+  "breadcrumbs": {
+    "countries": "destination country",
+    "exams": "Exams",
+    "scholarships": "Scholarships"
+  },
+  "countries": [
+    {
+      "slug": "germany",
+      "name": "Germany",
+      "flag": "/assets/flags/de.svg",
+      "image": "/assets/images/destinations/germany.jpg",
+      "currency": "Euro (EUR)",
+      "languages": "german",
+      "population": "About 84 million",
+      "capital": "Berlin",
+      "summary": "Germany has a variety of programs in public and private universities. Check the cost of living, program language and visa requirements separately.",
+      "scholarships": [
+        "DAAD",
+        "University scholarships"
+      ]
+    },
+    {
+      "slug": "united-kingdom",
+      "name": "Britain",
+      "flag": "/assets/flags/gb.svg",
+      "image": "/assets/images/destinations/united-kingdom.jpg",
+      "currency": "Pound Sterling (GBP)",
+      "languages": "english",
+      "population": "About 69 million",
+      "capital": "London",
+      "summary": "Britain has intensive and extensive English language courses. Check the tuition, city fee and language test credit in the desired program.",
+      "scholarships": [
+        "Chevening",
+        "GREAT Scholarships"
+      ]
+    },
+    {
+      "slug": "france",
+      "name": "France",
+      "flag": "/assets/flags/fr.svg",
+      "image": "/assets/images/destinations/france.jpg",
+      "currency": "Euro (EUR)",
+      "languages": "French",
+      "population": "About 68 million",
+      "capital": "Paris",
+      "summary": "In France, the language of instruction varies between programs. Follow the registration fee, language, accommodation and visa route from the official source.",
+      "scholarships": [
+        "Eiffel Excellence",
+        "Campus France scholarships"
+      ]
+    },
+    {
+      "slug": "italy",
+      "name": "Italy",
+      "flag": "/assets/flags/it.svg",
+      "image": "/assets/images/destinations/italy.jpg",
+      "currency": "Euro (EUR)",
+      "languages": "Italian",
+      "population": "About 59 million",
+      "capital": "Rome",
+      "summary": "Italy has English and Italian programs. Compare tuition, financial aid and living conditions separately for each region.",
+      "scholarships": [
+        "DSU Regional Scholarship",
+        "Invest Your Talent in Italy"
+      ]
+    },
+    {
+      "slug": "netherlands",
+      "name": "Holland",
+      "flag": "/assets/flags/nl.svg",
+      "image": "/assets/images/destinations/netherlands.jpg",
+      "currency": "Euro (EUR)",
+      "languages": "dutch",
+      "population": "About 18 million",
+      "capital": "Amsterdam",
+      "summary": "Holland has many English programs; But plan the cost of living and housing carefully before applying.",
+      "scholarships": [
+        "Holland Scholarship",
+        "Orange Knowledge Program"
+      ]
+    },
+    {
+      "slug": "turkiye",
+      "name": "Türkiye",
+      "flag": "/assets/flags/tr.svg",
+      "image": "/assets/images/destinations/turkiye.jpg",
+      "currency": "Turkish lira (TRY)",
+      "languages": "turkish",
+      "population": "About 86 million",
+      "capital": "Ankara",
+      "summary": "Türkiye has Turkish and English education options. Carefully check the accreditation of the university, the language of instruction and the actual cost of the city.",
+      "scholarships": [
+        "Turkey Scholarships",
+        "University scholarships"
+      ]
+    },
+    {
+      "slug": "hungary",
+      "name": "Hungary",
+      "flag": "/assets/flags/hu.svg",
+      "image": "/assets/images/destinations/hungary.jpg",
+      "currency": "HUF",
+      "languages": "ducts",
+      "population": "About 10 million",
+      "capital": "Budapest",
+      "summary": "Hungary offers several English-language programs. Check the conditions of admission, accommodation and insurance from the university.",
+      "scholarships": [
+        "Stipendium Hungaricum",
+        "University scholarships"
+      ]
+    },
+    {
+      "slug": "albania",
+      "name": "Albania",
+      "flag": "/assets/flags/al.svg",
+      "image": "/assets/images/destinations/italy.jpg",
+      "currency": "Lake Albania (ALL)",
+      "languages": "Albanian",
+      "population": "About 3 million",
+      "capital": "Tirana",
+      "summary": "For Albania, check language of instruction, program accreditation and residency options directly from the university and embassy.",
+      "scholarships": [
+        "University scholarships",
+        "International grants"
+      ]
+    },
+    {
+      "slug": "ireland",
+      "name": "Ireland",
+      "flag": "/assets/flags/ie.svg",
+      "image": "/assets/images/destinations/united-kingdom.jpg",
+      "currency": "Euro (EUR)",
+      "languages": "English and Irish",
+      "population": "About 5 million",
+      "capital": "Dublin",
+      "summary": "Ireland has English language programs and an active research environment. Reconfirm tuition, accommodation and visa requirements at the time of application.",
+      "scholarships": [
+        "Government of Ireland Scholarship",
+        "University scholarships"
+      ]
+    }
+  ],
+  "exams": [
+    {
+      "slug": "ielts",
+      "name": "IELTS",
+      "image": "/assets/images/destinations/united-kingdom.jpg",
+      "summary": "IELTS is used to measure English language proficiency. The destination university or department determines which type of test and what grade it accepts.",
+      "sections": [
+        "Choose Academic or General type based on your purpose.",
+        "Ask the destination program for the minimum total score and each skill.",
+        "Leave room in your schedule for the result and the possibility of retesting."
+      ],
+      "officialHref": "https://www.ielts.org/"
+    },
+    {
+      "slug": "toefl",
+      "name": "TOEFL",
+      "image": "/assets/images/destinations/germany.jpg",
+      "summary": "TOEFL measures English language proficiency for many university programs. Confirm the acceptance of the test copy and the minimum score from the destination.",
+      "sections": [
+        "Check the exam condition of the same university and field.",
+        "Know the official method of sending the result and its validity.",
+        "Prepare for each skill with sample tests and regular schedules."
+      ],
+      "officialHref": "https://www.ets.org/toefl.html"
+    },
+    {
+      "slug": "duolingo",
+      "name": "Duolingo English Test",
+      "summary": "Duolingo online test measures English language skills. Confirm the acceptance of the test and the minimum score from the destination university.",
+      "sections": [
+        "Check the list of accepted universities.",
+        "Prepare the test environment and equipment in advance.",
+        "Record the grade required for the destination program."
+      ],
+      "officialHref": "https://englishtest.duolingo.com/"
+    },
+    {
+      "slug": "sat",
+      "name": "SAT",
+      "summary": "The SAT is used for admission to some undergraduate programs. The requirement and required score depends on the university and the program.",
+      "sections": [
+        "Check the SAT requirement from the university.",
+        "Plan for math and reading sections.",
+        "Record the deadline for sending the result."
+      ],
+      "officialHref": "https://satsuite.collegeboard.org/sat"
+    },
+    {
+      "slug": "gre",
+      "name": "GRE",
+      "summary": "GRE is used in admission to some graduate courses. Confirm the need for the test from the destination program.",
+      "sections": [
+        "Check the GRE requirement of the same field.",
+        "Practice quantitative, verbal and written sections.",
+        "Check the university result submission code."
+      ],
+      "officialHref": "https://www.ets.org/gre.html"
+    },
+    {
+      "slug": "gmat",
+      "name": "GMAT",
+      "summary": "GMAT is used for some management and business programs. Ask the university for the accepted version and score.",
+      "sections": [
+        "Verify the program's GMAT requirement.",
+        "Practice for Quantitative Sections and Reasoning.",
+        "Check the deadline and method of sending the result."
+      ],
+      "officialHref": "https://www.mba.com/exams/gmat-exam"
+    }
+  ]
+}

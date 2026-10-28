@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&family=Vazirmatn:wght@100..900&display=swap");
 @import "tailwindcss";
 @import "./cms/styles.css";
 @font-face { font-family: "IRANYekan"; src: url("./assets/fonts/iranyekan/iranyekan-thin.ttf") format("truetype"); font-style: normal; font-weight: 100; font-display: swap; }
@@ -15,6 +15,7 @@ html.cms-modal-open { background: rgb(8 12 20 / .62); }
 @theme inline {
   --font-dari: "IRANYekan", Tahoma, Arial, sans-serif;
   --font-pashto: "Vazirmatn", Tahoma, Arial, sans-serif;
+  --font-english: "Poppins", Arial, Helvetica, sans-serif;
   --font-heading: "Vazirmatn", Tahoma, Arial, sans-serif;
   --color-brand-orange: var(--brand-orange);
   --color-brand-red: var(--brand-red);
@@ -95,13 +96,25 @@ html.cms-modal-open { background: rgb(8 12 20 / .62); }
   font-family: var(--font-pashto);
 }
 
+:lang(en) {
+  font-family: var(--font-english);
+}
+
 html {
-  direction: rtl;
   background: var(--theme-background);
   color: var(--theme-foreground);
   font-family: var(--font-dari);
   scroll-behavior: smooth;
 }
+html:dir(rtl) { direction: rtl; }
+html:dir(ltr) { direction: ltr; }
+html:dir(ltr) .text-right { text-align: left; }
+html:dir(ltr) .font-heading { font-family: var(--font-english); }
+html:dir(ltr) .lucide-arrow-left,
+html:dir(ltr) .lucide-arrow-right,
+html:dir(ltr) .lucide-chevron-left,
+html:dir(ltr) .lucide-chevron-right { transform: rotate(180deg); }
+@media (min-width: 1024px) { html:dir(ltr) .lg\:text-right { text-align: left; } }
 
 body {
   min-width: 320px; min-height: 100vh; margin: 0;
@@ -110,3 +123,13 @@ body {
 button, input, select, textarea { font: inherit; }
 @keyframes skeletonShimmerSweep { from { transform: translateX(-115%); } to { transform: translateX(115%); } }
 .search-field:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px transparent inset; -webkit-text-fill-color: var(--theme-foreground); }
+
+/* Keep the English interface compact while preserving a clear type hierarchy. */
+html:lang(en) {
+  font-size: 15px;
+}
+html:lang(en) .font-medium { font-weight: 500; }
+html:lang(en) .font-semibold { font-weight: 600; }
+html:lang(en) .font-bold { font-weight: 600; }
+html:lang(en) .font-extrabold { font-weight: 700; }
+html:lang(en) .font-black { font-weight: 800; }
