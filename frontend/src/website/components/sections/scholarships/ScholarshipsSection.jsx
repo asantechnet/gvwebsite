@@ -26,6 +26,7 @@ const pashtoDeadlineDates = {
 };
 
 function FilterSelect({
+  language,
   label,
   value,
   options,
@@ -50,7 +51,7 @@ function FilterSelect({
 
   return (
     <div ref={wrapperRef} className="relative min-w-0 flex-1 text-right">
-      <span className="mb-1 flex items-center gap-1.5 text-[10px] font-bold text-foreground-muted">
+      <span className={`mb-1 flex items-center gap-1.5 text-[10px] text-foreground-muted ${language === "en" ? "font-medium" : "font-bold"}`}>
         <Icon aria-hidden="true" size={13} className="text-primary" />
         {label}
       </span>
@@ -60,7 +61,7 @@ function FilterSelect({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         onClick={() => onToggle(!isOpen)}
-        className={`flex min-h-9 w-full items-center justify-between gap-2 rounded-xl border bg-white/90 px-2.5 text-right text-[11px] font-bold shadow-[0_2px_8px_rgba(54,69,77,0.05)] transition-all hover:border-primary/60 hover:shadow-[0_4px_12px_rgba(245,155,34,0.1)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(245,155,34,0.18)] dark:bg-gray-700/90 ${isOpen ? "border-primary" : "border-[#eadfce] dark:border-gray-600"}`}
+        className={`flex min-h-9 w-full items-center justify-between gap-2 rounded-xl border bg-white/90 px-2.5 text-right text-[11px] shadow-[0_2px_8px_rgba(54,69,77,0.05)] transition-all hover:border-primary/60 hover:shadow-[0_4px_12px_rgba(245,155,34,0.1)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(245,155,34,0.18)] dark:bg-gray-700/90 ${language === "en" ? "font-medium" : "font-bold"} ${isOpen ? "border-primary" : "border-[#eadfce] dark:border-gray-600"}`}
       >
         <span className={value ? "text-foreground" : "text-foreground-muted"}>
           {selectedLabel}
@@ -97,7 +98,7 @@ function FilterSelect({
                 minHeight: "32px",
                 paddingBlock: "5px",
               }}
-              className={`block w-full rounded-md px-2.5 text-right transition-colors ${selected ? "bg-primary/10 font-extrabold text-primary" : "font-semibold text-foreground hover:bg-primary/10 hover:text-primary"}`}
+                className={`block w-full rounded-md px-2.5 text-right transition-colors ${selected ? `bg-primary/10 ${language === "en" ? "font-semibold" : "font-extrabold"} text-primary` : `${language === "en" ? "font-medium" : "font-semibold"} text-foreground hover:bg-primary/10 hover:text-primary`}`}
             >
               {option}
             </button>
@@ -108,14 +109,14 @@ function FilterSelect({
   );
 }
 
-function ScholarshipCard({ scholarship }) {
+function ScholarshipCard({ scholarship, language }) {
   const deadline =
     pashtoDeadlineDates[scholarship.deadline] || scholarship.deadline;
 
   return (
-    <article className="group rounded-3xl border border-[#eadfce] bg-[#fffaf5] p-3 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-[0_12px_28px_rgba(54,69,77,0.1)] dark:border-gray-700 dark:bg-[#2b3442] md:p-4">
+    <article dir={language === "en" ? "ltr" : "rtl"} className={`group rounded-3xl border border-[#eadfce] bg-[#fffaf5] p-3 text-center shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-[0_12px_28px_rgba(54,69,77,0.1)] dark:border-gray-700 dark:bg-[#2b3442] md:p-4 ${language === "en" ? "text-left" : ""}`}>
       <a href={`/scholarships/${scholarship.slug}`} className="block">
-        <div className="grid gap-4 rounded-2xl bg-surface-muted/55 p-4 text-center dark:bg-gray-800/55 md:min-h-32 md:grid-cols-[7rem_minmax(0,1fr)] md:items-stretch md:text-right">
+        <div className={`grid gap-4 rounded-2xl bg-surface-muted/55 p-4 dark:bg-gray-800/55 md:min-h-32 md:grid-cols-[7rem_minmax(0,1fr)] md:items-stretch ${language === "en" ? "text-left" : "text-center md:text-right"}`}>
           <div className="flex min-h-28 items-center justify-center overflow-hidden rounded-xl bg-white shadow-sm dark:bg-gray-700 md:min-h-0">
             <img
               src={scholarship.image}
@@ -127,11 +128,11 @@ function ScholarshipCard({ scholarship }) {
             <h2 className="font-heading text-lg font-extrabold leading-7 text-foreground transition-colors group-hover:text-primary md:text-xl">
               {scholarship.title}
             </h2>
-            <p className="mt-1 inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-foreground-muted md:justify-start">
+            <p className={`mt-1 inline-flex items-center gap-1.5 text-sm font-semibold text-foreground-muted ${language === "en" ? "justify-start" : "justify-center md:justify-start"}`}>
               <MapPin aria-hidden="true" size={15} className="text-primary" />
               {scholarship.country}
             </p>
-            <div className="mt-3 flex flex-wrap items-center justify-center gap-2 md:justify-start">
+            <div className={`mt-3 flex flex-wrap items-center gap-2 ${language === "en" ? "justify-start" : "justify-center md:justify-start"}`}>
               <span className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-2.5 py-1.5 text-xs font-bold text-primary">
                 <GraduationCap aria-hidden="true" size={14} />
                 {scholarship.degree}
@@ -156,7 +157,7 @@ function ScholarshipCard({ scholarship }) {
   );
 }
 
-function ScholarshipsSection({ content }) {
+function ScholarshipsSection({ content, language = "prs" }) {
   const [filters, setFilters] = useState(initialFilters);
   const [openFilter, setOpenFilter] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -184,7 +185,7 @@ function ScholarshipsSection({ content }) {
   };
 
   return (
-    <div className="relative overflow-x-clip bg-[#fff4e8] text-foreground dark:bg-gray-800 dark:text-[#fff8f3]">
+    <div className="relative overflow-x-clip bg-background text-foreground dark:bg-gray-800 dark:text-[#fff8f3]">
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_8%,rgba(245,155,34,0.2),transparent_30%),radial-gradient(circle_at_85%_38%,rgba(236,31,39,0.08),transparent_28%)] dark:bg-[radial-gradient(circle_at_15%_8%,rgba(245,155,34,0.22),transparent_30%),radial-gradient(circle_at_85%_38%,rgba(236,31,39,0.14),transparent_28%)]"
         aria-hidden="true"
@@ -203,6 +204,7 @@ function ScholarshipsSection({ content }) {
               <h2 className="sr-only">{content.filters.title}</h2>
               <div className="flex flex-col gap-1.5 sm:flex-row">
                 <FilterSelect
+                  language={language}
                   icon={MapPin}
                   label={content.filters.country}
                   value={filters.country}
@@ -215,6 +217,7 @@ function ScholarshipsSection({ content }) {
                   }
                 />
                 <FilterSelect
+                  language={language}
                   icon={GraduationCap}
                   label={content.filters.degree}
                   value={filters.degree}
@@ -225,6 +228,7 @@ function ScholarshipsSection({ content }) {
                   onToggle={(isOpen) => setOpenFilter(isOpen ? "degree" : null)}
                 />
                 <FilterSelect
+                  language={language}
                   icon={WalletCards}
                   label={content.filters.funding}
                   value={filters.funding}
@@ -237,6 +241,7 @@ function ScholarshipsSection({ content }) {
                   }
                 />
                 <FilterSelect
+                  language={language}
                   icon={CalendarDays}
                   label={content.filters.deadline}
                   value={filters.deadline}
@@ -251,7 +256,7 @@ function ScholarshipsSection({ content }) {
                 <button
                   type="button"
                   onClick={resetFilters}
-                  className="mt-2 inline-flex h-9 min-h-9 shrink-0 self-center items-center justify-center gap-1.5 rounded-xl border border-primary/25 bg-primary/10 px-3 text-[11px] font-bold text-primary transition-all hover:border-primary/50 hover:bg-primary/15 sm:mt-0 sm:self-end"
+                  className={`mt-2 inline-flex h-9 min-h-9 shrink-0 self-center items-center justify-center gap-1.5 rounded-xl border border-primary/25 bg-primary/10 px-3 text-[11px] text-primary transition-all hover:border-primary/50 hover:bg-primary/15 sm:mt-0 sm:self-end ${language === "en" ? "font-medium" : "font-bold"}`}
                   aria-label={content.filters.reset}
                 >
                   <RotateCcw aria-hidden="true" size={13} />
@@ -274,6 +279,7 @@ function ScholarshipsSection({ content }) {
                 <ScholarshipCard
                   key={scholarship.slug}
                   scholarship={scholarship}
+                  language={language}
                 />
               ))}
             </div>

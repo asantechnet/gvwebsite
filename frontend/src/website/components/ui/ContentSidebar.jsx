@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, CheckSquare, ClipboardCheck, FileText, GraduationCap, Landmark, MessageCircle, PiggyBank, ShieldCheck, UsersRound } from 'lucide-react'
+import { BriefcaseBusiness, CheckSquare, ClipboardCheck, FileText, GraduationCap, Landmark, MessageCircle, ShieldCheck, TrendingUp, UsersRound } from 'lucide-react'
 
 import PostCard from '@ui/PostCard.jsx'
 import useBottomStickySidebar from '@website/hooks/useBottomStickySidebar.js'
@@ -6,7 +6,7 @@ import useBottomStickySidebar from '@website/hooks/useBottomStickySidebar.js'
 const quickLinks = [
   [GraduationCap, 'study', '/opportunities/study'],
   [BriefcaseBusiness, 'work', '/opportunities/work'],
-  [PiggyBank, 'investment', '/opportunities/investment'],
+  [TrendingUp, 'investment', '/opportunities/investment'],
   [CheckSquare, 'exams', '/opportunities/exams'],
   [UsersRound, 'migration', '/opportunities/migration'],
   [ShieldCheck, 'visa', '/services/visa'],
@@ -40,7 +40,7 @@ function SidebarCardGrid({ items }) {
 
 function ContentSidebar({ content, category, relatedPosts = [], className = '' }) {
   const sidebarRef = useBottomStickySidebar()
-  const language = document.documentElement.lang === 'en' ? 'en' : content.quickAccessLabel === 'چټک لاسرسی' ? 'ps' : 'prs'
+  const language = content.quickAccessLabel === 'Quick access' ? 'en' : content.quickAccessLabel === 'چټک لاسرسی' ? 'ps' : 'prs'
   const localizedQuickLinks = quickLinks.map(([Icon, key, href]) => [Icon, quickLabels[language][key], href])
   const serviceCards = serviceCardDefinitions.map(([Icon, href], index) => [Icon, serviceCardLabels[language][index], href])
 

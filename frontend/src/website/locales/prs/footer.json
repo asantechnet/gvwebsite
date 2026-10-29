@@ -3,7 +3,6 @@
   "consultationLabel": "مشاوره رایگان",
   "serviceLinks": [
     { "label": "مشاوره رایگان", "href": "/services/consultation" },
-    { "label": "درخواست", "href": "/services/migration-registration" },
     { "label": "پروسس اسناد", "href": "/services/document-process" },
     { "label": "ثبت نام بورسیه ها", "href": "/services/scholarship-registration" },
     { "label": "ویزه و اقامت", "href": "/services/visa" }

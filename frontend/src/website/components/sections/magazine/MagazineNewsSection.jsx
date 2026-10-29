@@ -4,7 +4,7 @@ import Section from '@ui/Section.jsx'
 
 function MagazineNewsSection({ content, language, titleId = 'magazine-news-title' }) {
   return (
-    <Section aria-labelledby={titleId} className="bg-background pt-0">
+    <Section aria-labelledby={titleId} className={`bg-background ${titleId === 'magazine-news-title' ? '-mt-4 pt-0' : 'pt-8'}`}>
       <Container>
         <div className="mb-8 text-center">
           <h2 id={titleId} className="font-heading text-xl font-extrabold text-foreground md:text-2xl">{content.title}</h2>

@@ -3,9 +3,9 @@
   "title": "About us page",
   "preview": "View page",
   "sectionsTitle": "Sections of the About Us page",
-  "visible": "be displayed",
-  "mission": "mission",
-  "vision": "the landscape",
+  "visible": "Be displayed",
+  "mission": "Mission",
+  "vision": "The landscape",
   "itemsDescription": "Add, edit or delete items in this section.",
   "addItem": "Add item",
   "addItemTitle": "Add new item",
@@ -15,12 +15,12 @@
   "deleteItemTitle": "Delete this item?",
   "deleteItemDescription": "This operation cannot be reversed.",
   "itemModalDescription": "Complete the information of this item.",
-  "save": "save",
-  "cancel": "opt out",
-  "close": "to close",
+  "save": "Save",
+  "cancel": "Opt out",
+  "close": "To close",
   "chooseImage": "Select image",
   "dropImage": "Drop image here or click to select",
-  "replaceImage": "to replace",
+  "replaceImage": "To replace",
   "removeImage": "Delete image",
   "sections": {
     "hero": {
@@ -33,13 +33,13 @@
       "label": "Mission and vision"
     },
     "story": {
-      "label": "our story"
+      "label": "Our story"
     },
     "faq": {
       "label": "Common questions"
     },
     "team": {
-      "label": "team"
+      "label": "Team"
     },
     "cta": {
       "label": "A call to action"
@@ -58,7 +58,7 @@
   },
   "fields": {
     "eyebrow": "Text above the title",
-    "title": "title",
+    "title": "Title",
     "sectionTitle": "Title of the section",
     "description": "Description",
     "imageAlt": "Image alt text",
@@ -66,11 +66,11 @@
     "primaryActionHref": "Main button link",
     "secondaryAction": "The text of the second button",
     "secondaryActionHref": "Link to the second button",
-    "question": "question",
-    "answer": "answer",
+    "question": "Question",
+    "answer": "Answer",
     "name": "Member name",
     "role": "Member position",
-    "avatar": "member's picture",
+    "avatar": "Member's picture",
     "avatarAlt": "Image alt text"
   }
 }

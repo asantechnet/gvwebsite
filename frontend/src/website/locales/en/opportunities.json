@@ -15,8 +15,8 @@
       "backHref": "/opportunities/study",
       "readTime": "15 minutes of study",
       "highlight": "For an Afghan applicant, the study path starts from the evaluation of the goal, budget, grades and language and continues until the choice of destination, admission, visa and the beginning of student life. Double-check any terms and conditions at the destination's official source.",
-      "shareLabel": "sharing",
-      "copyLabel": "copy link",
+      "shareLabel": "Sharing",
+      "copyLabel": "Copy link",
       "relatedLabel": "Related content",
       "quickAccessLabel": "Quick access",
       "media": {
@@ -43,7 +43,7 @@
         "audio": {
           "title": "Podcast: 5 tips for students applying to study abroad",
           "speaker": "Irfan Noorzadeh",
-          "speakerLabel": "sound",
+          "speakerLabel": "Sound",
           "duration": "The real episode",
           "avatar": "/assets/images/team/erfan.webp",
           "description": "A real episode of the IELTS Podcast about preparing to study abroad. Try the play, pause, seek and volume controls.",
@@ -62,12 +62,12 @@
         }
       },
       "quickLinks": {
-        "study": "education",
-        "work": "work",
+        "study": "Education",
+        "work": "Work",
         "countries": "Countries",
         "exams": "Exams",
-        "visa": "visa",
-        "migration": "immigration"
+        "visa": "Visa",
+        "migration": "Immigration"
       },
       "sections": [
         {
@@ -229,7 +229,7 @@
     "post": {
       "slug": "migration-opportunities",
       "category": "Immigration opportunities",
-      "title": "migration routes; From choosing the way to staying",
+      "title": "Migration routes; From choosing the way to staying",
       "description": "A practical guide to comparing educational, work and family immigration, preparing your case and distinguishing valid information from false promises.",
       "image": "/assets/images/destinations/united-kingdom.jpg",
       "imageAlt": "A view of an immigrant-friendly city"
@@ -241,17 +241,17 @@
       "backHref": "/opportunities/migration",
       "readTime": "12 minutes of study",
       "highlight": "Immigration is a legal and financial decision, not an immediate promise. First, determine the purpose and the legal route, then compare the official conditions of the destination country, cost, time, documents and the risk of rejection with your case.",
-      "shareLabel": "sharing",
-      "copyLabel": "copy link",
+      "shareLabel": "Sharing",
+      "copyLabel": "Copy link",
       "relatedLabel": "Related content",
       "quickAccessLabel": "Quick access",
       "quickLinks": {
-        "study": "education",
-        "work": "work",
+        "study": "Education",
+        "work": "Work",
         "countries": "Countries",
         "exams": "Exams",
-        "visa": "visa",
-        "migration": "immigration"
+        "visa": "Visa",
+        "migration": "Immigration"
       },
       "sections": [
         {
@@ -349,7 +349,7 @@
     "post": {
       "slug": "work-opportunities",
       "category": "Work opportunities",
-      "title": "work abroad; From resume preparation to work permit",
+      "title": "Work abroad; From resume preparation to work permit",
       "description": "A practical guide to find legal work, evaluate a job offer, prepare documents and understand the responsibilities of a migrant worker.",
       "image": "/assets/images/destinations/united-kingdom.jpg",
       "imageAlt": "International work environment"
@@ -361,17 +361,17 @@
       "backHref": "/opportunities/work",
       "readTime": "11 minutes of reading",
       "highlight": "A job offer alone is not a work or residence permit. Check destination country, job, employer, contract, language, skills and license type before paying or leaving your country.",
-      "shareLabel": "sharing",
-      "copyLabel": "copy link",
+      "shareLabel": "Sharing",
+      "copyLabel": "Copy link",
       "relatedLabel": "Related content",
       "quickAccessLabel": "Quick access",
       "quickLinks": {
-        "study": "education",
-        "work": "work",
+        "study": "Education",
+        "work": "Work",
         "countries": "Countries",
         "exams": "Exams",
-        "visa": "visa",
-        "migration": "immigration"
+        "visa": "Visa",
+        "migration": "Immigration"
       },
       "sections": [
         {
@@ -469,7 +469,7 @@
     "post": {
       "slug": "investment-opportunities",
       "category": "Investment opportunities",
-      "title": "investment abroad; From assessment to legal action",
+      "title": "Investment abroad; From assessment to legal action",
       "description": "A practical guide for comparing investment routes, assessing risk, reviewing documents and choosing the right destination.",
       "image": "/assets/images/destinations/germany.jpg",
       "imageAlt": "A view of an international economic center"
@@ -481,17 +481,17 @@
       "backHref": "/opportunities/investment",
       "readTime": "10 minutes of study",
       "highlight": "Investment and residence are not the same concept. Check the type of capital, source of money, business risk, taxes and residency requirements separately from official sources.",
-      "shareLabel": "sharing",
-      "copyLabel": "copy link",
+      "shareLabel": "Sharing",
+      "copyLabel": "Copy link",
       "relatedLabel": "Related content",
       "quickAccessLabel": "Quick access",
       "quickLinks": {
-        "study": "education",
-        "work": "work",
+        "study": "Education",
+        "work": "Work",
         "countries": "Countries",
         "exams": "Exams",
-        "visa": "visa",
-        "migration": "immigration"
+        "visa": "Visa",
+        "migration": "Immigration"
       },
       "sections": [
         {
@@ -575,17 +575,17 @@
       "backHref": "/opportunities/exams",
       "readTime": "10 minutes of study",
       "highlight": "Choose the right test based on the purpose and acceptance of the destination. Confirm the exam name, academic or general type, minimum score of each skill, validity date and result submission method from the university or official office.",
-      "shareLabel": "sharing",
-      "copyLabel": "copy link",
+      "shareLabel": "Sharing",
+      "copyLabel": "Copy link",
       "relatedLabel": "Related content",
       "quickAccessLabel": "Quick access",
       "quickLinks": {
-        "study": "education",
-        "work": "work",
+        "study": "Education",
+        "work": "Work",
         "countries": "Countries",
         "exams": "Exams",
-        "visa": "visa",
-        "migration": "immigration"
+        "visa": "Visa",
+        "migration": "Immigration"
       },
       "sections": [
         {
@@ -597,7 +597,7 @@
               "href": "/services/exam-registration"
             },
             {
-              "label": "study guide",
+              "label": "Study guide",
               "href": "/opportunities/study"
             }
           ],

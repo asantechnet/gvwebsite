@@ -187,7 +187,7 @@ function Header({
               alt={content.logoAlt}
               width="1431"
               height="974"
-              className="m-0 h-10 w-auto p-0 object-contain md:max-xl:h-11 2xl:h-13"
+              className="m-0 h-10 w-auto p-0 object-contain md:max-xl:h-11 xl:h-12 2xl:h-15"
             />
           </a>
 

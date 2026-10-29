@@ -51,7 +51,7 @@ function ContactSection({ content }) {
                 const Icon = icons[social.type] || Music2
 
                 return (
-                  <span key={social.type} title={social.label} className="flex size-10 items-center justify-center rounded-full border border-border text-foreground-muted dark:border-gray-600">
+                  <span key={social.type} title={social.label} className="flex size-10 items-center justify-center rounded-full border border-border text-foreground-muted transition-all duration-200 hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 hover:text-primary dark:border-gray-600">
                     <Icon aria-hidden="true" size={17} />
                   </span>
                 )

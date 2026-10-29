@@ -62,8 +62,8 @@
       ],
       "prepare": [
         "Academic documents",
-        "resume",
-        "letter of motivation",
+        "Resume",
+        "Letter of motivation",
         "Recommendation letter and language certificate"
       ]
     },
@@ -88,7 +88,7 @@
       "prepare": [
         "Valid passport",
         "The name according to the identity document",
-        "destination score condition",
+        "Destination score condition",
         "Valid payment method"
       ]
     },
@@ -163,14 +163,34 @@
       "prepare": [
         "The original document is sound",
         "Identity copy",
-        "destination reference name",
+        "Destination reference name",
         "Deadline and number of copies"
       ]
     },
     {
+      "slug": "application",
+      "title": "Application",
+      "description": "Prepare and submit applications for education, work, and immigration services with careful information review.",
+      "image": "/assets/images/destinations/france.jpg",
+      "audience": "For applicants who need a complete and organized application for the relevant authority.",
+      "included": ["Information review", "Form preparation", "Document check", "Submission guidance"],
+      "process": ["Collect information", "Review requirements", "Complete the form", "Submit and follow up"],
+      "prepare": ["Identity document", "Related documents", "Contact information", "Application deadline"]
+    },
+    {
+      "slug": "coordination",
+      "title": "Coordination",
+      "description": "Coordinate communication, scheduling, and case steps for organized application progress.",
+      "image": "/assets/images/destinations/germany.jpg",
+      "audience": "For applicants who need coordination between advisers, institutions, and related authorities.",
+      "included": ["Schedule planning", "Communication coordination", "Step tracking", "Status updates"],
+      "process": ["Assign responsibilities", "Set the plan", "Coordinate execution", "Report progress"],
+      "prepare": ["Case information", "Contact details", "Available times", "Tracking documents"]
+    },
+    {
       "slug": "visa",
       "aliases": [
-        "study-visa"
+        "Study-visa"
       ],
       "title": "Visa and residence",
       "description": "Preparation of visa and residence application based on admission, purpose of travel and destination regulations.",
@@ -189,8 +209,8 @@
         "Follow up result"
       ],
       "prepare": [
-        "passport",
-        "acceptance or invitation",
+        "Passport",
+        "Acceptance or invitation",
         "Financial documents",
         "Insurance and accommodation"
       ]

@@ -5,7 +5,7 @@ const focusClasses =
 
 function OpportunityCard({ icon: Icon, number, title, description, action, href }) {
   return (
-    <article className="group relative min-h-72 min-w-0 w-full max-w-md overflow-hidden rounded-3xl border border-border border-t-2 border-t-primary/30 bg-surface shadow-sm transition-all duration-300 hover:border-primary/50 hover:border-t-primary hover:shadow-xl dark:border-gray-600 dark:border-t-primary/40 dark:bg-gray-700 dark:hover:border-primary/60 dark:hover:border-t-primary">
+    <article className="home-opportunity-card group relative min-h-72 min-w-0 w-full max-w-md overflow-hidden rounded-3xl border border-border border-t-2 border-t-primary/30 bg-surface shadow-sm transition-all duration-300 hover:border-primary/50 hover:border-t-primary hover:shadow-xl dark:border-gray-600 dark:border-t-primary/40 dark:bg-gray-700 dark:hover:border-primary/60 dark:hover:border-t-primary">
       <div className="flex min-h-72 flex-col p-4 sm:p-5">
         <div className="relative flex items-start justify-between gap-4">
           <span className="grid size-14 place-items-center rounded-2xl bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-brand-white">

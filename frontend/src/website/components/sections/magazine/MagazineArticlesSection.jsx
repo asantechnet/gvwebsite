@@ -26,7 +26,7 @@ function MagazineArticlesSection({ content }) {
   }, [])
 
   return (
-    <Section aria-labelledby="magazine-articles-title" className="bg-surface-muted dark:bg-[#182230]">
+    <Section aria-labelledby="magazine-articles-title" className="bg-surface-muted pt-8 dark:bg-[#182230]">
       <Container>
         <div className="mb-8 text-center">
           <h2 id="magazine-articles-title" className="font-heading text-xl font-extrabold text-foreground md:text-2xl">{content.title}</h2>

@@ -11,19 +11,19 @@
         "label": "Magazine"
       }
     ],
-    "breadcrumbLabel": "page path"
+    "breadcrumbLabel": "Page path"
   },
   "news": {
     "title": "Latest news",
-    "previousLabel": "previous news",
-    "nextLabel": "next news",
+    "previousLabel": "Previous news",
+    "nextLabel": "Next news",
     "paginationLabel": "News pages",
-    "pageLabel": "position no",
-    "viewsLabel": "visit",
+    "pageLabel": "Position no",
+    "viewsLabel": "Visit",
     "items": [
       {
         "slug": "new-study-consultation-season",
-        "category": "the news",
+        "category": "The news",
         "date": "2026-10-11T08:00:00+04:30",
         "title": "The beginning of the new academic counseling season",
         "description": "Follow the latest news and announcements from Global Vision.",
@@ -32,7 +32,7 @@
       },
       {
         "slug": "new-opportunities-afghan-students",
-        "category": "the news",
+        "category": "The news",
         "date": "2026-10-07T08:00:00+04:30",
         "title": "New opportunities for Afghan students",
         "description": "New and important options for continuing education have been introduced.",
@@ -41,7 +41,7 @@
       },
       {
         "slug": "admission-visa-services-update",
-        "category": "the news",
+        "category": "The news",
         "date": "2026-09-11T08:00:00+04:30",
         "title": "Update of admission and visa services",
         "description": "New trends for better case preparation.",
@@ -50,7 +50,7 @@
       },
       {
         "slug": "new-guidance-programs",
-        "category": "the news",
+        "category": "The news",
         "date": "2026-09-01T08:00:00+04:30",
         "title": "The start of new guidance programs",
         "description": "New and useful information has been prepared to choose the right path.",
@@ -59,7 +59,7 @@
       },
       {
         "slug": "expanded-specialist-consultations",
-        "category": "the news",
+        "category": "The news",
         "date": "2026-08-21T08:00:00+04:30",
         "title": "Specialized counseling sessions were developed",
         "description": "Applicants can now use more detailed guidance.",
@@ -68,7 +68,7 @@
       },
       {
         "slug": "choosing-destination-country",
-        "category": "the news",
+        "category": "The news",
         "date": "2026-08-11T08:00:00+04:30",
         "title": "New tips for choosing the destination country",
         "description": "Information to better compare education and immigration options.",
@@ -77,7 +77,7 @@
       },
       {
         "slug": "online-application-workshop",
-        "category": "the news",
+        "category": "The news",
         "date": "2026-08-01T08:00:00+04:30",
         "title": "An online workshop for case preparation was held",
         "description": "In this workshop, the important stages of document preparation were reviewed.",
@@ -86,7 +86,7 @@
       },
       {
         "slug": "global-vision-services-guide",
-        "category": "the news",
+        "category": "The news",
         "date": "2026-07-21T08:00:00+04:30",
         "title": "New Global Vision Service Guide",
         "description": "The details of the service and the way to get better support were published.",
@@ -95,7 +95,7 @@
       },
       {
         "slug": "applicant-frequently-asked-questions",
-        "category": "the news",
+        "category": "The news",
         "date": "2026-07-11T08:00:00+04:30",
         "title": "Answers to frequently asked questions of applicants",
         "description": "Short answers to common user questions have been prepared.",
@@ -110,12 +110,12 @@
   "postDetail": {
     "magazineLabel": "Magazine",
     "dateLabel": "October 11, 2026",
-    "viewLabel": "visit",
+    "viewLabel": "Visit",
     "readTime": "3 minutes of reading",
     "backLabel": "Back to the magazine",
     "highlight": "Making the right choice today creates a clearer academic path for tomorrow.",
-    "shareLabel": "sharing",
-    "copyLabel": "copy link",
+    "shareLabel": "Sharing",
+    "copyLabel": "Copy link",
     "relatedLabel": "Related content",
     "quickAccessLabel": "Quick access",
     "media": {
@@ -124,29 +124,29 @@
       "imageLabel": "A picture of the city of London",
       "audioLabel": "Audio file",
       "audioTitle": "An overview podcast on the conditions and stages of educational immigration",
-      "speakerLabel": "the speaker",
+      "speakerLabel": "The speaker",
       "speaker": "Irfan Noorzadeh",
       "duration": "3 minutes",
       "audioDuration": "03:00",
       "rewindLabel": "5 seconds back",
       "forwardLabel": "5 seconds forward",
-      "speedLabel": "playback speed",
+      "speedLabel": "Playback speed",
       "videoTitle": "Video introducing the study paths",
       "youtubeLabel": "YouTube video",
       "youtubeTitle": "A guide to choosing an educational path on YouTube",
-      "playLabel": "media player",
+      "playLabel": "Media player",
       "volumeLabel": "Adjust the volume",
       "captionsLabel": "Subtitle",
       "settingsLabel": "Playback settings",
-      "fullscreenLabel": "full page"
+      "fullscreenLabel": "Full page"
     },
     "quickLinks": {
-      "study": "education",
-      "work": "work",
-      "travel": "travel",
-      "life": "life",
-      "visa": "visa",
-      "migration": "immigration"
+      "study": "Education",
+      "work": "Work",
+      "travel": "Travel",
+      "life": "Life",
+      "visa": "Visa",
+      "migration": "Immigration"
     },
     "paragraphs": [
       "At Global Vision, we believe that making a conscious choice is the first step to building a bright future.",
@@ -158,71 +158,71 @@
     "readMore": "Read more",
     "pagination": {
       "navigation": "Pagination of posts",
-      "first": "first page",
-      "previous": "previous page",
+      "first": "First page",
+      "previous": "Previous page",
       "next": "Next page",
-      "last": "last page",
+      "last": "Last page",
       "page": "Page"
     },
     "items": [
       {
-        "category": "education",
+        "category": "Education",
         "title": "How to prepare for choosing the right university?",
         "description": "Some practical tips for making an informed decision about the future of education.",
         "href": "/magazine",
         "image": "/assets/images/destinations/hungary.jpg"
       },
       {
-        "category": "immigration",
+        "category": "Immigration",
         "title": "Important documents to start a successful case",
         "description": "A short guide to organize documents and basic steps.",
         "href": "/magazine",
         "image": "/assets/images/destinations/turkiye.jpg"
       },
       {
-        "category": "guide",
+        "category": "Guide",
         "title": "From advice to achieving the goal",
         "description": "How to make our path clearer with proper planning.",
         "href": "/magazine",
         "image": "/assets/images/destinations/france.jpg"
       },
       {
-        "category": "education",
+        "category": "Education",
         "title": "Tips for better preparation",
         "description": "Improve your planning and preparation with a few simple steps.",
         "href": "/magazine",
         "image": "/assets/images/destinations/netherlands.jpg"
       },
       {
-        "category": "scholarship",
+        "category": "Scholarship",
         "title": "How to find scholarship opportunities?",
         "description": "Methods to search for and review suitable study opportunities.",
         "href": "/magazine",
         "image": "/assets/images/destinations/united-kingdom.jpg"
       },
       {
-        "category": "visa",
+        "category": "Visa",
         "title": "Preparing for the visa interview",
         "description": "Some recommendations to be more confident in the visa interview.",
         "href": "/magazine",
         "image": "/assets/images/destinations/germany.jpg"
       },
       {
-        "category": "immigration",
+        "category": "Immigration",
         "title": "Common mistakes in document preparation",
         "description": "Better manage your case process by recognizing common errors.",
         "href": "/magazine",
         "image": "/assets/images/destinations/italy.jpg"
       },
       {
-        "category": "guide",
+        "category": "Guide",
         "title": "Planning a clear path",
         "description": "How to turn your goals into practical steps.",
         "href": "/magazine",
         "image": "/assets/images/destinations/france.jpg"
       },
       {
-        "category": "experience",
+        "category": "Experience",
         "title": "Lessons from the experience of successful applicants",
         "description": "Experiences that can simplify your decision-making process.",
         "href": "/magazine",

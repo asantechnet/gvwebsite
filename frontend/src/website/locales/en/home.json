@@ -1,8 +1,8 @@
 {
   "hero": {
     "titleBefore": "Your future path",
-    "titleHighlight": "brighter",
-    "titleAfter": "choose",
+    "titleHighlight": "Brighter",
+    "titleAfter": "Choose",
     "description": "From choosing the right opportunity to preparing documents and going through the steps, we are by your side with clear and expert guidance.",
     "primaryAction": "Get a free consultation",
     "secondaryAction": "View study opportunities",
@@ -13,12 +13,12 @@
       "steps": [
         {
           "id": "study",
-          "title": "education",
+          "title": "Education",
           "description": "Discover opportunities that fit your purpose"
         },
         {
           "id": "migration",
-          "title": "immigration",
+          "title": "Immigration",
           "description": "Detailed preparation for a clear path"
         },
         {
@@ -31,7 +31,7 @@
     }
   },
   "opportunities": {
-    "titleBefore": "right opportunity",
+    "titleBefore": "Right opportunity",
     "titleHighlight": "For your purpose",
     "viewAll": "View study opportunities",
     "cards": [
@@ -63,7 +63,7 @@
   },
   "destinations": {
     "titleBefore": "Most popular destinations",
-    "titleHighlight": "travel",
+    "titleHighlight": "Travel",
     "viewAll": "View all destinations",
     "countries": [
       {
@@ -132,7 +132,7 @@
     ]
   },
   "process": {
-    "titleBefore": "from decision to outcome,",
+    "titleBefore": "From decision to outcome,",
     "titleHighlight": "We are with you",
     "steps": [
       {
@@ -197,13 +197,13 @@
         "title": "Study visa services",
         "description": "Get assistance from checking the documents to completing the visa application process.",
         "action": "View details",
-        "href": "/services/study-visa"
+        "href": "/services/visa"
       }
     ]
   },
   "testimonials": {
     "titleBefore": "Customer experience",
-    "titleHighlight": "we",
+    "titleHighlight": "We",
     "items": [
       {
         "id": "student-1",

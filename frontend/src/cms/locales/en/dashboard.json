@@ -14,11 +14,11 @@
           "key": "home"
         },
         {
-          "label": "about us",
+          "label": "About us",
           "key": "about"
         },
         {
-          "label": "contact us",
+          "label": "Contact us",
           "key": "contact"
         },
         {
@@ -104,7 +104,7 @@
     "contentEyebrow": "Content statistics",
     "contentTitle": "Content distribution",
     "contentDescription": "Content published in the main sections of the website.",
-    "itemUnit": "item",
+    "itemUnit": "Item",
     "contentEmpty": "Add content to view statistics.",
     "categories": [
       "Magazine",
@@ -114,10 +114,10 @@
     "inboxEyebrow": "Statistics of messages",
     "inboxTitle": "Message status",
     "inboxDescription": "Quick view of requests received from the website.",
-    "messageUnit": "message",
+    "messageUnit": "Message",
     "inboxEmpty": "New website messages are displayed here.",
-    "read": "read",
-    "unread": "unread"
+    "read": "Read",
+    "unread": "Unread"
   },
   "activity": {
     "title": "Recent activities",
@@ -147,14 +147,14 @@
     "postCategory": "Category of posts",
     "allCategories": "All categories",
     "status": "Opportunities page status",
-    "pageStatus": "page status",
-    "published": "published",
+    "pageStatus": "Page status",
+    "published": "Published",
     "lastUpdate": "Latest update",
-    "today": "today",
+    "today": "Today",
     "contentLanguage": "Content language",
-    "dari": "a door",
+    "dari": "Dari",
     "heroSettings": "Main banner settings",
     "heroTitle": "Main banner title"
   },
-  "logout": "departure"
+  "logout": "Departure"
 }

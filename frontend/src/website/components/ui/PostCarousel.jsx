@@ -1,10 +1,10 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import Button from '@ui/Button.jsx'
 import PostCard from '@ui/PostCard.jsx'
 
-const getVisibleCount = () => typeof window === 'undefined' ? 1 : window.innerWidth >= 1536 ? 5 : window.innerWidth >= 1024 ? 4 : window.innerWidth >= 768 ? 2 : 1
+const getVisibleCount = () => typeof window === 'undefined' ? 1 : window.innerWidth >= 1024 ? 4 : window.innerWidth >= 768 ? 2 : 1
 
 function PostCarousel({ items, category, labels, language }) {
   const isLtr = language === 'en'
@@ -22,12 +22,12 @@ function PostCarousel({ items, category, labels, language }) {
   const pages = Math.ceil(items.length / visibleCount)
   const gap = 12
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const resize = () => { const count = getVisibleCount(); setVisibleCount(count); setActiveIndex(count); setViewportWidth(viewportRef.current?.clientWidth || 0) }
     resize()
     window.addEventListener('resize', resize)
     return () => window.removeEventListener('resize', resize)
-  }, [items.length])
+  }, [items.length, language])
 
   useEffect(() => {
     if (paused || items.length <= visibleCount) return undefined
@@ -48,14 +48,17 @@ function PostCarousel({ items, category, labels, language }) {
   }, [activeIndex, first, last])
 
   const move = (direction) => setActiveIndex((index) => index + direction > last ? last + 1 : index + direction < first ? first - 1 : index + direction)
-  const cardWidth = `calc((100% - ${(visibleCount - 1) * gap}px) / ${visibleCount})`
+  const availableWidth = Math.max(0, viewportWidth - 16)
+  const cardWidth = viewportWidth ? Math.floor((availableWidth - (visibleCount - 1) * gap) / visibleCount) : 0
+  const cardStride = cardWidth + gap
 
   return (
-    <div className="relative" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false) }}>
+    <div dir={isLtr ? 'ltr' : 'rtl'} className="relative" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setPaused(false) }}>
       <Button unstyled type="button" aria-label={labels.previous} onClick={() => move(-1)} className="absolute start-0 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-surface text-foreground shadow-md outline-none hover:border-primary hover:text-primary focus:outline-none focus-visible:ring-0 dark:border-gray-600 dark:bg-[#2b3442]"><ChevronRight aria-hidden="true" size={20} /></Button>
       <div
         ref={viewportRef}
         className="mx-12 touch-pan-y cursor-grab overflow-hidden px-2 active:cursor-grabbing"
+        style={isLtr ? { clipPath: 'inset(0 12px 0 0)' } : undefined}
         onPointerDown={(event) => {
           pointerStartRef.current = event.clientX
           setPaused(true)
@@ -71,8 +74,8 @@ function PostCarousel({ items, category, labels, language }) {
           setPaused(false)
         }}
       >
-        <div className="flex gap-3 ease-out" style={{ transform: `translateX(${(isLtr ? -1 : 1) * activeIndex * (viewportWidth ? (viewportWidth - 16 + gap) / visibleCount : 0)}px)`, transition: resetting ? 'none' : 'transform 700ms ease-out' }}>
-          {loopItems.map((item, index) => <div key={`${item.slug || item.title}-${index}`} className="shrink-0" style={{ width: cardWidth }}><PostCard post={{ ...item, category: category || item.category }} language={language} viewsLabel={labels.viewsLabel} /></div>)}
+        <div className="flex gap-3 ease-out" style={{ transform: `translateX(${(isLtr ? -1 : 1) * activeIndex * cardStride}px)`, transition: resetting ? 'none' : 'transform 700ms ease-out' }}>
+          {loopItems.map((item, index) => <div key={`${item.slug || item.title}-${index}`} className="shrink-0" style={{ width: `${cardWidth}px` }}><PostCard post={{ ...item, category: category || item.category }} language={language} viewsLabel={labels.viewsLabel} /></div>)}
         </div>
       </div>
       <Button unstyled type="button" aria-label={labels.next} onClick={() => move(1)} className="absolute end-0 top-1/2 z-10 flex size-10 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-surface text-foreground shadow-md outline-none hover:border-primary hover:text-primary focus:outline-none focus-visible:ring-0 dark:border-gray-600 dark:bg-[#2b3442]"><ChevronLeft aria-hidden="true" size={20} /></Button>

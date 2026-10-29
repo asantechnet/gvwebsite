@@ -5,12 +5,12 @@
   "description": "Review and manage consultation requests and messages received from the website.",
   "search": "Search messages...",
   "categories": {
-    "all": "everyone",
-    "seen": "read",
-    "unread": "unread"
+    "all": "Everyone",
+    "seen": "Read",
+    "unread": "Unread"
   },
   "inbox": "Message box",
-  "unread": "unread",
+  "unread": "Unread",
   "empty": "Your inbox is empty.",
   "noMatches": "No message was found with this search.",
   "select": "Select a message",
@@ -19,11 +19,11 @@
   "noMessagesDescription": "New consultation requests from the website are displayed here.",
   "loading": "Loading messages...",
   "messageCategory": "Request for advice",
-  "service": "service",
-  "timeline": "timing",
-  "notSpecified": "not specified",
-  "markRead": "read",
-  "markUnread": "unread",
+  "service": "Service",
+  "timeline": "Timing",
+  "notSpecified": "Not specified",
+  "markRead": "Read",
+  "markUnread": "Unread",
   "delete": "Delete message",
   "reply": "Reply by email"
 }

@@ -1,7 +1,7 @@
 import ScholarshipsSection from '@sections/scholarships/ScholarshipsSection.jsx'
 
-function ScholarshipsPage({ content }) {
-  return <ScholarshipsSection content={content} />
+function ScholarshipsPage({ content, language }) {
+  return <ScholarshipsSection content={content} language={language} />
 }
 
 export default ScholarshipsPage

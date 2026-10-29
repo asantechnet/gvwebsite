@@ -96,7 +96,7 @@ function CountryCards({ content }) {
     <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-3">
       {countries.map((country) => <a key={country.href} href={country.href} aria-label={`${country.name}؛ ${content.countriesTitle}`} className="group overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 hover:border-primary hover:shadow-[0_12px_28px_rgba(54,69,77,0.12)] focus-visible:border-primary focus-visible:shadow-[0_0_0_3px_rgba(245,155,34,0.22)] dark:border-gray-600 dark:bg-gray-800">
         <div className="relative aspect-[16/9] overflow-hidden bg-surface-muted dark:bg-gray-700">
-          <img src={country.image} alt={country.imageAlt} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <img src={country.image} alt={country.imageAlt} className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
           <span className="absolute inset-x-3 bottom-2 flex items-center justify-between gap-2 rounded-lg bg-black/55 px-3 py-1.5 text-right text-xs font-bold text-white backdrop-blur-sm">
             <span>{country.name}</span>
             <img src={country.flag} alt="" aria-hidden="true" className="h-5 w-7 rounded-sm object-cover shadow-sm" />
@@ -111,7 +111,8 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
   const [isShareMenuOpen, setIsShareMenuOpen] = useState(false)
   const [isLinkCopied, setIsLinkCopied] = useState(false)
   const shareMenuRef = useRef(null)
-  const copySuccessLabel = content.copySuccess || (document.documentElement.lang === 'en' ? englishPostContent.copySuccess : document.documentElement.lang === 'ps' ? pashtoPostContent.copySuccess : dariPostContent.copySuccess)
+  const contentLanguage = content.quickAccessLabel === 'Quick access' ? 'en' : content.quickAccessLabel === 'چټک لاسرسی' ? 'ps' : 'prs'
+  const copySuccessLabel = content.copySuccess || (contentLanguage === 'en' ? englishPostContent.copySuccess : contentLanguage === 'ps' ? pashtoPostContent.copySuccess : dariPostContent.copySuccess)
   const parentLabel = content.parentLabel || content.magazineLabel
   const parentHref = content.parentHref || '/magazine'
   const backHref = content.backHref || '/magazine'
@@ -162,19 +163,19 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
 
   return (
     <>
-      <Section padded={false} className="bg-background py-6 md:py-10 lg:py-14">
+      <Section padded={false} className="bg-background py-10 md:py-10 lg:py-14">
       <Container>
-        {!hideBreadcrumb && <div className="mx-auto mb-5 max-w-6xl text-right text-sm text-foreground-muted">
+        {!hideBreadcrumb && <div className="mx-auto mb-2 max-w-6xl text-right text-sm text-foreground-muted md:mb-5">
           <a href={parentHref} className="transition-colors hover:text-primary">{parentLabel}</a>
           <span className="mx-2 text-primary">/</span>
           <span>{post.title}</span>
         </div>}
         <article className="mx-auto max-w-6xl rounded-[2rem] border border-border bg-surface shadow-sm dark:border-gray-700 dark:bg-[#2b3442]">
-          {!hideHero && <div className="relative aspect-[16/8] overflow-hidden rounded-t-[2rem] md:aspect-[16/7]">
+          {!hideHero && <div className="relative aspect-[16/8] overflow-hidden rounded-t-[2rem] md:aspect-[16/5]">
             <img src={post.image} alt={post.imageAlt || post.title} className="absolute inset-0 size-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" aria-hidden="true" />
             <div className="absolute inset-x-5 bottom-5 text-right text-white md:inset-x-10 md:bottom-10">
-              <h1 className="mt-4 max-w-3xl font-heading text-2xl font-extrabold leading-tight md:text-4xl lg:text-5xl">{post.title}</h1>
+              <h1 className="mt-4 w-full font-heading text-2xl font-extrabold leading-tight md:text-4xl lg:text-5xl">{post.title}</h1>
             </div>
           </div>}
           <div className="flex items-center justify-start px-5 pt-5 text-sm text-foreground-muted lg:hidden">
@@ -194,9 +195,9 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3 border-t border-border pt-5 dark:border-gray-600 lg:justify-end">
                 <span className="text-sm text-foreground-muted">{content.shareLabel}</span>
                 <button type="button" onClick={copyPostLink} className="group relative flex size-9 items-center justify-center rounded-xl border border-border bg-surface text-foreground-muted transition-colors hover:border-primary hover:text-primary focus:outline-none dark:border-gray-600 dark:bg-transparent" aria-label={isLinkCopied ? copySuccessLabel : content.copyLabel}><LinkIcon size={16} /><span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded-lg bg-foreground px-2.5 py-1.5 text-xs font-medium text-background opacity-0 shadow-lg transition-opacity group-hover:opacity-100">{isLinkCopied ? copySuccessLabel : content.copyLabel}</span></button>
-                <span ref={shareMenuRef} className="group relative">
+                <span ref={shareMenuRef} className="group relative z-20">
                   <button type="button" aria-label={content.shareLabel} aria-expanded={isShareMenuOpen} onClick={() => setIsShareMenuOpen((isOpen) => !isOpen)} className="flex size-9 items-center justify-center rounded-xl border border-border bg-surface text-foreground-muted transition-colors hover:border-primary hover:text-primary focus:outline-none dark:border-gray-600 dark:bg-transparent"><Share2 size={16} /></button>
-                  <span className={`absolute bottom-full left-0 flex translate-y-1 gap-1 rounded-xl border border-border bg-surface p-1.5 shadow-lg transition-all group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 dark:border-gray-600 ${isShareMenuOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none opacity-0'}`}>
+                  <span className={`absolute bottom-full left-0 z-30 flex translate-y-1 gap-1 rounded-xl border border-border bg-surface p-1.5 shadow-lg transition-all group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 ltr:left-auto ltr:right-0 dark:border-gray-600 ${isShareMenuOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none opacity-0'}`}>
                     <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodedShareUrl}`} target="_blank" rel="noreferrer" onClick={() => setIsShareMenuOpen(false)} aria-label="فیس‌بوک" className="flex size-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-primary/10 hover:text-primary"><FaFacebookF size={15} /></a>
                     <a href={`https://wa.me/?text=${encodedShareTitle}%20${encodedShareUrl}`} target="_blank" rel="noreferrer" onClick={() => setIsShareMenuOpen(false)} aria-label="واتساپ" className="flex size-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-primary/10 hover:text-primary"><FaWhatsapp size={17} /></a>
                     <a href={`https://t.me/share/url?url=${encodedShareUrl}&text=${encodedShareTitle}`} target="_blank" rel="noreferrer" onClick={() => setIsShareMenuOpen(false)} aria-label="تلگرام" className="flex size-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-primary/10 hover:text-primary"><FaTelegramPlane size={17} /></a>

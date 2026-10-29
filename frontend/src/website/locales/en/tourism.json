@@ -50,27 +50,27 @@
         "imageAlt": "The natural landscape of Panjshir Valley",
         "highlights": [
           "Panjshir Valley",
-          "the river",
-          "the mountain",
+          "The river",
+          "The mountain",
           "Responsible nature tourism"
         ]
       }
     ],
     "post": {
       "slug": "afghanistan-tourism",
-      "category": "tourism",
+      "category": "Tourism",
       "title": "Tourism in Afghanistan",
       "description": "A guide to getting to know Afghanistan's natural, historical and cultural attractions and responsible travel planning.",
       "image": "/assets/images/home/hero-globe.webp",
       "imageAlt": "A symbolic view of travel and geography"
     },
     "postDetail": {
-      "parentLabel": "tourism",
+      "parentLabel": "Tourism",
       "parentHref": "/tourism/afghanistan",
       "backLabel": "Return to tourism",
       "backHref": "/tourism/afghanistan",
-      "shareLabel": "sharing",
-      "copyLabel": "copy link",
+      "shareLabel": "Sharing",
+      "copyLabel": "Copy link",
       "relatedLabel": "Related content",
       "quickAccessLabel": "Quick access",
       "highlight": "Before traveling, check the security situation, transportation routes, weather and local regulations from reliable sources.",
@@ -147,19 +147,19 @@
     ],
     "post": {
       "slug": "world-tourism",
-      "category": "tourism",
-      "title": "travel around the world",
+      "category": "Tourism",
+      "title": "Travel around the world",
       "description": "A guide to destination selection, budgeting and preparation for responsible international travel.",
       "image": "/assets/images/destinations/italy.jpg",
       "imageAlt": "A view of a global tourist destination"
     },
     "postDetail": {
-      "parentLabel": "tourism",
+      "parentLabel": "Tourism",
       "parentHref": "/tourism/world",
       "backLabel": "Return to tourism",
       "backHref": "/tourism/world",
-      "shareLabel": "sharing",
-      "copyLabel": "copy link",
+      "shareLabel": "Sharing",
+      "copyLabel": "Copy link",
       "relatedLabel": "Related content",
       "quickAccessLabel": "Quick access",
       "highlight": "Conditions of entry, visa, insurance and regulations of each destination can change; Get the final information from official sources.",

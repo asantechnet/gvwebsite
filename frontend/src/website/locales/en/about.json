@@ -1,17 +1,17 @@
 {
   "hero": {
-    "eyebrow": "about us",
+    "eyebrow": "About us",
     "title": "Your companion for a bright future",
     "breadcrumbs": [
       {
-        "label": "home",
+        "label": "Home",
         "href": "/"
       },
       {
-        "label": "about us"
+        "label": "About us"
       }
     ],
-    "breadcrumbLabel": "page path",
+    "breadcrumbLabel": "Page path",
     "imageAlt": "Iconic image of Global Vision"
   },
   "introduction": {
@@ -86,7 +86,7 @@
     "members": [
       {
         "name": "Irfan Noorzadeh",
-        "role": "executive director",
+        "role": "Executive director",
         "avatar": "/assets/images/team/erfan.webp",
         "avatarAlt": "Profile picture of Irfan Noorzadeh"
       },
@@ -110,7 +110,7 @@
       },
       {
         "name": "Morteza Razavi",
-        "role": "media officer",
+        "role": "Media officer",
         "avatar": "/assets/images/team/murtaza.webp",
         "avatarAlt": "Profile picture of Morteza Razavi"
       }
@@ -120,7 +120,7 @@
     "title": "Start your future with awareness",
     "description": "To learn more about Global Vision or start an open conversation, take the next step.",
     "primaryAction": {
-      "label": "contact us",
+      "label": "Contact us",
       "href": "/contact"
     },
     "secondaryAction": {

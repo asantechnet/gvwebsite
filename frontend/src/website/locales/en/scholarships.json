@@ -6,11 +6,11 @@
   },
   "filters": {
     "title": "Scholarship filter",
-    "country": "destination country",
-    "degree": "degree",
+    "country": "Destination country",
+    "degree": "Degree",
     "funding": "Type of financial support",
     "deadline": "Application deadline",
-    "all": "everyone",
+    "all": "Everyone",
     "reset": "Clear filters",
     "showFilters": "Show filters",
     "hideFilters": "Close the filters"
@@ -20,21 +20,21 @@
     "count": "Available opportunity",
     "emptyTitle": "No scholarship found",
     "emptyDescription": "Change your search terms or filters.",
-    "showing": "show",
-    "of": "from",
+    "showing": "Show",
+    "of": "From",
     "opportunities": "Scholarship opportunity",
     "view": "View details",
     "deadline": "Application deadline",
     "provider": "Presenter",
     "featured": "Special offer",
-    "active": "active"
+    "active": "Active"
   },
   "pagination": {
     "navigation": "Pagination of scholarships",
-    "first": "first page",
-    "previous": "previous page",
+    "first": "First page",
+    "previous": "Previous page",
     "next": "Next page",
-    "last": "last page",
+    "last": "Last page",
     "page": "Page"
   },
   "detail": {
@@ -65,14 +65,14 @@
     ],
     "funding": [
       "Full financing",
-      "financial aid",
+      "Financial aid",
       "Exemption from fees"
     ],
     "deadlines": [
-      "today",
-      "three days",
-      "this week",
-      "this month"
+      "Today",
+      "Three days",
+      "This week",
+      "This month"
     ]
   },
   "items": [
@@ -84,7 +84,7 @@
       "degree": "Masters",
       "funding": "Full financing",
       "deadline": "25 Scorpio 1405",
-      "deadlineFilter": "this month",
+      "deadlineFilter": "This month",
       "status": "active",
       "featured": true,
       "image": "/assets/images/destinations/germany.jpg",
@@ -103,8 +103,8 @@
         "Research or educational support"
       ],
       "documents": [
-        "resume",
-        "letter of motivation",
+        "Resume",
+        "Letter of motivation",
         "Documents and transcripts",
         "Language certificate and recommendation letter"
       ],
@@ -118,7 +118,7 @@
       "degree": "Masters",
       "funding": "Full financing",
       "deadline": "3 Arc 1405",
-      "deadlineFilter": "this week",
+      "deadlineFilter": "This week",
       "status": "active",
       "featured": true,
       "image": "/assets/images/destinations/united-kingdom.jpg",
@@ -152,7 +152,7 @@
       "degree": "Bachelor's degree",
       "funding": "Full financing",
       "deadline": "10 Jedi 1405",
-      "deadlineFilter": "three days",
+      "deadlineFilter": "Three days",
       "status": "active",
       "featured": false,
       "image": "/assets/images/destinations/turkiye.jpg",
@@ -165,13 +165,13 @@
         "Complete the application within the official deadline"
       ],
       "benefits": [
-        "tuition fee",
+        "Tuition fee",
         "Monthly allowance",
         "Accommodation and insurance",
         "Turkish language course"
       ],
       "documents": [
-        "proof of identity",
+        "Proof of identity",
         "Academic documents",
         "Test result if needed",
         "Letter of motivation or research plan"
@@ -186,7 +186,7 @@
       "degree": "Masters",
       "funding": "Full financing",
       "deadline": "18 Aquarius 1405",
-      "deadlineFilter": "this month",
+      "deadlineFilter": "This month",
       "status": "active",
       "featured": false,
       "image": "/assets/images/destinations/hungary.jpg",
@@ -202,11 +202,11 @@
         "Tuition waiver",
         "Monthly allowance",
         "Accommodation assistance",
-        "health insurance"
+        "Health insurance"
       ],
       "documents": [
         "Online form",
-        "letter of motivation",
+        "Letter of motivation",
         "Academic documents",
         "Language certificate and health certificate"
       ],
@@ -218,9 +218,9 @@
       "provider": "Government of Italy",
       "country": "Italy",
       "degree": "Masters",
-      "funding": "financial aid",
+      "funding": "Financial aid",
       "deadline": "2 Pisces 1405",
-      "deadlineFilter": "today",
+      "deadlineFilter": "Today",
       "status": "active",
       "featured": false,
       "image": "/assets/images/destinations/italy.jpg",
@@ -233,16 +233,16 @@
         "Language skills required"
       ],
       "benefits": [
-        "periodic allowance",
+        "Periodic allowance",
         "Tuition waiver in selected universities",
         "Internship opportunity",
         "Professional networking experience"
       ],
       "documents": [
-        "passport",
+        "Passport",
         "Academic documents",
         "Resume and introduction video",
-        "language certificate"
+        "Language certificate"
       ],
       "officialHref": "https://investyourtalentapplication.esteri.it/"
     },
@@ -254,7 +254,7 @@
       "degree": "Ph.D",
       "funding": "Exemption from fees",
       "deadline": "15 Hamel 1406",
-      "deadlineFilter": "this week",
+      "deadlineFilter": "This week",
       "status": "active",
       "featured": false,
       "image": "/assets/images/destinations/united-kingdom.jpg",
