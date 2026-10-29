@@ -15,7 +15,6 @@ import StudyOpportunityPage from '@pages/StudyOpportunityPage.jsx'
 import WorkOpportunityPage from '@pages/WorkOpportunityPage.jsx'
 import MigrationOpportunityPage from '@pages/MigrationOpportunityPage.jsx'
 import InvestmentOpportunityPage from '@pages/InvestmentOpportunityPage.jsx'
-import ExamsOpportunityPage from '@pages/ExamsOpportunityPage.jsx'
 import OpportunityCountryPostPage from '@pages/OpportunityCountryPostPage.jsx'
 import GuidePostPage from '@pages/GuidePostPage.jsx'
 import ServicePostPage from '@pages/ServicePostPage.jsx'
@@ -62,9 +61,65 @@ import englishServicesContent from '@website/locales/en/services.json'
 import englishSearchContent from '@website/locales/en/search.json'
 import englishTourismContent from '@website/locales/en/tourism.json'
 import { searchCatalog } from '@website/utils/catalog.js'
+import { getLanguageConfig, localizeContentHrefs, localizeHref, parseLocalizedPathname, WEBSITE_LANGUAGE_STORAGE_KEY } from '@website/utils/language.js'
+import { WebsiteLanguageContext } from '@website/hooks/useWebsiteLanguage.js'
 
 // Temporary while content is static. Replace with real API loading state when the backend is connected.
 const STATIC_SKELETON_MINIMUM_MS = 1000
+const rawLocalizedContent = {
+  dr: {
+    footer: dariFooterContent,
+    header: dariHeaderContent,
+    home: dariHomeContent,
+    about: dariAboutContent,
+    contact: dariContactContent,
+    magazine: dariMagazineContent,
+    scholarships: dariScholarshipsContent,
+    opportunities: dariOpportunitiesContent,
+    guides: dariGuidesContent,
+    services: dariServicesContent,
+    search: dariSearchContent,
+    tourism: dariTourismContent,
+  },
+  ps: {
+    footer: pashtoFooterContent,
+    header: pashtoHeaderContent,
+    home: pashtoHomeContent,
+    about: pashtoAboutContent,
+    contact: pashtoContactContent,
+    magazine: pashtoMagazineContent,
+    scholarships: pashtoScholarshipsContent,
+    opportunities: pashtoOpportunitiesContent,
+    guides: pashtoGuidesContent,
+    services: pashtoServicesContent,
+    search: pashtoSearchContent,
+    tourism: pashtoTourismContent,
+  },
+  en: {
+    footer: englishFooterContent,
+    header: englishHeaderContent,
+    home: englishHomeContent,
+    about: englishAboutContent,
+    contact: englishContactContent,
+    magazine: englishMagazineContent,
+    scholarships: englishScholarshipsContent,
+    opportunities: englishOpportunitiesContent,
+    guides: englishGuidesContent,
+    services: englishServicesContent,
+    search: englishSearchContent,
+    tourism: englishTourismContent,
+  },
+}
+const localizedContent = Object.fromEntries(
+  Object.entries(rawLocalizedContent).map(([language, content]) => [
+    language,
+    localizeContentHrefs(content, language),
+  ]),
+)
+
+function formatPageTitle(pattern, values) {
+  return pattern.replace(/\{(\w+)\}/g, (placeholder, key) => values[key] ?? placeholder)
+}
 
 function WebsiteLayout({ children = null }) {
   const [isRouteLoading, setIsRouteLoading] = useState(true)
@@ -75,26 +130,21 @@ function WebsiteLayout({ children = null }) {
 
     return window.localStorage.getItem('globalvision-theme') || 'light'
   })
-  const [language, setLanguage] = useState(() => {
-    if (typeof window === 'undefined') return 'prs'
-
-    const savedLanguage = window.sessionStorage.getItem('globalvision-language')
-    return ['prs', 'ps', 'en'].includes(savedLanguage) ? savedLanguage : 'prs'
-  })
-  const select = (dari, pashto, english) => language === 'en' ? english : language === 'ps' ? pashto : dari
-  const headerContent = select(dariHeaderContent, pashtoHeaderContent, englishHeaderContent)
-  const footerContent = select(dariFooterContent, pashtoFooterContent, englishFooterContent)
-  const homeContent = select(dariHomeContent, pashtoHomeContent, englishHomeContent)
-  const aboutContent = select(dariAboutContent, pashtoAboutContent, englishAboutContent)
-  const contactContent = select(dariContactContent, pashtoContactContent, englishContactContent)
-  const magazineContent = select(dariMagazineContent, pashtoMagazineContent, englishMagazineContent)
-  const scholarshipsContent = select(dariScholarshipsContent, pashtoScholarshipsContent, englishScholarshipsContent)
-  const opportunitiesContent = select(dariOpportunitiesContent, pashtoOpportunitiesContent, englishOpportunitiesContent)
-  const guidesContent = select(dariGuidesContent, pashtoGuidesContent, englishGuidesContent)
-  const servicesContent = select(dariServicesContent, pashtoServicesContent, englishServicesContent)
-  const searchContent = select(dariSearchContent, pashtoSearchContent, englishSearchContent)
-  const tourismContent = select(dariTourismContent, pashtoTourismContent, englishTourismContent)
-  const page = window.location.pathname.replace(/\/$/, '') || '/'
+  const { language, pagePath: page } = parseLocalizedPathname(window.location.pathname)
+  const {
+    header: headerContent,
+    footer: footerContent,
+    home: homeContent,
+    about: aboutContent,
+    contact: contactContent,
+    magazine: magazineContent,
+    scholarships: scholarshipsContent,
+    opportunities: opportunitiesContent,
+    guides: guidesContent,
+    services: servicesContent,
+    search: searchContent,
+    tourism: tourismContent,
+  } = localizedContent[language]
   const isBlogPost = page.startsWith('/magazine/post/')
   const postSlug = isBlogPost ? decodeURIComponent(page.slice('/magazine/post/'.length)) : ''
   const selectedPost = magazineContent.news.items.find((post) => post.slug === postSlug)
@@ -114,12 +164,41 @@ function WebsiteLayout({ children = null }) {
   const tourismCard = tourismDetail?.cards.find((card) => card.slug === tourismDetailMatch[2])
   const serviceSlug = page.startsWith('/services/') ? page.slice('/services/'.length) : ''
   const service = servicesContent.services.find((item) => item.slug === serviceSlug || item.aliases?.includes(serviceSlug))
-  const serviceSearchItems = servicesContent.services.map((item) => ({ title: `${servicesContent.ui.services} ${item.title}`, description: item.description, image: item.image, href: `/services/${item.slug}` }))
-  const opportunitySearchItems = ['study', 'migration', 'work', 'investment', 'exams'].map((slug) => ({ title: opportunitiesContent[slug].post.category, description: opportunitiesContent[slug].post.description, image: opportunitiesContent[slug].post.image, href: `/opportunities/${slug}` }))
+  const serviceSearchItems = servicesContent.services.map((item) => ({ title: `${servicesContent.ui.services} ${item.title}`, description: item.description, image: item.image, href: localizeHref(`/services/${item.slug}`, language) }))
+  const opportunitySearchItems = ['study', 'migration', 'work', 'investment'].map((slug) => ({ title: opportunitiesContent[slug].post.category, description: opportunitiesContent[slug].post.description, image: opportunitiesContent[slug].post.image, href: localizeHref(`/opportunities/${slug}`, language) }))
   const searchQuery = new URLSearchParams(window.location.search).get('q')?.trim() || ''
-  const searchableItems = [...opportunitySearchItems, ...Object.entries(tourismContent).map(([slug, item]) => ({ title: item.post.title, description: item.post.description, image: item.post.image, href: `/tourism/${slug}` })), ...serviceSearchItems, ...scholarshipsContent.items.map((item) => ({ title: item.title, description: item.summary, href: `/scholarships/${item.slug}` })), ...guidesContent.countries.map((item) => ({ title: item.name, description: item.summary, href: `/opportunities/study/${item.slug}` })), ...guidesContent.exams.map((item) => ({ title: item.name, description: item.summary, href: `/opportunities/exams/${item.slug}` })), ...magazineContent.news.items.map((item) => ({ title: item.title, description: item.description, href: `/magazine/post/${item.slug}` }))]
+  const searchableItems = [...opportunitySearchItems, ...Object.entries(tourismContent).map(([slug, item]) => ({ title: item.post.title, description: item.post.description, image: item.post.image, href: localizeHref(`/tourism/${slug}`, language) })), ...serviceSearchItems, ...scholarshipsContent.items.map((item) => ({ title: item.title, description: item.summary, href: localizeHref(`/scholarships/${item.slug}`, language) })), ...guidesContent.countries.map((item) => ({ title: item.name, description: item.summary, href: localizeHref(`/opportunities/study/${item.slug}`, language) })), ...guidesContent.exams.map((item) => ({ title: item.name, description: item.summary, href: localizeHref(`/opportunities/exams/${item.slug}`, language) })), ...magazineContent.news.items.map((item) => ({ title: item.title, description: item.description, href: localizeHref(`/magazine/post/${item.slug}`, language) }))]
   const searchResults = searchCatalog(searchableItems, searchQuery, language)
-  const currentTitle = tourismCard?.name || service?.title || selectedScholarship?.title || examGuide?.name || tourism?.post.title || opportunity?.post.title || selectedPost?.title || (page === '/services' ? servicesContent.ui.indexTitle : page === '/search' ? searchContent.title : page === '/about' ? aboutContent.hero.title : page === '/contact' ? contactContent.hero.title : page === '/scholarships' ? scholarshipsContent.hero.title : page === '/magazine' ? magazineContent.hero.title : page === '/' ? headerContent.navigation.home : searchContent.notFoundTitle)
+  const opportunityPageTitle = contextualOpportunity?.post.category || opportunity?.post.category || null
+  const countryOpportunityTitle = contextualOpportunityCountry && opportunityPageTitle
+    ? formatPageTitle(headerContent.pageTitles.opportunityInCountry, {
+        opportunity: opportunityPageTitle,
+        country: contextualOpportunityCountry.name,
+      })
+    : null
+  const tourismDirectoryTitle = tourism?.post.title || null
+  const tourismDestinationTitle = tourismCard
+    ? formatPageTitle(headerContent.pageTitles.tourismInDestination, { destination: tourismCard.name })
+    : null
+  const navigationPageTitles = {
+    '/': headerContent.navigation.home,
+    '/services': headerContent.navigation.services,
+    '/scholarships': headerContent.navigation.scholarships,
+    '/magazine': headerContent.navigation.magazine,
+    '/about': headerContent.navigation.about,
+    '/contact': headerContent.navigation.contact,
+    '/search': searchContent.title,
+  }
+  const currentTitle = tourismDestinationTitle
+    || service?.title
+    || selectedScholarship?.title
+    || examGuide?.name
+    || countryOpportunityTitle
+    || tourismDirectoryTitle
+    || opportunityPageTitle
+    || selectedPost?.title
+    || navigationPageTitles[page]
+    || searchContent.notFoundTitle
 
   useLayoutEffect(() => {
     document.documentElement.style.scrollBehavior = 'auto'
@@ -156,13 +235,15 @@ function WebsiteLayout({ children = null }) {
   }, [theme])
 
   useLayoutEffect(() => {
-    document.documentElement.lang = language
-    document.documentElement.dir = language === 'en' ? 'ltr' : 'rtl'
-    window.sessionStorage.setItem('globalvision-language', language)
+    const config = getLanguageConfig(language)
+    document.documentElement.dataset.language = config.id
+    document.documentElement.lang = config.htmlLang
+    document.documentElement.dir = config.direction
+    window.localStorage.setItem(WEBSITE_LANGUAGE_STORAGE_KEY, config.id)
   }, [language])
 
-  useEffect(() => {
-    document.title = `${currentTitle} | Global Vision`
+  useLayoutEffect(() => {
+    document.title = `${currentTitle} | ${headerContent.brandName}`
     let descriptionMeta = document.querySelector('meta[name="description"]')
     if (!descriptionMeta) {
       descriptionMeta = document.createElement('meta')
@@ -170,36 +251,58 @@ function WebsiteLayout({ children = null }) {
       document.head.append(descriptionMeta)
     }
     descriptionMeta.content = tourismCard?.description || service?.description || selectedScholarship?.summary || examGuide?.summary || tourism?.post.description || opportunity?.post.description || selectedPost?.description || (page === '/services' ? servicesContent.ui.indexDescription : page === '/scholarships' ? scholarshipsContent.hero.description : searchContent.description)
-  }, [currentTitle, tourismCard, service, selectedScholarship, examGuide, tourism, opportunity, selectedPost, page, servicesContent.ui.indexDescription, scholarshipsContent.hero.description, searchContent.description])
+  }, [currentTitle, headerContent.brandName, tourismCard, service, selectedScholarship, examGuide, tourism, opportunity, selectedPost, page, servicesContent.ui.indexDescription, scholarshipsContent.hero.description, searchContent.description])
+
+  useEffect(() => {
+    const upsertLanguageLink = (rel, href, hreflang) => {
+      const selector = hreflang
+        ? `link[rel="${rel}"][hreflang="${hreflang}"]`
+        : `link[rel="${rel}"]:not([hreflang])`
+      let link = document.head.querySelector(selector)
+      if (!link) {
+        link = document.createElement('link')
+        link.rel = rel
+        if (hreflang) link.hreflang = hreflang
+        document.head.append(link)
+      }
+      link.href = new URL(href, window.location.origin).href
+    }
+
+    upsertLanguageLink('canonical', `${localizeHref(page, language)}${window.location.search}`)
+    upsertLanguageLink('alternate', localizeHref(page, 'dr'), 'fa-AF')
+    upsertLanguageLink('alternate', localizeHref(page, 'ps'), 'ps-AF')
+    upsertLanguageLink('alternate', localizeHref(page, 'en'), 'en')
+    upsertLanguageLink('alternate', localizeHref(page, 'dr'), 'x-default')
+  }, [language, page])
 
   if (isRouteLoading) {
     const directoryItemCount = page === '/services'
       ? servicesContent.services.length
       : page === '/tourism/afghanistan' || page === '/tourism/world'
         ? tourism?.cards.length || 0
-        : page === '/opportunities/exams'
-          ? guidesContent.exams.length
-          : ['/opportunities/study', '/opportunities/work', '/opportunities/migration', '/opportunities/investment'].includes(page)
+        : ['/opportunities/study', '/opportunities/work', '/opportunities/migration', '/opportunities/investment'].includes(page)
             ? guidesContent.countries.length
             : 0
     return <RouteProgress path={page} hasSearchQuery={Boolean(searchQuery)} searchResultCount={searchResults.length} directoryItemCount={directoryItemCount} />
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
-      <ScrollProgress />
-      <Header
-        content={headerContent}
-        language={language}
-        theme={theme}
-        onLanguageChange={setLanguage}
-        onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))}
-      />
-      <main key={language} className="flex-1 pt-8 md:pt-16 xl:pt-14">
-        {children ?? (page === '/' ? <HomePage content={homeContent} /> : page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} language={language} /> : selectedScholarship ? <ScholarshipPostPage scholarship={selectedScholarship} content={scholarshipsContent} postShell={opportunitiesContent.migration.postDetail} /> : page === '/scholarships' ? <ScholarshipsPage key={language} content={scholarshipsContent} language={language} /> : page === '/search' ? <SearchPage content={searchContent} query={searchQuery} results={searchResults} /> : page === '/services' ? <ServicesPage content={servicesContent} sidebarContent={opportunitiesContent.migration.postDetail} /> : tourismCard ? <TourismPage content={tourismDetail} card={tourismCard} /> : tourism?.id === 'afghanistan' ? <AfghanistanTourismPage content={tourism} sidebarContent={opportunitiesContent.migration.postDetail} /> : tourism?.id === 'world' ? <WorldTourismPage content={tourism} sidebarContent={opportunitiesContent.migration.postDetail} /> : service ? <ServicePostPage service={service} content={servicesContent} postShell={opportunitiesContent.migration.postDetail} /> : contextualOpportunityCountry && contextualOpportunity ? <OpportunityCountryPostPage country={contextualOpportunityCountry} opportunity={contextualOpportunity} type={contextualOpportunityMatch[1]} /> : examGuide ? <GuidePostPage guide={examGuide} content={guidesContent} type="exam" postShell={opportunitiesContent.exams.postDetail} /> : opportunitySlug === 'study' ? <StudyOpportunityPage content={opportunitiesContent.study.postDetail} countries={guidesContent.countries} title={language === 'en' ? 'Choose your preferred country' : language === 'ps' ? 'خپل مطلوب هېواد وټاکئ' : 'کشور مورد نظرتان را انتخاب کنید'} /> : opportunitySlug === 'work' ? <WorkOpportunityPage content={opportunitiesContent.work.postDetail} countries={guidesContent.countries} title={opportunitiesContent.work.post.category} /> : opportunitySlug === 'migration' ? <MigrationOpportunityPage content={opportunitiesContent.migration.postDetail} countries={guidesContent.countries} title={opportunitiesContent.migration.post.category} /> : opportunitySlug === 'investment' ? <InvestmentOpportunityPage content={opportunitiesContent.investment.postDetail} countries={guidesContent.countries} title={opportunitiesContent.investment.post.category} /> : opportunitySlug === 'exams' ? <ExamsOpportunityPage content={{ ...opportunitiesContent.exams.postDetail, guideLinksTitle: guidesContent.ui.examGuides }} exams={guidesContent.exams} /> : isBlogPost && selectedPost ? <BlogPostPage post={selectedPost} content={magazineContent.postDetail} relatedPosts={magazineContent.news.items.filter((relatedPost) => relatedPost.slug !== selectedPost.slug && relatedPost.category === selectedPost.category).slice(0, 5)} /> : page === '/magazine' ? <MagazinePage content={magazineContent} language={language} /> : <NotFoundPage content={searchContent} />)}
-      </main>
-      <Footer content={footerContent} navigationContent={headerContent} />
-    </div>
+    <WebsiteLanguageContext.Provider value={language}>
+      <div className="flex min-h-screen flex-col bg-background text-foreground">
+        <ScrollProgress />
+        <Header
+          content={headerContent}
+          language={language}
+          theme={theme}
+          onLanguageChange={(nextLanguage) => window.location.assign(localizeHref(`${page}${window.location.search}${window.location.hash}`, nextLanguage))}
+          onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))}
+        />
+        <main key={language} className="flex-1 pt-8 md:pt-16 xl:pt-14">
+          {children ?? (page === '/' ? <HomePage content={homeContent} /> : page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} language={language} /> : selectedScholarship ? <ScholarshipPostPage scholarship={selectedScholarship} content={scholarshipsContent} postShell={opportunitiesContent.migration.postDetail} /> : page === '/scholarships' ? <ScholarshipsPage key={language} content={scholarshipsContent} language={language} /> : page === '/search' ? <SearchPage content={searchContent} query={searchQuery} results={searchResults} /> : page === '/services' ? <ServicesPage content={servicesContent} sidebarContent={opportunitiesContent.migration.postDetail} /> : tourismCard ? <TourismPage content={tourismDetail} card={tourismCard} /> : tourism?.id === 'afghanistan' ? <AfghanistanTourismPage content={tourism} sidebarContent={opportunitiesContent.migration.postDetail} /> : tourism?.id === 'world' ? <WorldTourismPage content={tourism} sidebarContent={opportunitiesContent.migration.postDetail} /> : service ? <ServicePostPage service={service} content={servicesContent} postShell={opportunitiesContent.migration.postDetail} /> : contextualOpportunityCountry && contextualOpportunity ? <OpportunityCountryPostPage country={contextualOpportunityCountry} opportunity={contextualOpportunity} type={contextualOpportunityMatch[1]} /> : examGuide ? <GuidePostPage guide={examGuide} content={guidesContent} type="exam" postShell={opportunitiesContent.exams.postDetail} /> : opportunitySlug === 'study' ? <StudyOpportunityPage content={opportunitiesContent.study.postDetail} countries={guidesContent.countries} title={language === 'en' ? 'Choose your preferred country' : language === 'ps' ? 'خپل مطلوب هېواد وټاکئ' : 'کشور مورد نظرتان را انتخاب کنید'} /> : opportunitySlug === 'work' ? <WorkOpportunityPage content={opportunitiesContent.work.postDetail} countries={guidesContent.countries} title={opportunitiesContent.work.post.category} /> : opportunitySlug === 'migration' ? <MigrationOpportunityPage content={opportunitiesContent.migration.postDetail} countries={guidesContent.countries} title={opportunitiesContent.migration.post.category} /> : opportunitySlug === 'investment' ? <InvestmentOpportunityPage content={opportunitiesContent.investment.postDetail} countries={guidesContent.countries} title={opportunitiesContent.investment.post.category} /> : isBlogPost && selectedPost ? <BlogPostPage post={selectedPost} content={magazineContent.postDetail} relatedPosts={magazineContent.news.items.filter((relatedPost) => relatedPost.slug !== selectedPost.slug && relatedPost.category === selectedPost.category).slice(0, 5)} /> : page === '/magazine' ? <MagazinePage content={magazineContent} language={language} /> : <NotFoundPage content={searchContent} />)}
+        </main>
+        <Footer content={footerContent} navigationContent={headerContent} language={language} />
+      </div>
+    </WebsiteLanguageContext.Provider>
   )
 }
 

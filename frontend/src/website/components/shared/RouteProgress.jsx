@@ -98,7 +98,6 @@ function Content({ path, hasSearchQuery, searchResultCount, directoryItemCount }
   if (path === '/tourism/afghanistan' || path === '/tourism/world') return <OpportunityDirectorySkeleton count={directoryItemCount} />
   if (path === '/search') return <SearchSkeleton hasQuery={hasSearchQuery} resultCount={searchResultCount} />
   if (['/opportunities/study', '/opportunities/work', '/opportunities/migration', '/opportunities/investment'].includes(path)) return <OpportunityDirectorySkeleton count={directoryItemCount} />
-  if (path === '/opportunities/exams') return <OpportunityDirectorySkeleton count={directoryItemCount} />
   if (path.startsWith('/opportunities/exams/')) return <ArticleSkeleton />
   if (path.startsWith('/services/') || path.startsWith('/opportunities/') || path.startsWith('/tourism/') || path.startsWith('/scholarships/') || path.startsWith('/magazine/post/')) return <ArticleSkeleton />
   return <NotFoundSkeleton />

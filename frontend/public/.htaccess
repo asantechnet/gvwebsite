@@ -7,6 +7,12 @@
   RewriteCond %{REQUEST_FILENAME} -d
   RewriteRule ^ - [L]
 
+  # Send the public root and legacy unprefixed routes to default Dari URLs.
+  RewriteRule ^$ dr [R=302,L]
+  RewriteCond %{REQUEST_URI} !^/(dr|ps|en)(/|$)
+  RewriteCond %{REQUEST_URI} !^/dashboard(/|$)
+  RewriteRule ^(.+?)/?$ dr/$1 [R=301,L]
+
   # Let the client-side router resolve every application URL.
   RewriteRule ^ index.html [L]
 </IfModule>

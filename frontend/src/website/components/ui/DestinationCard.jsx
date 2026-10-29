@@ -1,3 +1,5 @@
+import { useLocalizedHref } from "@website/hooks/useWebsiteLanguage.js";
+
 const cardLayoutClasses = {
   wide: "md:col-span-3",
   standard: "md:col-span-2",
@@ -7,9 +9,10 @@ const focusClasses =
   "focus:outline-none focus-visible:outline-none focus-visible:border-primary focus-visible:shadow-lg";
 
 function DestinationCard({ item }) {
+  const href = useLocalizedHref(item.href);
   return (
     <a
-      href={item.href}
+      href={href}
       className={`group relative block h-56 overflow-hidden rounded-2xl border border-transparent bg-surface shadow-sm transition-all hover:shadow-lg md:h-60 ${cardLayoutClasses[item.layout]} ${focusClasses}`}
     >
       <img src={item.image} alt={item.imageAlt} width="1400" height="934" loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />

@@ -73,7 +73,7 @@ function AudioMedia({ media }) {
     <div className="pointer-events-none absolute inset-0 opacity-60 [background-image:repeating-linear-gradient(100deg,transparent_0,transparent_18px,rgba(245,155,34,0.12)_19px,transparent_20px)]" aria-hidden="true" />
     <div className="relative flex flex-col gap-6 md:flex-row-reverse md:items-center md:gap-8">
       <div className="flex shrink-0 justify-center md:order-2 md:w-32"><img src={audio.avatar || '/assets/images/avatars/avatar-female.png'} alt={audio.speaker || audio.title} className="size-20 rounded-full border-4 border-white object-cover shadow-[0_8px_24px_rgba(54,69,77,0.16)] dark:border-gray-700 sm:size-24" /></div>
-      <div className="relative min-w-0 flex-1 text-center md:order-1 md:text-right">
+      <div className="relative min-w-0 flex-1 text-center md:order-1 md:text-start">
         <h3 className="line-clamp-2 font-heading text-lg font-extrabold leading-tight md:text-xl" title={audio.title}>{audio.title}</h3>
         {audio.speaker && <p className="mt-1 text-[11px] text-foreground-muted">{audio.speakerLabel || 'صدا'}: {audio.speaker}</p>}
         <div className="mt-3 flex items-center gap-2" dir="ltr">

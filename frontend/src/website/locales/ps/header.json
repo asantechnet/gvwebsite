@@ -1,5 +1,6 @@
 {
   "homeLabel": "د ګلوبل ویژن مشورتي خدمتونه، کورپاڼه",
+  "brandName": "ګلوبل ویژن",
   "logoAlt": "د ګلوبل ویژن مشورتي خدمتونه",
   "primaryNavigationLabel": "اصلي لارښود",
   "mobileNavigationLabel": "د موبایل لارښود",
@@ -22,6 +23,10 @@
     "more": "نور",
     "about": "زموږ په اړه",
     "contact": "له موږ سره اړیکه"
+  },
+  "pageTitles": {
+    "opportunityInCountry": "{opportunity} په {country} کې",
+    "tourismInDestination": "په {destination} کې سیاحت"
   },
   "subNavigation": {
     "opportunities": {

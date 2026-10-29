@@ -1,9 +1,11 @@
 import { ArrowLeft } from "lucide-react";
+import { useLocalizedHref } from "@website/hooks/useWebsiteLanguage.js";
 
 const focusClasses =
   "focus:outline-none focus-visible:outline-none focus-visible:border-primary focus-visible:shadow-md";
 
 function OpportunityCard({ icon: Icon, number, title, description, action, href }) {
+  const localizedHref = useLocalizedHref(href);
   return (
     <article className="home-opportunity-card group relative min-h-72 min-w-0 w-full max-w-md overflow-hidden rounded-3xl border border-border border-t-2 border-t-primary/30 bg-surface shadow-sm transition-all duration-300 hover:border-primary/50 hover:border-t-primary hover:shadow-xl dark:border-gray-600 dark:border-t-primary/40 dark:bg-gray-700 dark:hover:border-primary/60 dark:hover:border-t-primary">
       <div className="flex min-h-72 flex-col p-4 sm:p-5">
@@ -23,7 +25,7 @@ function OpportunityCard({ icon: Icon, number, title, description, action, href 
             {description}
           </p>
           <a
-            href={href}
+            href={localizedHref}
             className={`mt-6 inline-flex min-h-11 w-full items-center justify-between gap-2 border-t border-border px-2 pt-4 text-sm font-bold text-primary transition-colors hover:text-primary-hover dark:border-gray-600 dark:hover:text-primary ${focusClasses}`}
           >
             {action}

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="prs" dir="rtl">
+<html lang="fa-AF" dir="rtl" data-language="dr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,10 +13,25 @@
         const theme = window.localStorage.getItem('globalvision-theme') || 'light'
         document.documentElement.classList.add(theme === 'dark' ? 'dark' : 'light')
         document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#1f2937' : '#fffaf5')
+
+        const isDashboard = window.location.pathname === '/dashboard' || window.location.pathname.startsWith('/dashboard/')
+        if (!isDashboard) {
+          const possibleLanguage = window.location.pathname.split('/')[1]
+          const language = ['dr', 'ps', 'en'].includes(possibleLanguage) ? possibleLanguage : 'dr'
+          const languageSettings = {
+            dr: { htmlLang: 'fa-AF', direction: 'rtl' },
+            ps: { htmlLang: 'ps-AF', direction: 'rtl' },
+            en: { htmlLang: 'en', direction: 'ltr' },
+          }[language]
+
+          document.documentElement.dataset.language = language
+          document.documentElement.lang = languageSettings.htmlLang
+          document.documentElement.dir = languageSettings.direction
+        }
       })()
     </script>
     <link rel="icon" type="image/webp" href="/assets/branding/icon.webp" />
-    <title>خدمات مشورتی گلوبل ویژن</title>
+    <title>صفحه اصلی | گلوبل ویژن</title>
     <script>
       if (window.location.pathname === '/dashboard' || window.location.pathname.startsWith('/dashboard/')) {
         document.title = window.localStorage.getItem('globalvision-language') === 'ps'

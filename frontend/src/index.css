@@ -108,13 +108,13 @@ html {
 }
 html:dir(rtl) { direction: rtl; }
 html:dir(ltr) { direction: ltr; }
-html:dir(ltr) .text-right { text-align: left; }
 html:dir(ltr) .font-heading { font-family: var(--font-english); }
 html:dir(ltr) .lucide-arrow-left,
 html:dir(ltr) .lucide-arrow-right,
 html:dir(ltr) .lucide-chevron-left,
 html:dir(ltr) .lucide-chevron-right { transform: rotate(180deg); }
-@media (min-width: 1024px) { html:dir(ltr) .lg\:text-right { text-align: left; } }
+html:dir(ltr) .cms-root .text-right { text-align: left; }
+@media (min-width: 1024px) { html:dir(ltr) .cms-root .lg\:text-right { text-align: left; } }
 
 body {
   min-width: 320px; min-height: 100vh; margin: 0;

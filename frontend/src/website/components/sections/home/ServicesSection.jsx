@@ -27,7 +27,7 @@ function ServicesSection({ content }) {
             className="absolute -inset-s-20 -top-24 size-72 rounded-full bg-primary/10 blur-3xl"
           />
           <div className="relative grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-14">
-            <div className="mx-auto max-w-xl text-center lg:mx-0 lg:text-right">
+            <div className="mx-auto max-w-xl text-center lg:mx-0 lg:text-start">
           <SectionHeading
                 id="home-services-heading"
                 titleBefore={content.titleBefore}

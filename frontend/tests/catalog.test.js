@@ -5,11 +5,46 @@ import dariScholarships from '../src/website/locales/prs/scholarships.json' with
 import pashtoScholarships from '../src/website/locales/ps/scholarships.json' with { type: 'json' }
 import englishScholarships from '../src/website/locales/en/scholarships.json' with { type: 'json' }
 import { filterScholarships, normalizeSearchText, searchCatalog } from '../src/website/utils/catalog.js'
+import { getLanguageConfig, localizeContentHrefs, localizeHref, normalizeLanguage, parseLocalizedPathname } from '../src/website/utils/language.js'
+
+test('public language identifiers normalize to dr, ps, and en with the correct direction', () => {
+  assert.equal(normalizeLanguage('prs'), 'dr')
+  assert.equal(normalizeLanguage('da'), 'dr')
+  assert.equal(getLanguageConfig('dr').direction, 'rtl')
+  assert.equal(getLanguageConfig('ps').direction, 'rtl')
+  assert.equal(getLanguageConfig('en').direction, 'ltr')
+})
+
+test('localized public routes preserve pages, queries, and hashes', () => {
+  assert.deepEqual(parseLocalizedPathname('/ps/contact'), {
+    language: 'ps',
+    pagePath: '/contact',
+    isCanonical: true,
+  })
+  assert.deepEqual(parseLocalizedPathname('/contact'), {
+    language: 'dr',
+    pagePath: '/contact',
+    isCanonical: false,
+  })
+  assert.equal(localizeHref('/dr/search?q=visa#results', 'en'), '/en/search?q=visa#results')
+  assert.equal(localizeHref('/', 'dr'), '/dr')
+  assert.equal(localizeHref('https://example.com', 'ps'), 'https://example.com')
+})
+
+test('localized content prefixes internal href fields without changing external links', () => {
+  const content = localizeContentHrefs({
+    action: { href: '/contact' },
+    source: { href: 'https://example.com' },
+  }, 'ps')
+
+  assert.equal(content.action.href, '/ps/contact')
+  assert.equal(content.source.href, 'https://example.com')
+})
 
 test('search ignores surrounding whitespace and Arabic/Persian character variants', () => {
   const items = [{ title: 'ویزای تحصیلی', description: 'راهنمای کشور ترکیه' }]
 
-  assert.equal(searchCatalog(items, '  ويزاي   تحصيلي ', 'prs').length, 1)
+  assert.equal(searchCatalog(items, '  ويزاي   تحصيلي ', 'dr').length, 1)
   assert.equal(normalizeSearchText('كشور'), normalizeSearchText('کشور'))
 })
 

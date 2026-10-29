@@ -20,6 +20,7 @@ import {
 
 import { headerNavigation } from "@website/data/navigation.js";
 import LanguageSwitcher from "@ui/LanguageSwitcher.jsx";
+import { localizeHref } from "@website/utils/language.js";
 
 const noFocusOutline = "focus:outline-none focus-visible:outline-none";
 const iconButtonClasses =
@@ -44,9 +45,11 @@ function NavigationIcon({ id }) {
 }
 
 function isNavigationItemActive(item, currentPath) {
+  if (item.id === 'home') return item.href === currentPath;
+
   return (
     (item.href && item.href === currentPath) ||
-    (item.href && item.href !== '/' && currentPath.startsWith(`${item.href}/`)) ||
+    (item.href && currentPath.startsWith(`${item.href}/`)) ||
     item.children?.some((child) => child.href === currentPath || currentPath.startsWith(`${child.href}/`))
   );
 }
@@ -93,10 +96,18 @@ function Header({
   onLanguageChange,
   className = "",
 }) {
+  const navigation = headerNavigation.map((item) => ({
+    ...item,
+    href: item.href ? localizeHref(item.href, language) : item.href,
+    children: item.children?.map((child) => ({
+      ...child,
+      href: localizeHref(child.href, language),
+    })),
+  }));
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [openMobileSection, setOpenMobileSection] = useState(() => {
-    const activeSection = headerNavigation.find((item) =>
+    const activeSection = navigation.find((item) =>
       item.children?.some((child) => window.location.pathname === child.href || window.location.pathname.startsWith(`${child.href}/`)),
     );
     return activeSection?.id ?? null;
@@ -166,7 +177,7 @@ function Header({
     event.preventDefault();
     const trimmedQuery = searchQuery.trim();
     if (!trimmedQuery) return;
-    window.location.assign(`/search?q=${encodeURIComponent(trimmedQuery)}`);
+    window.location.assign(localizeHref(`/search?q=${encodeURIComponent(trimmedQuery)}`, language));
   };
 
   const currentPath = window.location.pathname;
@@ -178,7 +189,7 @@ function Header({
       >
         <Container className="flex min-h-18 items-center justify-between gap-3 py-1.5 max-md:min-h-15 md:max-xl:min-h-15 ltr:xl:px-0 ltr:2xl:px-2 2xl:max-w-[96rem] ltr:2xl:max-w-none 2xl:gap-5">
           <a
-            href="/"
+            href={localizeHref('/', language)}
             aria-label={content.homeLabel}
             className={`m-0 shrink-0 rounded-2xl border border-transparent p-0 transition-colors ${noFocusOutline}`}
           >
@@ -195,7 +206,7 @@ function Header({
             aria-label={content.primaryNavigationLabel}
             className="hidden min-w-0 items-center gap-0.5 xl:flex xl:gap-2 2xl:gap-3"
           >
-            {headerNavigation.map((item) => (
+            {navigation.map((item) => (
               <div key={item.id} className="group relative">
                 {item.children?.length > 0 ? (
                   <span
@@ -228,7 +239,7 @@ function Header({
                         aria-current={
                           currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "page" : undefined
                         }
-                        className={`rounded-lg px-3 py-2 text-right text-sm transition-colors hover:bg-surface-muted hover:text-foreground dark:hover:bg-gray-700 ${currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "font-extrabold text-primary" : "font-medium text-foreground-muted dark:text-gray-100"}`}
+                        className={`rounded-lg px-3 py-2 text-start text-sm transition-colors hover:bg-surface-muted hover:text-foreground dark:hover:bg-gray-700 ${currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "font-extrabold text-primary" : "font-medium text-foreground-muted dark:text-gray-100"}`}
                       >
                         {content.subNavigation[item.id][child.id]}
                       </a>
@@ -278,7 +289,7 @@ function Header({
                 )}
               </div>
               <a
-                href="/contact"
+                href={localizeHref('/contact', language)}
                 className={`hidden h-10 min-h-10 shrink-0 items-center justify-center rounded-xl border-2 border-primary bg-primary px-3 text-xs font-semibold leading-none whitespace-nowrap text-brand-white shadow-[0_8px_20px_rgba(245,155,34,0.2)] transition-colors hover:border-primary-hover hover:bg-primary-hover dark:hover:border-[#db7f0e] dark:hover:bg-[#db7f0e] xl:inline-flex 2xl:px-5 2xl:text-sm ${noFocusOutline}`}
               >
                 {content.consultationLabel}
@@ -321,7 +332,7 @@ function Header({
       >
         <div className="mb-5 flex items-center justify-between border-b border-foreground/10 pb-4">
           <a
-            href="/"
+            href={localizeHref('/', language)}
             onClick={() => setIsMenuOpen(false)}
             aria-label={content.homeLabel}
             className={`flex justify-start ${noFocusOutline}`}
@@ -345,10 +356,10 @@ function Header({
         </div>
         <nav
           aria-label={content.mobileNavigationLabel}
-          className="min-h-0 w-full overflow-y-auto overscroll-contain pb-2 text-right"
+          className="min-h-0 w-full overflow-y-auto overscroll-contain pb-2 text-start"
         >
           <div className="grid content-start justify-items-start gap-2 max-md:gap-1">
-            {headerNavigation.map((item) => {
+            {navigation.map((item) => {
               const hasChildren = item.children?.length > 0;
               const isSectionOpen = openMobileSection === item.id;
 
@@ -367,7 +378,7 @@ function Header({
                           section === item.id ? null : item.id,
                         )
                       }
-                      className={`${navLinkClasses} w-auto justify-start px-3 text-right ${isSectionOpen ? activeNavLinkClasses : ""}`}
+                      className={`${navLinkClasses} w-auto justify-start px-3 text-start ${isSectionOpen ? activeNavLinkClasses : ""}`}
                     >
                       <NavigationIcon id={item.id} />
                       {content.navigation[item.id]}
@@ -385,7 +396,7 @@ function Header({
                           ? "page"
                           : undefined
                       }
-                      className={`${navLinkClasses} w-auto justify-start px-3 text-right ${isNavigationItemActive(item, currentPath) ? activeNavLinkClasses : ""}`}
+                      className={`${navLinkClasses} w-auto justify-start px-3 text-start ${isNavigationItemActive(item, currentPath) ? activeNavLinkClasses : ""}`}
                     >
                       <NavigationIcon id={item.id} />
                       {content.navigation[item.id]}
@@ -404,7 +415,7 @@ function Header({
                           aria-current={
                             currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "page" : undefined
                           }
-                          className={`rounded-lg px-3 py-1.5 text-right text-sm transition-colors hover:text-foreground dark:hover:text-white ${currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "font-extrabold text-primary dark:text-primary" : "text-foreground-muted dark:text-gray-300"}`}
+                          className={`rounded-lg px-3 py-1.5 text-start text-sm transition-colors hover:text-foreground dark:hover:text-white ${currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "font-extrabold text-primary dark:text-primary" : "text-foreground-muted dark:text-gray-300"}`}
                         >
                           {content.subNavigation[item.id][child.id]}
                         </a>

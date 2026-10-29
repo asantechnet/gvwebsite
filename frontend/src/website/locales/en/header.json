@@ -1,5 +1,6 @@
 {
   "homeLabel": "Global Vision Consulting Services, home page",
+  "brandName": "Global Vision",
   "logoAlt": "Global Vision Consulting Services",
   "primaryNavigationLabel": "Main navigation",
   "mobileNavigationLabel": "Mobile navigation",
@@ -22,6 +23,10 @@
     "more": "More",
     "about": "About Us",
     "contact": "Contact Us"
+  },
+  "pageTitles": {
+    "opportunityInCountry": "{opportunity} in {country}",
+    "tourismInDestination": "Tourism in {destination}"
   },
   "subNavigation": {
     "opportunities": {

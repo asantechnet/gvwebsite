@@ -1,5 +1,6 @@
 {
   "homeLabel": "خدمات مشورتی گلوبل ویژن، صفحه اصلی",
+  "brandName": "گلوبل ویژن",
   "logoAlt": "خدمات مشورتی گلوبل ویژن",
   "primaryNavigationLabel": "ناوبری اصلی",
   "mobileNavigationLabel": "ناوبری موبایل",
@@ -22,6 +23,10 @@
     "more": "بیشتر",
     "about": "در باره ما",
     "contact": "تماس با ما"
+  },
+  "pageTitles": {
+    "opportunityInCountry": "{opportunity} در {country}",
+    "tourismInDestination": "سیاحت در {destination}"
   },
   "subNavigation": {
     "opportunities": {

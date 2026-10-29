@@ -10,6 +10,8 @@ import MediaShowcase from '@shared/media/MediaShowcase.jsx'
 import dariPostContent from '@website/locales/prs/post.json'
 import pashtoPostContent from '@website/locales/ps/post.json'
 import englishPostContent from '@website/locales/en/post.json'
+import useWebsiteLanguage from '@website/hooks/useWebsiteLanguage.js'
+import { localizeHref } from '@website/utils/language.js'
 
 const sectionIcons = [BookOpenCheck, WalletCards, FileCheck2, PlaneTakeoff]
 const linkReplacements = {
@@ -22,7 +24,8 @@ function getValidHref(href) {
 }
 
 function BidiLabel({ label }) {
-  const isRtl = document.documentElement.dir === 'rtl'
+  const language = useWebsiteLanguage()
+  const isRtl = language !== 'en'
   const separatorIndex = label.indexOf('؛')
   const firstPart = separatorIndex === -1 ? '' : label.slice(0, separatorIndex).trim()
   const secondPart = separatorIndex === -1 ? '' : label.slice(separatorIndex + 1).trim()
@@ -32,28 +35,30 @@ function BidiLabel({ label }) {
 }
 
 function RichPostContent({ content }) {
+  const language = useWebsiteLanguage()
+  const localizedHref = (href) => localizeHref(href, language)
   if (!content.sections?.length) return <div className="mt-7 space-y-5 text-base leading-9 text-foreground-muted">{content.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
 
   return <div className="mt-8 space-y-8">
     {content.sections.map((section, index) => {
       const Icon = sectionIcons[index % sectionIcons.length]
       return <section key={section.title} className="border-b border-border pb-8 dark:border-gray-600">
-        <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:text-right">
+        <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:text-start">
           <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"><Icon aria-hidden="true" size={23} /></span>
           <h2 className="font-heading text-xl font-extrabold text-foreground md:text-2xl">{section.title}</h2>
         </div>
         <p className="mt-4 text-base leading-8 text-foreground-muted">{section.body}</p>
-        {section.links?.length > 0 && <div className="mt-4 flex flex-wrap justify-start gap-2">{section.links.map((link) => <a key={link.href} href={getValidHref(link.href)} className="inline-flex items-center rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-start text-sm font-bold text-primary transition-colors hover:border-primary hover:bg-primary/20"><BidiLabel label={link.label} /><ArrowLeft aria-hidden="true" size={15} className="ms-1 shrink-0" /></a>)}</div>}
+        {section.links?.length > 0 && <div className="mt-4 flex flex-wrap justify-start gap-2">{section.links.map((link) => <a key={link.href} href={localizedHref(getValidHref(link.href))} className="inline-flex items-center rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-start text-sm font-bold text-primary transition-colors hover:border-primary hover:bg-primary/20"><BidiLabel label={link.label} /><ArrowLeft aria-hidden="true" size={15} className="ms-1 shrink-0" /></a>)}</div>}
         {section.items?.length > 0 && <ul className="mt-4 grid gap-3 sm:grid-cols-2">{section.items.map((item) => <li key={item} className="flex items-start gap-2 rounded-xl bg-surface px-3 py-3 text-sm leading-7 text-foreground-muted dark:bg-gray-800"><span className="mt-2 size-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />{item}</li>)}</ul>}
       </section>
     })}
     {content.countries?.length > 0 && <section className="mt-2" aria-labelledby="country-cards-heading">
       <h2 id="country-cards-heading" className="font-heading text-xl font-extrabold text-foreground md:text-2xl">{content.countriesTitle}</h2>
       <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-3">
-        {content.countries.map((country) => <a key={country.href} href={country.href} aria-label={`${country.name}؛ ${content.countriesTitle}`} className="group overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 hover:border-primary hover:shadow-[0_12px_28px_rgba(54,69,77,0.12)] focus-visible:border-primary focus-visible:shadow-[0_0_0_3px_rgba(245,155,34,0.22)] dark:border-gray-600 dark:bg-gray-800">
+        {content.countries.map((country) => <a key={country.href} href={localizedHref(country.href)} aria-label={`${country.name}؛ ${content.countriesTitle}`} className="group overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 hover:border-primary hover:shadow-[0_12px_28px_rgba(54,69,77,0.12)] focus-visible:border-primary focus-visible:shadow-[0_0_0_3px_rgba(245,155,34,0.22)] dark:border-gray-600 dark:bg-gray-800">
           <div className="relative aspect-[16/9] overflow-hidden bg-surface-muted dark:bg-gray-700">
             <img src={country.image} alt={country.imageAlt} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-            <span className="absolute inset-x-3 bottom-3 rounded-lg bg-black/55 px-3 py-1.5 text-right text-xs font-bold text-white backdrop-blur-sm">{country.name}</span>
+            <span className="absolute inset-x-3 bottom-3 rounded-lg bg-black/55 px-3 py-1.5 text-start text-xs font-bold text-white backdrop-blur-sm">{country.name}</span>
           </div>
           <div className="flex min-h-16 items-center justify-between gap-3 p-3.5">
             <span className="flex min-w-0 items-center gap-3">
@@ -74,6 +79,7 @@ function RichPostContent({ content }) {
 }
 
 function CountryCards({ content }) {
+  const language = useWebsiteLanguage()
   const isPashto = content.countriesTitle?.includes('هېوادونه')
   const countriesTitle = content.countriesTitle.replace(' مقصد', '').replace('د مقصد ', '').replace('مشهور د ', 'مشهور ')
   const countries = content.countries.map((country) => ({
@@ -94,10 +100,10 @@ function CountryCards({ content }) {
   return <section aria-labelledby="country-cards-heading">
     <h2 id="country-cards-heading" className="font-heading text-xl font-extrabold text-foreground md:text-2xl">{countriesTitle}</h2>
     <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-3">
-      {countries.map((country) => <a key={country.href} href={country.href} aria-label={`${country.name}؛ ${content.countriesTitle}`} className="group overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 hover:border-primary hover:shadow-[0_12px_28px_rgba(54,69,77,0.12)] focus-visible:border-primary focus-visible:shadow-[0_0_0_3px_rgba(245,155,34,0.22)] dark:border-gray-600 dark:bg-gray-800">
+      {countries.map((country) => <a key={country.href} href={localizeHref(country.href, language)} aria-label={`${country.name}؛ ${content.countriesTitle}`} className="group overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 hover:border-primary hover:shadow-[0_12px_28px_rgba(54,69,77,0.12)] focus-visible:border-primary focus-visible:shadow-[0_0_0_3px_rgba(245,155,34,0.22)] dark:border-gray-600 dark:bg-gray-800">
         <div className="relative aspect-[16/9] overflow-hidden bg-surface-muted dark:bg-gray-700">
           <img src={country.image} alt={country.imageAlt} className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-          <span className="absolute inset-x-3 bottom-2 flex items-center justify-between gap-2 rounded-lg bg-black/55 px-3 py-1.5 text-right text-xs font-bold text-white backdrop-blur-sm">
+          <span className="absolute inset-x-3 bottom-2 flex items-center justify-between gap-2 rounded-lg bg-black/55 px-3 py-1.5 text-start text-xs font-bold text-white backdrop-blur-sm">
             <span>{country.name}</span>
             <img src={country.flag} alt="" aria-hidden="true" className="h-5 w-7 rounded-sm object-cover shadow-sm" />
           </span>
@@ -108,11 +114,12 @@ function CountryCards({ content }) {
 }
 
 function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideHero = false, hideBreadcrumb = false }) {
+  const language = useWebsiteLanguage()
+  const localizedHref = (href) => localizeHref(href, language)
   const [isShareMenuOpen, setIsShareMenuOpen] = useState(false)
   const [isLinkCopied, setIsLinkCopied] = useState(false)
   const shareMenuRef = useRef(null)
-  const contentLanguage = content.quickAccessLabel === 'Quick access' ? 'en' : content.quickAccessLabel === 'چټک لاسرسی' ? 'ps' : 'prs'
-  const copySuccessLabel = content.copySuccess || (contentLanguage === 'en' ? englishPostContent.copySuccess : contentLanguage === 'ps' ? pashtoPostContent.copySuccess : dariPostContent.copySuccess)
+  const copySuccessLabel = content.copySuccess || (language === 'en' ? englishPostContent.copySuccess : language === 'ps' ? pashtoPostContent.copySuccess : dariPostContent.copySuccess)
   const parentLabel = content.parentLabel || content.magazineLabel
   const parentHref = content.parentHref || '/magazine'
   const backHref = content.backHref || '/magazine'
@@ -165,8 +172,8 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
     <>
       <Section padded={false} className="bg-background py-10 md:py-10 lg:py-14">
       <Container>
-        {!hideBreadcrumb && <div className="mx-auto mb-2 max-w-6xl text-right text-sm text-foreground-muted md:mb-5">
-          <a href={parentHref} className="transition-colors hover:text-primary">{parentLabel}</a>
+        {!hideBreadcrumb && <div className="mx-auto mb-2 max-w-6xl text-start text-sm text-foreground-muted md:mb-5">
+          <a href={localizedHref(parentHref)} className="transition-colors hover:text-primary">{parentLabel}</a>
           <span className="mx-2 text-primary">/</span>
           <span>{post.title}</span>
         </div>}
@@ -174,7 +181,7 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
           {!hideHero && <div className="relative aspect-[16/8] overflow-hidden rounded-t-[2rem] md:aspect-[16/5]">
             <img src={post.image} alt={post.imageAlt || post.title} className="absolute inset-0 size-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" aria-hidden="true" />
-            <div className="absolute inset-x-5 bottom-5 text-right text-white md:inset-x-10 md:bottom-10">
+            <div className="absolute inset-x-5 bottom-5 text-start text-white md:inset-x-10 md:bottom-10">
               <h1 className="mt-4 w-full font-heading text-2xl font-extrabold leading-tight md:text-4xl lg:text-5xl">{post.title}</h1>
             </div>
           </div>}
@@ -183,14 +190,14 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
           </div>
 
           <div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-6 lg:p-8">
-            <div className="order-1 min-w-0 text-right lg:order-1">
+            <div className="order-1 min-w-0 text-start lg:order-1">
               {content.countries?.length > 0 ? <CountryCards content={content} /> : <>
               <p className="text-lg font-medium leading-9 text-foreground-muted">{post.description}</p>
               <div className="my-8 rounded-2xl border-r-4 border-primary bg-primary/10 px-5 py-4 text-base font-semibold leading-8 text-foreground">
                 {content.highlight}
               </div>
               <RichPostContent content={content} />
-              {guideLinks.length > 0 && <section className="mt-8 rounded-2xl border border-primary/30 bg-primary/10 p-5 md:p-6" aria-labelledby="guide-links-heading"><h2 id="guide-links-heading" className="font-heading text-xl font-extrabold text-foreground">{content.guideLinksTitle}</h2><div className="mt-4 flex flex-wrap gap-3">{guideLinks.map((guide) => <a key={guide.href} href={guide.href} className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold !text-[#fff8f3] transition-colors hover:bg-primary-hover"><ArrowLeft aria-hidden="true" size={17} />{guide.label}</a>)}</div></section>}
+              {guideLinks.length > 0 && <section className="mt-8 rounded-2xl border border-primary/30 bg-primary/10 p-5 md:p-6" aria-labelledby="guide-links-heading"><h2 id="guide-links-heading" className="font-heading text-xl font-extrabold text-foreground">{content.guideLinksTitle}</h2><div className="mt-4 flex flex-wrap gap-3">{guideLinks.map((guide) => <a key={guide.href} href={localizedHref(guide.href)} className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold !text-[#fff8f3] transition-colors hover:bg-primary-hover"><ArrowLeft aria-hidden="true" size={17} />{guide.label}</a>)}</div></section>}
               {content.media && <MediaShowcase post={post} media={content.media} />}
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3 border-t border-border pt-5 dark:border-gray-600 lg:justify-end">
                 <span className="text-sm text-foreground-muted">{content.shareLabel}</span>
@@ -207,7 +214,7 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
                 </span>
               </div>
               <div className="mt-8 flex justify-center lg:justify-start">
-                <a href={backHref} className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold !text-[#fff8f3] transition-colors hover:bg-primary-hover focus-visible:bg-primary-hover">
+                <a href={localizedHref(backHref)} className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold !text-[#fff8f3] transition-colors hover:bg-primary-hover focus-visible:bg-primary-hover">
                   <ArrowRight aria-hidden="true" size={17} />
                   {content.backLabel}
                 </a>

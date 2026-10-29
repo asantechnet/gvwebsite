@@ -1,3 +1,5 @@
+import { getLanguageConfig } from './language.js'
+
 const arabicCharacterVariants = /[يىك]/g
 const characterMap = { ي: 'ی', ى: 'ی', ك: 'ک' }
 const inferredDeadlineFilters = {
@@ -12,7 +14,9 @@ const inferredDeadlineFiltersBySlug = {
   'stipendium-hungaricum': 'دا میاشت',
 }
 
-export function normalizeSearchText(value, locale = 'prs') {
+export function normalizeSearchText(value, language = 'dr') {
+  const { locale } = getLanguageConfig(language)
+
   return String(value ?? '')
     .normalize('NFKC')
     .replace(/[\u064B-\u065F\u0670]/g, '')
@@ -22,11 +26,11 @@ export function normalizeSearchText(value, locale = 'prs') {
     .toLocaleLowerCase(locale)
 }
 
-export function searchCatalog(items, query, locale = 'prs') {
-  const normalizedQuery = normalizeSearchText(query, locale)
+export function searchCatalog(items, query, language = 'dr') {
+  const normalizedQuery = normalizeSearchText(query, language)
   if (!normalizedQuery) return []
 
-  return items.filter((item) => normalizeSearchText(`${item.title} ${item.description}`, locale).includes(normalizedQuery))
+  return items.filter((item) => normalizeSearchText(`${item.title} ${item.description}`, language).includes(normalizedQuery))
 }
 
 export function filterScholarships(items, filters) {

@@ -2,7 +2,7 @@
   "study": {
     "post": {
       "slug": "study-opportunities",
-      "category": "Educational opportunities",
+      "category": "Study Opportunities",
       "title": "Educational opportunities for Afghan students",
       "description": "Guidance to know study options, scholarships and prepare a clear path to continue studying abroad.",
       "image": "/assets/images/destinations/germany.jpg",
@@ -228,7 +228,7 @@
   "migration": {
     "post": {
       "slug": "migration-opportunities",
-      "category": "Immigration opportunities",
+      "category": "Migration Opportunities",
       "title": "Migration routes; From choosing the way to staying",
       "description": "A practical guide to comparing educational, work and family immigration, preparing your case and distinguishing valid information from false promises.",
       "image": "/assets/images/destinations/united-kingdom.jpg",
@@ -348,7 +348,7 @@
   "work": {
     "post": {
       "slug": "work-opportunities",
-      "category": "Work opportunities",
+      "category": "Work Opportunities",
       "title": "Work abroad; From resume preparation to work permit",
       "description": "A practical guide to find legal work, evaluate a job offer, prepare documents and understand the responsibilities of a migrant worker.",
       "image": "/assets/images/destinations/united-kingdom.jpg",
@@ -468,7 +468,7 @@
   "investment": {
     "post": {
       "slug": "investment-opportunities",
-      "category": "Investment opportunities",
+      "category": "Investment Opportunities",
       "title": "Investment abroad; From assessment to legal action",
       "description": "A practical guide for comparing investment routes, assessing risk, reviewing documents and choosing the right destination.",
       "image": "/assets/images/destinations/germany.jpg",

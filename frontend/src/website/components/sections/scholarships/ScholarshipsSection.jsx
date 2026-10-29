@@ -14,6 +14,7 @@ import Container from "@ui/Container.jsx";
 import PostPagination from "@ui/PostPagination.jsx";
 import Section from "@ui/Section.jsx";
 import { filterScholarships } from "@website/utils/catalog.js";
+import { useLocalizedHref } from "@website/hooks/useWebsiteLanguage.js";
 
 const initialFilters = { country: "", degree: "", funding: "", deadline: "" };
 const scholarshipsPerPage = 10;
@@ -50,7 +51,7 @@ function FilterSelect({
   }, [isOpen, onToggle]);
 
   return (
-    <div ref={wrapperRef} className="relative min-w-0 flex-1 text-right">
+    <div ref={wrapperRef} className="relative min-w-0 flex-1 text-start">
       <span className={`mb-1 flex items-center gap-1.5 text-[10px] text-foreground-muted ${language === "en" ? "font-medium" : "font-bold"}`}>
         <Icon aria-hidden="true" size={13} className="text-primary" />
         {label}
@@ -61,7 +62,7 @@ function FilterSelect({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         onClick={() => onToggle(!isOpen)}
-        className={`flex min-h-9 w-full items-center justify-between gap-2 rounded-xl border bg-white/90 px-2.5 text-right text-[11px] shadow-[0_2px_8px_rgba(54,69,77,0.05)] transition-all hover:border-primary/60 hover:shadow-[0_4px_12px_rgba(245,155,34,0.1)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(245,155,34,0.18)] dark:bg-gray-700/90 ${language === "en" ? "font-medium" : "font-bold"} ${isOpen ? "border-primary" : "border-[#eadfce] dark:border-gray-600"}`}
+        className={`flex min-h-9 w-full items-center justify-between gap-2 rounded-xl border bg-white/90 px-2.5 text-start text-[11px] shadow-[0_2px_8px_rgba(54,69,77,0.05)] transition-all hover:border-primary/60 hover:shadow-[0_4px_12px_rgba(245,155,34,0.1)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(245,155,34,0.18)] dark:bg-gray-700/90 ${language === "en" ? "font-medium" : "font-bold"} ${isOpen ? "border-primary" : "border-[#eadfce] dark:border-gray-600"}`}
       >
         <span className={value ? "text-foreground" : "text-foreground-muted"}>
           {selectedLabel}
@@ -77,7 +78,7 @@ function FilterSelect({
         aria-label={label}
         aria-hidden={!isOpen}
         inert={!isOpen}
-        className={`absolute inset-x-0 top-full z-50 mt-1 overflow-hidden rounded-md border border-border bg-surface p-0 text-right shadow-[0_8px_18px_rgba(54,69,77,0.14)] transition-all duration-200 motion-reduce:transition-none dark:border-gray-600 dark:bg-gray-800 ${isOpen ? "visible translate-y-0 opacity-100" : "invisible pointer-events-none translate-y-2 opacity-0"}`}
+        className={`absolute inset-x-0 top-full z-50 mt-1 overflow-hidden rounded-md border border-border bg-surface p-0 text-start shadow-[0_8px_18px_rgba(54,69,77,0.14)] transition-all duration-200 motion-reduce:transition-none dark:border-gray-600 dark:bg-gray-800 ${isOpen ? "visible translate-y-0 opacity-100" : "invisible pointer-events-none translate-y-2 opacity-0"}`}
       >
         {[allLabel, ...options].map((option) => {
           const optionValue = option === allLabel ? "" : option;
@@ -98,7 +99,7 @@ function FilterSelect({
                 minHeight: "32px",
                 paddingBlock: "5px",
               }}
-                className={`block w-full rounded-md px-2.5 text-right transition-colors ${selected ? `bg-primary/10 ${language === "en" ? "font-semibold" : "font-extrabold"} text-primary` : `${language === "en" ? "font-medium" : "font-semibold"} text-foreground hover:bg-primary/10 hover:text-primary`}`}
+                className={`block w-full rounded-md px-2.5 text-start transition-colors ${selected ? `bg-primary/10 ${language === "en" ? "font-semibold" : "font-extrabold"} text-primary` : `${language === "en" ? "font-medium" : "font-semibold"} text-foreground hover:bg-primary/10 hover:text-primary`}`}
             >
               {option}
             </button>
@@ -110,13 +111,14 @@ function FilterSelect({
 }
 
 function ScholarshipCard({ scholarship, language }) {
+  const scholarshipHref = useLocalizedHref(`/scholarships/${scholarship.slug}`);
   const deadline =
     pashtoDeadlineDates[scholarship.deadline] || scholarship.deadline;
 
   return (
-    <article dir={language === "en" ? "ltr" : "rtl"} className={`group rounded-3xl border border-[#eadfce] bg-[#fffaf5] p-3 text-center shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-[0_12px_28px_rgba(54,69,77,0.1)] dark:border-gray-700 dark:bg-[#2b3442] md:p-4 ${language === "en" ? "text-left" : ""}`}>
-      <a href={`/scholarships/${scholarship.slug}`} className="block">
-        <div className={`grid gap-4 rounded-2xl bg-surface-muted/55 p-4 dark:bg-gray-800/55 md:min-h-32 md:grid-cols-[7rem_minmax(0,1fr)] md:items-stretch ${language === "en" ? "text-left" : "text-center md:text-right"}`}>
+    <article dir={language === "en" ? "ltr" : "rtl"} className="group rounded-3xl border border-[#eadfce] bg-[#fffaf5] p-3 text-center shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-[0_12px_28px_rgba(54,69,77,0.1)] dark:border-gray-700 dark:bg-[#2b3442] md:p-4">
+      <a href={scholarshipHref} className="block">
+        <div className="grid gap-4 rounded-2xl bg-surface-muted/55 p-4 text-center dark:bg-gray-800/55 md:min-h-32 md:grid-cols-[7rem_minmax(0,1fr)] md:items-stretch md:text-start">
           <div className="flex min-h-28 items-center justify-center overflow-hidden rounded-xl bg-white shadow-sm dark:bg-gray-700 md:min-h-0">
             <img
               src={scholarship.image}
@@ -157,7 +159,7 @@ function ScholarshipCard({ scholarship, language }) {
   );
 }
 
-function ScholarshipsSection({ content, language = "prs" }) {
+function ScholarshipsSection({ content, language = "dr" }) {
   const [filters, setFilters] = useState(initialFilters);
   const [openFilter, setOpenFilter] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -315,7 +317,7 @@ function ScholarshipsSection({ content, language = "prs" }) {
               className="mt-0! justify-center md:justify-start"
               compact
             />
-            <p className="flex min-h-9 shrink-0 items-center text-center text-xs font-semibold leading-5 text-foreground-muted md:text-left">
+            <p className="flex min-h-9 shrink-0 items-center text-center text-xs font-semibold leading-5 text-foreground-muted md:text-start">
               {content.results.showing}{" "}
               <span className="mx-1 font-extrabold text-foreground">
                 {visibleScholarships.length}

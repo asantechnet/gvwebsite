@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 
 const languages = [
   { id: 'en', label: 'English', flag: '🇺🇸' },
-  { id: 'prs', label: 'دری', flag: '🇦🇫' },
+  { id: 'dr', label: 'دری', flag: '🇦🇫' },
   { id: 'ps', label: 'پښتو', flag: '🇦🇫' },
 ]
 

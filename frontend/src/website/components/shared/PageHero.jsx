@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import Breadcrumbs from "@ui/Breadcrumbs.jsx";
 import Container from "@ui/Container.jsx";
 import Section from "@ui/Section.jsx";
+import { useLocalizedHref } from "@website/hooks/useWebsiteLanguage.js";
 
 function PageHero({
   title,
@@ -15,6 +16,7 @@ function PageHero({
   className = "",
   style,
 }) {
+  const primaryActionHref = useLocalizedHref(primaryAction?.href);
   return (
     <Section
       padded={false}
@@ -56,7 +58,7 @@ function PageHero({
             </div>
             {primaryAction && (
               <a
-                href={primaryAction.href}
+                href={primaryActionHref}
                 className="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-on-primary shadow-lg shadow-brand-orange/20 transition-colors hover:bg-primary-hover focus-visible:bg-primary-hover"
               >
                 {primaryAction.label}

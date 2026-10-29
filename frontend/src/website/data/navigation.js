@@ -16,7 +16,6 @@ export const headerNavigation = [
     children: [
       { id: 'afghanistan', href: '/tourism/afghanistan' },
       { id: 'world', href: '/tourism/world' },
-      { id: 'exams', href: '/opportunities/exams' },
     ],
   },
   { id: 'magazine', href: '/magazine' },

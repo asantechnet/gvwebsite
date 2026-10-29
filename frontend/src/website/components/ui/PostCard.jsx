@@ -1,9 +1,11 @@
+import { useLocalizedHref } from '@website/hooks/useWebsiteLanguage.js'
+
 function PostCard({ post, variant = 'default' }) {
   const isFeatured = variant === 'featured'
-  const postHref = post.slug ? `/magazine/post/${post.slug}` : (post.href || '/magazine')
+  const postHref = useLocalizedHref(post.slug ? `/magazine/post/${post.slug}` : (post.href || '/magazine'))
 
   return (
-    <a href={postHref} className={`group flex flex-col overflow-hidden rounded-3xl border border-border bg-surface text-right transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 dark:border-gray-600 dark:bg-[#2b3442] ${isFeatured ? 'md:rounded-[2rem]' : ''}`}>
+    <a href={postHref} className={`group flex flex-col overflow-hidden rounded-3xl border border-border bg-surface text-start transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 dark:border-gray-600 dark:bg-[#2b3442] ${isFeatured ? 'md:rounded-[2rem]' : ''}`}>
       {post.image && (
         <div className="relative aspect-[1.45] overflow-hidden">
           <img src={post.image} alt={post.imageAlt || post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />

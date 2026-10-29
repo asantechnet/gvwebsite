@@ -2,6 +2,7 @@ import { ArrowLeft, BriefcaseBusiness, Wrench } from "lucide-react";
 
 import { headerNavigation } from "@website/data/navigation.js";
 import Container from "@ui/Container.jsx";
+import { localizeHref } from "@website/utils/language.js";
 
 const focusClasses =
   "focus:outline-none focus-visible:outline-none focus-visible:border-primary focus-visible:text-primary";
@@ -20,11 +21,16 @@ function FooterLink({ href, children }) {
   );
 }
 
-function Footer({ content, navigationContent, className = "" }) {
-  const opportunities = headerNavigation.find(
+function Footer({ content, navigationContent, language, className = "" }) {
+  const navigation = headerNavigation.map((item) => ({
+    ...item,
+    href: item.href ? localizeHref(item.href, language) : item.href,
+    children: item.children?.map((child) => ({ ...child, href: localizeHref(child.href, language) })),
+  }));
+  const opportunities = navigation.find(
     (item) => item.id === "opportunities",
   );
-  const primaryLinks = headerNavigation.filter(
+  const primaryLinks = navigation.filter(
     (item) => !item.children?.length,
   );
 
@@ -45,7 +51,7 @@ function Footer({ content, navigationContent, className = "" }) {
         <div className="grid gap-10 border-b border-border pb-10 text-center dark:border-gray-500 md:grid-cols-2 md:text-start lg:grid-cols-4 lg:gap-8">
           <div className="mx-auto flex max-w-md flex-col items-center md:mx-0 md:items-start">
             <a
-              href="/"
+              href={localizeHref('/', language)}
               aria-label={navigationContent.homeLabel}
               className={`rounded-xl border border-border bg-white p-2 shadow-sm ${focusClasses}`}
             >
@@ -61,7 +67,7 @@ function Footer({ content, navigationContent, className = "" }) {
               {content.description}
             </p>
             <a
-              href="/contact"
+              href={localizeHref('/contact', language)}
               className={`mt-6 inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-primary bg-primary px-5 text-sm font-bold text-brand-white shadow-lg transition-colors hover:border-primary-hover hover:bg-primary-hover ${focusClasses}`}
             >
               {content.consultationLabel}

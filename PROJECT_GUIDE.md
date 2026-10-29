@@ -195,20 +195,22 @@ Use aliases across source areas and relative imports for nearby files within one
 
 ### Translation architecture
 
-- Store website translations under `src/website/locales/` and CMS translations under `src/cms/locales/`, each with matching `prs/`, `ps/`, and `en/` directories.
+- Store website translations under `src/website/locales/` and CMS translations under `src/cms/locales/`, each with matching `prs/`, `ps/`, and `en/` directories. The public website maps the Dari `prs/` resources to the visible route identifier `dr`.
 - Use matching filenames and matching translation-key structures in both language directories.
 - Split large translations by stable feature or namespace rather than maintaining one oversized file.
 - Use stable semantic keys, not full source sentences as keys.
-- Dari (`prs`) is the default and fallback language. Pashto uses `ps`.
-- Language switching changes content, the document `lang` value, and direction: `prs` and `ps` use RTL while `en` uses LTR.
+- Dari (`dr`) is the public website's default and fallback route identifier. Pashto uses `ps` and English uses `en`; legacy `da` and `prs` values normalize to `dr`.
+- Every public route is language-prefixed (`/dr`, `/ps`, or `/en`). `/` and legacy unprefixed public paths redirect to the equivalent Dari route, and language switching preserves the current page, query string, and hash.
+- Public language switching is driven by the centralized language configuration and changes content, the `data-language` identifier, the accurate document `lang` value, and direction. Dari and Pashto use RTL while English uses LTR.
+- Use logical alignment and spacing utilities such as `text-start`, `text-end`, `start-*`, and `end-*` for localized public layouts. Avoid broad language-specific CSS overrides for physical left/right utility classes.
 - Reusable components receive translated strings through props or a translation interface; they must not duplicate literal UI copy for both languages.
 - Keep backend content fields and frontend translation keys distinct: CMS-managed content comes from the API, while fixed interface labels come from JSON translation files.
 
 ## Routing Rules
 
-`App.jsx` selects the website or CMS from `window.location.pathname` without a routing dependency. `WebsiteLayout` currently selects public pages the same way. Magazine posts use stable, language-independent paths in the form `/magazine/post/:slug`; matching Dari and Pashto records must share the same slug. Every child item under Opportunities and Services is content of type post, rendered with the shared single-post layout rather than a standalone page component. These posts may use their canonical navigation path, such as `/opportunities/study`. When routing expands or a routing library is introduced:
+`App.jsx` selects the website or CMS from `window.location.pathname` without a routing dependency. `WebsiteLayout` currently selects public pages after removing the required `/dr`, `/ps`, or `/en` prefix. Magazine posts use stable paths in the form `/:language/magazine/post/:slug`; matching language records must share the same slug. Every child item under Opportunities and Services is content of type post, rendered with the shared single-post layout rather than a standalone page component. These posts use their localized canonical navigation path, such as `/dr/opportunities/study`. When routing expands or a routing library is introduced:
 
-`/opportunities` is intentionally not a public route. Its header label is a non-navigating dropdown trigger; only its child routes are navigable. `/services` is an independent directory route, and its cards link to service detail routes.
+`/:language/opportunities` is intentionally not a public route. Its header label is a non-navigating dropdown trigger; only its child routes are navigable. `/:language/services` is an independent directory route, and its cards link to localized service detail routes.
 
 The CMS shell starts at `/dashboard`. Paths below `/dashboard/*` are reserved for CMS content areas and currently render the dashboard shell until their editors are implemented.
 
@@ -318,6 +320,7 @@ Shared branding colors, fonts, light and dark class colors, and necessary global
 - Store repeated content as structured objects or arrays.
 - Use stable IDs or unique keys for lists.
 - Keep navigation wording synchronized with section headings.
+- Format browser tab titles as the localized page name followed by ` | ` and the localized company name. Derive page names directly from the active navigation or content record so CMS edits automatically update titles; use localized contextual patterns only to join opportunity countries and tourism destinations.
 - Do not leave placeholder links in completed work.
 - Treat final Dari, Pashto, and English copy as distinct authored content.
 

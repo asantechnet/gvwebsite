@@ -1,5 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import Button from "./Button";
+import { useLocalizedHref } from "@website/hooks/useWebsiteLanguage.js";
 
 function ActionLink({
   href,
@@ -8,10 +9,12 @@ function ActionLink({
   className = "",
   icon: Icon = ArrowLeft,
 }) {
+  const localizedHref = useLocalizedHref(href);
+
   return (
     <Button
       as="a"
-      href={href}
+      href={localizedHref}
       variant={variant}
       icon={Icon}
       className={`min-h-10 px-5 text-sm font-semibold ${className}`.trim()}
