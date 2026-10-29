@@ -16,6 +16,7 @@
   "contact": {
     "title": "Our contact addresses",
     "mapTitle": "Location map of Global Vision in Kabul",
+    "whatsappLabel": "Contact us on WhatsApp",
     "details": [
       {
         "type": "phone",

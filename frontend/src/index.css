@@ -122,6 +122,7 @@ body {
 }
 button, input, select, textarea { font: inherit; }
 @keyframes skeletonShimmerSweep { from { transform: translateX(-115%); } to { transform: translateX(115%); } }
+@keyframes growShrink { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 .search-field:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px transparent inset; -webkit-text-fill-color: var(--theme-foreground); }
 
 /* Keep the English interface compact while preserving a clear type hierarchy. */
