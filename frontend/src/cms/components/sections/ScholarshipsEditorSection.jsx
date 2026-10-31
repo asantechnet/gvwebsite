@@ -23,7 +23,7 @@ function ScholarshipsEditorSection({ content, initialContent }) {
   }
 
   return <PageContainer>
-    <PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.breadcrumb }, { label: content.title }]} action={<EditorPreviewLink href="/scholarships">{content.preview}</EditorPreviewLink>} />
+    <PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.breadcrumb }, { label: content.title }]} action={<EditorPreviewLink href="/scholarships">{content.visitPage}</EditorPreviewLink>} />
     <section className="min-w-0 w-full overflow-visible rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_38px_rgb(15_23_42_/.055)]">
       <SectionTabBar sections={content.sections} icons={sectionIcons} selectedSection={selectedSection} onSelect={setSelectedSection} ariaLabel={content.sectionsTitle} />
       <EditorSectionHeader icon={sectionIcons[selectedSection]} title={content.sections[selectedSection].label} action={selectedSection === 'scholarships' && <button type="button" onClick={() => setEditing({ index: null, item: null })} className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-lg border border-admin-brand bg-admin-brand px-3 text-[.6875rem] font-semibold text-white transition hover:bg-orange-500"><Plus size={14} />{content.add}</button>} />
@@ -32,7 +32,7 @@ function ScholarshipsEditorSection({ content, initialContent }) {
         {selectedSection === 'scholarships' && <ScholarshipList items={draft.items} options={draft.options} content={content} onEdit={(index) => setEditing({ index, item: draft.items[index] })} onDelete={deleteItem} onToggleStatus={(index) => setDraft((current) => ({ ...current, items: current.items.map((entry, itemIndex) => itemIndex === index ? { ...entry, status: entry.status === 'draft' ? 'published' : 'draft', savedStatus: entry.savedStatus ?? entry.status } : entry) }))} />}
       </div>
     </section>
-    {editing && <ScholarshipModal content={content} item={editing.item} onClose={() => setEditing(null)} onSave={(item) => { saveItem(item); setEditing(null) }} />}
+    {editing && <ScholarshipModal content={content} item={editing.item} options={draft.options} onClose={() => setEditing(null)} onSave={(item) => { saveItem(item); setEditing(null) }} />}
   </PageContainer>
 }
 
@@ -66,11 +66,55 @@ function FilterSelect({ value, onChange, label, options, allLabel }) {
   return <div ref={root} className="relative min-w-0"><span className="mb-1 block text-[.625rem] font-semibold text-admin-muted">{label}</span><button type="button" aria-haspopup="listbox" aria-expanded={open} onClick={() => setOpen((current) => !current)} className={`flex h-9 w-full items-center gap-2 rounded-lg border bg-(--editor-input) px-3 text-xs text-admin-heading outline-none transition-colors ${open ? 'border-admin-brand shadow-[0_0_0_2px_var(--admin-brand-soft)]' : 'border-(--editor-field-border) hover:border-admin-brand'}`}><span className="min-w-0 flex-1 truncate text-right">{selected.label}</span><ChevronDown size={14} className={`shrink-0 text-admin-muted transition-transform duration-200 ${open ? 'rotate-180' : ''}`} /></button><div role="listbox" aria-hidden={!open} className={`absolute inset-x-0 top-[calc(100%+1.6rem)] z-40 grid max-h-56 gap-1 overflow-y-auto rounded-lg border border-(--editor-field-border) bg-(--admin-card) p-1.5 shadow-[0_18px_45px_rgb(15_23_42_/.28)] transition-all duration-200 ${open ? 'visible translate-y-0 opacity-100' : 'invisible pointer-events-none translate-y-2 opacity-0'}`}>{choices.map((option) => <button type="button" role="option" aria-selected={option.value === value} key={option.value} onClick={() => { onChange(option.value); setOpen(false) }} className={`flex min-h-9 items-center justify-between rounded-md px-3 text-right text-xs font-semibold transition-colors ${option.value === value ? 'bg-admin-brand text-white' : 'text-admin-heading hover:bg-admin-brand-soft hover:text-admin-brand'}`}><span>{option.label}</span>{option.value === value && <Check size={14} />}</button>)}</div></div>
 }
 
-function ScholarshipModal({ content, item, onClose, onSave }) {
+function ScholarshipModal({ content, item, options = {}, onClose, onSave }) {
   const [draft, setDraft] = useState(() => item ? { ...item, status: item.status === 'draft' ? 'draft' : 'published' } : { slug: '', title: '', provider: '', country: '', degree: '', funding: '', deadline: '', deadlineFilter: '', status: 'published', featured: false, image: '', summary: '', overview: '', eligibility: [], benefits: [], documents: [], officialHref: '' })
   const update = (key, value) => setDraft((current) => ({ ...current, [key]: value }))
   const save = (event) => { event.preventDefault(); const slug = draft.slug || draft.title.trim().toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, ''); onSave({ ...draft, slug }) }
-  return <div className="cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center overflow-y-auto p-4" onMouseDown={onClose}><form onSubmit={save} onMouseDown={(event) => event.stopPropagation()} className="relative z-10 my-auto flex max-h-[calc(100svh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-admin-border bg-admin-page shadow-2xl"><header className="flex items-start justify-between gap-4 border-b border-admin-border bg-admin-card px-5 py-4 sm:px-6"><div><h2 className="font-heading text-lg text-admin-heading">{item ? content.editTitle : content.addTitle}</h2><p className="mt-1 text-xs text-admin-muted">{content.modalDescription}</p></div><button type="button" onClick={onClose} aria-label={content.close} className="grid size-9 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:text-admin-brand"><X size={17} /></button></header><div className="grid gap-4 overflow-y-auto p-4 sm:p-6"><EditorFieldGroup><EditorField label={content.fields.itemTitle} value={draft.title} full onChange={(value) => update('title', value)} /><EditorField label={content.fields.country} value={draft.country} onChange={(value) => update('country', value)} /><EditorField label={content.fields.degree} value={draft.degree} onChange={(value) => update('degree', value)} /><EditorField label={content.fields.funding} value={draft.funding} onChange={(value) => update('funding', value)} /><EditorField label={content.fields.deadline} value={draft.deadline} onChange={(value) => update('deadline', value)} /><label className="block min-w-0 text-xs font-semibold text-admin-heading"><span>{content.fields.status}</span><select value={draft.status} onChange={(event) => update('status', event.target.value)} className="mt-2 min-h-11 w-full rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3.5 text-sm font-normal text-admin-heading outline-none focus:border-admin-brand"><option value="published">{content.published}</option><option value="draft">{content.draft}</option></select></label><EditorField label={content.fields.summary} value={draft.summary} multiline full onChange={(value) => update('summary', value)} /><label className="flex min-h-11 items-center justify-between gap-3 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-4 text-xs font-semibold text-admin-heading sm:col-span-2"><span>{content.featured}</span><input type="checkbox" checked={draft.featured} onChange={(event) => update('featured', event.target.checked)} className="size-5 accent-[var(--admin-brand)]" /></label><MediaUploadField value={draft.image} onChange={(image) => update('image', image)} content={{ countryImage: content.fields.image, choose: content.chooseImage, drop: content.dropImage, replace: content.replaceImage, remove: content.removeImage }} /></EditorFieldGroup></div><footer className="flex justify-end gap-2 border-t border-admin-border bg-admin-card p-4 sm:px-6"><button type="button" onClick={onClose} className="min-h-10 rounded-xl border border-admin-border px-4 text-xs font-semibold text-admin-muted hover:border-admin-brand hover:text-admin-brand">{content.cancel}</button><button type="submit" className="min-h-10 rounded-xl bg-admin-brand px-5 text-xs font-semibold text-white hover:bg-orange-500">{content.save}</button></footer></form></div>
+  return <div className="cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center overflow-hidden p-4" onMouseDown={onClose}>
+<form onSubmit={save} onMouseDown={(event) => event.stopPropagation()} className="relative z-10 my-auto flex max-h-[calc(100svh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-admin-border bg-admin-page shadow-2xl">
+<header className="flex items-start justify-between gap-4 border-b border-admin-border bg-admin-card px-5 py-4 sm:px-6">
+<div>
+<h2 className="font-heading text-lg text-admin-heading">{item ? content.editTitle : content.addTitle}</h2>
+<p className="mt-1 text-xs text-admin-muted">{content.modalDescription}</p>
+</div>
+<button type="button" onClick={onClose} aria-label={content.close} className="grid size-9 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:text-admin-brand">
+<X size={17} />
+</button>
+</header>
+<div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6">
+<EditorFieldGroup>
+<EditorField label={content.fields.itemTitle} value={draft.title} full onChange={(value) => update('title', value)} />
+<ScholarshipSelect label={content.fields.country} value={draft.country} onChange={(value) => update('country', value)} options={options.countries} />
+<ScholarshipSelect label={content.fields.degree} value={draft.degree} onChange={(value) => update('degree', value)} options={content.programOptions} />
+<ScholarshipSelect label={content.fields.funding} value={draft.funding} onChange={(value) => update('funding', value)} options={options.funding} />
+<EditorField label={content.fields.deadline} value={draft.deadline} type="date" onChange={(value) => update('deadline', value)} />
+<label className="block min-w-0 text-xs font-semibold text-admin-heading">
+<span>{content.fields.status}</span>
+<ScholarshipSelect label="" value={draft.status} onChange={(value) => update('status', value)} options={[{ value: 'published', label: content.published }, { value: 'draft', label: content.draft }]} />
+</label>
+<EditorField label={content.fields.summary} value={draft.summary} multiline full onChange={(value) => update('summary', value)} />
+<div className="flex min-h-11 items-center justify-between gap-3 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-4 text-xs font-semibold text-admin-heading sm:col-span-2">
+<span>{content.featured}</span>
+<button type="button" role="switch" aria-checked={draft.featured} aria-label={content.featured} onClick={() => update('featured', !draft.featured)} className={`relative h-5 w-9 shrink-0 rounded-full border transition-colors duration-200 ease-out ${draft.featured ? 'border-admin-brand bg-admin-brand' : 'border-admin-border bg-[var(--admin-toggle-off)]'}`}><span aria-hidden="true" className={`absolute top-1/2 start-1 size-3 -translate-y-1/2 rounded-full bg-white shadow-sm transition-transform duration-200 ease-out motion-reduce:transition-none ${draft.featured ? 'translate-x-4 rtl:-translate-x-4' : 'translate-x-0'}`} /></button>
+</div>
+<MediaUploadField value={draft.image} onChange={(image) => update('image', image)} content={{ countryImage: content.fields.image, choose: content.chooseImage, drop: content.dropImage, replace: content.replaceImage, remove: content.removeImage }} />
+</EditorFieldGroup>
+</div>
+<footer className="flex justify-end gap-2 border-t border-admin-border bg-admin-card p-4 sm:px-6">
+<button type="button" onClick={onClose} className="min-h-10 rounded-xl border border-admin-border px-4 text-xs font-semibold text-admin-muted hover:border-admin-brand hover:text-admin-brand">{content.cancel}</button>
+<button type="submit" className="min-h-10 rounded-xl bg-admin-brand px-5 text-xs font-semibold text-white hover:bg-orange-500">{content.save}</button>
+</footer>
+</form>
+</div>
+}
+
+function ScholarshipSelect({ label, value, onChange, options = [] }) {
+  const choices = options.map((option) => typeof option === 'string' ? { value: option, label: option } : option)
+  const [open, setOpen] = useState(false)
+  const root = useRef(null)
+  useEffect(() => { const close = (event) => { if (!root.current?.contains(event.target)) setOpen(false) }; document.addEventListener('pointerdown', close); return () => document.removeEventListener('pointerdown', close) }, [])
+  const selected = choices.find((option) => option.value === value)
+  return <div ref={root} className="relative min-w-0">{label && <span className="mb-2 block text-xs font-semibold text-admin-heading">{label}</span>}<button type="button" aria-haspopup="listbox" aria-expanded={open} onClick={() => setOpen((current) => !current)} className={`flex min-h-11 w-full items-center gap-2 rounded-xl border bg-(--editor-input) px-3.5 text-sm text-admin-heading outline-none transition-colors ${open ? 'border-admin-brand shadow-[0_0_0_2px_var(--admin-brand-soft)]' : 'border-(--editor-field-border) hover:border-admin-brand'}`}><span className="min-w-0 flex-1 truncate text-right">{selected?.label || '—'}</span><ChevronDown size={16} className={`shrink-0 text-admin-muted transition-transform ${open ? 'rotate-180' : ''}`} /></button><div role="listbox" aria-hidden={!open} inert={!open} className={`absolute inset-x-0 top-full z-50 mt-2 grid max-h-56 gap-1 overflow-y-auto rounded-xl border border-(--editor-field-border) bg-(--admin-card) p-1.5 shadow-[0_18px_45px_rgb(15_23_42_/.28)] transition-all ${open ? 'visible translate-y-0 opacity-100' : 'invisible pointer-events-none translate-y-2 opacity-0'}`}>{choices.map((option) => <button type="button" role="option" aria-selected={option.value === value} key={option.value} onClick={() => { onChange(option.value); setOpen(false) }} className={`flex min-h-10 items-center justify-between rounded-lg px-3 text-right text-xs font-semibold transition-colors ${option.value === value ? 'bg-admin-brand text-white' : 'text-admin-heading hover:bg-admin-brand-soft hover:text-admin-brand'}`}><span>{option.label}</span>{option.value === value && <Check size={15} />}</button>)}</div></div>
 }
 
 export default ScholarshipsEditorSection

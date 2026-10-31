@@ -22,7 +22,7 @@ function OpportunitiesPage({ content, opportunities, exams }) {
   const categoryOptions = [...new Set(cards.map((card) => card.category).filter(Boolean))]
   const filteredCards = useMemo(() => cards.filter((card) => (status === 'all' || card.status === status) && `${card.title} ${card.description} ${card.category || ''}`.toLocaleLowerCase().includes(query.toLocaleLowerCase())), [cards, query, status])
   const modalContent = { ...content, editItem: labels.editPost || 'ویرایش نوشته', editItemTitle: labels.editPostTitle || 'ویرایش نوشته فرصت', close: labels.close || 'بستن', itemTitle: labels.postTitle || 'عنوان نوشته', itemDescription: labels.postDescription || 'خلاصه نوشته', itemAction: labels.postAction || 'متن دکمه', itemLink: labels.postLink || 'پیوند نوشته', cancel: labels.cancel || 'انصراف', save: labels.save || 'ذخیره', categoryOptions }
-  return <PageContainer><PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.overview }, { label }]} action={<EditorPreviewLink>{content.topbar.website}</EditorPreviewLink>} />
+  return <PageContainer><PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.overview }, { label }]} action={<EditorPreviewLink>{content.topbar.visitPage}</EditorPreviewLink>} />
     <section className="overflow-hidden rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)]" aria-label={labels.settings || label}>
       <div className="p-5 sm:p-7"><EditorFieldGroup title={labels.heroSettings || labels.settings || label} columns={false}><EditorField label={labels.heroTitle || labels.pageTitle || 'عنوان بنر اصلی'} value={pageTitle} onChange={setPageTitle} /></EditorFieldGroup></div>
     </section>

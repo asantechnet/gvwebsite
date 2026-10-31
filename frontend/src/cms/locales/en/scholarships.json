@@ -2,6 +2,7 @@
   "breadcrumb": "Website Content",
   "title": "Scholarships page",
   "preview": "View the official source",
+  "visitPage": "Visit page",
   "sectionsTitle": "Scholarships page sections",
   "sections": {
     "hero": {
@@ -29,6 +30,7 @@
     "funding": "Financial support",
     "deadline": "Deadline"
   },
+  "programOptions": ["Bachelor", "Masters", "PhD", "PostDoctoral"],
   "activeValue": "Active",
   "published": "Published",
   "draft": "Draft",

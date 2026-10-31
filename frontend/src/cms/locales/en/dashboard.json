@@ -1,5 +1,5 @@
 {
-  "brand": "Global Vision Management",
+  "brand": "Global Vision",
   "documentTitle": "Managing the Global Vision website",
   "role": "Website manager",
   "overview": "Overview",
@@ -66,6 +66,7 @@
     "search": "Search in management...",
     "searchEmpty": "No results found.",
     "website": "View website",
+    "visitPage": "Visit page",
     "theme": "Change format",
     "language": "Pashto",
     "notifications": "Notifications",
