@@ -228,8 +228,8 @@ The CMS shell starts at `/dashboard`. Paths below `/dashboard/*` are reserved fo
 
 | Name | Value | Usage |
 | --- | --- | --- |
-| Global Vision orange | `#f59b22` | Primary accent and calls to action |
-| Global Vision red | `#ec1f27` | Secondary accent and important actions |
+| Global Vision orange | `#f47e26` | Primary accent and calls to action |
+| Global Vision purple | `#80027f` | Secondary accent and important actions |
 | Global Vision white | `#ffffff` | Brand neutral and clean surfaces |
 | Light background | `#fffaf5` | Light page background |
 | Light foreground | `#333333` | Light primary text and titles |

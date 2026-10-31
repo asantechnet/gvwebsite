@@ -18,6 +18,7 @@ import dariContent from '@cms/locales/prs/dashboard.json'
 import pashtoContent from '@cms/locales/ps/dashboard.json'
 import dariMagazineContent from '@website/locales/prs/magazine.json'
 import dariServicesContent from '@website/locales/prs/services.json'
+import pashtoServicesContent from '@website/locales/ps/services.json'
 import dariMessagesContent from '@cms/locales/prs/messages.json'
 import pashtoMessagesContent from '@cms/locales/ps/messages.json'
 import dariProfileContent from '@cms/locales/prs/profile.json'
@@ -60,6 +61,7 @@ import englishScholarshipsContent from '@website/locales/en/scholarships.json'
 import englishContactContent from '@website/locales/en/contact.json'
 import englishOpportunitiesContent from '@website/locales/en/opportunities.json'
 import englishGuidesContent from '@website/locales/en/guides.json'
+import englishServicesContent from '@website/locales/en/services.json'
 
 function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -85,6 +87,7 @@ function DashboardLayout() {
   const contactContent = select(dariContactContent, pashtoContactContent, englishContactContent)
   const opportunitiesContent = select(dariOpportunitiesContent, pashtoOpportunitiesContent, englishOpportunitiesContent)
   const guidesContent = select(dariGuidesContent, pashtoGuidesContent, englishGuidesContent)
+  const servicesContent = select(dariServicesContent, pashtoServicesContent, englishServicesContent)
   const counts = { posts: dariMagazineContent.news.items.length, services: dariServicesContent.services.length, guides: dariGuidesContent.countries.length + dariGuidesContent.exams.length, messages: 0 }
 
   useEffect(() => {
@@ -115,10 +118,10 @@ function DashboardLayout() {
 
   return <DeleteConfirmation><div className="cms-root min-h-screen" data-theme={theme} dir={language === 'en' ? 'ltr' : 'rtl'}>
     <a href="#dashboard-content" className="fixed start-3 top-3 z-[70] -translate-y-20 rounded-xl bg-admin-heading px-4 py-3 text-white transition-transform focus:translate-y-0">{content.overview}</a>
-    <DashboardSidebar content={content} open={sidebarOpen} collapsed={sidebarCollapsed} onCollapseToggle={toggleSidebar} onClose={() => setSidebarOpen(false)} />
+    <DashboardSidebar content={content} theme={theme} open={sidebarOpen} collapsed={sidebarCollapsed} onCollapseToggle={toggleSidebar} onClose={() => setSidebarOpen(false)} />
     <div className={`admin-shell min-h-screen transition-[padding] duration-250 rtl:lg:pr-(--sidebar-width) ltr:lg:pl-(--sidebar-width) ${sidebarCollapsed ? 'rtl:lg:pr-21 ltr:lg:pl-21' : ''}`}>
       <DashboardTopbar content={content.topbar} searchItems={content.groups.flatMap((group) => group.items)} language={language} theme={theme} onMenuOpen={() => setSidebarOpen(true)} onThemeToggle={() => setTheme((current) => current === 'light' ? 'dark' : 'light')} onLanguageChange={setLanguage} />
-      <main id="dashboard-content" className="min-h-[calc(100vh-5rem)] px-4 pt-6 pb-28 sm:px-8 sm:pt-8">{window.location.pathname === '/dashboard' ? <DashboardPage content={content} counts={counts} /> : window.location.pathname.startsWith('/dashboard/home') ? <HomePage key={language} content={homeEditorContent} initialContent={homeContent} /> : window.location.pathname.startsWith('/dashboard/about') ? <AboutPage key={language} content={aboutEditorContent} initialContent={aboutContent} /> : window.location.pathname.startsWith('/dashboard/contact') ? <ContactPage key={language} content={contactEditorContent} initialContent={contactContent} /> : window.location.pathname.startsWith('/dashboard/magazine') ? <MagazinePage key={language} content={magazineEditorContent} initialContent={magazineContent} /> : window.location.pathname.startsWith('/dashboard/scholarships') ? <ScholarshipsPage key={language} content={scholarshipsEditorContent} initialContent={scholarshipsContent} /> : window.location.pathname.startsWith('/dashboard/opportunities') ? <OpportunitiesPage key={language} content={content} opportunities={opportunitiesContent} exams={guidesContent.exams} /> : window.location.pathname.startsWith('/dashboard/messages') ? <MessagesPage content={{ ...messagesContent, dashboard: content.overview }} /> : window.location.pathname.startsWith('/dashboard/profile') ? <ProfilePage content={profileContent} /> : <PlaceholderPage content={content} pageKey={window.location.pathname.split('/')[2]} />}</main><UnsavedChangesBar sidebarCollapsed={sidebarCollapsed} />
+      <main id="dashboard-content" className="min-h-[calc(100vh-5rem)] px-4 pt-6 pb-28 sm:px-8 sm:pt-8">{window.location.pathname === '/dashboard' ? <DashboardPage content={content} counts={counts} /> : window.location.pathname.startsWith('/dashboard/home') ? <HomePage key={language} content={homeEditorContent} initialContent={homeContent} /> : window.location.pathname.startsWith('/dashboard/about') ? <AboutPage key={language} content={aboutEditorContent} initialContent={aboutContent} /> : window.location.pathname.startsWith('/dashboard/contact') ? <ContactPage key={language} content={contactEditorContent} initialContent={contactContent} /> : window.location.pathname.startsWith('/dashboard/magazine') ? <MagazinePage key={language} content={magazineEditorContent} initialContent={magazineContent} /> : window.location.pathname.startsWith('/dashboard/scholarships') ? <ScholarshipsPage key={language} content={scholarshipsEditorContent} initialContent={scholarshipsContent} /> : window.location.pathname.startsWith('/dashboard/opportunities') ? <OpportunitiesPage key={language} content={content} opportunities={opportunitiesContent} exams={guidesContent.exams} /> : window.location.pathname.startsWith('/dashboard/services') ? <OpportunitiesPage key={language} content={content} services={servicesContent.services} /> : window.location.pathname.startsWith('/dashboard/messages') ? <MessagesPage content={{ ...messagesContent, dashboard: content.overview }} /> : window.location.pathname.startsWith('/dashboard/profile') ? <ProfilePage content={profileContent} theme={theme} /> : <PlaceholderPage content={content} pageKey={window.location.pathname.split('/')[2]} />}</main><UnsavedChangesBar sidebarCollapsed={sidebarCollapsed} />
     </div>
   </div></DeleteConfirmation>
 }

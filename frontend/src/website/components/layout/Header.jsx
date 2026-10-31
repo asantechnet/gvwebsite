@@ -194,7 +194,7 @@ function Header({
             className={`m-0 shrink-0 rounded-2xl border border-transparent p-0 transition-colors ${noFocusOutline}`}
           >
             <img
-              src="/assets/branding/icon.webp"
+              src={theme === "dark" ? "/assets/branding/new%20logo%20white.webp" : "/assets/branding/new%20logo.webp"}
               alt={content.logoAlt}
               width="1431"
               height="974"
@@ -290,7 +290,7 @@ function Header({
               </div>
               <a
                 href={localizeHref('/contact', language)}
-                className={`hidden h-10 min-h-10 shrink-0 items-center justify-center rounded-xl border-2 border-primary bg-primary px-3 text-xs font-semibold leading-none whitespace-nowrap text-brand-white shadow-[0_8px_20px_rgba(245,155,34,0.2)] transition-colors hover:border-primary-hover hover:bg-primary-hover dark:hover:border-[#db7f0e] dark:hover:bg-[#db7f0e] xl:inline-flex 2xl:px-5 2xl:text-sm ${noFocusOutline}`}
+                className={`hidden h-10 min-h-10 shrink-0 items-center justify-center rounded-xl border-2 border-primary bg-primary px-3 text-xs font-semibold leading-none whitespace-nowrap text-brand-white shadow-[0_8px_20px_rgba(244,126,38,0.2)] transition-colors hover:border-primary-hover hover:bg-primary-hover dark:hover:border-[#d96512] dark:hover:bg-[#d96512] xl:inline-flex 2xl:px-5 2xl:text-sm ${noFocusOutline}`}
               >
                 {content.consultationLabel}
               </a>
@@ -338,10 +338,10 @@ function Header({
             className={`flex justify-start ${noFocusOutline}`}
           >
             <img
-              src="/assets/branding/horizontal-logo.webp"
+              src={theme === "dark" ? "/assets/branding/new%20logo%20white.webp" : "/assets/branding/new%20logo.webp"}
               alt={content.logoAlt}
-              width="1946"
-              height="490"
+              width="1431"
+              height="974"
               className="h-9 w-auto object-contain md:h-10"
             />
           </a>

@@ -55,7 +55,7 @@ function RichPostContent({ content }) {
     {content.countries?.length > 0 && <section className="mt-2" aria-labelledby="country-cards-heading">
       <h2 id="country-cards-heading" className="font-heading text-xl font-extrabold text-foreground md:text-2xl">{content.countriesTitle}</h2>
       <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-3">
-        {content.countries.map((country) => <a key={country.href} href={localizedHref(country.href)} aria-label={`${country.name}؛ ${content.countriesTitle}`} className="group overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 hover:border-primary hover:shadow-[0_12px_28px_rgba(54,69,77,0.12)] focus-visible:border-primary focus-visible:shadow-[0_0_0_3px_rgba(245,155,34,0.22)] dark:border-gray-600 dark:bg-gray-800">
+      {content.countries.map((country) => <a key={country.href} href={localizedHref(country.href)} aria-label={`${country.name}؛ ${content.countriesTitle}`} className="group overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 hover:border-primary hover:shadow-[0_12px_28px_rgba(54,69,77,0.12)] focus-visible:border-primary focus-visible:shadow-[0_0_0_3px_rgba(244,126,38,0.22)] dark:border-gray-600 dark:bg-gray-800">
           <div className="relative aspect-[16/9] overflow-hidden bg-surface-muted dark:bg-gray-700">
             <img src={country.image} alt={country.imageAlt} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
             <span className="absolute inset-x-3 bottom-3 rounded-lg bg-black/55 px-3 py-1.5 text-start text-xs font-bold text-white backdrop-blur-sm">{country.name}</span>
@@ -100,7 +100,7 @@ function CountryCards({ content }) {
   return <section aria-labelledby="country-cards-heading">
     <h2 id="country-cards-heading" className="font-heading text-xl font-extrabold text-foreground md:text-2xl">{countriesTitle}</h2>
     <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-3">
-      {countries.map((country) => <a key={country.href} href={localizeHref(country.href, language)} aria-label={`${country.name}؛ ${content.countriesTitle}`} className="group overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 hover:border-primary hover:shadow-[0_12px_28px_rgba(54,69,77,0.12)] focus-visible:border-primary focus-visible:shadow-[0_0_0_3px_rgba(245,155,34,0.22)] dark:border-gray-600 dark:bg-gray-800">
+      {countries.map((country) => <a key={country.href} href={localizeHref(country.href, language)} aria-label={`${country.name}؛ ${content.countriesTitle}`} className="group overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 hover:border-primary hover:shadow-[0_12px_28px_rgba(54,69,77,0.12)] focus-visible:border-primary focus-visible:shadow-[0_0_0_3px_rgba(244,126,38,0.22)] dark:border-gray-600 dark:bg-gray-800">
         <div className="relative aspect-[16/9] overflow-hidden bg-surface-muted dark:bg-gray-700">
           <img src={country.image} alt={country.imageAlt} className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
           <span className="absolute inset-x-3 bottom-2 flex items-center justify-between gap-2 rounded-lg bg-black/55 px-3 py-1.5 text-start text-xs font-bold text-white backdrop-blur-sm">

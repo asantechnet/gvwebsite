@@ -2,6 +2,7 @@
   "brand": "Global Vision",
   "documentTitle": "Managing the Global Vision website",
   "role": "Website manager",
+  "createService": "Create new service",
   "overview": "Overview",
   "expand": "Open the sidebar",
   "collapse": "Close the sidebar",
@@ -49,10 +50,6 @@
         {
           "label": "Media library",
           "key": "media"
-        },
-        {
-          "label": "Users",
-          "key": "users"
         },
         {
           "label": "Settings",

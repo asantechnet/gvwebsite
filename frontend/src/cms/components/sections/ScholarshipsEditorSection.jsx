@@ -37,6 +37,7 @@ function ScholarshipsEditorSection({ content, initialContent }) {
 }
 
 function ScholarshipList({ items, options, content, onEdit, onDelete, onToggleStatus }) {
+  const isEnglish = document.documentElement.lang === 'en' || window.sessionStorage.getItem('globalvision-language') === 'en'
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState('all')
   const [country, setCountry] = useState('all')
@@ -45,7 +46,80 @@ function ScholarshipList({ items, options, content, onEdit, onDelete, onToggleSt
   const [deadline, setDeadline] = useState('all')
   const filteredItems = items.filter((item) => { const filterStatus = item.savedStatus ?? item.status; return (status === 'all' || (status === 'published' ? filterStatus !== 'draft' : filterStatus === 'draft')) && (country === 'all' || item.country === country) && (degree === 'all' || item.degree === degree) && (funding === 'all' || item.funding === funding) && (deadline === 'all' || item.deadlineFilter === deadline) && `${item.title} ${item.provider} ${item.country} ${item.degree}`.toLocaleLowerCase().includes(query.toLocaleLowerCase()) })
   const resetFilters = () => { setQuery(''); setStatus('all'); setCountry('all'); setDegree('all'); setFunding('all'); setDeadline('all') }
-  return <div className="grid gap-4"><section className="grid gap-2 rounded-2xl border border-admin-border bg-admin-card p-2 md:grid-cols-2 xl:grid-cols-5"><label className="flex h-9 min-w-0 items-center gap-2 rounded-lg border border-(--editor-field-border) bg-(--editor-input) px-3 text-admin-muted focus-within:border-admin-brand md:col-span-2 md:row-start-2 md:mt-[1.1rem] xl:col-span-4"><Search size={15} /><input className="min-w-0 flex-1 bg-transparent text-xs text-admin-heading outline-none" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={content.search} /></label><StatusSelect value={status} onChange={setStatus} content={content} className="md:col-span-2 md:row-start-3 xl:col-span-1 xl:row-start-2" /><button type="button" onClick={resetFilters} aria-label={content.reset} title={content.reset} className="inline-flex h-[2.25rem] min-h-0 box-border items-center justify-center gap-1.5 rounded-lg border border-admin-border leading-none bg-admin-brand-soft px-3 text-xs font-semibold text-admin-muted transition hover:border-admin-brand dark:bg-admin-control hover:bg-admin-brand-soft hover:text-admin-brand xl:col-start-5 xl:row-start-1 xl:mt-[1.25rem]"><RotateCcw size={14} />{content.reset}</button><FilterSelect value={country} onChange={setCountry} label={content.filters.country} options={options.countries} allLabel={content.filters.all} /><FilterSelect value={degree} onChange={setDegree} label={content.filters.degree} options={options.degrees} allLabel={content.filters.all} /><FilterSelect value={funding} onChange={setFunding} label={content.filters.funding} options={options.funding} allLabel={content.filters.all} /><FilterSelect value={deadline} onChange={setDeadline} label={content.filters.deadline} options={options.deadlines} allLabel={content.filters.all} /></section><section className="hidden overflow-hidden rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)] lg:block"><table className="w-full table-fixed border-collapse text-right"><thead className="bg-(--editor-field) text-[.65rem] font-semibold text-admin-muted"><tr><th className="w-[45%] p-4">{content.fields.itemTitle}</th><th className="p-4">{content.fields.country}</th><th className="p-4">{content.fields.degree}</th><th className="p-4">{content.status}</th><th className="w-36 p-4">{content.actions}</th></tr></thead><tbody>{filteredItems.map((item) => { const index = items.indexOf(item); const statusLabel = item.status === 'draft' ? content.draft : content.published; const statusTone = item.status === 'draft' ? 'bg-admin-brand-soft text-admin-brand hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'; return <tr className="border-t border-admin-border transition hover:bg-admin-control-soft" key={item.slug}><td className="p-4"><div className="flex items-center gap-3"><img className="size-14 rounded-xl bg-(--editor-field) object-cover" src={item.image} alt="" /><div className="min-w-0"><strong className="block truncate text-sm text-admin-heading">{item.title}</strong></div></div></td><td className="p-4 text-xs text-admin-muted">{item.country}</td><td className="p-4 text-xs text-admin-muted">{item.degree}</td><td className="p-4"><button type="button" onClick={(event) => { onToggleStatus(index); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition ${statusTone}`}>{statusLabel}</button></td><td className="p-4"><div className="flex gap-1"><a className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand" href={item.officialHref} target="_blank" rel="noreferrer" aria-label={content.preview}><ExternalLink size={16} /></a><button type="button" onClick={() => onEdit(index)} aria-label={content.edit} className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-brand transition hover:border-admin-brand hover:bg-admin-brand-soft"><Pencil size={16} /></button><button type="button" onClick={() => onDelete(index)} aria-label={content.delete} className="grid size-9 place-items-center rounded-xl border border-red-500/25 text-red-500 transition hover:border-red-500 hover:bg-red-500/10"><Trash2 size={16} /></button></div></td></tr> })}</tbody></table></section><section className="grid gap-3 lg:hidden">{filteredItems.map((item) => { const index = items.indexOf(item); const statusLabel = item.status === 'draft' ? content.draft : content.published; const statusTone = item.status === 'draft' ? 'bg-admin-brand-soft text-admin-brand hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'; return <article className="grid grid-cols-[5rem_1fr] gap-3 rounded-2xl border border-admin-border bg-admin-card p-3 shadow-[0_8px_24px_rgb(15_23_42_/.05)]" key={item.slug}><img className="h-20 w-20 rounded-xl bg-(--editor-field) object-cover" src={item.image} alt="" /><div className="min-w-0"><strong className="block truncate text-sm text-admin-heading">{item.title}</strong><span className="mt-1 block truncate text-xs text-admin-muted">{item.country} · {item.degree}</span><button type="button" onClick={(event) => { onToggleStatus(index); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`mt-2 inline-block rounded-full px-2 py-1 text-[.65rem] font-semibold transition ${statusTone}`}>{statusLabel}</button><div className="mt-2 flex justify-end gap-1"><a className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-muted hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand" href={item.officialHref} target="_blank" rel="noreferrer" aria-label={content.preview}><ExternalLink size={15} /></a><button type="button" onClick={() => onEdit(index)} aria-label={content.edit} className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-brand hover:border-admin-brand hover:bg-admin-brand-soft"><Pencil size={15} /></button><button type="button" onClick={() => onDelete(index)} aria-label={content.delete} className="grid size-8 place-items-center rounded-xl border border-red-500/25 text-red-500 hover:border-red-500 hover:bg-red-500/10"><Trash2 size={15} /></button></div></div></article> })}</section>{filteredItems.length === 0 && <div className="grid min-h-32 place-items-center rounded-2xl border border-dashed border-admin-border text-sm text-admin-muted">{content.empty}</div>}</div>
+  return <div className="grid gap-4">
+<section className="grid gap-2 rounded-2xl border border-admin-border bg-admin-card p-2 md:grid-cols-2 xl:grid-cols-5">
+<label className="flex h-9 min-w-0 items-center gap-2 rounded-lg border border-(--editor-field-border) bg-(--editor-input) px-3 text-admin-muted focus-within:border-admin-brand md:col-span-2 md:row-start-2 md:mt-[1.1rem] xl:col-span-4">
+<Search size={15} />
+<input className="min-w-0 flex-1 bg-transparent text-xs text-admin-heading outline-none" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={content.search} />
+</label>
+<StatusSelect value={status} onChange={setStatus} content={content} className="md:col-span-2 md:row-start-3 xl:col-span-1 xl:row-start-2" />
+<button type="button" onClick={resetFilters} aria-label={content.reset} title={content.reset} className="inline-flex h-[2.25rem] min-h-0 box-border items-center justify-center gap-1.5 rounded-lg border border-admin-border leading-none bg-admin-brand-soft px-3 text-xs font-semibold text-admin-muted transition hover:border-admin-brand dark:bg-admin-control hover:bg-admin-brand-soft hover:text-admin-brand xl:col-start-5 xl:row-start-1 xl:mt-[1.25rem]">
+<RotateCcw size={14} />{content.reset}</button>
+<FilterSelect value={country} onChange={setCountry} label={content.filters.country} options={options.countries} allLabel={content.filters.all} />
+<FilterSelect value={degree} onChange={setDegree} label={content.filters.degree} options={options.degrees} allLabel={content.filters.all} />
+<FilterSelect value={funding} onChange={setFunding} label={content.filters.funding} options={options.funding} allLabel={content.filters.all} />
+<FilterSelect value={deadline} onChange={setDeadline} label={content.filters.deadline} options={options.deadlines} allLabel={content.filters.all} />
+</section>
+<section className="hidden overflow-hidden rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)] lg:block">
+<table className="w-full table-fixed border-collapse text-right">
+<thead className="bg-(--editor-field) text-[.65rem] font-semibold text-admin-muted">
+<tr>
+<th className="w-[45%] p-4">{content.fields.itemTitle}</th>
+<th className="p-4">{content.fields.country}</th>
+<th className="p-4">{content.fields.degree}</th>
+<th className="p-4">{content.status}</th>
+<th className="w-36 p-4">{content.actions}</th>
+</tr>
+</thead>
+<tbody>{filteredItems.map((item) => { const index = items.indexOf(item); const statusLabel = item.status === 'draft' ? content.draft : content.published; const statusTone = item.status === 'draft' ? 'bg-admin-brand-soft text-admin-brand hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'; return <tr className="border-t border-admin-border transition hover:bg-admin-control-soft" key={item.slug}>
+<td className="p-4">
+<div className="flex items-center gap-3">
+<img className="size-14 rounded-xl bg-(--editor-field) object-cover" src={item.image} alt="" />
+<div className="min-w-0">
+<strong className={`block truncate text-sm text-admin-heading ${isEnglish ? '!font-normal' : ''}`}>{item.title}</strong>
+</div>
+</div>
+</td>
+<td className="p-4 text-xs text-admin-muted">{item.country}</td>
+<td className="p-4 text-xs text-admin-muted">{item.degree}</td>
+<td className="p-4">
+<button type="button" onClick={(event) => { onToggleStatus(index); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition ${statusTone}`}>{statusLabel}</button>
+</td>
+<td className="p-4">
+<div className="flex gap-1">
+<a className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand" href={item.officialHref} target="_blank" rel="noreferrer" aria-label={content.preview}>
+<ExternalLink size={16} />
+</a>
+<button type="button" onClick={() => onEdit(index)} aria-label={content.edit} className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-brand transition hover:border-admin-brand hover:bg-admin-brand-soft">
+<Pencil size={16} />
+</button>
+<button type="button" onClick={() => onDelete(index)} aria-label={content.delete} className="grid size-9 place-items-center rounded-xl border border-red-500/25 text-red-500 transition hover:border-red-500 hover:bg-red-500/10">
+<Trash2 size={16} />
+</button>
+</div>
+</td>
+</tr> })}</tbody>
+</table>
+</section>
+<section className="grid gap-3 lg:hidden">{filteredItems.map((item) => { const index = items.indexOf(item); const statusLabel = item.status === 'draft' ? content.draft : content.published; const statusTone = item.status === 'draft' ? 'bg-admin-brand-soft text-admin-brand hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'; return <article className="grid grid-cols-[5rem_1fr] gap-3 rounded-2xl border border-admin-border bg-admin-card p-3 shadow-[0_8px_24px_rgb(15_23_42_/.05)]" key={item.slug}>
+<img className="h-20 w-20 rounded-xl bg-(--editor-field) object-cover" src={item.image} alt="" />
+<div className="min-w-0">
+<strong className={`block truncate text-sm text-admin-heading ${isEnglish ? '!font-normal' : ''}`}>{item.title}</strong>
+<span className="mt-1 block truncate text-xs text-admin-muted">{item.country} · {item.degree}</span>
+<button type="button" onClick={(event) => { onToggleStatus(index); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`mt-2 inline-block rounded-full px-2 py-1 text-[.65rem] font-semibold transition ${statusTone}`}>{statusLabel}</button>
+<div className="mt-2 flex justify-end gap-1">
+<a className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-muted hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand" href={item.officialHref} target="_blank" rel="noreferrer" aria-label={content.preview}>
+<ExternalLink size={15} />
+</a>
+<button type="button" onClick={() => onEdit(index)} aria-label={content.edit} className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-brand hover:border-admin-brand hover:bg-admin-brand-soft">
+<Pencil size={15} />
+</button>
+<button type="button" onClick={() => onDelete(index)} aria-label={content.delete} className="grid size-8 place-items-center rounded-xl border border-red-500/25 text-red-500 hover:border-red-500 hover:bg-red-500/10">
+<Trash2 size={15} />
+</button>
+</div>
+</div>
+</article> })}</section>{filteredItems.length === 0 && <div className="grid min-h-32 place-items-center rounded-2xl border border-dashed border-admin-border text-sm text-admin-muted">{content.empty}</div>}</div>
 }
 
 function StatusSelect({ value, onChange, content, className = '' }) {

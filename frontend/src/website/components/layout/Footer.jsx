@@ -21,7 +21,7 @@ function FooterLink({ href, children }) {
   );
 }
 
-function Footer({ content, navigationContent, language, className = "" }) {
+function Footer({ content, navigationContent, language, theme, className = "" }) {
   const navigation = headerNavigation.map((item) => ({
     ...item,
     href: item.href ? localizeHref(item.href, language) : item.href,
@@ -53,14 +53,14 @@ function Footer({ content, navigationContent, language, className = "" }) {
             <a
               href={localizeHref('/', language)}
               aria-label={navigationContent.homeLabel}
-              className={`rounded-xl border border-border bg-white p-2 shadow-sm ${focusClasses}`}
+              className={`rounded-xl border border-border bg-white p-2 shadow-sm dark:border-gray-600 dark:bg-[#1d2a3a] ${focusClasses}`}
             >
               <img
-                src="/assets/branding/horizontal-logo.webp"
+                src={theme === "dark" ? "/assets/branding/new%20logo%20white.webp" : "/assets/branding/new%20logo.webp"}
                 alt={navigationContent.logoAlt}
-                width="1946"
-                height="490"
-                className="h-10 w-auto object-contain md:h-12"
+                width="1431"
+                height="974"
+                className="h-12 w-auto object-contain md:h-14"
               />
             </a>
             <p className="mt-5 text-xs leading-6 text-foreground-muted dark:text-gray-100 md:text-sm md:leading-7">

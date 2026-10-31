@@ -2,6 +2,7 @@
   "brand": "گلوبل ویژن",
   "documentTitle": "مدیریت وبسایت گلوبل ویژن",
   "role": "مدیر وب‌سایت",
+  "createService": "ایجاد خدمت جدید",
   "overview": "نمای کلی",
   "expand": "باز کردن نوار کناری",
   "collapse": "بستن نوار کناری",
@@ -18,7 +19,6 @@
     ] },
     { "label": "مدیریت", "items": [
       { "label": "کتابخانه رسانه", "key": "media" },
-      { "label": "کاربران", "key": "users" },
       { "label": "تنظیمات", "key": "settings" }
     ] }
   ],

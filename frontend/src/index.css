@@ -48,10 +48,10 @@ html.cms-modal-open { background: rgb(8 12 20 / .62); }
 :root,
 .light {
   color-scheme: light;
-  --brand-orange: #f59b22;
-  --brand-orange-hsl: 34 91% 55%;
-  --brand-red: #ec1f27;
-  --brand-red-hsl: 358 84% 52%;
+  --brand-orange: #f47e26;
+  --brand-orange-hsl: 25 90% 55%;
+  --brand-red: #80027f;
+  --brand-red-hsl: 301 97% 26%;
   --brand-white: #ffffff;
   --theme-background: #fffaf5;
   --theme-surface: #ffffff;
@@ -60,13 +60,13 @@ html.cms-modal-open { background: rgb(8 12 20 / .62); }
   --theme-foreground-muted: #715d55;
   --theme-border: #ead5c9;
   --theme-primary: var(--brand-orange);
-  --theme-primary-hover: #db7f0e;
+  --theme-primary-hover: #d96512;
   --theme-on-primary: #2b1700;
   --theme-secondary: var(--brand-red);
-  --theme-secondary-hover: #c8121a;
+  --theme-secondary-hover: #650264;
   --theme-on-secondary: var(--brand-white);
   --theme-link: #a91319;
-  --theme-focus: #c66f00;
+  --theme-focus: #b6530d;
 }
 
 .dark {
@@ -77,14 +77,14 @@ html.cms-modal-open { background: rgb(8 12 20 / .62); }
   --theme-foreground: #fff8f3;
   --theme-foreground-muted: #d7bdb2;
   --theme-border: #55312b;
-  --theme-primary: #f7a33a;
-  --theme-primary-hover: #ffb75c;
+  --theme-primary: #f47e26;
+  --theme-primary-hover: #ff9a4d;
   --theme-on-primary: #2b1700;
-  --theme-secondary: #f0444b;
-  --theme-secondary-hover: #ff5c62;
+  --theme-secondary: #a52aa3;
+  --theme-secondary-hover: #c348c0;
   --theme-on-secondary: #ffffff;
-  --theme-link: #ffb15c;
-  --theme-focus: #ffad45;
+  --theme-link: #ff9a4d;
+  --theme-focus: #ff963f;
 }
 
 :lang(fa),

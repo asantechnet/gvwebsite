@@ -62,7 +62,7 @@ function FilterSelect({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         onClick={() => onToggle(!isOpen)}
-        className={`flex min-h-9 w-full items-center justify-between gap-2 rounded-xl border bg-white/90 px-2.5 text-start text-[11px] shadow-[0_2px_8px_rgba(54,69,77,0.05)] transition-all hover:border-primary/60 hover:shadow-[0_4px_12px_rgba(245,155,34,0.1)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(245,155,34,0.18)] dark:bg-gray-700/90 ${language === "en" ? "font-medium" : "font-bold"} ${isOpen ? "border-primary" : "border-[#eadfce] dark:border-gray-600"}`}
+        className={`flex min-h-9 w-full items-center justify-between gap-2 rounded-xl border bg-white/90 px-2.5 text-start text-[11px] shadow-[0_2px_8px_rgba(54,69,77,0.05)] transition-all hover:border-primary/60 hover:shadow-[0_4px_12px_rgba(244,126,38,0.1)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(244,126,38,0.18)] dark:bg-gray-700/90 ${language === "en" ? "font-medium" : "font-bold"} ${isOpen ? "border-primary" : "border-[#eadfce] dark:border-gray-600"}`}
       >
         <span className={value ? "text-foreground" : "text-foreground-muted"}>
           {selectedLabel}
@@ -189,7 +189,7 @@ function ScholarshipsSection({ content, language = "dr" }) {
   return (
     <div className="relative overflow-x-clip bg-background text-foreground dark:bg-gray-800 dark:text-[#fff8f3]">
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_8%,rgba(245,155,34,0.2),transparent_30%),radial-gradient(circle_at_85%_38%,rgba(236,31,39,0.08),transparent_28%)] dark:bg-[radial-gradient(circle_at_15%_8%,rgba(245,155,34,0.22),transparent_30%),radial-gradient(circle_at_85%_38%,rgba(236,31,39,0.14),transparent_28%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_8%,rgba(244,126,38,0.2),transparent_30%),radial-gradient(circle_at_85%_38%,rgba(128,2,127,0.08),transparent_28%)] dark:bg-[radial-gradient(circle_at_15%_8%,rgba(244,126,38,0.22),transparent_30%),radial-gradient(circle_at_85%_38%,rgba(128,2,127,0.14),transparent_28%)]"
         aria-hidden="true"
       />
       <Section
