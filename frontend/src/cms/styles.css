@@ -23,6 +23,15 @@
 .cms-root .cms-opportunity-prose em { font-style: oblique 12deg !important; font-synthesis: style; }
 .cms-root .cms-opportunity-prose a { color: var(--admin-brand); font-weight: 600; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
 .cms-root .cms-opportunity-prose :where(h2, h3)[data-icon]::before { content: attr(data-icon); display: inline-grid; width: 2.5rem; height: 2.5rem; margin-inline-end: .65rem; place-items: center; border: 1px solid color-mix(in srgb, var(--admin-brand) 36%, var(--admin-border)); border-radius: .75rem; background: color-mix(in srgb, var(--admin-brand) 19%, var(--admin-card)); box-shadow: 0 5px 14px color-mix(in srgb, var(--admin-brand) 14%, transparent); color: var(--admin-brand); font-family: sans-serif; font-size: 1.15rem; vertical-align: middle; }
+.cms-root .cms-opportunity-prose .cms-heading-content { display: inline; }
+.cms-root .cms-opportunity-prose .cms-heading-icon { position: relative; display: inline-grid; width: 2.5rem; height: 2.5rem; place-items: center; border: 1px solid color-mix(in srgb, var(--admin-brand) 36%, var(--admin-border)); border-radius: .75rem; background: color-mix(in srgb, var(--admin-brand) 19%, var(--admin-card)); box-shadow: 0 5px 14px color-mix(in srgb, var(--admin-brand) 14%, transparent); color: var(--admin-brand); font-family: sans-serif; font-size: 1.15rem; vertical-align: middle; }
+.cms-root .cms-opportunity-prose .cms-heading-icon[hidden] { display: none; }
+.cms-root .cms-opportunity-prose .cms-heading-icon-spacer { display: inline-block; width: .65rem; height: 1px; pointer-events: none; vertical-align: middle; }
+.cms-root .cms-opportunity-prose .cms-heading-icon-spacer[hidden] { display: none; }
+.cms-root .cms-opportunity-prose .cms-heading-icon-remove { position: absolute; inset-block-start: -.4rem; inset-inline-end: -.4rem; display: grid; width: 1.15rem; height: 1.15rem; place-items: center; border: 1px solid white; border-radius: 999px; background: #dc2626; box-shadow: 0 3px 8px rgb(15 23 42 / .25); color: white; font-size: .85rem; font-weight: 700; line-height: 1; opacity: 0; transition: opacity .16s ease, background-color .16s ease; }
+.cms-root .cms-opportunity-prose .cms-heading-icon-remove:hover { background: #b91c1c; }
+@media (hover: hover) and (min-width: 1024px) { .cms-root .cms-opportunity-prose .cms-heading-icon:hover .cms-heading-icon-remove { opacity: 1; } }
+@media (hover: none), (max-width: 1023px) { .cms-root .cms-opportunity-prose .cms-heading-icon.is-controls-visible .cms-heading-icon-remove { opacity: 1; } }
 .cms-root .cms-opportunity-prose [data-highlight-box] { margin-block: 1rem; border-inline-end: 4px solid var(--admin-brand); border-radius: 1rem; background: var(--admin-brand-soft); padding: 1rem 1.25rem; font-weight: 600; }
 .cms-root .cms-opportunity-prose :where(ul, ol) { margin-block: .75rem; padding-inline-start: 1.5rem; }
 .cms-root .cms-opportunity-prose ul { list-style: disc; }
@@ -35,7 +44,26 @@
 .cms-root .cms-opportunity-prose figure[data-editor-media] audio { display: block; width: 100%; }
 .cms-root .cms-opportunity-prose figure[data-editor-media] figcaption { padding: .55rem .25rem 0; color: var(--admin-muted); font-size: .75rem; }
 .cms-root .cms-opportunity-prose [data-editor-button] { margin-block: 1rem; }
-.cms-root .cms-opportunity-prose [data-editor-button] a { display: inline-flex; min-height: 2.6rem; align-items: center; justify-content: center; border-radius: .75rem; background: var(--admin-brand); padding: .6rem 1rem; color: white; font-weight: 700; text-decoration: none; }
+.cms-root .cms-opportunity-prose [data-editor-button] a {
+  display: inline-flex; min-height: 2.75rem; align-items: center; justify-content: center; border: 1px solid color-mix(in srgb, var(--brand-orange) 72%, #9a3f08); border-radius: .8rem;
+  background: var(--brand-orange); box-shadow: 0 7px 18px color-mix(in srgb, var(--brand-orange) 24%, transparent); padding: .65rem 1.15rem; color: #2a170a; cursor: pointer;
+  font-weight: 700; line-height: 1.4; text-align: center; text-decoration: none; transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease, color .18s ease;
+}
+.cms-root .cms-opportunity-prose [data-editor-button] a:hover {
+  border-color: color-mix(in srgb, var(--brand-orange) 62%, #743006); background: color-mix(in srgb, var(--brand-orange) 88%, white); box-shadow: 0 9px 24px color-mix(in srgb, var(--brand-orange) 32%, transparent); color: #211006;
+}
+.cms-root .cms-opportunity-prose [data-editor-button] a:focus-visible {
+  border-color: var(--admin-card); box-shadow: 0 0 0 3px var(--admin-card), 0 0 0 5px var(--brand-orange), 0 9px 24px color-mix(in srgb, var(--brand-orange) 28%, transparent);
+}
+.cms-root .cms-opportunity-prose [data-editor-button] a:active { background: color-mix(in srgb, var(--brand-orange) 84%, #8f3a07); box-shadow: 0 4px 12px color-mix(in srgb, var(--brand-orange) 24%, transparent); color: #1b0d04; }
+.cms-root[data-theme="dark"] .cms-opportunity-prose [data-editor-button] a {
+  border-color: color-mix(in srgb, var(--brand-orange) 82%, white); background: var(--brand-orange); box-shadow: 0 7px 20px color-mix(in srgb, var(--brand-orange) 20%, transparent); color: #172033;
+}
+.cms-root[data-theme="dark"] .cms-opportunity-prose [data-editor-button] a:hover {
+  border-color: color-mix(in srgb, var(--brand-orange) 70%, white); background: color-mix(in srgb, var(--brand-orange) 88%, white); box-shadow: 0 9px 26px color-mix(in srgb, var(--brand-orange) 28%, transparent); color: #111827;
+}
+.cms-root[data-theme="dark"] .cms-opportunity-prose [data-editor-button] a:focus-visible { border-color: var(--admin-card); box-shadow: 0 0 0 3px var(--admin-card), 0 0 0 5px var(--brand-orange), 0 9px 26px color-mix(in srgb, var(--brand-orange) 26%, transparent); }
+.cms-root[data-theme="dark"] .cms-opportunity-prose [data-editor-button] a:active { background: color-mix(in srgb, var(--brand-orange) 82%, black); box-shadow: 0 4px 12px color-mix(in srgb, var(--brand-orange) 18%, transparent); color: #111827; }
 @media (max-width: 640px) { .cms-root .cms-opportunity-prose :where(ul, ol)[data-columns] { columns: 1; } }
 .cms-root :lang(ps) { font-family: Vazirmatn, Tahoma, sans-serif; }
 .cms-root[data-theme="dark"] {

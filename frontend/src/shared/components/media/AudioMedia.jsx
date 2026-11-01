@@ -1,7 +1,7 @@
 import { Gauge, Pause, Play, RotateCcw } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
-function AudioMedia({ media }) {
+function AudioMedia({ media, compact = false }) {
   const audioRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
@@ -28,6 +28,14 @@ function AudioMedia({ media }) {
     frameId = window.requestAnimationFrame(updateProgress)
     return () => window.cancelAnimationFrame(frameId)
   }, [isPlaying])
+
+  if (compact) return <div className="relative flex h-full min-h-0 w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border border-[#d8dce0] bg-[#fffdfa] p-4 text-center text-[#36454d] dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100">
+    <div className="pointer-events-none absolute inset-0 opacity-60 [background-image:repeating-linear-gradient(100deg,transparent_0,transparent_18px,rgba(244,126,38,0.12)_19px,transparent_20px)]" aria-hidden="true" />
+    <img src={audio.avatar || '/assets/images/team/erfan.webp'} alt={audio.speaker || audio.title} className="relative size-14 shrink-0 rounded-full border-2 border-white object-cover shadow-md dark:border-gray-700" />
+    <div className="relative min-w-0 max-w-full"><h3 className="line-clamp-2 font-heading text-sm font-extrabold leading-tight" title={audio.title}>{audio.title}</h3>{audio.speaker && <p className="mt-1 truncate text-[10px] text-foreground-muted">{audio.speaker}</p>}</div>
+    <div className="relative flex w-full items-center gap-2" dir="ltr"><button type="button" onClick={togglePlayback} aria-label={isPlaying ? (audio.pauseLabel || 'مکث') : (audio.playLabel || 'پخش')} className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[#ecad24] text-white shadow-sm transition-colors hover:bg-primary-hover">{isPlaying ? <Pause size={14} fill="currentColor" /> : <Play size={14} fill="currentColor" />}</button><div className="flex h-7 min-w-0 flex-1 cursor-pointer items-center justify-center gap-1 overflow-hidden" role="slider" tabIndex="0" aria-label="موقعیت پخش صدا" aria-valuemin="0" aria-valuemax={duration || 0} aria-valuenow={currentTime} onPointerDown={seekFromPointer}>{Array.from({ length: 24 }, (_, index) => <span key={index} className={`w-0.5 shrink-0 rounded-full ${index / 24 < progress ? 'bg-[#59636a] dark:bg-[#cbd5e1]' : 'bg-[#cbd2d5] dark:bg-gray-600'}`} style={{ height: `${8 + ((index * 13) % 18)}px` }} />)}</div></div>
+    <audio ref={audioRef} className="sr-only" preload="metadata"><source src={audio.src} type={audio.type || 'audio/mpeg'} />{audio.unsupportedLabel}</audio>
+  </div>
 
   return <div className="relative w-full min-w-0 max-w-full overflow-hidden rounded-[1.4rem] border border-[#d8dce0] bg-[#fffdfa] px-5 py-6 text-[#36454d] dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 sm:px-8 sm:py-8">
     <div className="pointer-events-none absolute inset-0 opacity-60 [background-image:repeating-linear-gradient(100deg,transparent_0,transparent_18px,rgba(244,126,38,0.12)_19px,transparent_20px)]" aria-hidden="true" />

@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, ClipboardCheck, FileText, GraduationCap, Landmark, MessageCircle, ShieldCheck, TrendingUp, UsersRound } from 'lucide-react'
+import { BriefcaseBusiness, ClipboardCheck, FileText, GraduationCap, Landmark, MessageCircle, TrendingUp, UsersRound } from 'lucide-react'
 
 import PostCard from '@ui/PostCard.jsx'
 import useBottomStickySidebar from '@website/hooks/useBottomStickySidebar.js'
@@ -10,13 +10,12 @@ const quickLinks = [
   [BriefcaseBusiness, 'work', '/opportunities/work'],
   [TrendingUp, 'investment', '/opportunities/investment'],
   [UsersRound, 'migration', '/opportunities/migration'],
-  [ShieldCheck, 'visa', '/services/visa'],
 ]
 
 const quickLabels = {
-  dr: { study: 'تحصیل', work: 'کار', investment: 'سرمایه گذاری', migration: 'مهاجرت', visa: 'ویزه' },
-  ps: { study: 'زده‌کړې', work: 'کار', investment: 'پانګونه', migration: 'مهاجرت', visa: 'ویزه' },
-  en: { study: 'Study', work: 'Work', investment: 'Investment', migration: 'Migration', visa: 'Visa' },
+  dr: { study: 'تحصیل', work: 'کار', investment: 'سرمایه گذاری', migration: 'مهاجرت' },
+  ps: { study: 'زده‌کړې', work: 'کار', investment: 'پانګونه', migration: 'مهاجرت' },
+  en: { study: 'Study', work: 'Work', investment: 'Investment', migration: 'Migration' },
 }
 
 const serviceCardLabels = {
