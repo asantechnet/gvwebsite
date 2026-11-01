@@ -16,24 +16,101 @@ function OpportunitiesPage({ content, opportunities, exams, services }) {
   const [query, setQuery] = useState('')
   const [status, setStatus] = useState('all')
   const [editing, setEditing] = useState(null)
+  const [serviceCards, setServiceCards] = useState(() => services || [])
+  const [savedServiceCards, setSavedServiceCards] = useState(() => services || [])
+  useEffect(() => {
+    if (!isServices) return undefined
+    const handleSaved = () => {
+      const committed = serviceCards.map((service) => { const next = { ...service }; delete next.savedStatus; return next })
+      setServiceCards(committed)
+      setSavedServiceCards(committed)
+    }
+    const handleReset = () => setServiceCards(savedServiceCards)
+    window.addEventListener('cms:changes-saved', handleSaved)
+    window.addEventListener('cms:changes-reset', handleReset)
+    return () => { window.removeEventListener('cms:changes-saved', handleSaved); window.removeEventListener('cms:changes-reset', handleReset) }
+  }, [isServices, savedServiceCards, serviceCards])
   const cards = isServices
-    ? services.map((service) => ({ ...service, id: service.slug, href: `/services/${service.slug}`, status: 'published', category: label }))
+    ? serviceCards.map((service) => ({ ...service, id: service.slug, href: `/services/${service.slug}`, status: service.status || 'published', category: label }))
     : opportunityKeys.flatMap((key) => opportunities?.[key]?.post ? [{ ...opportunities[key].post, id: key, href: `/opportunities/${key}`, status: 'published' }] : [])
   const ielts = exams?.find((exam) => exam.slug === 'ielts')
   if (ielts) cards.push({ title: ielts.name, description: ielts.summary, category: ielts.category || 'امتحانات', image: ielts.image || '/assets/images/destinations/france.jpg', href: '/opportunities/exams/ielts', id: 'ielts', status: 'published' })
   const labels = content.opportunities || {}
   const categoryOptions = [...new Set(cards.map((card) => card.category).filter(Boolean))]
-  const filteredCards = useMemo(() => cards.filter((card) => (status === 'all' || card.status === status) && `${card.title} ${card.description} ${card.category || ''}`.toLocaleLowerCase().includes(query.toLocaleLowerCase())), [cards, query, status])
+  const filteredCards = useMemo(() => cards.filter((card) => { const filterStatus = card.savedStatus ?? card.status; return (status === 'all' || filterStatus === status) && `${card.title} ${card.description} ${card.category || ''}`.toLocaleLowerCase().includes(query.toLocaleLowerCase()) }), [cards, query, status])
   const modalContent = { ...content, editItem: labels.editPost || 'ویرایش نوشته', editItemTitle: labels.editPostTitle || 'ویرایش نوشته فرصت', close: labels.close || 'بستن', itemTitle: labels.postTitle || 'عنوان نوشته', itemDescription: labels.postDescription || 'خلاصه نوشته', itemAction: labels.postAction || 'متن دکمه', itemLink: labels.postLink || 'پیوند نوشته', cancel: labels.cancel || 'انصراف', save: labels.save || 'ذخیره', categoryOptions }
   return <PageContainer><PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.overview }, { label }]} action={<EditorPreviewLink>{content.topbar.visitPage}</EditorPreviewLink>} />
     <section className="overflow-hidden rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)]" aria-label={labels.settings || label}>
       <div className="p-5 sm:p-7"><EditorFieldGroup title={labels.heroSettings || labels.settings || label} columns={false}><EditorField label={labels.heroTitle || labels.pageTitle || 'عنوان بنر اصلی'} value={pageTitle} onChange={setPageTitle} /></EditorFieldGroup></div>
     </section>
-    <section className={`grid rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)] md:grid-cols-[minmax(12rem,1fr)_minmax(12rem,.7fr)_minmax(14rem,.8fr)] ${isServices ? 'gap-1 p-1' : 'gap-2 p-2'}`}><button type="button" onClick={() => setEditing({ id: `new-${Date.now()}`, title: '', description: '', action: '', href: '', image: '' })} className={`box-border flex w-full items-center justify-center gap-1.5 rounded-xl border border-admin-brand bg-admin-brand px-3 text-xs font-semibold text-white transition hover:bg-orange-500 md:w-fit md:justify-self-start md:px-4 ${isServices ? 'h-9 min-h-0' : 'h-11'}`}><Plus size={14} />{isServices ? content.createService : 'ایجاد فرصت جدید'}</button><StatusSelect value={status} onChange={setStatus} labels={labels} compact={isServices} /><label className={`flex min-w-0 items-center gap-2 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3 text-admin-muted focus-within:border-admin-brand ${isServices ? 'h-9' : 'h-11'}`}><Search size={15} /><input className="min-w-0 flex-1 bg-transparent text-xs text-admin-heading outline-none" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={labels.search || 'جستجوی نوشته‌ها...'} /></label></section>
-    <section className="hidden overflow-hidden rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)] lg:block"><table className="w-full table-fixed border-collapse text-right"><thead className="bg-(--editor-field) text-[.65rem] font-semibold text-admin-muted"><tr><th className="w-[48%] p-4">{labels.postTitle || 'نوشته'}</th><th className="p-4">{labels.postCategory || 'دسته‌بندی'}</th><th className="p-4">{labels.pageStatus || 'وضعیت'}</th><th className="w-36 p-4">{labels.actions || 'عملیات'}</th></tr></thead><tbody>{filteredCards.map((card) => <tr className="border-t border-admin-border transition hover:bg-admin-control-soft" key={card.id}><td className="p-4"><div className="flex items-center gap-3"><img className="size-14 rounded-xl bg-(--editor-field) object-cover" src={card.image} alt="" /><div className="min-w-0"><strong className="block truncate text-sm text-admin-heading">{card.title}</strong></div></div></td><td className="p-4 text-xs text-admin-muted">{card.category || label}</td><td className="p-4"><span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[.65rem] font-semibold text-emerald-700 dark:text-emerald-300">{labels.published || 'منتشرشده'}</span></td><td className="p-4"><div className="flex gap-1"><a className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand" href={card.href} target="_blank" rel="noreferrer" aria-label={labels.preview || 'پیش‌نمایش'}><ExternalLink size={16} /></a><button type="button" className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-brand transition hover:border-admin-brand hover:bg-admin-brand-soft" onClick={() => setEditing(card)} aria-label={labels.editPost || 'ویرایش'}><Pencil size={16} /></button><button type="button" className="grid size-9 place-items-center rounded-xl border border-red-500/25 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" onClick={() => window.cmsConfirmDelete?.({ title: labels.deletePost || 'حذف نوشته', description: labels.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })} aria-label={labels.deletePost || 'حذف'}><Trash2 size={16} /></button></div></td></tr>)}</tbody></table></section>
-    <section className="grid gap-3 lg:hidden">{filteredCards.map((card) => <article className="grid grid-cols-[5rem_1fr] gap-3 rounded-2xl border border-admin-border bg-admin-card p-3 shadow-[0_8px_24px_rgb(15_23_42_/.05)]" key={card.id}><img className="h-20 w-20 rounded-xl bg-(--editor-field) object-cover" src={card.image} alt="" /><div className="min-w-0"><strong className="block truncate text-sm text-admin-heading">{card.title}</strong><span className="mt-2 inline-block rounded-full bg-emerald-500/10 px-2 py-1 text-[.65rem] font-semibold text-emerald-700 dark:text-emerald-300">{labels.published || 'منتشرشده'}</span><div className="mt-2 flex justify-end gap-1"><a className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-muted hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand" href={card.href} target="_blank" rel="noreferrer" aria-label={labels.preview || 'پیش‌نمایش'}><ExternalLink size={15} /></a><button type="button" className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-brand hover:border-admin-brand hover:bg-admin-brand-soft" onClick={() => setEditing(card)} aria-label={labels.editPost || 'ویرایش'}><Pencil size={15} /></button><button type="button" className="grid size-8 place-items-center rounded-xl border border-red-500/25 text-red-500 hover:border-red-500 hover:bg-red-500/10" onClick={() => window.cmsConfirmDelete?.({ title: labels.deletePost || 'حذف نوشته', description: labels.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })} aria-label={labels.deletePost || 'حذف'}><Trash2 size={15} /></button></div></div></article>)}</section>
+    <section className={`grid rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)] md:grid-cols-[minmax(12rem,1fr)_minmax(12rem,.7fr)_minmax(14rem,.8fr)] ${isServices ? 'gap-1 p-1' : 'gap-2 p-2'}`}>
+<button type="button" onClick={() => setEditing({ id: `new-${Date.now()}`, title: '', description: '', action: '', href: '', image: '' })} className={`box-border flex w-full items-center justify-center gap-1.5 rounded-xl border border-admin-brand bg-admin-brand px-3 text-xs font-semibold text-white transition hover:bg-orange-500 md:w-fit md:justify-self-start md:px-4 ${isServices ? 'h-9 min-h-0' : 'h-11'}`}>
+<Plus size={14} />{isServices ? content.createService : 'ایجاد فرصت جدید'}</button>
+<StatusSelect value={status} onChange={setStatus} labels={labels} compact={isServices} />
+<label className={`flex min-w-0 items-center gap-2 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3 text-admin-muted focus-within:border-admin-brand ${isServices ? 'h-9' : 'h-11'}`}>
+<Search size={15} />
+<input className="min-w-0 flex-1 bg-transparent text-xs text-admin-heading outline-none" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={labels.search || 'جستجوی نوشته‌ها...'} />
+</label>
+</section>
+    <section className="hidden overflow-hidden rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)] lg:block">
+<table className="w-full table-fixed border-collapse text-right">
+<thead className="bg-(--editor-field) text-[.65rem] font-semibold text-admin-muted">
+<tr>
+<th className="w-[48%] p-4">{labels.postTitle || 'نوشته'}</th>
+<th className="p-4">{labels.postCategory || 'دسته‌بندی'}</th>
+<th className="p-4">{labels.pageStatus || 'وضعیت'}</th>
+<th className="w-36 p-4">{labels.actions || 'عملیات'}</th>
+</tr>
+</thead>
+<tbody>{filteredCards.map((card) => <tr className="border-t border-admin-border transition hover:bg-admin-control-soft" key={card.id}>
+<td className="p-4">
+<div className="flex items-center gap-3">
+<img className="size-14 rounded-xl bg-(--editor-field) object-cover" src={card.image} alt="" />
+<div className="min-w-0">
+<strong className="block truncate text-sm text-admin-heading">{card.title}</strong>
+</div>
+</div>
+</td>
+<td className="p-4 text-xs text-admin-muted">{card.category || label}</td>
+<td className="p-4">
+{isServices ? <ServiceStatusBadge card={card} labels={labels} onToggle={() => setServiceCards((current) => current.map((service) => service.slug === card.slug ? { ...service, status: service.status === 'draft' ? 'published' : 'draft', savedStatus: service.savedStatus ?? service.status } : service))} /> : <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[.65rem] font-semibold text-emerald-700 dark:text-emerald-300">{labels.published || 'منتشرشده'}</span>}
+</td>
+<td className="p-4">
+<div className="flex gap-1">
+<a className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand" href={card.href} target="_blank" rel="noreferrer" aria-label={labels.preview || 'پیش‌نمایش'}>
+<ExternalLink size={16} />
+</a>
+<button type="button" className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-brand transition hover:border-admin-brand hover:bg-admin-brand-soft" onClick={() => setEditing(card)} aria-label={labels.editPost || 'ویرایش'}>
+<Pencil size={16} />
+</button>
+<button type="button" className="grid size-9 place-items-center rounded-xl border border-red-500/25 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" onClick={() => window.cmsConfirmDelete?.({ title: labels.deletePost || 'حذف نوشته', description: labels.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })} aria-label={labels.deletePost || 'حذف'}>
+<Trash2 size={16} />
+</button>
+</div>
+</td>
+</tr>)}</tbody>
+</table>
+</section>
+    <section className="grid gap-3 lg:hidden">{filteredCards.map((card) => <article className="grid grid-cols-[5rem_1fr] gap-3 rounded-2xl border border-admin-border bg-admin-card p-3 shadow-[0_8px_24px_rgb(15_23_42_/.05)]" key={card.id}>
+<img className="h-20 w-20 rounded-xl bg-(--editor-field) object-cover" src={card.image} alt="" />
+<div className="min-w-0">
+<strong className="block truncate text-sm text-admin-heading">{card.title}</strong>
+{isServices ? <ServiceStatusBadge card={card} labels={labels} onToggle={() => setServiceCards((current) => current.map((service) => service.slug === card.slug ? { ...service, status: service.status === 'draft' ? 'published' : 'draft', savedStatus: service.savedStatus ?? service.status } : service))} /> : <span className="mt-2 inline-block rounded-full bg-emerald-500/10 px-2 py-1 text-[.65rem] font-semibold text-emerald-700 dark:text-emerald-300">{labels.published || 'منتشرشده'}</span>}
+<div className="mt-2 flex justify-end gap-1">
+<a className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-muted hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand" href={card.href} target="_blank" rel="noreferrer" aria-label={labels.preview || 'پیش‌نمایش'}>
+<ExternalLink size={15} />
+</a>
+<button type="button" className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-brand hover:border-admin-brand hover:bg-admin-brand-soft" onClick={() => setEditing(card)} aria-label={labels.editPost || 'ویرایش'}>
+<Pencil size={15} />
+</button>
+<button type="button" className="grid size-8 place-items-center rounded-xl border border-red-500/25 text-red-500 hover:border-red-500 hover:bg-red-500/10" onClick={() => window.cmsConfirmDelete?.({ title: labels.deletePost || 'حذف نوشته', description: labels.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })} aria-label={labels.deletePost || 'حذف'}>
+<Trash2 size={15} />
+</button>
+</div>
+</div>
+</article>)}</section>
     {!filteredCards.length && <div className="grid min-h-44 place-items-center rounded-2xl border border-admin-border bg-admin-card text-sm text-admin-muted">{labels.empty || 'نوشته‌ای پیدا نشد.'}</div>}
-    {editing && <OpportunityPostModal post={editing} content={modalContent} onClose={() => setEditing(null)} onSave={() => setEditing(null)} />}
+    {editing && <OpportunityPostModal post={editing} content={modalContent} isServices={isServices} onClose={() => setEditing(null)} onSave={(savedPost) => { if (isServices) setServiceCards((current) => current.some((service) => service.slug === savedPost.slug) ? current.map((service) => service.slug === savedPost.slug ? { ...service, ...savedPost } : service) : [...current, savedPost]); setEditing(null) }} />}
   </PageContainer>
 }
 
@@ -50,7 +127,16 @@ function StatusSelect({ value, onChange, labels, compact = false }) {
   return <div ref={root} className="relative min-w-0"><button type="button" aria-haspopup="listbox" aria-expanded={open} onClick={() => setOpen((current) => !current)} className={`flex w-full items-center gap-2 rounded-xl border bg-(--editor-input) px-3 text-sm text-admin-heading outline-none transition-colors ${compact ? 'h-9' : 'h-11'} ${open ? 'border-admin-brand shadow-[0_0_0_2px_var(--admin-brand-soft)]' : 'border-(--editor-field-border) hover:border-admin-brand'}`}><span className="min-w-0 flex-1 truncate text-right">{selected.label}</span><ChevronDown size={16} className={`shrink-0 text-admin-muted transition-transform duration-200 motion-reduce:transition-none ${open ? 'rotate-180' : ''}`} /></button><div role="listbox" aria-hidden={!open} inert={!open} className={`absolute inset-x-0 top-[calc(100%+.45rem)] z-40 grid gap-1 rounded-xl border border-(--editor-field-border) bg-(--admin-card) p-1.5 shadow-[0_18px_45px_rgb(15_23_42_/.28)] transition-all duration-200 ease-out motion-reduce:transition-none ${open ? 'visible translate-y-0 opacity-100' : 'invisible pointer-events-none translate-y-2 opacity-0'}`}>{options.map((option) => <button type="button" role="option" aria-selected={option.value === value} key={option.value} onClick={() => { onChange(option.value); setOpen(false) }} className={`flex min-h-10 items-center justify-between rounded-lg px-3 text-right text-xs font-semibold transition-colors ${option.value === value ? 'bg-admin-brand text-white' : 'text-admin-heading hover:bg-admin-brand-soft hover:text-admin-brand'}`}><span>{option.label}</span>{option.value === value && <Check size={15} />}</button>)}</div></div>
 }
 
-function OpportunityPostModal({ post, content, onClose, onSave }) {
+function ServiceStatusBadge({ card, labels, onToggle }) {
+  const isDraft = card.status === 'draft'
+  return <button type="button" onClick={(event) => { onToggle(); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition ${isDraft ? 'bg-admin-brand-soft text-admin-brand hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'}`}>{isDraft ? (labels.draft || 'پیش‌نویس') : (labels.published || 'منتشرشده')}</button>
+}
+
+function FeaturedToggle({ label, checked, onChange }) {
+  return <div className="flex min-h-12 items-center justify-between gap-3 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-4 text-xs font-semibold text-admin-heading sm:col-span-2"><span>{label}</span><button type="button" role="switch" aria-checked={checked} aria-label={label} onClick={() => onChange(!checked)} className={`relative h-5 w-9 shrink-0 rounded-full border transition-colors duration-200 ease-out ${checked ? 'border-admin-brand bg-admin-brand' : 'border-admin-border bg-[var(--admin-toggle-off)]'}`}><span aria-hidden="true" className={`absolute top-1/2 start-1 size-3 -translate-y-1/2 rounded-full bg-white shadow-sm transition-transform duration-200 ease-out motion-reduce:transition-none ${checked ? 'translate-x-4 rtl:-translate-x-4' : 'translate-x-0'}`} /></button></div>
+}
+
+function OpportunityPostModal({ post, content, isServices = false, onClose, onSave }) {
   const isNew = String(post.id ?? '').startsWith('new-')
   const [closing, setClosing] = useState(false)
   const close = () => { if (closing) return; setClosing(true); window.setTimeout(onClose, 200) }
@@ -73,7 +159,41 @@ function OpportunityPostModal({ post, content, onClose, onSave }) {
   const submit = (event) => { event.preventDefault(); const slug = form.title.toLocaleLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, ''); const savedPost = { ...post, ...form, slug, description: form.excerpt, author: 'گلوبل ویژن' }; setClosing(true); window.setTimeout(() => onSave(savedPost), 200) }
   return <div className={`cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-4 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onMouseDown={close}><form onSubmit={submit} onMouseDown={(event) => event.stopPropagation()} className={`relative z-10 flex max-h-[calc(100svh-2rem)] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-admin-border bg-admin-page shadow-2xl ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`}>
     <header className="flex items-start justify-between gap-4 border-b border-admin-border bg-admin-card px-5 py-4 sm:px-6"><div><span className="text-[.65rem] font-semibold tracking-[.12em] text-admin-brand">{isNew ? (content.newPost || 'نوشته جدید') : (content.editItem || 'ویرایش نوشته')}</span><h2 className="mt-1 font-heading text-xl text-admin-heading">{isNew ? (content.createPost || 'ایجاد فرصت جدید') : form.title}</h2></div><button type="button" className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand" onClick={close} aria-label={content.close || 'بستن'}><X size={18} /></button></header>
-    <div className="grid gap-5 overflow-y-auto p-4 sm:p-6"><section className="grid gap-5 rounded-2xl border border-admin-border bg-admin-card p-4 sm:grid-cols-2 sm:p-5"><Field label={content.postTitle || 'عنوان نوشته'} value={form.title} onChange={(value) => update('title', value)} full /><ModalSelect label={content.postCategory || 'دسته‌بندی'} value={form.category} onChange={(value) => update('category', value)} options={[{ value: '', label: content.noCategory || 'بدون دسته‌بندی' }]} /><ModalSelect label={content.postStatus || 'وضعیت'} value={form.status} onChange={(value) => update('status', value)} options={[{ value: 'draft', label: content.draft || 'پیش‌نویس' }, { value: 'published', label: content.published || 'منتشرشده' }]} /><Field label={content.postDescription || 'خلاصه نوشته'} value={form.excerpt} onChange={(value) => update('excerpt', value)} full /><label className="flex min-h-12 items-center justify-between gap-3 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-4 text-xs font-semibold text-admin-heading sm:col-span-2"><span>{content.featuredPost || 'نوشته ویژه'}</span><input type="checkbox" className="size-5 accent-[var(--admin-brand)]" checked={form.featured} onChange={(event) => update('featured', event.target.checked)} /></label></section><section className="grid gap-4 rounded-2xl border border-admin-border bg-admin-card p-4 sm:p-5"><h3 className="text-sm text-admin-heading">{content.tags || 'برچسب‌ها'}</h3><div className="flex min-h-11 flex-wrap items-center gap-2 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3 py-2 focus-within:border-admin-brand">{form.tags.map((tag) => <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-admin-brand-soft px-2.5 py-1 text-xs font-medium text-admin-brand"><span>{tag}</span><button type="button" className="grid size-4 place-items-center rounded-full text-current hover:bg-admin-brand hover:text-white" aria-label={`حذف ${tag}`} onClick={() => update('tags', form.tags.filter((currentTag) => currentTag !== tag))}><X size={12} /></button></span>)}<input className="min-w-32 flex-1 border-0 bg-transparent px-1 py-1 text-sm font-normal text-admin-heading outline-none" value={tagDraft} placeholder={content.tagsPlaceholder || 'برچسب را بنویسید و Enter بزنید'} onChange={(event) => setTagDraft(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ',' || event.key === '،') { event.preventDefault(); addTag() } else if (event.key === 'Backspace' && !tagDraft && form.tags.length) update('tags', form.tags.slice(0, -1)) }} /></div></section><section className="grid gap-4 rounded-2xl border border-admin-border bg-admin-card p-4 sm:p-5"><h3 className="text-sm text-admin-heading">{content.postContent || 'محتوای نوشته'}</h3><RichTextEditor value={form.content} onChange={(value) => update('content', value)} /></section><section className="grid gap-5 rounded-2xl border border-admin-border bg-admin-card p-4 sm:p-5"><h3 className="text-sm text-admin-heading">{content.coverImage || 'تصویر اصلی'}</h3><MediaUploadField content={{ countryImage: content.postImage || 'تصویر اصلی', choose: content.chooseImage || 'انتخاب تصویر', drop: content.dropImage || 'تصویر را بکشید و رها کنید', replace: content.replaceImage || 'جایگزین کردن', remove: content.removeImage || 'حذف' }} value={form.image} onChange={(value) => update('image', value)} /></section><section className="grid gap-5 rounded-2xl border border-admin-border bg-admin-card p-4 sm:grid-cols-2 sm:p-5"><h3 className="text-sm text-admin-heading sm:col-span-2">{content.seo || 'تنظیمات موتور جستجو'}</h3><Field label={content.seoTitle || 'عنوان SEO'} value={form.seoTitle} onChange={(value) => update('seoTitle', value)} full /><label className="text-xs font-semibold text-admin-heading sm:col-span-2"><span>{content.metaDescription || 'توضیحات متا'}</span><textarea rows="3" maxLength="170" className="mt-2 w-full resize-y rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3.5 py-3 text-sm leading-6 text-admin-heading outline-none focus:border-admin-brand" value={form.metaDescription} onChange={(event) => update('metaDescription', event.target.value)} /></label><Field label={content.imageAlt || 'متن جایگزین تصویر'} value={form.imageAlt} onChange={(value) => update('imageAlt', value)} /></section></div>
+    <div className="grid gap-5 overflow-y-auto p-4 sm:p-6">
+<section className="grid gap-5 rounded-2xl border border-admin-border bg-admin-card p-4 sm:grid-cols-2 sm:p-5">
+<Field label={content.postTitle || 'عنوان نوشته'} value={form.title} onChange={(value) => update('title', value)} full />
+{!isServices && <ModalSelect label={content.postCategory || 'دسته‌بندی'} value={form.category} onChange={(value) => update('category', value)} options={[{ value: '', label: content.noCategory || 'بدون دسته‌بندی' }]} />}
+<ModalSelect label={content.postStatus || 'وضعیت'} value={form.status} onChange={(value) => update('status', value)} options={[{ value: 'draft', label: content.draft || 'پیش‌نویس' }, { value: 'published', label: content.published || 'منتشرشده' }]} />
+<Field label={content.postDescription || 'خلاصه نوشته'} value={form.excerpt} onChange={(value) => update('excerpt', value)} full />
+<FeaturedToggle label={content.featuredPost || 'نوشته ویژه'} checked={form.featured} onChange={(value) => update('featured', value)} />
+</section>
+<section className="grid gap-4 rounded-2xl border border-admin-border bg-admin-card p-4 sm:p-5">
+<h3 className="text-sm text-admin-heading">{content.tags || 'برچسب‌ها'}</h3>
+<div className="flex min-h-11 flex-wrap items-center gap-2 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3 py-2 focus-within:border-admin-brand">{form.tags.map((tag) => <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-admin-brand-soft px-2.5 py-1 text-xs font-medium text-admin-brand">
+<span>{tag}</span>
+<button type="button" className="grid size-4 place-items-center rounded-full text-current hover:bg-admin-brand hover:text-white" aria-label={`حذف ${tag}`} onClick={() => update('tags', form.tags.filter((currentTag) => currentTag !== tag))}>
+<X size={12} />
+</button>
+</span>)}<input className="min-w-32 flex-1 border-0 bg-transparent px-1 py-1 text-sm font-normal text-admin-heading outline-none" value={tagDraft} placeholder={content.tagsPlaceholder || 'برچسب را بنویسید و Enter بزنید'} onChange={(event) => setTagDraft(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ',' || event.key === '،') { event.preventDefault(); addTag() } else if (event.key === 'Backspace' && !tagDraft && form.tags.length) update('tags', form.tags.slice(0, -1)) }} />
+</div>
+</section>
+<section className="grid gap-4 rounded-2xl border border-admin-border bg-admin-card p-4 sm:p-5">
+<h3 className="text-sm text-admin-heading">{content.postContent || 'محتوای نوشته'}</h3>
+<RichTextEditor value={form.content} onChange={(value) => update('content', value)} />
+</section>
+<section className="grid gap-5 rounded-2xl border border-admin-border bg-admin-card p-4 sm:p-5">
+<MediaUploadField content={{ countryImage: content.postImage || 'تصویر اصلی', choose: content.chooseImage || 'انتخاب تصویر', drop: content.dropImage || 'تصویر را بکشید و رها کنید', replace: content.replaceImage || 'جایگزین کردن', remove: content.removeImage || 'حذف' }} value={form.image} onChange={(value) => update('image', value)} />
+</section>
+<section className="grid gap-5 rounded-2xl border border-admin-border bg-admin-card p-4 sm:grid-cols-2 sm:p-5">
+<h3 className="text-sm text-admin-heading sm:col-span-2">{content.seo || 'تنظیمات موتور جستجو'}</h3>
+<Field label={content.seoTitle || 'عنوان SEO'} value={form.seoTitle} onChange={(value) => update('seoTitle', value)} full />
+<label className="text-xs font-semibold text-admin-heading sm:col-span-2">
+<span>{content.metaDescription || 'توضیحات متا'}</span>
+<textarea rows="3" maxLength="170" className="mt-2 w-full resize-y rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3.5 py-3 text-sm leading-6 text-admin-heading outline-none focus:border-admin-brand" value={form.metaDescription} onChange={(event) => update('metaDescription', event.target.value)} />
+</label>
+<Field label={content.imageAlt || 'متن جایگزین تصویر'} value={form.imageAlt} onChange={(value) => update('imageAlt', value)} />
+</section>
+</div>
     <footer className="flex justify-end gap-2 border-t border-admin-border bg-admin-card p-4 sm:px-6"><button type="button" onClick={close} className="min-h-10 rounded-xl border border-admin-border px-4 text-xs font-semibold text-admin-muted hover:border-admin-brand hover:text-admin-brand">{content.cancel || 'انصراف'}</button><button type="submit" className="min-h-10 rounded-xl bg-admin-brand px-5 text-xs font-semibold text-white hover:bg-orange-500">{content.save || 'ذخیره تغییرات'}</button></footer>
   </form></div>
 }

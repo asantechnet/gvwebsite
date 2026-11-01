@@ -166,6 +166,7 @@ Use aliases across source areas and relative imports for nearby files within one
 
 - Application-specific UI, compound components, and layouts belong under the owning application's `components/` directory.
 - Cross-application components are added under `src/shared/components/` only when both applications actively use them.
+- Blog and CMS rich-text media previews share the canonical image, video, and audio templates under `src/shared/components/media/`; application-specific paths may only re-export those shared implementations for compatibility.
 - CMS editors must compose shared primitives from `EditorPrimitives.jsx` and `SectionTabBar.jsx` instead of copying their markup or Tailwind classes. Shared tab persistence and scroll-reset behavior must use `useEditorTabs`.
 - Supply changeable content, images, links, icons, states, colors, and behavior through props.
 - Prefer `children` where composition creates a clearer API.
