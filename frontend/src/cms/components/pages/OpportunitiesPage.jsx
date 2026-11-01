@@ -8,6 +8,25 @@ import MediaUploadField from '@cms/components/MediaUploadField.jsx'
 import { EditorField, EditorFieldGroup, EditorPreviewLink } from '@cms/components/EditorPrimitives.jsx'
 
 const opportunityKeys = ['study', 'migration', 'work', 'investment', 'exams']
+const contentLanguages = [{ id: 'prs', short: 'دری', label: 'زبان دری' }, { id: 'ps', short: 'پښتو', label: 'پښتو ژبه' }, { id: 'en', short: 'English', label: 'English language' }]
+const currentCmsLanguage = () => {
+  const language = document.documentElement.lang
+  return ['prs', 'ps', 'en'].includes(language) ? language : 'prs'
+}
+
+const emptyPostTranslation = () => ({ title: '', excerpt: '', content: '', tags: [], seoTitle: '', metaDescription: '', imageAlt: '' })
+
+function ContentLanguageTabs({ value, onChange, mobile = false }) {
+  const activeIndex = contentLanguages.findIndex((language) => language.id === value)
+  if (mobile) return <div dir="ltr" className="sticky top-0 z-30 grid grid-cols-3 gap-1 border-b border-admin-border bg-admin-card p-1.5 md:hidden" role="tablist" aria-label="Content language">
+    <span aria-hidden="true" className="pointer-events-none absolute inset-y-1.5 left-1.5 w-[calc((100%-1rem)/3)] translate-x-[calc(var(--language-index)*(100%+.25rem))] rounded-lg bg-admin-brand shadow-[0_1px_3px_rgb(15_23_42_/.12)] transition-transform duration-300 ease-out" style={{ '--language-index': activeIndex }} />
+    {contentLanguages.map((language) => <button key={language.id} type="button" role="tab" aria-selected={value === language.id} onClick={() => onChange(language.id)} className={`relative z-10 min-h-9 rounded-lg px-2 text-[.65rem] font-semibold transition-colors duration-300 ${value === language.id ? 'text-white' : 'text-admin-muted hover:bg-admin-control-soft hover:text-admin-heading'}`}>{language.short}</button>)}
+  </div>
+  return <div role="tablist" aria-label="Content language" className="absolute right-0 top-1/2 z-40 hidden -translate-y-1/2 gap-1.5 overflow-hidden rounded-l-xl border-y border-l border-admin-border bg-admin-card p-1 shadow-[-8px_8px_24px_rgb(15_23_42_/.16)] md:grid">
+    <span aria-hidden="true" className="pointer-events-none absolute top-1 left-1 h-16 w-10 translate-y-[calc(var(--language-index)*4.375rem)] rounded-lg bg-admin-brand shadow-[0_1px_3px_rgb(15_23_42_/.12)] transition-transform duration-300 ease-out" style={{ '--language-index': activeIndex }} />
+    {contentLanguages.map((language) => <button key={language.id} type="button" role="tab" aria-selected={value === language.id} aria-label={language.label} onClick={() => onChange(language.id)} className={`relative z-10 grid h-16 w-10 place-items-center rounded-lg text-[.65rem] font-semibold transition-colors duration-300 ease-out ${value === language.id ? 'text-white' : 'text-admin-muted hover:bg-admin-control-soft hover:text-admin-heading'}`}><span className="block origin-center whitespace-nowrap leading-none rotate-90">{language.short}</span></button>)}
+  </div>
+}
 
 function OpportunitiesPage({ content, opportunities, exams, services }) {
   const isServices = Array.isArray(services)
@@ -132,13 +151,15 @@ function ServiceStatusBadge({ card, labels, onToggle }) {
   return <button type="button" onClick={(event) => { onToggle(); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition ${isDraft ? 'bg-admin-brand-soft text-admin-brand hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'}`}>{isDraft ? (labels.draft || 'پیش‌نویس') : (labels.published || 'منتشرشده')}</button>
 }
 
-function FeaturedToggle({ label, checked, onChange }) {
-  return <div className="flex min-h-12 items-center justify-between gap-3 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-4 text-xs font-semibold text-admin-heading sm:col-span-2"><span>{label}</span><button type="button" role="switch" aria-checked={checked} aria-label={label} onClick={() => onChange(!checked)} className={`relative h-5 w-9 shrink-0 rounded-full border transition-colors duration-200 ease-out ${checked ? 'border-admin-brand bg-admin-brand' : 'border-admin-border bg-[var(--admin-toggle-off)]'}`}><span aria-hidden="true" className={`absolute top-1/2 start-1 size-3 -translate-y-1/2 rounded-full bg-white shadow-sm transition-transform duration-200 ease-out motion-reduce:transition-none ${checked ? 'translate-x-4 rtl:-translate-x-4' : 'translate-x-0'}`} /></button></div>
+function FeaturedToggle({ label, checked, onChange, full = true }) {
+  return <div className={`flex items-center justify-between gap-3 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-4 text-xs font-semibold text-admin-heading ${full ? 'min-h-12 sm:col-span-2' : 'h-11 min-h-11 self-end'}`}><span>{label}</span><button type="button" role="switch" aria-checked={checked} aria-label={label} onClick={() => onChange(!checked)} className={`relative h-5 w-9 shrink-0 rounded-full border transition-colors duration-200 ease-out ${checked ? 'border-admin-brand bg-admin-brand' : 'border-admin-border bg-[var(--admin-toggle-off)]'}`}><span aria-hidden="true" className={`absolute top-1/2 start-1 size-3 -translate-y-1/2 rounded-full bg-white shadow-sm transition-transform duration-200 ease-out motion-reduce:transition-none ${checked ? 'translate-x-4 rtl:-translate-x-4' : 'translate-x-0'}`} /></button></div>
 }
 
 function OpportunityPostModal({ post, content, isServices = false, onClose, onSave }) {
   const isNew = String(post.id ?? '').startsWith('new-')
+  const interfaceLanguage = currentCmsLanguage()
   const [closing, setClosing] = useState(false)
+  const [contentLanguage, setContentLanguage] = useState(interfaceLanguage)
   const close = () => { if (closing) return; setClosing(true); window.setTimeout(onClose, 200) }
   useEffect(() => {
     const previousBodyOverflow = document.body.style.overflow
@@ -152,47 +173,64 @@ function OpportunityPostModal({ post, content, isServices = false, onClose, onSa
       document.documentElement.classList.remove('cms-modal-open')
     }
   }, [])
-  const [form, setForm] = useState(() => ({ title: post.title || '', slug: post.slug || '', excerpt: post.description || '', content: post.content || '', category: post.category || '', href: post.href || '', image: post.image || '', status: post.status || 'draft', featured: post.featured || false, publishDate: post.publishDate || new Date().toISOString().slice(0, 10), tags: Array.isArray(post.tags) ? post.tags : [], seoTitle: post.seoTitle || post.title || '', metaDescription: post.metaDescription || post.description || '', imageAlt: post.imageAlt || '', author: 'گلوبل ویژن' }))
+  const [form, setForm] = useState(() => {
+    const fallbackTranslation = { title: post.title || '', excerpt: post.description || post.excerpt || '', content: post.content || '', tags: Array.isArray(post.tags) ? post.tags : [], seoTitle: post.seoTitle || post.title || '', metaDescription: post.metaDescription || post.description || '', imageAlt: post.imageAlt || '' }
+    const translations = Object.fromEntries(contentLanguages.map(({ id }) => {
+      const stored = post.translations?.[id]
+      const source = stored || (id === interfaceLanguage ? fallbackTranslation : emptyPostTranslation())
+      return [id, { ...emptyPostTranslation(), ...source, tags: Array.isArray(source.tags) ? source.tags : [] }]
+    }))
+    return { slug: post.slug || '', category: post.category || '', href: post.href || '', image: post.image || '', status: post.status || 'draft', featured: post.featured || false, publishDate: post.publishDate || new Date().toISOString().slice(0, 10), author: 'گلوبل ویژن', translations }
+  })
+  const translation = form.translations[contentLanguage]
   const [tagDraft, setTagDraft] = useState('')
-  const addTag = () => { const tag = tagDraft.trim(); if (!tag || form.tags.includes(tag)) { setTagDraft(''); return }; update('tags', [...form.tags, tag]); setTagDraft('') }
+  const selectContentLanguage = (language) => { setTagDraft(''); setContentLanguage(language) }
+  const addTag = () => { const tag = tagDraft.trim(); if (!tag || translation.tags.includes(tag)) { setTagDraft(''); return }; updateTranslation('tags', [...translation.tags, tag]); setTagDraft('') }
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }))
-  const submit = (event) => { event.preventDefault(); const slug = form.title.toLocaleLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, ''); const savedPost = { ...post, ...form, slug, description: form.excerpt, author: 'گلوبل ویژن' }; setClosing(true); window.setTimeout(() => onSave(savedPost), 200) }
-  return <div className={`cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-4 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onMouseDown={close}><form onSubmit={submit} onMouseDown={(event) => event.stopPropagation()} className={`relative z-10 flex max-h-[calc(100svh-2rem)] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-admin-border bg-admin-page shadow-2xl ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`}>
-    <header className="flex items-center justify-between gap-4 border-b border-admin-border bg-admin-card px-5 py-2 sm:px-6"><h2 className="font-heading text-xl leading-tight text-admin-heading">{isNew ? (content.createPost || 'ایجاد فرصت جدید') : form.title}</h2><button type="button" className="grid size-8 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand" onClick={close} aria-label={content.close || 'بستن'}><X size={16} /></button></header>
-    <div className="grid gap-5 overflow-y-auto p-4 sm:p-6">
+  const updateTranslation = (key, value) => setForm((current) => ({ ...current, translations: { ...current.translations, [contentLanguage]: { ...current.translations[contentLanguage], [key]: value } } }))
+  const submit = (event) => { event.preventDefault(); const displayTranslation = form.translations[interfaceLanguage]; const slugTitle = form.translations.prs.title || form.translations.en.title || form.translations.ps.title; const slug = form.slug || slugTitle.toLocaleLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, ''); const savedPost = { ...post, ...form, ...displayTranslation, slug, description: displayTranslation.excerpt, author: 'گلوبل ویژن' }; setClosing(true); window.setTimeout(() => onSave(savedPost), 200) }
+  return <div className={`cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-4 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onMouseDown={close}><form onSubmit={submit} onMouseDown={(event) => event.stopPropagation()} className={`relative z-10 flex max-h-[calc(100svh-2rem)] w-full flex-col overflow-hidden rounded-2xl border border-admin-border bg-admin-page shadow-2xl ${isServices ? 'max-w-5xl' : 'max-w-3xl'} ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`}>
+    {isServices && <ContentLanguageTabs value={contentLanguage} onChange={selectContentLanguage} />}
+    <header className="flex items-center justify-between gap-4 border-b border-admin-border bg-admin-card px-5 py-2 sm:px-6"><h2 className="font-heading text-xl leading-tight text-admin-heading">{isNew ? (content.createPost || 'ایجاد فرصت جدید') : translation.title}</h2><button type="button" className="grid size-8 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand" onClick={close} aria-label={content.close || 'بستن'}><X size={16} /></button></header>
+    {isServices && <ContentLanguageTabs mobile value={contentLanguage} onChange={selectContentLanguage} />}
+    <div className={`grid gap-5 overflow-y-auto p-4 sm:p-6 ${isServices ? 'md:pr-20' : ''}`} dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
 <section className="grid gap-5 rounded-2xl border border-admin-border bg-admin-card p-4 sm:grid-cols-2 sm:p-5">
-<Field label={content.postTitle || 'عنوان نوشته'} value={form.title} onChange={(value) => update('title', value)} full />
+<Field label={content.postTitle || 'عنوان نوشته'} value={translation.title} onChange={(value) => updateTranslation('title', value)} full />
 {!isServices && <ModalSelect label={content.postCategory || 'دسته‌بندی'} value={form.category} onChange={(value) => update('category', value)} options={[{ value: '', label: content.noCategory || 'بدون دسته‌بندی' }]} />}
 <ModalSelect label={content.postStatus || 'وضعیت'} value={form.status} onChange={(value) => update('status', value)} options={[{ value: 'draft', label: content.draft || 'پیش‌نویس' }, { value: 'published', label: content.published || 'منتشرشده' }]} />
-<Field label={content.postDescription || 'خلاصه نوشته'} value={form.excerpt} onChange={(value) => update('excerpt', value)} full />
-<FeaturedToggle label={content.featuredPost || 'نوشته ویژه'} checked={form.featured} onChange={(value) => update('featured', value)} />
+{isServices && <FeaturedToggle label={content.featuredPost || 'نوشته ویژه'} checked={form.featured} onChange={(value) => update('featured', value)} full={false} />}
+<Field label={content.postDescription || 'خلاصه نوشته'} value={translation.excerpt} onChange={(value) => updateTranslation('excerpt', value)} full />
+{!isServices && <FeaturedToggle label={content.featuredPost || 'نوشته ویژه'} checked={form.featured} onChange={(value) => update('featured', value)} />}
 </section>
 <section className="grid gap-4 rounded-2xl border border-admin-border bg-admin-card p-4 sm:p-5">
 <h3 className="text-sm text-admin-heading">{content.tags || 'برچسب‌ها'}</h3>
-<div className="flex min-h-11 flex-wrap items-center gap-2 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3 py-2 focus-within:border-admin-brand">{form.tags.map((tag) => <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-admin-brand-soft px-2.5 py-1 text-xs font-medium text-admin-brand">
+<div className="flex min-h-11 flex-wrap items-center gap-2 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3 py-2 focus-within:border-admin-brand">{translation.tags.map((tag) => <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-admin-brand-soft px-2.5 py-1 text-xs font-medium text-admin-brand">
 <span>{tag}</span>
-<button type="button" className="grid size-4 place-items-center rounded-full text-current hover:bg-admin-brand hover:text-white" aria-label={`حذف ${tag}`} onClick={() => update('tags', form.tags.filter((currentTag) => currentTag !== tag))}>
+<button type="button" className="grid size-4 place-items-center rounded-full text-current hover:bg-admin-brand hover:text-white" aria-label={`حذف ${tag}`} onClick={() => updateTranslation('tags', translation.tags.filter((currentTag) => currentTag !== tag))}>
 <X size={12} />
 </button>
-</span>)}<input className="min-w-32 flex-1 border-0 bg-transparent px-1 py-1 text-sm font-normal text-admin-heading outline-none" value={tagDraft} placeholder={content.tagsPlaceholder || 'برچسب را بنویسید و Enter بزنید'} onChange={(event) => setTagDraft(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ',' || event.key === '،') { event.preventDefault(); addTag() } else if (event.key === 'Backspace' && !tagDraft && form.tags.length) update('tags', form.tags.slice(0, -1)) }} />
+</span>)}<input className="min-w-32 flex-1 border-0 bg-transparent px-1 py-1 text-sm font-normal text-admin-heading outline-none" value={tagDraft} placeholder={content.tagsPlaceholder || 'برچسب را بنویسید و Enter بزنید'} onChange={(event) => setTagDraft(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ',' || event.key === '،') { event.preventDefault(); addTag() } else if (event.key === 'Backspace' && !tagDraft && translation.tags.length) updateTranslation('tags', translation.tags.slice(0, -1)) }} />
 </div>
 </section>
 <section className="grid gap-4 rounded-2xl border border-admin-border bg-admin-card p-4 sm:p-5">
 <h3 className="text-sm text-admin-heading">{content.postContent || 'محتوای نوشته'}</h3>
-<RichTextEditor value={form.content} onChange={(value) => update('content', value)} />
+<RichTextEditor key={contentLanguage} language={contentLanguage} value={translation.content} onChange={(value) => updateTranslation('content', value)} />
 </section>
+<div className={`grid gap-5 ${isServices ? 'lg:grid-cols-2' : ''}`}>
 <section className="grid gap-5 rounded-2xl border border-admin-border bg-admin-card p-4 sm:p-5">
-<MediaUploadField content={{ countryImage: content.postImage || 'تصویر اصلی', choose: content.chooseImage || 'انتخاب تصویر', drop: content.dropImage || 'تصویر را بکشید و رها کنید', replace: content.replaceImage || 'جایگزین کردن', remove: content.removeImage || 'حذف' }} value={form.image} onChange={(value) => update('image', value)} />
+<MediaUploadField fill={isServices} content={{ countryImage: content.postImage || 'تصویر اصلی', choose: content.chooseImage || 'انتخاب تصویر', drop: content.dropImage || 'تصویر را بکشید و رها کنید', replace: content.replaceImage || 'جایگزین کردن', remove: content.removeImage || 'حذف' }} value={form.image} onChange={(value) => update('image', value)} />
 </section>
 <section className="grid gap-5 rounded-2xl border border-admin-border bg-admin-card p-4 sm:grid-cols-2 sm:p-5">
 <h3 className="text-sm text-admin-heading sm:col-span-2">{content.seo || 'تنظیمات موتور جستجو'}</h3>
-<Field label={content.seoTitle || 'عنوان SEO'} value={form.seoTitle} onChange={(value) => update('seoTitle', value)} full />
+<Field label={content.seoTitle || 'عنوان SEO'} value={translation.seoTitle} onChange={(value) => updateTranslation('seoTitle', value)} full={!isServices} />
+{isServices && <Field label={content.imageAlt || 'متن جایگزین تصویر'} value={translation.imageAlt} onChange={(value) => updateTranslation('imageAlt', value)} />}
 <label className="text-xs font-semibold text-admin-heading sm:col-span-2">
 <span>{content.metaDescription || 'توضیحات متا'}</span>
-<textarea rows="3" maxLength="170" className="mt-2 w-full resize-y rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3.5 py-3 text-sm leading-6 text-admin-heading outline-none focus:border-admin-brand" value={form.metaDescription} onChange={(event) => update('metaDescription', event.target.value)} />
+<textarea rows="3" maxLength="170" className="mt-2 w-full resize-y rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3.5 py-3 text-sm leading-6 text-admin-heading outline-none focus:border-admin-brand" value={translation.metaDescription} onChange={(event) => updateTranslation('metaDescription', event.target.value)} />
 </label>
-<Field label={content.imageAlt || 'متن جایگزین تصویر'} value={form.imageAlt} onChange={(value) => update('imageAlt', value)} />
+{!isServices && <Field label={content.imageAlt || 'متن جایگزین تصویر'} value={translation.imageAlt} onChange={(value) => updateTranslation('imageAlt', value)} />}
 </section>
+</div>
 </div>
     <footer className="flex justify-end gap-2 border-t border-admin-border bg-admin-card px-4 py-2 sm:px-6"><button type="button" onClick={close} className="min-h-8 rounded-xl border border-admin-border px-4 text-xs font-semibold text-admin-muted hover:border-admin-brand hover:text-admin-brand">{content.cancel || 'انصراف'}</button><button type="submit" className="min-h-8 rounded-xl bg-admin-brand px-5 text-xs font-semibold text-white hover:bg-orange-500">{content.save || 'ذخیره تغییرات'}</button></footer>
   </form></div>

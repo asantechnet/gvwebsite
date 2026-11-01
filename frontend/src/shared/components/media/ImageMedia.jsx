@@ -1,11 +1,1 @@
-function ImageMedia({ post, media, fill = false }) {
-  const images = media.gallery?.length ? media.gallery : [{ src: post.image, alt: media.imageAlt, label: media.imageLabel }]
-  return <div className={`w-full min-w-0 max-w-full ${fill ? 'h-full' : ''}`}><div className={`grid gap-3 ${fill ? 'h-full' : ''} ${images.length > 1 ? 'sm:grid-cols-3' : 'grid-cols-1'}`}>
-    {images.map((image, index) => <figure key={image.src} className={`relative overflow-hidden rounded-2xl border border-border dark:border-gray-600 ${fill ? 'h-full min-h-0' : ''} ${images.length > 1 && index === 0 ? 'sm:col-span-2 sm:row-span-2' : ''}`}>
-      <img src={image.src} alt={image.alt} className={`block h-full w-full object-cover ${fill ? '' : images.length > 1 && index === 0 ? 'aspect-[16/9]' : 'aspect-[16/8]'}`} />
-      <figcaption className="absolute right-2 bottom-2 rounded-md bg-black/60 px-2 py-1 text-[10px] font-semibold leading-4 text-white backdrop-blur-sm">{image.label}</figcaption>
-    </figure>)}
-  </div></div>
-}
-
-export default ImageMedia
+export { default } from '../rich-text-editor/media/ImageMedia.jsx'
