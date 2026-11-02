@@ -45,9 +45,10 @@
 .gv-rich-text-editor .cms-opportunity-prose :where(ul, ol) { margin-block: .75rem; padding-inline-start: 1.5rem; }
 .gv-rich-text-editor .cms-opportunity-prose ul { list-style: disc; }
 .gv-rich-text-editor .cms-opportunity-prose ol { list-style: decimal; }
-.gv-rich-text-editor .cms-opportunity-prose :where(ul, ol)[data-columns="2"] { columns: 2; column-gap: 1.25rem; }
-.gv-rich-text-editor .cms-opportunity-prose :where(ul, ol)[data-columns="3"] { columns: 3; column-gap: 1.25rem; }
-.gv-rich-text-editor .cms-opportunity-prose :where(ul, ol)[data-columns] > li { break-inside: avoid; margin-block: .35rem; }
+.gv-rich-text-editor .cms-opportunity-prose :where(ul, ol)[data-columns] { display: grid; column-gap: 1.25rem; row-gap: .35rem; }
+.gv-rich-text-editor .cms-opportunity-prose :where(ul, ol)[data-columns="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.gv-rich-text-editor .cms-opportunity-prose :where(ul, ol)[data-columns="3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.gv-rich-text-editor .cms-opportunity-prose :where(ul, ol)[data-columns] > li { min-width: 0; margin-block: 0; }
 .gv-rich-text-editor .cms-opportunity-prose figure[data-editor-media] { margin-block: 1rem; overflow: hidden; border: 1px solid var(--admin-border); border-radius: 1rem; background: var(--admin-control-soft); padding: .65rem; }
 .gv-rich-text-editor .cms-opportunity-prose figure[data-editor-media] :where(img, video) { display: block; width: 100%; max-height: 24rem; border-radius: .7rem; object-fit: contain; }
 .gv-rich-text-editor .cms-opportunity-prose figure[data-editor-media] audio { display: block; width: 100%; }
@@ -58,4 +59,4 @@
 .gv-rich-text-editor .cms-opportunity-prose [data-editor-button] a:active { background: color-mix(in srgb, var(--brand-orange) 84%, #8f3a07); }
 @media (hover: hover) and (min-width: 1024px) { .gv-rich-text-editor .cms-heading-icon:hover .cms-heading-icon-remove { opacity: 1; } }
 @media (hover: none), (max-width: 1023px) { .gv-rich-text-editor .cms-heading-icon.is-controls-visible .cms-heading-icon-remove { opacity: 1; } }
-@media (max-width: 640px) { .gv-rich-text-editor .cms-opportunity-prose :where(ul, ol)[data-columns] { columns: 1; } }
+@media (max-width: 640px) { .gv-rich-text-editor .cms-opportunity-prose :where(ul, ol)[data-columns] { grid-template-columns: minmax(0, 1fr); } }

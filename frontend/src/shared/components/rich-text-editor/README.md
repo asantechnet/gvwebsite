@@ -62,6 +62,8 @@ See `Example.jsx` for a minimal working component.
 
 Bold, italic, underline, links, H2/H3 toggles, heading icons and categories, highlight boxes, bullet/numbered lists, multi-column lists, left/center/right alignment, action buttons, undo/redo, image/video/audio attachments, media editing/removal, and all five media-grid layouts are included. Mobile toolbar categories and desktop toolbar groups are preserved.
 
+Two- and three-column lists flow row by row in the editor's configured direction. Press `Tab` to advance to the next item (creating one when needed), and `Shift+Tab` to return to the previous item. `Enter` retains its normal paragraph/list behavior.
+
 Media files selected in the browser use object URLs for preview, matching the current frontend implementation. A production application must upload files and replace object URLs with persistent server URLs before saving durable content.
 
 ## Theming

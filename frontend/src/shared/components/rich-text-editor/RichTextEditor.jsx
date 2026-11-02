@@ -121,8 +121,62 @@ const StructuredAttributes = Extension.create({
   addGlobalAttributes: () => [{ types: ['bulletList', 'orderedList'], attributes: { columns: { default: 1, parseHTML: (element) => Number(element.getAttribute('data-columns')) || 1, renderHTML: ({ columns }) => Number(columns) > 1 ? { 'data-columns': columns } : {} } } }],
 })
 
+const MultiColumnListNavigation = Extension.create({
+  name: 'multiColumnListNavigation',
+  priority: 1000,
+  addKeyboardShortcuts() {
+    const moveBetweenItems = (backward = false) => {
+      const { state, view } = this.editor
+      const { $from } = state.selection
+      let listDepth = -1
+      let itemDepth = -1
+
+      for (let depth = $from.depth; depth > 0; depth -= 1) {
+        const nodeName = $from.node(depth).type.name
+        if (itemDepth < 0 && nodeName === 'listItem') itemDepth = depth
+        if (nodeName === 'bulletList' || nodeName === 'orderedList') {
+          listDepth = depth
+          break
+        }
+      }
+
+      if (listDepth < 0 || itemDepth !== listDepth + 1) return false
+      const list = $from.node(listDepth)
+      if (Number(list.attrs.columns) < 2) return false
+
+      const itemIndex = $from.index(listDepth)
+      const itemPosition = $from.before(itemDepth)
+      const transaction = state.tr
+      const selectionNear = state.selection.constructor.near
+
+      if (backward) {
+        if (itemIndex === 0) return false
+        const previousPosition = itemPosition - list.child(itemIndex - 1).nodeSize
+        transaction.setSelection(selectionNear(transaction.doc.resolve(previousPosition + 1), 1))
+      } else if (itemIndex < list.childCount - 1) {
+        const nextPosition = itemPosition + list.child(itemIndex).nodeSize
+        transaction.setSelection(selectionNear(transaction.doc.resolve(nextPosition + 1), 1))
+      } else {
+        const newItem = state.schema.nodes.listItem.createAndFill()
+        if (!newItem) return false
+        const insertionPosition = $from.end(listDepth)
+        transaction.insert(insertionPosition, newItem)
+        transaction.setSelection(selectionNear(transaction.doc.resolve(insertionPosition + 1), 1))
+      }
+
+      view.dispatch(transaction.scrollIntoView())
+      return true
+    }
+
+    return {
+      Tab: () => moveBetweenItems(),
+      'Shift-Tab': () => moveBetweenItems(true),
+    }
+  },
+})
+
 const getLanguage = () => { const lang = document.documentElement.lang; return lang === 'en' ? 'en' : lang === 'ps' ? 'ps' : 'prs' }
-const editorExtensions = (copy, onEditMedia, onEditGridSlot, placeholder) => [StarterKit.configure({ link: false, underline: false, heading: false }), IconHeading, Underline, Link.configure({ openOnClick: false, autolink: true, defaultProtocol: 'https' }), Placeholder.configure({ placeholder: placeholder || copy.placeholder }), TextAlign.configure({ types: ['heading', 'paragraph'], alignments: ['left', 'center', 'right'] }), StructuredAttributes, HighlightBox, MediaBlock.configure({ onEdit: onEditMedia }), MediaGrid.configure({ onEditSlot: onEditGridSlot }), ActionButton]
+const editorExtensions = (copy, onEditMedia, onEditGridSlot, placeholder) => [StarterKit.configure({ link: false, underline: false, heading: false }), IconHeading, Underline, Link.configure({ openOnClick: false, autolink: true, defaultProtocol: 'https' }), Placeholder.configure({ placeholder: placeholder || copy.placeholder }), TextAlign.configure({ types: ['heading', 'paragraph'], alignments: ['left', 'center', 'right'] }), StructuredAttributes, MultiColumnListNavigation, HighlightBox, MediaBlock.configure({ onEdit: onEditMedia }), MediaGrid.configure({ onEditSlot: onEditGridSlot }), ActionButton]
 const toolClass = 'grid h-9 min-w-0 w-full place-items-center rounded-lg border transition-colors disabled:opacity-35 md:size-9 md:min-w-9'
 
 function EditorMediaNodeView({ node, selected, deleteNode, extension, getPos }) {
@@ -197,9 +251,11 @@ function OpportunityRichTextEditor({ value, onChange, language: requestedLanguag
   const [panel, setPanel] = useState(null); const [mobileToolCategory, setMobileToolCategory] = useState(null); const [linkValue, setLinkValue] = useState(''); const [pendingSelection, setPendingSelection] = useState(null); const [pendingIconSelection, setPendingIconSelection] = useState(null); const [buttonValue, setButtonValue] = useState({ label: '', href: '' }); const [attachment, setAttachment] = useState(emptyAttachment); const [editingMediaPos, setEditingMediaPos] = useState(null); const [editingGridSlot, setEditingGridSlot] = useState(null)
   const openMediaEditor = (attrs, position) => { setAttachment({ ...emptyAttachment, ...attrs }); setEditingMediaPos(position); setPanel('attachment') }
   const openGridSlotEditor = (attrs, position, index) => { setAttachment({ ...emptyAttachment, ...(attrs || {}) }); setEditingMediaPos(null); setEditingGridSlot({ position, index }); setPanel('attachment') }
-  const editor = useEditor({ extensions: editorExtensions(copy, openMediaEditor, openGridSlotEditor, placeholder), content: value || '', editable: !locked, immediatelyRender: false, editorProps: { attributes: { dir: 'auto', class: 'cms-opportunity-prose h-72 overflow-y-auto text-start px-4 py-3 text-sm font-normal leading-7 text-admin-heading outline-none' } }, onUpdate: ({ editor: current }) => onChange(current.getHTML()) })
+  const direction = language === 'en' ? 'ltr' : 'rtl'
+  const editor = useEditor({ extensions: editorExtensions(copy, openMediaEditor, openGridSlotEditor, placeholder), content: value || '', editable: !locked, immediatelyRender: false, editorProps: { attributes: { dir: direction, class: 'cms-opportunity-prose h-72 overflow-y-auto text-start px-4 py-3 text-sm font-normal leading-7 text-admin-heading outline-none' } }, onUpdate: ({ editor: current }) => onChange(current.getHTML()) })
   useEffect(() => { if (editor && value !== editor.getHTML()) editor.commands.setContent(value || '', { emitUpdate: false }) }, [editor, value])
   useEffect(() => { editor?.setEditable(!locked) }, [editor, locked])
+  useEffect(() => { editor?.view.dom.setAttribute('dir', direction) }, [direction, editor])
   useEffect(() => {
     const closeMobileLists = (event) => {
       if (mobileToolbarRef.current?.contains(event.target)) return

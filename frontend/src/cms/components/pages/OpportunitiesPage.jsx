@@ -75,14 +75,14 @@ function OpportunitiesPage({ content, opportunities, exams, services }) {
 <table className="w-full table-fixed border-collapse text-right">
 <thead className="bg-(--editor-field) text-[.65rem] font-semibold text-admin-muted">
 <tr>
-<th className="w-[48%] p-4">{labels.postTitle || 'نوشته'}</th>
-<th className="p-4">{labels.postCategory || 'دسته‌بندی'}</th>
-<th className="p-4">{labels.pageStatus || 'وضعیت'}</th>
-<th className="w-36 p-4">{labels.actions || 'عملیات'}</th>
+<th className={`${isServices ? '' : 'w-[48%]'} p-4`}>{labels.postTitle || 'نوشته'}</th>
+{!isServices && <th className="p-4">{labels.postCategory || 'دسته‌بندی'}</th>}
+<th className="w-32 pe-5 p-4 text-right"><span className="inline-block translate-x-6">{labels.pageStatus || 'وضعیت'}</span></th>
+<th className="w-36 ps-5 p-4 text-right">{labels.actions || 'عملیات'}</th>
 </tr>
 </thead>
 <tbody>{filteredCards.map((card) => <tr className="border-t border-admin-border transition hover:bg-admin-control-soft" key={card.id}>
-<td className="p-4">
+<td className="pe-5 p-4 text-right">
 <div className="flex items-center gap-3">
 <img className="size-14 rounded-xl bg-(--editor-field) object-cover" src={card.image} alt="" />
 <div className="min-w-0">
@@ -90,12 +90,12 @@ function OpportunitiesPage({ content, opportunities, exams, services }) {
 </div>
 </div>
 </td>
-<td className="p-4 text-xs text-admin-muted">{card.category || label}</td>
-<td className="p-4">
-{isServices ? <ServiceStatusBadge card={card} labels={labels} onToggle={() => setServiceCards((current) => current.map((service) => service.slug === card.slug ? { ...service, status: service.status === 'draft' ? 'published' : 'draft', savedStatus: service.savedStatus ?? service.status } : service))} /> : <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[.65rem] font-semibold text-emerald-700 dark:text-emerald-300">{labels.published || 'منتشرشده'}</span>}
+{!isServices && <td className="p-4 text-xs text-admin-muted">{card.category || label}</td>}
+<td className="w-32 pe-5 p-4 text-right">
+<span className="inline-block translate-x-6">{isServices ? <ServiceStatusBadge card={card} labels={labels} onToggle={() => setServiceCards((current) => current.map((service) => service.slug === card.slug ? { ...service, status: service.status === 'draft' ? 'published' : 'draft', savedStatus: service.savedStatus ?? service.status } : service))} /> : <span className="rounded-full bg-emerald-500/10 px-2.5 py-1 text-[.65rem] font-semibold text-emerald-700 dark:text-emerald-300">{labels.published || 'منتشرشده'}</span>}</span>
 </td>
-<td className="p-4">
-<div className="flex gap-1">
+<td className="ps-5 p-4 text-right">
+<div className="flex justify-end gap-1">
 <a className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand" href={card.href} target="_blank" rel="noreferrer" aria-label={labels.preview || 'پیش‌نمایش'}>
 <ExternalLink size={16} />
 </a>
@@ -110,12 +110,12 @@ function OpportunitiesPage({ content, opportunities, exams, services }) {
 </tr>)}</tbody>
 </table>
 </section>
-    <section className="grid gap-3 lg:hidden">{filteredCards.map((card) => <article className="grid grid-cols-[5rem_1fr] gap-3 rounded-2xl border border-admin-border bg-admin-card p-3 shadow-[0_8px_24px_rgb(15_23_42_/.05)]" key={card.id}>
-<img className="h-20 w-20 rounded-xl bg-(--editor-field) object-cover" src={card.image} alt="" />
-<div className="min-w-0">
+    <section className="grid gap-3 lg:hidden md:grid-cols-2">{filteredCards.map((card) => <article className="relative grid min-h-32 grid-cols-[5rem_1fr] items-center gap-3 rounded-2xl border border-admin-border bg-admin-card p-3 shadow-[0_8px_24px_rgb(15_23_42_/.05)]" key={card.id}>
+<img className="h-20 w-20 justify-self-center rounded-xl bg-(--editor-field) object-cover" src={card.image} alt="" />
+<div className="min-w-0 pl-12 text-right">
 <strong className="block truncate text-sm text-admin-heading">{card.title}</strong>
 {isServices ? <ServiceStatusBadge card={card} labels={labels} onToggle={() => setServiceCards((current) => current.map((service) => service.slug === card.slug ? { ...service, status: service.status === 'draft' ? 'published' : 'draft', savedStatus: service.savedStatus ?? service.status } : service))} /> : <span className="mt-2 inline-block rounded-full bg-emerald-500/10 px-2 py-1 text-[.65rem] font-semibold text-emerald-700 dark:text-emerald-300">{labels.published || 'منتشرشده'}</span>}
-<div className="mt-2 flex justify-end gap-1">
+<div className="absolute left-3 top-1/2 flex -translate-y-1/2 flex-col gap-1">
 <a className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-muted hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand" href={card.href} target="_blank" rel="noreferrer" aria-label={labels.preview || 'پیش‌نمایش'}>
 <ExternalLink size={15} />
 </a>
@@ -148,7 +148,7 @@ function StatusSelect({ value, onChange, labels, compact = false }) {
 
 function ServiceStatusBadge({ card, labels, onToggle }) {
   const isDraft = card.status === 'draft'
-  return <button type="button" onClick={(event) => { onToggle(); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition ${isDraft ? 'bg-admin-brand-soft text-admin-brand hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'}`}>{isDraft ? (labels.draft || 'پیش‌نویس') : (labels.published || 'منتشرشده')}</button>
+  return <button type="button" onClick={(event) => { onToggle(); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`mt-2 inline-block rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition lg:mt-0 ${isDraft ? 'bg-admin-brand-soft text-admin-brand hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'}`}>{isDraft ? (labels.draft || 'پیش‌نویس') : (labels.published || 'منتشرشده')}</button>
 }
 
 function FeaturedToggle({ label, checked, onChange, full = true }) {
