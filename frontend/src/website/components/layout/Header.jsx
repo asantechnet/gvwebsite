@@ -22,7 +22,7 @@ import { headerNavigation } from "@website/data/navigation.js";
 import LanguageSwitcher from "@ui/LanguageSwitcher.jsx";
 import { localizeHref } from "@website/utils/language.js";
 
-const noFocusOutline = "focus:outline-none focus-visible:outline-none";
+const noFocusOutline = "outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0";
 const iconButtonClasses =
   "grid size-10 place-items-center rounded-xl border border-border bg-surface-muted text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700";
 const navIcons = {

@@ -88,6 +88,10 @@ function NotFoundSkeleton() {
   return <section className="bg-background px-4 py-16 md:px-6 lg:py-24"><div className="mx-auto flex max-w-2xl flex-col items-center rounded-4xl border border-border bg-surface p-10"><SkeletonBlock className="h-20 w-36 bg-primary/15" /><SkeletonBlock className="mt-5 h-10 w-3/4" /><SkeletonBlock className="mt-4 h-4 w-full" /><SkeletonBlock className="mt-2 h-4 w-2/3" /><SkeletonBlock className="mt-7 h-12 w-36" /></div></section>
 }
 
+function MaintenanceSkeleton() {
+  return <main className="grid min-h-screen place-items-center bg-background px-5 py-10"><section className="relative flex w-full max-w-2xl items-center justify-center rounded-[2rem] border border-border bg-surface px-6 pt-28 pb-8 shadow-2xl shadow-brand-orange/10 sm:px-12 sm:pt-28 sm:pb-10 lg:py-10"><div className="absolute left-4 top-4 flex gap-2"><SkeletonBlock className="h-10 w-32 rounded-xl" /><SkeletonBlock className="size-10 rounded-xl" /></div><div className="mx-auto flex w-full max-w-xl flex-col items-center"><SkeletonBlock className="h-12 w-48 rounded-xl bg-primary/15" /><SkeletonBlock className="mt-7 h-3 w-24 bg-primary/20" /><SkeletonBlock className="mt-4 h-10 w-[min(100%,30rem)]" /><SkeletonBlock className="mt-6 h-4 w-[min(100%,27rem)]" /><SkeletonBlock className="mt-3 h-4 w-[min(82%,22rem)]" /><SkeletonBlock className="mt-7 h-4 w-52 bg-primary/15" /></div></section></main>
+}
+
 function Content({ path, hasSearchQuery, searchResultCount, directoryItemCount }) {
   if (path === '/') return <HomeSkeleton />
   if (path === '/about') return <AboutSkeleton />
@@ -103,6 +107,6 @@ function Content({ path, hasSearchQuery, searchResultCount, directoryItemCount }
   return <NotFoundSkeleton />
 }
 
-export default function RouteProgress({ path, hasSearchQuery = false, searchResultCount = 0, directoryItemCount = 0 }) {
-  return <div className="overflow-hidden bg-background" role="status" aria-live="polite" aria-busy="true" aria-label="در حال بارگذاری محتوای وب‌سایت"><span className="sr-only">در حال بارگذاری محتوای وب‌سایت</span><HeaderSkeleton /><Content path={path} hasSearchQuery={hasSearchQuery} searchResultCount={searchResultCount} directoryItemCount={directoryItemCount} /><FooterSkeleton /></div>
+export default function RouteProgress({ path, hasSearchQuery = false, searchResultCount = 0, directoryItemCount = 0, maintenanceMode = false }) {
+  return <div className="overflow-hidden bg-background" role="status" aria-live="polite" aria-busy="true" aria-label="در حال بارگذاری محتوای وب‌سایت"><span className="sr-only">در حال بارگذاری محتوای وب‌سایت</span>{maintenanceMode ? <MaintenanceSkeleton /> : <><HeaderSkeleton /><Content path={path} hasSearchQuery={hasSearchQuery} searchResultCount={searchResultCount} directoryItemCount={directoryItemCount} /><FooterSkeleton /></>}</div>
 }

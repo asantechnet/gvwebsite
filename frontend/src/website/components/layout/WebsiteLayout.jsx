@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import Footer from './Footer.jsx'
+import MaintenancePage from '../MaintenancePage.jsx'
 import Header from './Header.jsx'
 import ScrollProgress from './ScrollProgress.jsx'
 import RouteProgress from '@shared/RouteProgress.jsx'
@@ -123,6 +124,7 @@ function formatPageTitle(pattern, values) {
 
 function WebsiteLayout({ children = null }) {
   const [isRouteLoading, setIsRouteLoading] = useState(true)
+  const [maintenanceMode, setMaintenanceMode] = useState(() => window.localStorage.getItem('globalvision-maintenance-mode') === 'true')
   const scrollStorageKey = `globalvision-scroll:${window.location.pathname}${window.location.search}`
   const savedScrollPosition = useRef(Number(window.sessionStorage.getItem(scrollStorageKey)))
   const [theme, setTheme] = useState(() => {
@@ -131,6 +133,14 @@ function WebsiteLayout({ children = null }) {
     return window.localStorage.getItem('globalvision-theme') || 'light'
   })
   const { language, pagePath: page } = parseLocalizedPathname(window.location.pathname)
+
+  useLayoutEffect(() => {
+    if (!maintenanceMode) return
+    if (window.location.pathname === '/' && !window.location.search && !window.location.hash) return
+
+    window.history.replaceState(window.history.state, '', '/')
+  }, [maintenanceMode])
+
   const {
     header: headerContent,
     footer: footerContent,
@@ -278,6 +288,12 @@ function WebsiteLayout({ children = null }) {
     upsertLanguageLink('alternate', localizeHref(page, 'dr'), 'x-default')
   }, [language, page])
 
+  useEffect(() => {
+    const syncMaintenanceMode = (event) => { if (event.key === 'globalvision-maintenance-mode') setMaintenanceMode(event.newValue === 'true') }
+    window.addEventListener('storage', syncMaintenanceMode)
+    return () => window.removeEventListener('storage', syncMaintenanceMode)
+  }, [])
+
   if (isRouteLoading) {
     const directoryItemCount = page === '/services'
       ? servicesContent.services.length
@@ -286,8 +302,10 @@ function WebsiteLayout({ children = null }) {
         : ['/opportunities/study', '/opportunities/work', '/opportunities/migration', '/opportunities/investment'].includes(page)
             ? guidesContent.countries.length
             : 0
-    return <RouteProgress path={page} hasSearchQuery={Boolean(searchQuery)} searchResultCount={searchResults.length} directoryItemCount={directoryItemCount} />
+    return <RouteProgress path={page} hasSearchQuery={Boolean(searchQuery)} searchResultCount={searchResults.length} directoryItemCount={directoryItemCount} maintenanceMode={maintenanceMode} />
   }
+
+  if (maintenanceMode) return <MaintenancePage language={language} theme={theme} contactEmail={contactContent.contact.details.find((detail) => detail.type === 'email')?.value || 'info@globalvision.af'} onLanguageChange={(nextLanguage) => window.location.assign(localizeHref(`${page}${window.location.search}${window.location.hash}`, nextLanguage))} onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))} />
 
   return (
     <WebsiteLanguageContext.Provider value={language}>

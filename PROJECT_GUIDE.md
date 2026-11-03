@@ -204,6 +204,7 @@ Use aliases across source areas and relative imports for nearby files within one
 - Use stable semantic keys, not full source sentences as keys.
 - Dari (`dr`) is the public website's default and fallback route identifier. Pashto uses `ps` and English uses `en`; legacy `da` and `prs` values normalize to `dr`.
 - Every public route is language-prefixed (`/dr`, `/ps`, or `/en`). `/` and legacy unprefixed public paths redirect to the equivalent Dari route, and language switching preserves the current page, query string, and hash.
+- While maintenance mode is active, every public route is replaced with the origin root (`/`) before the maintenance page is shown. The blocked path, query string, and hash must not remain in browser history; the active language is retained in application state for the maintenance content.
 - Public language switching is driven by the centralized language configuration and changes content, the `data-language` identifier, the accurate document `lang` value, and direction. Dari and Pashto use RTL while English uses LTR.
 - Use logical alignment and spacing utilities such as `text-start`, `text-end`, `start-*`, and `end-*` for localized public layouts. Avoid broad language-specific CSS overrides for physical left/right utility classes.
 - Reusable components receive translated strings through props or a translation interface; they must not duplicate literal UI copy for both languages.
@@ -372,6 +373,9 @@ When backend or content management work begins:
 - Validate and sanitize server input even when frontend validation exists.
 - Keep secrets in environment files and never commit credentials.
 - Keep React presentation files insulated from endpoint paths and raw Laravel response structures so normal backend changes remain localized to services and adapters.
+- Persist the public light-mode and dark-mode logos in CMS settings. The public website, CMS shell, and maintenance page must all read those logo values through the shared API layer so a settings change updates every consumer.
+- Treat the contact email managed on the CMS contact page as the single source of truth. The public contact page and maintenance page must use the same backend value.
+- Persist the primary and secondary branding colors in CMS settings and expose them as shared dynamic theme tokens for both the public website and CMS, including the maintenance page.
 - Provide consistent loading, empty, success, and error states.
 - Update this guide before describing backend, CMS, routes, pages, or dependencies as implemented.
 

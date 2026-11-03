@@ -82,21 +82,22 @@
       "key": "posts"
     },
     {
-      "label": "Services",
-      "note": "Active Global Vision Services",
-      "key": "services"
+      "label": "Scholarships",
+      "note": "Published scholarships",
+      "key": "scholarships"
     },
     {
-      "label": "Guides",
-      "note": "Countries and exam guides",
-      "key": "guides"
+      "label": "Countries",
+      "note": "Study guide countries",
+      "key": "countries"
     },
     {
-      "label": "New messages",
-      "note": "Need review and answer",
+      "label": "Messages",
+      "note": "Received messages",
       "key": "messages"
     }
   ],
+  "metricLastMonth": "{count} in the last month",
   "analytics": {
     "label": "Website statistics",
     "contentEyebrow": "Content statistics",
@@ -106,8 +107,8 @@
     "contentEmpty": "Add content to view statistics.",
     "categories": [
       "Magazine",
-      "Services",
-      "Guides"
+      "Scholarships",
+      "Countries"
     ],
     "inboxEyebrow": "Statistics of messages",
     "inboxTitle": "Message status",

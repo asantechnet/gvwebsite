@@ -91,6 +91,7 @@ function UnsavedChangesBar({ sidebarCollapsed = false }) {
       setPromptClosing(false)
       setPendingHref(null)
       if (saveChanges) {
+        window.dispatchEvent(new Event('cms:changes-saved'))
         setSaved(true)
         window.setTimeout(() => setSaved(false), 2200)
       }
