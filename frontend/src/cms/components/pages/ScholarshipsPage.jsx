@@ -1,7 +1,7 @@
 import ScholarshipsEditorSection from '@cms/components/sections/ScholarshipsEditorSection.jsx'
 
-function ScholarshipsPage({ content, initialContent }) {
-  return <ScholarshipsEditorSection content={content} initialContent={initialContent} />
+function ScholarshipsPage({ content, initialTranslations }) {
+  return <ScholarshipsEditorSection content={content} initialTranslations={initialTranslations} />
 }
 
 export default ScholarshipsPage

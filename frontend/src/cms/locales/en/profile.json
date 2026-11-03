@@ -26,7 +26,7 @@
   "memberSince": "Membership from",
   "status": "Account status",
   "active": "Active",
-  "sessions": "Active meetings",
+  "sessions": "Active devices",
   "sessionsDescription": "Devices logged into the CMS.",
   "noSessions": "No active meeting has been registered.",
   "latestPassword": "Last password change",

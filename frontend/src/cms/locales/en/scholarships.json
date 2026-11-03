@@ -59,6 +59,7 @@
     "status": "Publication status",
     "officialHref": "Official source link",
     "summary": "Summary of the scholarship",
+    "overview": "Complete scholarship information",
     "image": "Scholarship image"
   }
 }

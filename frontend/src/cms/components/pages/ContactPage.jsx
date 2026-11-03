@@ -1,7 +1,7 @@
 import ContactEditorSection from '@cms/components/sections/ContactEditorSection.jsx'
 
-function ContactPage({ content, initialContent }) {
-  return <ContactEditorSection content={content} initialContent={initialContent} />
+function ContactPage({ content, initialTranslations }) {
+  return <ContactEditorSection content={content} initialTranslations={initialTranslations} />
 }
 
 export default ContactPage

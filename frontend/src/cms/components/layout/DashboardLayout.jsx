@@ -9,6 +9,8 @@ import ContactPage from '@cms/components/pages/ContactPage.jsx'
 import OpportunitiesPage from '@cms/components/pages/OpportunitiesPage.jsx'
 import MessagesPage from '@cms/components/pages/MessagesPage.jsx'
 import ProfilePage from '@cms/components/pages/ProfilePage.jsx'
+import MediaLibraryPage from '@cms/components/pages/MediaLibraryPage.jsx'
+import SettingsPage from '@cms/components/pages/SettingsPage.jsx'
 import PlaceholderPage from '@cms/components/pages/PlaceholderPage.jsx'
 import DashboardSidebar from './DashboardSidebar.jsx'
 import DashboardTopbar from './DashboardTopbar.jsx'
@@ -49,6 +51,9 @@ import pashtoOpportunitiesContent from '@website/locales/ps/opportunities.json'
 import englishContent from '@cms/locales/en/dashboard.json'
 import englishMessagesContent from '@cms/locales/en/messages.json'
 import englishProfileContent from '@cms/locales/en/profile.json'
+import dariDeviceContent from '@cms/locales/prs/device.json'
+import pashtoDeviceContent from '@cms/locales/ps/device.json'
+import englishDeviceContent from '@cms/locales/en/device.json'
 import englishHomeEditorContent from '@cms/locales/en/home.json'
 import englishAboutEditorContent from '@cms/locales/en/about.json'
 import englishMagazineEditorContent from '@cms/locales/en/magazine.json'
@@ -62,6 +67,12 @@ import englishContactContent from '@website/locales/en/contact.json'
 import englishOpportunitiesContent from '@website/locales/en/opportunities.json'
 import englishGuidesContent from '@website/locales/en/guides.json'
 import englishServicesContent from '@website/locales/en/services.json'
+import dariMediaContent from '@cms/locales/prs/media.json'
+import pashtoMediaContent from '@cms/locales/ps/media.json'
+import englishMediaContent from '@cms/locales/en/media.json'
+import dariSettingsContent from '@cms/locales/prs/settings.json'
+import pashtoSettingsContent from '@cms/locales/ps/settings.json'
+import englishSettingsContent from '@cms/locales/en/settings.json'
 
 function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -74,20 +85,18 @@ function DashboardLayout() {
   const select = (dari, pashto, english) => language === 'en' ? english : language === 'ps' ? pashto : dari
   const content = select(dariContent, pashtoContent, englishContent)
   const messagesContent = select(dariMessagesContent, pashtoMessagesContent, englishMessagesContent)
-  const profileContent = select(dariProfileContent, pashtoProfileContent, englishProfileContent)
+  const deviceContent = select(dariDeviceContent, pashtoDeviceContent, englishDeviceContent)
+  const profileContent = { ...select(dariProfileContent, pashtoProfileContent, englishProfileContent), ...deviceContent }
   const homeEditorContent = select(dariHomeEditorContent, pashtoHomeEditorContent, englishHomeEditorContent)
-  const homeContent = select(dariHomeContent, pashtoHomeContent, englishHomeContent)
   const aboutEditorContent = select(dariAboutEditorContent, pashtoAboutEditorContent, englishAboutEditorContent)
-  const aboutContent = select(dariAboutContent, pashtoAboutContent, englishAboutContent)
   const magazineEditorContent = select(dariMagazineEditorContent, pashtoMagazineEditorContent, englishMagazineEditorContent)
-  const magazineContent = select(dariMagazineContent, pashtoMagazineContent, englishMagazineContent)
   const scholarshipsEditorContent = select(dariScholarshipsEditorContent, pashtoScholarshipsEditorContent, englishScholarshipsEditorContent)
-  const scholarshipsContent = select(dariScholarshipsContent, pashtoScholarshipsContent, englishScholarshipsContent)
   const contactEditorContent = select(dariContactEditorContent, pashtoContactEditorContent, englishContactEditorContent)
-  const contactContent = select(dariContactContent, pashtoContactContent, englishContactContent)
   const opportunitiesContent = select(dariOpportunitiesContent, pashtoOpportunitiesContent, englishOpportunitiesContent)
   const guidesContent = select(dariGuidesContent, pashtoGuidesContent, englishGuidesContent)
   const servicesContent = select(dariServicesContent, pashtoServicesContent, englishServicesContent)
+  const mediaContent = select(dariMediaContent, pashtoMediaContent, englishMediaContent)
+  const settingsContent = select(dariSettingsContent, pashtoSettingsContent, englishSettingsContent)
   const serviceSources = { prs: dariServicesContent.services, ps: pashtoServicesContent.services, en: englishServicesContent.services }
   const localizedServices = servicesContent.services.map((service) => ({
     ...service,
@@ -104,6 +113,9 @@ function DashboardLayout() {
     document.documentElement.lang = language
     document.documentElement.dir = language === 'en' ? 'ltr' : 'rtl'
     document.title = content.documentTitle
+    let robots = document.querySelector('meta[name="robots"]')
+    if (!robots) { robots = document.createElement('meta'); robots.name = 'robots'; document.head.appendChild(robots) }
+    robots.content = 'noindex, nofollow, noarchive'
     window.localStorage.setItem('globalvision-theme', theme)
     window.sessionStorage.setItem('globalvision-language', language)
   }, [content.documentTitle, language, theme])
@@ -129,7 +141,7 @@ function DashboardLayout() {
     <DashboardSidebar content={content} theme={theme} open={sidebarOpen} collapsed={sidebarCollapsed} onCollapseToggle={toggleSidebar} onClose={() => setSidebarOpen(false)} />
     <div className={`admin-shell min-h-screen transition-[padding] duration-250 rtl:lg:pr-(--sidebar-width) ltr:lg:pl-(--sidebar-width) ${sidebarCollapsed ? 'rtl:lg:pr-21 ltr:lg:pl-21' : ''}`}>
       <DashboardTopbar content={content.topbar} searchItems={content.groups.flatMap((group) => group.items)} language={language} theme={theme} onMenuOpen={() => setSidebarOpen(true)} onThemeToggle={() => setTheme((current) => current === 'light' ? 'dark' : 'light')} onLanguageChange={setLanguage} />
-      <main id="dashboard-content" className="min-h-[calc(100vh-5rem)] px-4 pt-6 pb-28 sm:px-8 sm:pt-8">{window.location.pathname === '/dashboard' ? <DashboardPage content={content} counts={counts} /> : window.location.pathname.startsWith('/dashboard/home') ? <HomePage key={language} content={homeEditorContent} initialContent={homeContent} /> : window.location.pathname.startsWith('/dashboard/about') ? <AboutPage key={language} content={aboutEditorContent} initialContent={aboutContent} /> : window.location.pathname.startsWith('/dashboard/contact') ? <ContactPage key={language} content={contactEditorContent} initialContent={contactContent} /> : window.location.pathname.startsWith('/dashboard/magazine') ? <MagazinePage key={language} content={magazineEditorContent} initialContent={magazineContent} /> : window.location.pathname.startsWith('/dashboard/scholarships') ? <ScholarshipsPage key={language} content={scholarshipsEditorContent} initialContent={scholarshipsContent} /> : window.location.pathname.startsWith('/dashboard/opportunities') ? <OpportunitiesPage key={language} content={content} opportunities={opportunitiesContent} exams={guidesContent.exams} /> : window.location.pathname.startsWith('/dashboard/services') ? <OpportunitiesPage key={language} content={content} services={localizedServices} /> : window.location.pathname.startsWith('/dashboard/messages') ? <MessagesPage content={{ ...messagesContent, dashboard: content.overview }} /> : window.location.pathname.startsWith('/dashboard/profile') ? <ProfilePage content={profileContent} theme={theme} /> : <PlaceholderPage content={content} pageKey={window.location.pathname.split('/')[2]} />}</main><UnsavedChangesBar sidebarCollapsed={sidebarCollapsed} />
+      <main id="dashboard-content" className="min-h-[calc(100vh-5rem)] px-4 pt-6 pb-28 sm:px-8 sm:pt-8">{window.location.pathname === '/dashboard' ? <DashboardPage content={content} counts={counts} /> : window.location.pathname.startsWith('/dashboard/home') ? <HomePage content={homeEditorContent} initialTranslations={{ prs: dariHomeContent, ps: pashtoHomeContent, en: englishHomeContent }} /> : window.location.pathname.startsWith('/dashboard/about') ? <AboutPage key={language} content={aboutEditorContent} initialTranslations={{ prs: dariAboutContent, ps: pashtoAboutContent, en: englishAboutContent }} /> : window.location.pathname.startsWith('/dashboard/contact') ? <ContactPage key={language} content={contactEditorContent} initialTranslations={{ prs: dariContactContent, ps: pashtoContactContent, en: englishContactContent }} /> : window.location.pathname.startsWith('/dashboard/magazine') ? <MagazinePage key={language} content={magazineEditorContent} initialTranslations={{ prs: dariMagazineContent, ps: pashtoMagazineContent, en: englishMagazineContent }} /> : window.location.pathname.startsWith('/dashboard/scholarships') ? <ScholarshipsPage key={language} content={scholarshipsEditorContent} initialTranslations={{ prs: dariScholarshipsContent, ps: pashtoScholarshipsContent, en: englishScholarshipsContent }} /> : window.location.pathname.startsWith('/dashboard/opportunities') ? <OpportunitiesPage key={language} content={content} opportunities={opportunitiesContent} exams={guidesContent.exams} /> : window.location.pathname.startsWith('/dashboard/services') ? <OpportunitiesPage key={language} content={content} services={localizedServices} /> : window.location.pathname.startsWith('/dashboard/messages') ? <MessagesPage content={{ ...messagesContent, dashboard: content.overview }} /> : window.location.pathname.startsWith('/dashboard/media') ? <MediaLibraryPage key={language} content={mediaContent} /> : window.location.pathname.startsWith('/dashboard/settings') ? <SettingsPage key={language} content={settingsContent} /> : window.location.pathname.startsWith('/dashboard/profile') ? <ProfilePage content={profileContent} theme={theme} /> : <PlaceholderPage content={content} pageKey={window.location.pathname.split('/')[2]} />}</main><UnsavedChangesBar sidebarCollapsed={sidebarCollapsed} />
     </div>
   </div></DeleteConfirmation>
 }

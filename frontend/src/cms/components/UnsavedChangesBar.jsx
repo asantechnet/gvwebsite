@@ -118,7 +118,6 @@ function UnsavedChangesBar({ sidebarCollapsed = false }) {
           {saved ? <><Check size={14} />{labels.saved}</> : dirty ? labels.dirty : labels.clean}
         </span>
         <div className="flex w-full items-center gap-[.38rem] min-[701px]:w-auto min-[701px]:gap-[.55rem]">
-          <button type="button" className="inline-flex min-h-9 flex-1 items-center justify-center gap-[.35rem] rounded-[.55rem] border border-admin-border bg-admin-control px-[.7rem] py-[.42rem] text-[.6875rem] font-semibold text-admin-muted transition hover:border-[#d97706] hover:bg-admin-brand-soft hover:text-[#d97706] min-[701px]:flex-none" onClick={() => { setDirty(false); setSaved(false); window.dispatchEvent(new Event('cms:changes-reset')) }}><RotateCcw size={14} />{labels.reset}</button>
           <button type="button" disabled={!dirty} className="inline-flex min-h-9 flex-1 items-center justify-center gap-[.35rem] rounded-[.55rem] border border-admin-brand bg-admin-brand px-[.7rem] py-[.42rem] text-[.6875rem] font-semibold text-white transition hover:bg-orange-500 disabled:cursor-not-allowed disabled:border-admin-border disabled:bg-admin-control-soft disabled:text-admin-muted min-[701px]:flex-none" onClick={save}><Save size={14} />{labels.saveChanges}</button>
         </div>
       </div>

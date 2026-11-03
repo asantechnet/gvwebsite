@@ -193,6 +193,7 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
             <div className="order-1 min-w-0 text-start lg:order-1">
               {content.countries?.length > 0 ? <CountryCards content={content} /> : <>
               <p className="text-lg font-medium leading-9 text-foreground-muted">{post.description}</p>
+              {post.facts?.length > 0 && <dl className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{post.facts.map((fact) => <div key={fact.label} className="rounded-2xl border border-border bg-background/70 p-4 dark:border-gray-600 dark:bg-gray-800"><dt className="text-xs font-bold text-primary">{fact.label}</dt><dd className="mt-2 text-sm font-extrabold text-foreground">{fact.value}</dd></div>)}</dl>}
               <div className="my-8 rounded-2xl border-r-4 border-primary bg-primary/10 px-5 py-4 text-base font-semibold leading-8 text-foreground">
                 {content.highlight}
               </div>

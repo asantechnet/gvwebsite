@@ -5,15 +5,19 @@ import MediaUploadField from '@cms/components/MediaUploadField.jsx'
 import PageContainer from '@cms/components/PageContainer.jsx'
 import PageHeading from '@cms/components/PageHeading.jsx'
 import SectionTabBar from '@cms/components/SectionTabBar.jsx'
+import ContentLanguageSwitcher from '@cms/components/ContentLanguageSwitcher.jsx'
 import { EditorField, EditorFieldGroup, EditorPreviewLink, EditorSectionHeader, EditorVisibilityToggle } from '@cms/components/EditorPrimitives.jsx'
 import useEditorTabs from '@cms/hooks/useEditorTabs.js'
 
 const sectionIcons = { hero: LayoutTemplate, introduction: Sparkles, missionVision: Eye, story: History, faq: CircleHelp, team: Users, cta: Flag }
 const collectionKeys = { introduction: 'values', story: 'milestones', faq: 'items', team: 'members' }
 
-function AboutEditorSection({ content, initialContent }) {
+function AboutEditorSection({ content, initialTranslations }) {
   const [selectedSection, setSelectedSection] = useEditorTabs({ defaultTab: 'hero', storageKey: 'globalvision-cms-about-tab', tabs: Object.keys(sectionIcons) })
-  const [draft, setDraft] = useState(() => structuredClone(initialContent))
+  const [contentLanguage, setContentLanguage] = useState(() => ['prs', 'ps', 'en'].includes(document.documentElement.lang) ? document.documentElement.lang : 'prs')
+  const [drafts, setDrafts] = useState(() => structuredClone(initialTranslations))
+  const draft = drafts[contentLanguage]
+  const setDraft = (update) => setDrafts((current) => ({ ...current, [contentLanguage]: typeof update === 'function' ? update(current[contentLanguage]) : update }))
   const [visibility, setVisibility] = useState(() => Object.fromEntries(Object.keys(sectionIcons).map((key) => [key, true])))
   const [editingItem, setEditingItem] = useState(null)
   const [addingItem, setAddingItem] = useState(false)
@@ -22,7 +26,11 @@ function AboutEditorSection({ content, initialContent }) {
 
   const updateSection = (field, value) => setDraft((current) => ({ ...current, [selectedSection]: { ...current[selectedSection], [field]: value } }))
   const updateNested = (group, field, value) => setDraft((current) => ({ ...current, [selectedSection]: { ...current[selectedSection], [group]: { ...current[selectedSection][group], [field]: value } } }))
-  const saveCollectionItem = (item) => setDraft((current) => ({ ...current, [selectedSection]: { ...current[selectedSection], [collectionKey]: editingItem === null ? [...current[selectedSection][collectionKey], item] : current[selectedSection][collectionKey].map((entry, index) => index === editingItem ? item : entry) } }))
+  const saveCollectionTranslations = (localizedItems) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => {
+    const items = languageDraft[selectedSection][collectionKey]
+    const item = localizedItems[language]
+    return [language, { ...languageDraft, [selectedSection]: { ...languageDraft[selectedSection], [collectionKey]: editingItem === null ? [...items, item] : items.map((entry, index) => index === editingItem ? item : entry) } }]
+  })))
   const deleteCollectionItem = async (index) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: content.deleteItemTitle, description: content.deleteItemDescription })
     if (confirmed) setDraft((current) => ({ ...current, [selectedSection]: { ...current[selectedSection], [collectionKey]: current[selectedSection][collectionKey].filter((_, itemIndex) => itemIndex !== index) } }))
@@ -33,7 +41,7 @@ function AboutEditorSection({ content, initialContent }) {
 
     <section className="min-w-0 w-full overflow-visible rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_38px_rgb(15_23_42_/.055)]">
       <SectionTabBar sections={content.sections} icons={sectionIcons} selectedSection={selectedSection} onSelect={setSelectedSection} ariaLabel={content.sectionsTitle} />
-      <EditorSectionHeader icon={sectionIcons[selectedSection]} title={content.sections[selectedSection].label} action={<EditorVisibilityToggle label={content.visible} checked={visibility[selectedSection]} onChange={() => setVisibility((current) => ({ ...current, [selectedSection]: !current[selectedSection] }))} />} />
+      <EditorSectionHeader icon={sectionIcons[selectedSection]} title={content.sections[selectedSection].label} action={<div className="flex flex-nowrap items-center gap-2"><EditorVisibilityToggle label={content.visible} checked={visibility[selectedSection]} onChange={() => setVisibility((current) => ({ ...current, [selectedSection]: !current[selectedSection] }))} /><ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} /></div>} />
 
       <div className="grid gap-6 p-5 sm:p-6">
         <div>
@@ -52,17 +60,21 @@ function AboutEditorSection({ content, initialContent }) {
       </div>
     </section>
 
-    {addingItem && <AboutItemModal content={content} type={selectedSection} item={editingItem === null ? null : collection[editingItem]} onClose={() => setAddingItem(false)} onSave={(item) => { saveCollectionItem(item); setAddingItem(false) }} />}
+    {addingItem && <AboutItemModal content={content} type={selectedSection} initialLanguage={contentLanguage} initialTranslations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, editingItem === null ? null : languageDraft[selectedSection][collectionKey]?.[editingItem] || null]))} onClose={() => setAddingItem(false)} onSave={(localizedItems) => { saveCollectionTranslations(localizedItems); setAddingItem(false) }} />}
   </PageContainer>
 }
 
-function AboutItemModal({ content, type, item, onClose, onSave }) {
+function AboutItemModal({ content, type, initialLanguage, initialTranslations, onClose, onSave }) {
   const emptyItem = type === 'faq' ? { question: '', answer: '' } : type === 'team' ? { name: '', role: '', avatar: '', avatarAlt: '' } : { title: '', description: '' }
-  const [draft, setDraft] = useState(() => ({ ...emptyItem, ...item }))
+  const [contentLanguage, setContentLanguage] = useState(initialLanguage)
+  const [popupDrafts, setPopupDrafts] = useState(() => Object.fromEntries(['prs', 'ps', 'en'].map((language) => [language, { ...emptyItem, ...initialTranslations[language] }])))
+  const draft = popupDrafts[contentLanguage]
+  const setDraft = (update) => setPopupDrafts((current) => ({ ...current, [contentLanguage]: typeof update === 'function' ? update(current[contentLanguage]) : update }))
   const fields = type === 'faq' ? [['question', content.fields.question], ['answer', content.fields.answer]] : type === 'team' ? [['name', content.fields.name], ['role', content.fields.role]] : [['title', content.fields.title], ['description', content.fields.description]]
-  const save = (event) => { event.preventDefault(); onSave(type === 'team' ? { ...draft, avatarAlt: draft.name } : draft) }
+  const save = (event) => { event.preventDefault(); onSave(Object.fromEntries(Object.entries(popupDrafts).map(([language, languageDraft]) => [language, type === 'team' ? { ...languageDraft, avatarAlt: languageDraft.name } : languageDraft]))) }
 
-  return <div className="cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center overflow-y-auto p-4" onMouseDown={onClose}><form onSubmit={save} onMouseDown={(event) => event.stopPropagation()} className="relative z-10 my-auto grid w-full max-w-lg gap-5 rounded-2xl border border-admin-border bg-admin-card p-5 shadow-2xl sm:p-6"><header className="flex items-start justify-between gap-4"><div><h2 className="font-heading text-lg text-admin-heading">{item ? content.editItemTitle : content.addItemTitle}</h2><p className="mt-1 text-xs text-admin-muted">{content.itemModalDescription}</p></div><button type="button" onClick={onClose} aria-label={content.close} className="grid size-9 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:text-admin-brand"><X size={17} /></button></header><div className="grid gap-4">{fields.map(([field, label]) => <EditorField key={field} label={label} value={draft[field]} multiline={field === 'description' || field === 'answer'} onChange={(value) => setDraft((current) => ({ ...current, [field]: value }))} />)}{type === 'team' && <MediaUploadField value={draft.avatar} onChange={(avatar) => setDraft((current) => ({ ...current, avatar }))} content={{ countryImage: content.fields.avatar, choose: content.chooseImage, drop: content.dropImage, replace: content.replaceImage, remove: content.removeImage }} />}</div><footer className="flex justify-end gap-2"><button type="button" onClick={onClose} className="min-h-10 rounded-xl border border-admin-border px-4 text-xs font-semibold text-admin-muted hover:border-admin-brand hover:text-admin-brand">{content.cancel}</button><button type="submit" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-admin-brand px-5 text-xs font-semibold text-white hover:bg-orange-500"><Plus size={15} />{content.save}</button></footer></form></div>
+  const isEditing = Object.values(initialTranslations).some(Boolean)
+  return <div className="cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center overflow-y-auto p-4" onMouseDown={onClose}><form onSubmit={save} onMouseDown={(event) => event.stopPropagation()} className="relative z-10 my-auto grid w-full max-w-lg gap-5 rounded-2xl border border-admin-border bg-admin-card p-5 shadow-2xl sm:p-6"><header className="flex flex-wrap items-center justify-between gap-4"><h2 className="min-w-0 flex-1 font-heading text-base text-admin-heading sm:text-lg">{isEditing ? content.editItemTitle : content.addItemTitle}</h2><ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} /><button type="button" onClick={onClose} aria-label={content.close} className="grid size-9 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:text-admin-brand"><X size={17} /></button></header><div className="grid gap-4" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>{fields.map(([field, label]) => <EditorField key={field} label={label} value={draft[field]} multiline={field === 'description' || field === 'answer'} dir={contentLanguage === 'en' ? 'ltr' : 'rtl'} onChange={(value) => setDraft((current) => ({ ...current, [field]: value }))} />)}{type === 'team' && <MediaUploadField value={draft.avatar} onChange={(avatar) => setPopupDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, avatar }]))) } content={{ countryImage: content.fields.avatar, choose: content.chooseImage, drop: content.dropImage, replace: content.replaceImage, remove: content.removeImage }} />}</div><footer className="flex justify-end gap-2"><button type="button" onClick={onClose} className="min-h-10 rounded-xl border border-admin-border px-4 text-xs font-semibold text-admin-muted hover:border-admin-brand hover:text-admin-brand">{content.cancel}</button><button type="submit" className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-admin-brand px-5 text-xs font-semibold text-white hover:bg-orange-500"><Plus size={15} />{content.save}</button></footer></form></div>
 }
 
 export default AboutEditorSection

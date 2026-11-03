@@ -1,7 +1,7 @@
 import AboutEditorSection from '@cms/components/sections/AboutEditorSection.jsx'
 
-function AboutPage({ content, initialContent }) {
-  return <AboutEditorSection content={content} initialContent={initialContent} />
+function AboutPage({ content, initialTranslations }) {
+  return <AboutEditorSection content={content} initialTranslations={initialTranslations} />
 }
 
 export default AboutPage

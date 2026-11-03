@@ -5,7 +5,8 @@ import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTelegram, FaWhatsapp, FaXTwit
 import PageContainer from '@cms/components/PageContainer.jsx'
 import PageHeading from '@cms/components/PageHeading.jsx'
 import SectionTabBar from '@cms/components/SectionTabBar.jsx'
-import { EditorField, EditorFieldGroup, EditorPreviewLink, EditorSectionHeader } from '@cms/components/EditorPrimitives.jsx'
+import ContentLanguageSwitcher from '@cms/components/ContentLanguageSwitcher.jsx'
+import { EditorField, EditorFieldGroup, EditorPreviewLink, EditorSectionHeader, EditorVisibilityToggle } from '@cms/components/EditorPrimitives.jsx'
 import useEditorTabs from '@cms/hooks/useEditorTabs.js'
 
 const tabIcons = { hero: FileText, details: ContactRound, form: MessageSquareText, connections: MapPinned, social: Globe2 }
@@ -23,17 +24,23 @@ const socialOptions = [
   { type: 'tiktok', label: 'TikTok', icon: Music2 },
 ]
 
-function ContactEditorSection({ content, initialContent }) {
+const prepareContactDraft = (initialContent) => ({
+  ...structuredClone(initialContent),
+  contact: {
+    ...structuredClone(initialContent.contact),
+    mapUrl: initialContent.contact.mapUrl || defaultMapUrl,
+    socials: initialContent.contact.socials.map((social) => ({ ...social, href: social.href || defaultSocialUrls[social.type] }))
+  }
+})
+
+function ContactEditorSection({ content, initialTranslations }) {
   const [selectedTab, setSelectedTab] = useEditorTabs({ defaultTab: 'hero', storageKey: 'globalvision-cms-contact-tab', tabs: Object.keys(tabIcons) })
-  const [draft, setDraft] = useState(() => ({
-    ...structuredClone(initialContent),
-    contact: {
-      ...structuredClone(initialContent.contact),
-      mapUrl: initialContent.contact.mapUrl || defaultMapUrl,
-      socials: initialContent.contact.socials.map((social) => ({ ...social, href: social.href || defaultSocialUrls[social.type] }))
-    }
-  }))
+  const [contentLanguage, setContentLanguage] = useState(() => ['prs', 'ps', 'en'].includes(document.documentElement.lang) ? document.documentElement.lang : 'prs')
+  const [drafts, setDrafts] = useState(() => Object.fromEntries(Object.entries(initialTranslations).map(([language, initialContent]) => [language, prepareContactDraft(initialContent)])))
+  const draft = drafts[contentLanguage]
+  const setDraft = (update) => setDrafts((current) => ({ ...current, [contentLanguage]: typeof update === 'function' ? update(current[contentLanguage]) : update }))
   const [addingSocial, setAddingSocial] = useState(false)
+  const [visibility, setVisibility] = useState(() => Object.fromEntries(Object.keys(tabIcons).map((key) => [key, true])))
 
   const updateHero = (key, value) => setDraft((current) => ({ ...current, hero: { ...current.hero, [key]: value } }))
   const updateContact = (key, value) => setDraft((current) => ({ ...current, contact: { ...current.contact, [key]: value } }))
@@ -51,7 +58,7 @@ function ContactEditorSection({ content, initialContent }) {
     <section className="min-w-0 w-full overflow-visible rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_38px_rgb(15_23_42_/.055)]">
       <SectionTabBar sections={content.sections} icons={tabIcons} selectedSection={selectedTab} onSelect={setSelectedTab} ariaLabel={content.sectionsTitle} />
 
-      <EditorSectionHeader icon={CurrentIcon} title={content.sections[selectedTab]} />
+      <EditorSectionHeader icon={CurrentIcon} title={content.sections[selectedTab]} action={<div className="flex flex-nowrap items-center gap-2"><EditorVisibilityToggle label={content.visible || 'نمایش داده شود'} checked={visibility[selectedTab]} onChange={() => setVisibility((current) => ({ ...current, [selectedTab]: !current[selectedTab] }))} /><ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} /></div>} />
 
       <div className="p-5 sm:p-6">
         {selectedTab === 'hero' && <EditorFieldGroup columns={false} className="sm:p-5"><EditorField label={content.fields.heroTitle} value={draft.hero.title} onChange={(value) => updateHero('title', value)} /></EditorFieldGroup>}

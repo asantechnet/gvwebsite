@@ -5,8 +5,10 @@ import {
   MapPin,
   RotateCcw,
   Search,
+  SlidersHorizontal,
   Sparkles,
   WalletCards,
+  X,
 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -25,6 +27,19 @@ const pashtoDeadlineDates = {
   "د رسمي اعلان مطابق": "18 سلواغه 1405",
   "د څېړنیز اعلان مطابق": "15 وری 1406",
 };
+
+function FilterModal({ open, onClose, title, children }) {
+  useEffect(() => {
+    if (!open) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event) => { if (event.key === "Escape") onClose(); };
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", closeOnEscape);
+    return () => { document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", closeOnEscape); };
+  }, [onClose, open]);
+  if (!open) return null;
+  return <div className="fixed inset-0 z-[100] grid place-items-center bg-black/55 p-4 backdrop-blur-[2px] lg:hidden" onMouseDown={onClose}><section role="dialog" aria-modal="true" aria-labelledby="website-filter-title" className="w-full max-w-lg rounded-2xl border border-border bg-surface shadow-2xl dark:border-gray-600 dark:bg-gray-800" onMouseDown={(event) => event.stopPropagation()}><header className="flex items-center gap-3 border-b border-border p-4 dark:border-gray-600"><span className="grid size-9 place-items-center rounded-xl bg-primary/10 text-primary"><SlidersHorizontal size={17} /></span><h2 id="website-filter-title" className="min-w-0 flex-1 text-start font-heading text-base font-extrabold text-foreground">{title}</h2><button type="button" onClick={onClose} className="grid size-9 place-items-center rounded-xl border border-border text-foreground-muted hover:border-primary hover:text-primary dark:border-gray-600" aria-label="Close"><X size={17} /></button></header><div className="grid max-h-[70svh] gap-4 overflow-y-auto p-4">{children}</div></section></div>;
+}
 
 function FilterSelect({
   language,
@@ -163,6 +178,7 @@ function ScholarshipsSection({ content, language = "dr" }) {
   const [filters, setFilters] = useState(initialFilters);
   const [openFilter, setOpenFilter] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
 
   const filteredScholarships = useMemo(
     () => filterScholarships(content.items, filters),
@@ -185,6 +201,13 @@ function ScholarshipsSection({ content, language = "dr" }) {
     setOpenFilter(null);
     setCurrentPage(1);
   };
+  const filterControls = <>
+    <FilterSelect language={language} icon={MapPin} label={content.filters.country} value={filters.country} options={content.options.countries} allLabel={content.filters.all} onChange={(value) => updateFilter("country", value)} isOpen={openFilter === "country"} onToggle={(isOpen) => setOpenFilter(isOpen ? "country" : null)} />
+    <FilterSelect language={language} icon={GraduationCap} label={content.filters.degree} value={filters.degree} options={content.options.degrees} allLabel={content.filters.all} onChange={(value) => updateFilter("degree", value)} isOpen={openFilter === "degree"} onToggle={(isOpen) => setOpenFilter(isOpen ? "degree" : null)} />
+    <FilterSelect language={language} icon={WalletCards} label={content.filters.funding} value={filters.funding} options={content.options.funding} allLabel={content.filters.all} onChange={(value) => updateFilter("funding", value)} isOpen={openFilter === "funding"} onToggle={(isOpen) => setOpenFilter(isOpen ? "funding" : null)} />
+    <FilterSelect language={language} icon={CalendarDays} label={content.filters.deadline} value={filters.deadline} options={content.options.deadlines} allLabel={content.filters.all} onChange={(value) => updateFilter("deadline", value)} isOpen={openFilter === "deadline"} onToggle={(isOpen) => setOpenFilter(isOpen ? "deadline" : null)} />
+    <button type="button" onClick={resetFilters} className={`mt-2 inline-flex h-9 min-h-9 shrink-0 self-center items-center justify-center gap-1.5 rounded-xl border border-primary/25 bg-primary/10 px-3 text-[11px] text-primary transition-all hover:border-primary/50 hover:bg-primary/15 sm:mt-0 sm:self-end ${language === "en" ? "font-medium" : "font-bold"}`} aria-label={content.filters.reset}><RotateCcw aria-hidden="true" size={13} />{content.filters.reset}</button>
+  </>;
 
   return (
     <div className="relative overflow-x-clip bg-background text-foreground dark:bg-gray-800 dark:text-[#fff8f3]">
@@ -202,68 +225,12 @@ function ScholarshipsSection({ content, language = "dr" }) {
               <Sparkles aria-hidden="true" size={17} className="text-primary" />
               {content.hero.eyebrow}
             </h1>
-            <div className="relative z-30 mx-auto mt-3 w-full rounded-2xl border border-white/90 bg-white/55 p-2 shadow-[0_12px_28px_rgba(54,69,77,0.1)] backdrop-blur-sm dark:border-gray-600 dark:bg-gray-800/65">
+            <button type="button" onClick={() => setFilterModalOpen(true)} className="mx-auto mt-3 flex min-h-11 items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-5 text-sm font-bold text-primary lg:hidden"><SlidersHorizontal size={16} />{content.filters.title}</button>
+            <FilterModal open={filterModalOpen} onClose={() => setFilterModalOpen(false)} title={content.filters.title}><div className="grid gap-4">{filterControls}</div></FilterModal>
+            <div className="relative z-30 mx-auto mt-3 hidden w-full rounded-2xl border border-white/90 bg-white/55 p-2 shadow-[0_12px_28px_rgba(54,69,77,0.1)] backdrop-blur-sm dark:border-gray-600 dark:bg-gray-800/65 lg:block">
               <h2 className="sr-only">{content.filters.title}</h2>
               <div className="flex flex-col gap-1.5 sm:flex-row">
-                <FilterSelect
-                  language={language}
-                  icon={MapPin}
-                  label={content.filters.country}
-                  value={filters.country}
-                  options={content.options.countries}
-                  allLabel={content.filters.all}
-                  onChange={(value) => updateFilter("country", value)}
-                  isOpen={openFilter === "country"}
-                  onToggle={(isOpen) =>
-                    setOpenFilter(isOpen ? "country" : null)
-                  }
-                />
-                <FilterSelect
-                  language={language}
-                  icon={GraduationCap}
-                  label={content.filters.degree}
-                  value={filters.degree}
-                  options={content.options.degrees}
-                  allLabel={content.filters.all}
-                  onChange={(value) => updateFilter("degree", value)}
-                  isOpen={openFilter === "degree"}
-                  onToggle={(isOpen) => setOpenFilter(isOpen ? "degree" : null)}
-                />
-                <FilterSelect
-                  language={language}
-                  icon={WalletCards}
-                  label={content.filters.funding}
-                  value={filters.funding}
-                  options={content.options.funding}
-                  allLabel={content.filters.all}
-                  onChange={(value) => updateFilter("funding", value)}
-                  isOpen={openFilter === "funding"}
-                  onToggle={(isOpen) =>
-                    setOpenFilter(isOpen ? "funding" : null)
-                  }
-                />
-                <FilterSelect
-                  language={language}
-                  icon={CalendarDays}
-                  label={content.filters.deadline}
-                  value={filters.deadline}
-                  options={content.options.deadlines}
-                  allLabel={content.filters.all}
-                  onChange={(value) => updateFilter("deadline", value)}
-                  isOpen={openFilter === "deadline"}
-                  onToggle={(isOpen) =>
-                    setOpenFilter(isOpen ? "deadline" : null)
-                  }
-                />
-                <button
-                  type="button"
-                  onClick={resetFilters}
-                  className={`mt-2 inline-flex h-9 min-h-9 shrink-0 self-center items-center justify-center gap-1.5 rounded-xl border border-primary/25 bg-primary/10 px-3 text-[11px] text-primary transition-all hover:border-primary/50 hover:bg-primary/15 sm:mt-0 sm:self-end ${language === "en" ? "font-medium" : "font-bold"}`}
-                  aria-label={content.filters.reset}
-                >
-                  <RotateCcw aria-hidden="true" size={13} />
-                  {content.filters.reset}
-                </button>
+                {filterControls}
               </div>
             </div>
           </div>

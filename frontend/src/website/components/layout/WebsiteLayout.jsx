@@ -244,6 +244,9 @@ function WebsiteLayout({ children = null }) {
 
   useLayoutEffect(() => {
     document.title = `${currentTitle} | ${headerContent.brandName}`
+    let robots = document.querySelector('meta[name="robots"]')
+    if (!robots) { robots = document.createElement('meta'); robots.name = 'robots'; document.head.appendChild(robots) }
+    robots.content = 'index, follow'
     let descriptionMeta = document.querySelector('meta[name="description"]')
     if (!descriptionMeta) {
       descriptionMeta = document.createElement('meta')

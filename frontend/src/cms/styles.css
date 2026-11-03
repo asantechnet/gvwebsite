@@ -5,7 +5,7 @@
   --sidebar-border: #d9e0eb; --sidebar-hover: #edf1f6; --admin-page: #edf1f6; --admin-control: #ffffff;
   --admin-control-soft: #f3f5f9; --admin-toggle-off: #d4dce8; --admin-topbar: rgb(255 255 255 / .88); --header-control: #ffffff;
   --header-control-hover: #f7f9fc; --header-control-border: #dfe4ed; --primary-action-bg: #ffffff;
-  --primary-action-text: #172033; --editor-field: #f7f9fc; --editor-input: #f3f6fa; --editor-field-border: #cfd8e5; --admin-editor-group-bg: #f8fafc; --admin-editor-group-border: #d6deea; --admin-tab-active-bg: #ffffff; --admin-tab-bar-border: #c4cedc; --admin-chart-track: #d7dee9; --sidebar-width: 17rem;
+  --primary-action-text: #172033; --editor-field: #f7f9fc; --editor-input: #f3f6fa; --editor-field-border: #cfd8e5; --admin-editor-group-bg: #f8fafc; --admin-editor-group-border: #d6deea; --admin-tab-active-bg: #ffffff; --admin-tab-hover-bg: #dfe5ee; --admin-tab-hover-text: var(--admin-heading); --admin-tab-bar-border: #c4cedc; --admin-chart-track: #d7dee9; --sidebar-width: 17rem;
   min-height: 100vh; color: var(--admin-muted); background-color: var(--admin-page); font-family: IRANYekan, Vazirmatn, Tahoma, sans-serif; font-size: .8125rem; line-height: 1.5;
   background-image: radial-gradient(circle at 12% -10%, color-mix(in srgb, var(--admin-brand) 7%, transparent), transparent 28rem);
   background-attachment: fixed; font-synthesis: none;
@@ -72,7 +72,7 @@
   --admin-sidebar: #141e2c; --sidebar-heading: #f7f9fd; --sidebar-text: #c1cada; --sidebar-muted: #909db2;
   --sidebar-border: #334157; --sidebar-hover: rgb(255 255 255 / .075); --admin-page: #0a1019;
   --admin-card: #1d2a3a; --admin-control: #29384d; --admin-control-soft: #223044; --admin-toggle-off: #536681; --admin-topbar: rgb(20 30 44 / .96);
-  --header-control: #27354a; --header-control-hover: #33445e; --header-control-border: #4a5b75; --admin-editor-group-bg: #243247; --admin-editor-group-border: #536681; --admin-tab-active-bg: #26364a; --admin-tab-bar-border: #39465b; --admin-chart-track: #4b5b72;
+  --header-control: #27354a; --header-control-hover: #33445e; --header-control-border: #4a5b75; --admin-editor-group-bg: #243247; --admin-editor-group-border: #536681; --admin-tab-active-bg: #26364a; --admin-tab-hover-bg: var(--admin-control-soft); --admin-tab-hover-text: var(--admin-heading); --admin-tab-bar-border: #39465b; --admin-chart-track: #4b5b72;
   --primary-action-bg: #27354a; --primary-action-text: #f7f9fd; --editor-field: #212d3e; --editor-input: #111a27; --editor-field-border: #45546c;
   background-image: radial-gradient(circle at 12% -8%, color-mix(in srgb, var(--admin-brand) 11%, transparent), transparent 32rem);
 }

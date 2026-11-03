@@ -8,6 +8,12 @@ function ScholarshipPostPage({ scholarship, content, postShell }) {
     description: scholarship.summary,
     image: scholarship.image,
     imageAlt: scholarship.title,
+    facts: [
+      { label: content.filters.degree, value: scholarship.degree },
+      { label: content.filters.funding, value: scholarship.funding },
+      { label: content.filters.deadline, value: scholarship.deadline },
+      { label: content.filters.country, value: scholarship.country },
+    ],
   }
   const detailContent = {
     ...postShell,
@@ -22,7 +28,7 @@ function ScholarshipPostPage({ scholarship, content, postShell }) {
       {
         title: content.detail.overview,
         body: scholarship.overview,
-        items: [scholarship.provider, scholarship.country, scholarship.degree, scholarship.funding, scholarship.deadline],
+        items: [scholarship.provider],
       },
       { title: content.detail.eligibility, body: scholarship.summary, items: scholarship.eligibility },
       { title: content.detail.benefits, body: scholarship.overview, items: scholarship.benefits },

@@ -1,0 +1,51 @@
+{
+  "dashboard": "Overview",
+  "title": "Settings",
+  "description": "Manage website defaults, regional preferences, search visibility, and administrative notifications.",
+  "contentLanguage": "Content language",
+  "general": {
+    "eyebrow": "Website",
+    "title": "General settings",
+    "description": "Basic identity and public contact information.",
+    "siteName": "Website name",
+    "email": "Contact email",
+    "phone": "Contact phone"
+  },
+  "regional": {
+    "eyebrow": "Localization",
+    "title": "Language and region",
+    "description": "Set the website defaults for language, time, and dates.",
+    "defaultLanguage": "Default public language",
+    "timezone": "Time zone",
+    "dateFormat": "Date format"
+  },
+  "languages": { "prs": "دری", "ps": "پښتو", "en": "English" },
+  "seo": {
+    "eyebrow": "Search",
+    "title": "Default SEO",
+    "description": "Fallback information used when a page has no custom SEO values.",
+    "siteTitle": "Default website title",
+    "metaDescription": "Default meta description",
+    "indexWebsite": "Allow search indexing",
+    "indexDescription": "Let search engines discover and index the public website."
+  },
+  "notifications": {
+    "eyebrow": "Inbox",
+    "title": "Notifications",
+    "description": "Choose which website activities should notify administrators.",
+    "email": "Email notifications",
+    "emailDescription": "Send administrative notifications to the contact email.",
+    "messages": "New message notifications",
+    "messagesDescription": "Notify administrators when a visitor submits a new message."
+  },
+  "system": {
+    "eyebrow": "Availability",
+    "title": "System status",
+    "description": "Control public access during website maintenance.",
+    "maintenance": "Website under development",
+    "maintenanceDescription": "Temporarily hide the public website while administrators continue working."
+  },
+  "defaults": {
+    "seoDescription": "Global Vision provides educational consulting, scholarship guidance, and international opportunity services."
+  }
+}

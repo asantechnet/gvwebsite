@@ -34,5 +34,5 @@
   "dropImage": "تصویر را اینجا رها کنید یا برای انتخاب کلیک کنید",
   "replaceImage": "جایگزین کردن",
   "removeImage": "حذف تصویر",
-  "fields": { "heroEyebrow": "متن برچسب بنر", "heroTitle": "عنوان اصلی صفحه", "heroDescription": "توضیحات صفحه", "itemTitle": "عنوان بورسیه", "provider": "ارائه‌کننده", "country": "کشور", "degree": "مقطع تحصیلی", "funding": "نوع حمایت مالی", "deadline": "مهلت درخواست", "status": "وضعیت انتشار", "officialHref": "لینک منبع رسمی", "summary": "خلاصه بورسیه", "image": "تصویر بورسیه" }
+  "fields": { "heroEyebrow": "متن برچسب بنر", "heroTitle": "عنوان اصلی صفحه", "heroDescription": "توضیحات صفحه", "itemTitle": "عنوان بورسیه", "provider": "ارائه‌کننده", "country": "کشور", "degree": "مقطع تحصیلی", "funding": "نوع حمایت مالی", "deadline": "مهلت درخواست", "status": "وضعیت انتشار", "officialHref": "لینک منبع رسمی", "summary": "خلاصه بورسیه", "overview": "معلومات کامل بورسیه", "image": "تصویر بورسیه" }
 }
