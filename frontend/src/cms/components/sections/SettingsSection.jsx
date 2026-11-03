@@ -1,26 +1,37 @@
 import { useEffect, useRef, useState } from 'react'
-import { Check, ChevronDown, Globe2, ShieldCheck } from 'lucide-react'
+import { Check, ChevronDown, Globe2, ImagePlus, Palette, ShieldCheck } from 'lucide-react'
 
 import { EditorVisibilityToggle } from '@cms/components/EditorPrimitives.jsx'
+import MediaUploadField from '@cms/components/MediaUploadField.jsx'
 const cardClass = 'relative rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)]'
 
-function SettingsSection({ content }) {
+function SettingsSection({ content, language }) {
   const [settings, setSettings] = useState({
     defaultLanguage: 'prs',
     maintenanceMode: false,
   })
   const update = (key, value) => setSettings((current) => ({ ...current, [key]: value }))
+  const [branding, setBranding] = useState(() => ({ primary: window.localStorage.getItem('globalvision-brand-primary') || '#f47e26', secondary: window.localStorage.getItem('globalvision-brand-secondary') || '#80027f', lightLogo: window.localStorage.getItem('globalvision-brand-logo-light') || '', darkLogo: window.localStorage.getItem('globalvision-brand-logo-dark') || '' }))
+  const copy = language === 'en' ? { logo: 'Website logo', lightLogo: 'Light mode logo', darkLogo: 'Dark mode logo', logoHelp: 'Used on the public website and CMS.', choose: 'Upload logo', replace: 'Change logo', remove: 'Delete logo', reset: 'Reset', colors: 'Brand colors', primary: 'Primary color', secondary: 'Secondary color', colorsHelp: 'Applied to the public website and CMS.' } : language === 'ps' ? { logo: 'د وېب‌سایټ لوګو', lightLogo: 'د روښانه حالت لوګو', darkLogo: 'د تیاره حالت لوګو', logoHelp: 'په عامه وېب‌سایټ او CMS کې کارېږي.', choose: 'لوګو پورته کړئ', replace: 'لوګو بدل کړئ', remove: 'لوګو ړنګ کړئ', reset: 'بیا تنظیمول', colors: 'د نښې رنګونه', primary: 'لومړنی رنګ', secondary: 'دوهم رنګ', colorsHelp: 'په عامه وېب‌سایټ او CMS کې پلي کېږي.' } : { logo: 'لوگوی وب‌سایت', lightLogo: 'لوگوی حالت روشن', darkLogo: 'لوگوی حالت تاریک', logoHelp: 'در وب‌سایت عمومی و CMS استفاده می‌شود.', choose: 'بارگذاری لوگو', replace: 'تغییر لوگو', remove: 'حذف لوگو', reset: 'بازنشانی', colors: 'رنگ‌های برند', primary: 'رنگ اصلی', secondary: 'رنگ دوم', colorsHelp: 'در وب‌سایت عمومی و CMS اعمال می‌شود.' }
+  const applyBranding = (next) => { setBranding(next); window.localStorage.setItem('globalvision-brand-primary', next.primary); window.localStorage.setItem('globalvision-brand-secondary', next.secondary); if (next.lightLogo) window.localStorage.setItem('globalvision-brand-logo-light', next.lightLogo); else window.localStorage.removeItem('globalvision-brand-logo-light'); if (next.darkLogo) window.localStorage.setItem('globalvision-brand-logo-dark', next.darkLogo); else window.localStorage.removeItem('globalvision-brand-logo-dark'); document.documentElement.style.setProperty('--brand-orange', next.primary); document.documentElement.style.setProperty('--brand-red', next.secondary); document.querySelectorAll('.cms-root').forEach((root) => { root.style.setProperty('--admin-brand', next.primary); root.style.setProperty('--brand-orange', next.primary); root.style.setProperty('--brand-red', next.secondary) }) }
+  useEffect(() => { document.documentElement.style.setProperty('--brand-orange', branding.primary); document.documentElement.style.setProperty('--brand-red', branding.secondary); document.querySelectorAll('.cms-root').forEach((root) => { root.style.setProperty('--admin-brand', branding.primary); root.style.setProperty('--brand-orange', branding.primary); root.style.setProperty('--brand-red', branding.secondary) }) }, [branding])
+  const handleLogo = (key, logo) => applyBranding({ ...branding, [key]: logo })
 
-  return <div className="grid items-stretch gap-5 lg:grid-cols-2">
+  return <div className="grid items-stretch gap-5">
+    <div className="grid gap-5 lg:grid-cols-2"><BrandingLogo copy={copy} lightLogo={branding.lightLogo} darkLogo={branding.darkLogo} onLogo={handleLogo} /><BrandingColors copy={copy} branding={branding} onChange={(key, value) => applyBranding({ ...branding, [key]: value })} /></div>
+    <div className="grid items-stretch gap-5 lg:grid-cols-2">
     <SettingsCard icon={Globe2} eyebrow={content.regional.eyebrow} title={content.regional.title} description={content.regional.description}>
       <div className="mt-auto"><LanguageSelect label={content.regional.defaultLanguage} value={settings.defaultLanguage} onChange={(value) => update('defaultLanguage', value)} options={[{ value: 'prs', label: content.languages.prs }, { value: 'ps', label: content.languages.ps }, { value: 'en', label: content.languages.en }]} /></div>
     </SettingsCard>
 
     <SettingsCard icon={ShieldCheck} eyebrow={content.system.eyebrow} title={content.system.title} description={content.system.description}>
       <div className="mt-auto w-full [&>label]:!w-full"><EditorVisibilityToggle className="!h-11 !min-h-11 !max-h-11" label={content.system.maintenance} checked={settings.maintenanceMode} onChange={(event) => update('maintenanceMode', event.target.checked)} /></div>
-    </SettingsCard>
+    </SettingsCard></div>
   </div>
 }
+
+function BrandingLogo({ copy, lightLogo, darkLogo, onLogo }) { return <section className={`${cardClass} p-4 sm:p-5`}><div className="flex items-center gap-3"><span className="grid size-10 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand"><ImagePlus size={19} /></span><h2 className="font-heading text-base text-admin-heading">{copy.logo}</h2></div><div className="mt-5 grid gap-4 sm:grid-cols-2"><div><span className="text-xs font-semibold text-admin-heading">{copy.lightLogo}</span><MediaUploadField iconOnly value={lightLogo || '/assets/branding/new%20logo.webp'} onChange={(logo) => onLogo('lightLogo', logo)} content={{ countryImage: '', choose: copy.choose, drop: '', replace: copy.replace, remove: copy.remove }} /></div><div><span className="text-xs font-semibold text-admin-heading">{copy.darkLogo}</span><MediaUploadField iconOnly value={darkLogo || '/assets/branding/new%20logo%20white.webp'} onChange={(logo) => onLogo('darkLogo', logo)} content={{ countryImage: '', choose: copy.choose, drop: '', replace: copy.replace, remove: copy.remove }} /></div></div></section> }
+function BrandingColors({ copy, branding, onChange }) { return <section className={`${cardClass} p-4 sm:p-5`}><div className="flex items-center gap-3"><span className="grid size-10 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand"><Palette size={19} /></span><h2 className="font-heading text-base text-admin-heading">{copy.colors}</h2></div><div className="mt-5 grid gap-3">{[['primary', copy.primary], ['secondary', copy.secondary]].map(([key, label]) => <label key={key} className="flex min-h-11 items-center gap-3 rounded-xl border border-admin-border bg-(--editor-field) px-3 text-xs font-semibold text-admin-heading"><span className="size-7 shrink-0 rounded-lg border border-white/20 shadow-inner" style={{ backgroundColor: branding[key] }} /><span className="flex-1">{label}</span><input dir="ltr" type="text" inputMode="text" spellCheck="false" aria-label={label} value={branding[key].toUpperCase()} onChange={(event) => { const value = event.target.value.trim(); onChange(key, value) }} className="h-8 w-24 rounded-lg border border-(--editor-field-border) bg-(--editor-input) px-2 text-left text-[.6875rem] font-normal uppercase text-admin-heading outline-none focus:border-admin-brand" /></label>)}</div></section> }
 
 function SettingsCard({ icon: Icon, title, children }) {
   return <section className={`${cardClass} flex h-full flex-col`}>
