@@ -19,7 +19,7 @@ function ApproachSection({ content }) {
 
             return (
               <article key={item.title} className="rounded-3xl bg-surface p-6 text-center dark:bg-[#2b3442] md:p-8">
-                <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-primary/15 text-primary">
+                <div className="mx-auto flex size-12 items-center justify-center rounded-2xl bg-primary/15 text-accent-text">
                   <Icon aria-hidden="true" size={24} strokeWidth={1.8} />
                 </div>
                 <h3 className="mt-5 font-heading text-lg font-extrabold text-foreground">{item.title}</h3>

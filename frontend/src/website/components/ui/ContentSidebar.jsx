@@ -29,7 +29,7 @@ function SidebarCardGrid({ items }) {
   return (
     <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-2">
       {items.map(([Icon, label, href]) => (
-        <a key={href} href={href} className="flex flex-col items-center gap-1 rounded-xl border border-border px-2 py-3 text-center text-xs text-foreground-muted transition-colors hover:border-primary hover:text-primary dark:border-gray-600">
+        <a key={href} href={href} className="flex flex-col items-center gap-1 rounded-xl border border-border px-2 py-3 text-center text-xs text-foreground-muted transition-colors hover:border-primary hover:text-accent-text dark:border-gray-600">
           <Icon size={20} />
           <span className="font-bold">{label}</span>
         </a>
@@ -47,7 +47,7 @@ function ContentSidebar({ content, category, relatedPosts = [], className = '' }
   return (
     <aside ref={sidebarRef} className={`order-2 h-fit self-start text-start text-sm text-foreground-muted lg:sticky lg:top-[calc(100vh-var(--sidebar-height)-1.5rem)] lg:border-r lg:pr-6 ltr:lg:border-r-0 ltr:lg:border-l ltr:lg:pr-0 ltr:lg:pl-6 ${className}`.trim()}>
       <div className="w-full">
-        {category && <div className="flex flex-col items-start gap-3"><span className="w-fit rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary">{category}</span></div>}
+        {category && <div className="flex flex-col items-start gap-3"><span className="w-fit rounded-full bg-primary/10 px-3 py-1 font-semibold text-accent-text">{category}</span></div>}
         <div className={`${category ? 'mt-5 border-t border-border pt-5 dark:border-gray-600' : ''} w-full text-start`.trim()}>
           <h2 className="mb-4 text-center font-heading text-lg font-extrabold text-foreground lg:text-start">{content.quickAccessLabel}</h2>
           <SidebarCardGrid items={localizedQuickLinks} />

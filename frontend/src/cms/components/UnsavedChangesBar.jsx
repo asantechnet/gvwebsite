@@ -1,6 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 import { AlertTriangle, Check, CircleX, RotateCcw, Save } from 'lucide-react'
 
+import { getCmsRouteKey } from '@cms/routes.js'
+import useModalFocus from '@/shared/hooks/useModalFocus.js'
+import {
+  CMS_CHANGES_DISCARDED_EVENT,
+  CMS_CHANGES_SAVED_EVENT,
+  CMS_DRAFT_DIRTY_EVENT,
+  hasRecoverableCmsDraft,
+} from '@cms/utils/draftEvents.js'
+
 const copy = {
   prs: { actions: 'اقدامات صفحه', saved: 'تغییرات ذخیره شد', dirty: 'تغییرات ذخیره‌نشده دارید.', clean: 'تغییری برای ذخیره وجود ندارد.', reset: 'بازنشانی', saveChanges: 'ذخیره تغییرات', leave: 'بدون ذخیره خارج شوید؟', leaveDescription: 'تغییرات شما هنوز ذخیره نشده است.', cancel: 'لغو', discard: 'صرف‌نظر', save: 'ذخیره' },
   ps: { actions: 'د پاڼې کړنې', saved: 'بدلونونه خوندي شول', dirty: 'تاسو ناخوندي بدلونونه لرئ.', clean: 'د خوندي کولو لپاره بدلون نشته.', reset: 'بیا تنظیمول', saveChanges: 'بدلونونه خوندي کړئ', leave: 'له خوندي کولو پرته ووځئ؟', leaveDescription: 'ستاسو بدلونونه لا نه دي خوندي شوي.', cancel: 'لغوه', discard: 'پرېښودل', save: 'خوندي کول' },
@@ -9,7 +18,7 @@ const copy = {
 
 function UnsavedChangesBar({ sidebarCollapsed = false }) {
   const labels = copy[document.documentElement.lang] || copy.prs
-  const [dirty, setDirty] = useState(false)
+  const [dirty, setDirty] = useState(() => hasRecoverableCmsDraft(getCmsRouteKey(window.location.pathname)))
   const [saved, setSaved] = useState(false)
   const [leavePrompt, setLeavePrompt] = useState(false)
   const [promptClosing, setPromptClosing] = useState(false)
@@ -29,6 +38,15 @@ function UnsavedChangesBar({ sidebarCollapsed = false }) {
       document.removeEventListener('input', mark, true)
       document.removeEventListener('change', mark, true)
     }
+  }, [])
+
+  useEffect(() => {
+    const markDirty = () => {
+      setDirty(true)
+      setSaved(false)
+    }
+    window.addEventListener(CMS_DRAFT_DIRTY_EVENT, markDirty)
+    return () => window.removeEventListener(CMS_DRAFT_DIRTY_EVENT, markDirty)
   }, [])
 
   useEffect(() => {
@@ -104,9 +122,11 @@ function UnsavedChangesBar({ sidebarCollapsed = false }) {
       setPromptClosing(false)
       setPendingHref(null)
       if (saveChanges) {
-        window.dispatchEvent(new Event('cms:changes-saved'))
+        window.dispatchEvent(new Event(CMS_CHANGES_SAVED_EVENT))
         setSaved(true)
         window.setTimeout(() => setSaved(false), 2200)
+      } else {
+        window.dispatchEvent(new Event(CMS_CHANGES_DISCARDED_EVENT))
       }
       if (href) window.location.assign(href)
     }, 200)
@@ -115,9 +135,11 @@ function UnsavedChangesBar({ sidebarCollapsed = false }) {
   const save = () => {
     setDirty(false)
     setSaved(true)
-    window.dispatchEvent(new Event('cms:changes-saved'))
+    window.dispatchEvent(new Event(CMS_CHANGES_SAVED_EVENT))
     window.setTimeout(() => setSaved(false), 2200)
   }
+
+  const promptRef = useModalFocus({ active: leavePrompt, onClose: closePrompt })
 
   if (window.location.pathname.startsWith('/dashboard/messages')) return null
 
@@ -138,10 +160,10 @@ function UnsavedChangesBar({ sidebarCollapsed = false }) {
     </aside>
 
     {leavePrompt && <div className={`cms-modal-backdrop fixed inset-0 z-[125] isolate grid place-items-center p-4 ${promptClosing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onClick={closePrompt}>
-      <section role="alertdialog" aria-modal="true" className={`relative z-10 grid w-[min(100%,27rem)] justify-items-center rounded-[1.1rem] border border-admin-border bg-admin-card px-6 py-6 text-center shadow-2xl ${promptClosing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`} onClick={(event) => event.stopPropagation()}>
+      <section ref={promptRef} tabIndex={-1} role="alertdialog" aria-modal="true" aria-labelledby="unsaved-dialog-title" aria-describedby="unsaved-dialog-description" className={`relative z-10 grid w-[min(100%,27rem)] justify-items-center rounded-[1.1rem] border border-admin-border bg-admin-card px-6 py-6 text-center shadow-2xl ${promptClosing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`} onClick={(event) => event.stopPropagation()}>
         <span className="grid size-[3.2rem] place-items-center rounded-[.95rem] bg-[rgb(217_119_6/.12)] text-[#d97706]"><AlertTriangle size={22} /></span>
-        <h2 className="mt-4 mb-2 font-heading text-[1.15rem] text-admin-heading">{labels.leave}</h2>
-        <p className="m-0 max-w-[23rem] text-[.75rem] leading-[1.65] text-admin-muted">{labels.leaveDescription}</p>
+        <h2 id="unsaved-dialog-title" className="mt-4 mb-2 font-heading text-[1.15rem] text-admin-heading">{labels.leave}</h2>
+        <p id="unsaved-dialog-description" className="m-0 max-w-[23rem] text-[.75rem] leading-[1.65] text-admin-muted">{labels.leaveDescription}</p>
         <div className="mt-5 grid w-full gap-2 sm:grid-cols-3">
           <button type="button" className="inline-flex min-h-9 items-center justify-center gap-1 rounded-lg border border-admin-border bg-admin-control px-3 text-xs font-semibold text-admin-muted transition hover:border-admin-brand hover:bg-admin-control-soft hover:text-admin-heading" onClick={closePrompt}><CircleX size={14} />{labels.cancel}</button>
           <button type="button" className="inline-flex min-h-9 items-center justify-center gap-1 rounded-lg border border-red-500/60 bg-red-600/20 px-3 text-xs font-semibold text-red-500 transition hover:border-red-500 hover:bg-red-600 hover:text-white" onClick={() => continueNavigation(false)}><RotateCcw size={14} />{labels.discard}</button>

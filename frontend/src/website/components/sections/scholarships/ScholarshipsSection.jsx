@@ -17,6 +17,7 @@ import PostPagination from "@ui/PostPagination.jsx";
 import Section from "@ui/Section.jsx";
 import { filterScholarships } from "@website/utils/catalog.js";
 import { useLocalizedHref } from "@website/hooks/useWebsiteLanguage.js";
+import useModalFocus from "@/shared/hooks/useModalFocus.js";
 
 const initialFilters = { country: "", degree: "", funding: "", deadline: "" };
 const scholarshipsPerPage = 10;
@@ -29,16 +30,15 @@ const pashtoDeadlineDates = {
 };
 
 function FilterModal({ open, onClose, title, children }) {
+  const dialogRef = useModalFocus({ active: open, onClose });
   useEffect(() => {
     if (!open) return undefined;
     const previousOverflow = document.body.style.overflow;
-    const closeOnEscape = (event) => { if (event.key === "Escape") onClose(); };
     document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", closeOnEscape);
-    return () => { document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", closeOnEscape); };
-  }, [onClose, open]);
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [open]);
   if (!open) return null;
-  return <div className="fixed inset-0 z-[100] grid place-items-center bg-black/55 p-4 backdrop-blur-[2px] lg:hidden" onMouseDown={onClose}><section role="dialog" aria-modal="true" aria-labelledby="website-filter-title" className="w-full max-w-lg rounded-2xl border border-border bg-surface shadow-2xl dark:border-gray-600 dark:bg-gray-800" onMouseDown={(event) => event.stopPropagation()}><header className="flex items-center gap-3 border-b border-border p-4 dark:border-gray-600"><span className="grid size-9 place-items-center rounded-xl bg-primary/10 text-primary"><SlidersHorizontal size={17} /></span><h2 id="website-filter-title" className="min-w-0 flex-1 text-start font-heading text-base font-extrabold text-foreground">{title}</h2><button type="button" onClick={onClose} className="grid size-9 place-items-center rounded-xl border border-border text-foreground-muted hover:border-primary hover:text-primary dark:border-gray-600" aria-label="Close"><X size={17} /></button></header><div className="grid max-h-[70svh] gap-4 overflow-y-auto p-4">{children}</div></section></div>;
+  return <div className="fixed inset-0 z-[100] grid place-items-center bg-black/55 p-4 backdrop-blur-[2px] lg:hidden" onMouseDown={onClose}><section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="website-filter-title" className="w-full max-w-lg rounded-2xl border border-border bg-surface shadow-2xl dark:border-gray-600 dark:bg-gray-800" onMouseDown={(event) => event.stopPropagation()}><header className="flex items-center gap-3 border-b border-border p-4 dark:border-gray-600"><span className="grid size-9 place-items-center rounded-xl bg-primary/10 text-accent-text"><SlidersHorizontal size={17} /></span><h2 id="website-filter-title" className="min-w-0 flex-1 text-start font-heading text-base font-extrabold text-foreground">{title}</h2><button type="button" onClick={onClose} className="grid size-9 place-items-center rounded-xl border border-border text-foreground-muted hover:border-primary hover:text-accent-text dark:border-gray-600" aria-label="Close"><X size={17} /></button></header><div className="grid max-h-[70svh] gap-4 overflow-y-auto p-4">{children}</div></section></div>;
 }
 
 function FilterSelect({
@@ -68,7 +68,7 @@ function FilterSelect({
   return (
     <div ref={wrapperRef} className="relative min-w-0 flex-1 text-start">
       <span className={`mb-1 flex items-center gap-1.5 text-[10px] text-foreground-muted ${language === "en" ? "font-medium" : "font-bold"}`}>
-        <Icon aria-hidden="true" size={13} className="text-primary" />
+        <Icon aria-hidden="true" size={13} className="text-accent-text" />
         {label}
       </span>
       <button
@@ -85,7 +85,7 @@ function FilterSelect({
         <ChevronDown
           aria-hidden="true"
           size={15}
-          className={`shrink-0 text-primary transition-transform duration-200 motion-reduce:transition-none ${isOpen ? "rotate-180" : ""}`}
+          className={`shrink-0 text-accent-text transition-transform duration-200 motion-reduce:transition-none ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
       <div
@@ -114,7 +114,7 @@ function FilterSelect({
                 minHeight: "32px",
                 paddingBlock: "5px",
               }}
-                className={`block w-full rounded-md px-2.5 text-start transition-colors ${selected ? `bg-primary/10 ${language === "en" ? "font-semibold" : "font-extrabold"} text-primary` : `${language === "en" ? "font-medium" : "font-semibold"} text-foreground hover:bg-primary/10 hover:text-primary`}`}
+                className={`block w-full rounded-md px-2.5 text-start transition-colors ${selected ? `bg-primary/10 ${language === "en" ? "font-semibold" : "font-extrabold"} text-accent-text` : `${language === "en" ? "font-medium" : "font-semibold"} text-foreground hover:bg-primary/10 hover:text-accent-text`}`}
             >
               {option}
             </button>
@@ -138,19 +138,21 @@ function ScholarshipCard({ scholarship, language }) {
             <img
               src={scholarship.image}
               alt=""
+              loading="lazy"
+              decoding="async"
               className="h-full max-h-40 w-full object-cover"
             />
           </div>
           <div className="flex min-w-0 flex-col justify-center py-2 md:px-3">
-            <h2 className="font-heading text-lg font-extrabold leading-7 text-foreground transition-colors group-hover:text-primary md:text-xl">
+            <h2 className="font-heading text-lg font-extrabold leading-7 text-foreground transition-colors group-hover:text-accent-text md:text-xl">
               {scholarship.title}
             </h2>
             <p className={`mt-1 inline-flex items-center gap-1.5 text-sm font-semibold text-foreground-muted ${language === "en" ? "justify-start" : "justify-center md:justify-start"}`}>
-              <MapPin aria-hidden="true" size={15} className="text-primary" />
+              <MapPin aria-hidden="true" size={15} className="text-accent-text" />
               {scholarship.country}
             </p>
             <div className={`mt-3 flex flex-wrap items-center gap-2 ${language === "en" ? "justify-start" : "justify-center md:justify-start"}`}>
-              <span className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-2.5 py-1.5 text-xs font-bold text-primary">
+              <span className="inline-flex items-center gap-1.5 rounded-lg bg-primary/10 px-2.5 py-1.5 text-xs font-bold text-accent-text">
                 <GraduationCap aria-hidden="true" size={14} />
                 {scholarship.degree}
               </span>
@@ -162,7 +164,7 @@ function ScholarshipCard({ scholarship, language }) {
                 <CalendarDays
                   aria-hidden="true"
                   size={14}
-                  className="text-primary"
+                  className="text-accent-text"
                 />
                 {deadline}
               </span>
@@ -206,7 +208,7 @@ function ScholarshipsSection({ content, language = "dr" }) {
     <FilterSelect language={language} icon={GraduationCap} label={content.filters.degree} value={filters.degree} options={content.options.degrees} allLabel={content.filters.all} onChange={(value) => updateFilter("degree", value)} isOpen={openFilter === "degree"} onToggle={(isOpen) => setOpenFilter(isOpen ? "degree" : null)} />
     <FilterSelect language={language} icon={WalletCards} label={content.filters.funding} value={filters.funding} options={content.options.funding} allLabel={content.filters.all} onChange={(value) => updateFilter("funding", value)} isOpen={openFilter === "funding"} onToggle={(isOpen) => setOpenFilter(isOpen ? "funding" : null)} />
     <FilterSelect language={language} icon={CalendarDays} label={content.filters.deadline} value={filters.deadline} options={content.options.deadlines} allLabel={content.filters.all} onChange={(value) => updateFilter("deadline", value)} isOpen={openFilter === "deadline"} onToggle={(isOpen) => setOpenFilter(isOpen ? "deadline" : null)} />
-    <button type="button" onClick={resetFilters} className={`mt-2 inline-flex h-9 min-h-9 shrink-0 self-center items-center justify-center gap-1.5 rounded-xl border border-primary/25 bg-primary/10 px-3 text-[11px] text-primary transition-all hover:border-primary/50 hover:bg-primary/15 sm:mt-0 sm:self-end ${language === "en" ? "font-medium" : "font-bold"}`} aria-label={content.filters.reset}><RotateCcw aria-hidden="true" size={13} />{content.filters.reset}</button>
+    <button type="button" onClick={resetFilters} className={`mt-2 inline-flex h-9 min-h-9 shrink-0 self-center items-center justify-center gap-1.5 rounded-xl border border-primary/25 bg-primary/10 px-3 text-[11px] text-accent-text transition-all hover:border-primary/50 hover:bg-primary/15 sm:mt-0 sm:self-end ${language === "en" ? "font-medium" : "font-bold"}`} aria-label={content.filters.reset}><RotateCcw aria-hidden="true" size={13} />{content.filters.reset}</button>
   </>;
 
   return (
@@ -222,10 +224,10 @@ function ScholarshipsSection({ content, language = "dr" }) {
         <Container className="relative max-w-6xl!">
           <div className="mx-auto w-full max-w-6xl text-center">
             <h1 className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 font-heading text-sm font-bold text-foreground">
-              <Sparkles aria-hidden="true" size={17} className="text-primary" />
+              <Sparkles aria-hidden="true" size={17} className="text-accent-text" />
               {content.hero.eyebrow}
             </h1>
-            <button type="button" onClick={() => setFilterModalOpen(true)} className="mx-auto mt-3 flex min-h-11 items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-5 text-sm font-bold text-primary lg:hidden"><SlidersHorizontal size={16} />{content.filters.title}</button>
+            <button type="button" onClick={() => setFilterModalOpen(true)} className="mx-auto mt-3 flex min-h-11 items-center justify-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-5 text-sm font-bold text-accent-text lg:hidden"><SlidersHorizontal size={16} />{content.filters.title}</button>
             <FilterModal open={filterModalOpen} onClose={() => setFilterModalOpen(false)} title={content.filters.title}><div className="grid gap-4">{filterControls}</div></FilterModal>
             <div className="relative z-30 mx-auto mt-3 hidden w-full rounded-2xl border border-white/90 bg-white/55 p-2 shadow-[0_12px_28px_rgba(54,69,77,0.1)] backdrop-blur-sm dark:border-gray-600 dark:bg-gray-800/65 lg:block">
               <h2 className="sr-only">{content.filters.title}</h2>
@@ -256,7 +258,7 @@ function ScholarshipsSection({ content, language = "dr" }) {
             <div className="rounded-3xl border border-dashed border-border bg-surface px-6 py-16 text-center dark:border-gray-700 dark:bg-[#2b3442]">
               <Search
                 aria-hidden="true"
-                className="mx-auto text-primary"
+                className="mx-auto text-accent-text"
                 size={42}
               />
               <h2 className="mt-4 font-heading text-xl font-extrabold text-foreground">

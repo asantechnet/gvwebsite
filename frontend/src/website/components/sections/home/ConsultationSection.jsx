@@ -16,7 +16,7 @@ function ConsultationSection({ content }) {
             aria-hidden="true"
             className="absolute -bottom-28 -left-24 -z-10 size-72 rounded-full bg-primary/10 blur-3xl"
           />
-          <span className="relative mx-auto grid size-14 place-items-center rounded-2xl border border-primary/20 bg-primary/10 text-primary shadow-sm">
+          <span className="relative mx-auto grid size-14 place-items-center rounded-2xl border border-primary/20 bg-primary/10 text-accent-text shadow-sm">
             <MessagesSquare aria-hidden="true" className="size-7" />
           </span>
 

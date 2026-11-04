@@ -11,6 +11,8 @@ import AudioMedia from './media/AudioMedia.jsx'
 import ImageMedia from './media/ImageMedia.jsx'
 import VideoMedia from './media/VideoMedia.jsx'
 import { editorTranslations as translations } from './translations.js'
+import { sanitizeRichText } from '@/shared/security/sanitizeRichText.js'
+import { createLocalUpload, revokeLocalUpload } from '@/shared/uploads/files.js'
 import './styles.css'
 
 const headingIconCategories = [
@@ -43,7 +45,10 @@ function createIconHeadingNodeView({ node, editor, getPos }) {
   remove.type = 'button'
   remove.className = 'cms-heading-icon-remove'
   remove.setAttribute('aria-label', 'Remove icon')
-  remove.innerHTML = '<span aria-hidden="true">×</span>'
+  const removeIcon = document.createElement('span')
+  removeIcon.setAttribute('aria-hidden', 'true')
+  removeIcon.textContent = '×'
+  remove.append(removeIcon)
   icon.append(iconValue, remove)
   dom.append(icon, spacer, contentDOM)
 
@@ -252,8 +257,8 @@ function OpportunityRichTextEditor({ value, onChange, language: requestedLanguag
   const openMediaEditor = (attrs, position) => { setAttachment({ ...emptyAttachment, ...attrs }); setEditingMediaPos(position); setPanel('attachment') }
   const openGridSlotEditor = (attrs, position, index) => { setAttachment({ ...emptyAttachment, ...(attrs || {}) }); setEditingMediaPos(null); setEditingGridSlot({ position, index }); setPanel('attachment') }
   const direction = language === 'en' ? 'ltr' : 'rtl'
-  const editor = useEditor({ extensions: editorExtensions(copy, openMediaEditor, openGridSlotEditor, placeholder), content: value || '', editable: !locked, immediatelyRender: false, editorProps: { attributes: { dir: direction, class: 'cms-opportunity-prose h-72 overflow-y-auto text-start px-4 py-3 text-sm font-normal leading-7 text-admin-heading outline-none' } }, onUpdate: ({ editor: current }) => onChange(current.getHTML()) })
-  useEffect(() => { if (editor && value !== editor.getHTML()) editor.commands.setContent(value || '', { emitUpdate: false }) }, [editor, value])
+  const editor = useEditor({ extensions: editorExtensions(copy, openMediaEditor, openGridSlotEditor, placeholder), content: sanitizeRichText(value || ''), editable: !locked, immediatelyRender: false, editorProps: { attributes: { dir: direction, class: 'cms-opportunity-prose h-72 overflow-y-auto text-start px-4 py-3 text-sm font-normal leading-7 text-admin-heading outline-none' } }, onUpdate: ({ editor: current }) => onChange(current.getHTML()) })
+  useEffect(() => { if (editor && value !== editor.getHTML()) editor.commands.setContent(sanitizeRichText(value || ''), { emitUpdate: false }) }, [editor, value])
   useEffect(() => { editor?.setEditable(!locked) }, [editor, locked])
   useEffect(() => { editor?.view.dom.setAttribute('dir', direction) }, [direction, editor])
   useEffect(() => {
@@ -270,8 +275,8 @@ function OpportunityRichTextEditor({ value, onChange, language: requestedLanguag
   const openLink = () => { const { from, to } = editor.state.selection; setPendingSelection({ from, to }); setLinkValue(editor.getAttributes('link').href || ''); setPanel('link') }
   const saveLink = () => { const href = linkValue.trim(); const chain = editor.chain().focus(); if (pendingSelection) chain.setTextSelection(pendingSelection); if (href) chain.setLink({ href }).run(); else chain.unsetLink().run(); setPendingSelection(null); setPanel(null) }
   const saveButton = () => { const label = buttonValue.label.trim(); const href = buttonValue.href.trim(); if (label && href) editor.chain().focus().insertContent({ type: 'actionButton', attrs: { label, href } }).run(); setPanel(null); setButtonValue({ label: '', href: '' }) }
-  const chooseAttachmentFile = (file) => { if (!file) return; const detectedType = file.type.startsWith('image/') ? 'image' : file.type.startsWith('video/') ? 'video' : file.type.startsWith('audio/') ? 'audio' : attachment.mediaType; setAttachment((current) => ({ ...current, mediaType: detectedType, src: URL.createObjectURL(file), name: file.name, title: current.title || file.name.replace(/\.[^.]+$/, ''), mimeType: file.type })) }
-  const chooseAttachmentImage = (key, file) => { if (file) setAttachment((current) => ({ ...current, [key]: URL.createObjectURL(file) })) }
+  const chooseAttachmentFile = (file) => { const upload = createLocalUpload(file, ['image', 'video', 'audio']); if (!upload.valid) return; setAttachment((current) => { revokeLocalUpload(current.src); return { ...current, mediaType: upload.kind, src: upload.previewUrl, name: upload.name, title: current.title || upload.name.replace(/\.[^.]+$/, ''), mimeType: file.type } }) }
+  const chooseAttachmentImage = (key, file) => { const upload = createLocalUpload(file, ['image']); if (!upload.valid) return; setAttachment((current) => { revokeLocalUpload(current[key]); return { ...current, [key]: upload.previewUrl } }) }
   const insertAttachment = () => { if (!attachment.src) return; const attrs = attachment.mediaType === 'image' ? { ...attachment, alt: attachment.title, caption: attachment.title } : attachment; if (editingGridSlot) editor.chain().focus().command(({ tr, state }) => { const gridNode = state.doc.nodeAt(editingGridSlot.position); if (!gridNode) return false; const items = [...gridNode.attrs.items]; items[editingGridSlot.index] = attrs; tr.setNodeMarkup(editingGridSlot.position, undefined, { ...gridNode.attrs, items }); return true }).run(); else if (editingMediaPos !== null) editor.chain().focus().command(({ tr }) => { tr.setNodeMarkup(editingMediaPos, undefined, attrs); return true }).run(); else editor.chain().focus().insertContent({ type: 'mediaBlock', attrs }).run(); setAttachment(emptyAttachment); setEditingMediaPos(null); setEditingGridSlot(null); setPanel(null) }
   const insertMediaGrid = (layout, slots) => { editor.chain().focus().insertContent({ type: 'mediaGrid', attrs: { layout, items: Array.from({ length: slots }, () => null) } }).run(); setPanel(null) }
   const setColumns = (columns) => { const listType = editor.isActive('orderedList') ? 'orderedList' : editor.isActive('bulletList') ? 'bulletList' : null; const chain = editor.chain().focus(); if (listType) chain.updateAttributes(listType, { columns }).run(); else chain.toggleBulletList().updateAttributes('bulletList', { columns }).run(); setPanel(null) }
@@ -311,7 +316,7 @@ function OpportunityRichTextEditor({ value, onChange, language: requestedLanguag
 
 function RecoveryEditor({ value, onChange, readOnly = false, disabled = false, className = '' }) {
   const inputRef = useRef(null)
-  useEffect(() => { if (inputRef.current && document.activeElement !== inputRef.current) inputRef.current.innerHTML = value || '' }, [value])
+  useEffect(() => { if (inputRef.current && document.activeElement !== inputRef.current) inputRef.current.innerHTML = sanitizeRichText(value || '') }, [value])
   return <div className={`gv-rich-text-editor rounded-xl border border-(--editor-field-border) bg-(--editor-input) ${disabled ? 'opacity-60' : ''} ${className}`}><div ref={inputRef} dir="auto" contentEditable={!readOnly && !disabled} suppressContentEditableWarning onInput={(event) => onChange(event.currentTarget.innerHTML)} className="cms-opportunity-prose h-72 overflow-y-auto px-4 py-3 text-sm leading-7 text-admin-heading outline-none" /></div>
 }
 

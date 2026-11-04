@@ -18,7 +18,7 @@ function DestinationCard({ item }) {
       <img src={item.image} alt={item.imageAlt} width="1400" height="934" loading="lazy" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
       <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/10 to-black/20" />
       <span className="absolute inset-x-0 top-0 flex items-center gap-3 p-5 text-brand-white">
-        <img src={item.flag} alt="" width="32" height="32" className="size-8 rounded-full border-2 border-white/80 object-cover shadow-sm" />
+        <img src={item.flag} alt="" width="32" height="32" loading="lazy" className="size-8 rounded-full border-2 border-white/80 object-cover shadow-sm" />
         <span className="font-heading text-xl font-extrabold drop-shadow-md sm:text-2xl">{item.name}</span>
       </span>
     </a>

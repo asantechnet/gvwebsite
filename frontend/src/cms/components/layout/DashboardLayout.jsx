@@ -1,16 +1,5 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 
-import DashboardPage from '@cms/components/pages/DashboardPage.jsx'
-import HomePage from '@cms/components/pages/HomePage.jsx'
-import AboutPage from '@cms/components/pages/AboutPage.jsx'
-import MagazinePage from '@cms/components/pages/MagazinePage.jsx'
-import ScholarshipsPage from '@cms/components/pages/ScholarshipsPage.jsx'
-import ContactPage from '@cms/components/pages/ContactPage.jsx'
-import OpportunitiesPage from '@cms/components/pages/OpportunitiesPage.jsx'
-import MessagesPage from '@cms/components/pages/MessagesPage.jsx'
-import ProfilePage from '@cms/components/pages/ProfilePage.jsx'
-import MediaLibraryPage from '@cms/components/pages/MediaLibraryPage.jsx'
-import SettingsPage from '@cms/components/pages/SettingsPage.jsx'
 import PlaceholderPage from '@cms/components/pages/PlaceholderPage.jsx'
 import DashboardSidebar from './DashboardSidebar.jsx'
 import DashboardTopbar from './DashboardTopbar.jsx'
@@ -76,8 +65,25 @@ import englishMediaContent from '@cms/locales/en/media.json'
 import dariSettingsContent from '@cms/locales/prs/settings.json'
 import pashtoSettingsContent from '@cms/locales/ps/settings.json'
 import englishSettingsContent from '@cms/locales/en/settings.json'
+import { getCmsRouteKey } from '@cms/routes.js'
+import useAuth from '@cms/auth/useAuth.js'
+import { canAccessCmsRoute } from '@cms/auth/permissions.js'
+import ApplicationLoading from '@/shared/components/ApplicationLoading.jsx'
+
+const DashboardPage = lazy(() => import('@cms/components/pages/DashboardPage.jsx'))
+const HomePage = lazy(() => import('@cms/components/pages/HomePage.jsx'))
+const AboutPage = lazy(() => import('@cms/components/pages/AboutPage.jsx'))
+const MagazinePage = lazy(() => import('@cms/components/pages/MagazinePage.jsx'))
+const ScholarshipsPage = lazy(() => import('@cms/components/pages/ScholarshipsPage.jsx'))
+const ContactPage = lazy(() => import('@cms/components/pages/ContactPage.jsx'))
+const OpportunitiesPage = lazy(() => import('@cms/components/pages/OpportunitiesPage.jsx'))
+const MessagesPage = lazy(() => import('@cms/components/pages/MessagesPage.jsx'))
+const ProfilePage = lazy(() => import('@cms/components/pages/ProfilePage.jsx'))
+const MediaLibraryPage = lazy(() => import('@cms/components/pages/MediaLibraryPage.jsx'))
+const SettingsPage = lazy(() => import('@cms/components/pages/SettingsPage.jsx'))
 
 function DashboardLayout() {
+  const auth = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => window.localStorage.getItem('globalvision-cms-sidebar-collapsed') === 'true')
   const [theme, setTheme] = useState(() => window.localStorage.getItem('globalvision-theme') || 'light')
@@ -139,15 +145,46 @@ function DashboardLayout() {
   }, [sidebarOpen])
 
   const toggleSidebar = () => setSidebarCollapsed((current) => { window.localStorage.setItem('globalvision-cms-sidebar-collapsed', String(!current)); return !current })
+  const routeKey = getCmsRouteKey(window.location.pathname)
+  const routePages = {
+    overview: <DashboardPage content={content} counts={counts} />,
+    home: <HomePage content={homeEditorContent} initialTranslations={{ prs: dariHomeContent, ps: pashtoHomeContent, en: englishHomeContent }} />,
+    about: <AboutPage key={language} content={aboutEditorContent} initialTranslations={{ prs: dariAboutContent, ps: pashtoAboutContent, en: englishAboutContent }} />,
+    contact: <ContactPage key={language} content={contactEditorContent} initialTranslations={{ prs: dariContactContent, ps: pashtoContactContent, en: englishContactContent }} />,
+    magazine: <MagazinePage key={language} content={magazineEditorContent} initialTranslations={{ prs: dariMagazineContent, ps: pashtoMagazineContent, en: englishMagazineContent }} />,
+    scholarships: <ScholarshipsPage key={language} content={scholarshipsEditorContent} initialTranslations={{ prs: dariScholarshipsContent, ps: pashtoScholarshipsContent, en: englishScholarshipsContent }} />,
+    opportunities: <OpportunitiesPage key={language} content={content} opportunities={opportunitiesContent} exams={guidesContent.exams} />,
+    tourism: <OpportunitiesPage key={language} content={content} tourism={tourismContent} />,
+    services: <OpportunitiesPage key={language} content={content} services={localizedServices} />,
+    messages: <MessagesPage content={{ ...messagesContent, dashboard: content.overview }} language={language} />,
+    media: <MediaLibraryPage key={language} content={mediaContent} />,
+    settings: <SettingsPage key={language} content={settingsContent} language={language} />,
+    profile: <ProfilePage content={profileContent} theme={theme} />,
+  }
+  const accessLabels = content.auth || {}
+  const activePage = auth.status === 'loading'
+    ? <CmsAccessState title={accessLabels.loading || 'Loading account…'} />
+    : auth.status === 'error'
+      ? <CmsAccessState title={accessLabels.error || 'The account could not be loaded.'} action={accessLabels.retry || 'Retry'} onAction={auth.retry} />
+      : auth.status === 'unauthenticated'
+        ? <CmsAccessState title={accessLabels.unauthenticated || 'Your session has expired.'} />
+        : !canAccessCmsRoute(auth.session, routeKey)
+          ? <CmsAccessState title={accessLabels.forbidden || 'You do not have access to this page.'} />
+          : routePages[routeKey] || <PlaceholderPage content={content} pageKey={window.location.pathname.split('/')[2]} />
+  const canAccess = (key) => canAccessCmsRoute(auth.session, key)
 
-  return <DeleteConfirmation><div className="cms-root min-h-screen" data-theme={theme} dir={language === 'en' ? 'ltr' : 'rtl'}>
+  return <DeleteConfirmation><div className="cms-root min-h-screen w-full max-w-full overflow-x-clip" data-theme={theme} dir={language === 'en' ? 'ltr' : 'rtl'}>
     <a href="#dashboard-content" className="fixed start-3 top-3 z-[70] -translate-y-20 rounded-xl bg-admin-heading px-4 py-3 text-white transition-transform focus:translate-y-0">{content.overview}</a>
-    <DashboardSidebar content={content} theme={theme} open={sidebarOpen} collapsed={sidebarCollapsed} onCollapseToggle={toggleSidebar} onClose={() => setSidebarOpen(false)} />
-    <div className={`admin-shell min-h-screen transition-[padding] duration-250 rtl:lg:pr-(--sidebar-width) ltr:lg:pl-(--sidebar-width) ${sidebarCollapsed ? 'rtl:lg:pr-21 ltr:lg:pl-21' : ''}`}>
+    <DashboardSidebar content={content} theme={theme} open={sidebarOpen} collapsed={sidebarCollapsed} canAccess={canAccess} onCollapseToggle={toggleSidebar} onClose={() => setSidebarOpen(false)} onLogout={auth.logout} />
+    <div className={`admin-shell min-h-screen min-w-0 max-w-full transition-[padding] duration-250 rtl:lg:pr-(--sidebar-width) ltr:lg:pl-(--sidebar-width) ${sidebarCollapsed ? 'rtl:lg:pr-21 ltr:lg:pl-21' : ''}`}>
       <DashboardTopbar content={content.topbar} searchItems={content.groups.flatMap((group) => group.items)} language={language} theme={theme} onMenuOpen={() => setSidebarOpen(true)} onThemeToggle={() => setTheme((current) => current === 'light' ? 'dark' : 'light')} onLanguageChange={setLanguage} />
-      <main id="dashboard-content" className="min-h-[calc(100vh-5rem)] px-4 pt-6 pb-28 sm:px-8 sm:pt-8">{window.location.pathname === '/dashboard' ? <DashboardPage content={content} counts={counts} /> : window.location.pathname.startsWith('/dashboard/home') ? <HomePage content={homeEditorContent} initialTranslations={{ prs: dariHomeContent, ps: pashtoHomeContent, en: englishHomeContent }} /> : window.location.pathname.startsWith('/dashboard/about') ? <AboutPage key={language} content={aboutEditorContent} initialTranslations={{ prs: dariAboutContent, ps: pashtoAboutContent, en: englishAboutContent }} /> : window.location.pathname.startsWith('/dashboard/contact') ? <ContactPage key={language} content={contactEditorContent} initialTranslations={{ prs: dariContactContent, ps: pashtoContactContent, en: englishContactContent }} /> : window.location.pathname.startsWith('/dashboard/magazine') ? <MagazinePage key={language} content={magazineEditorContent} initialTranslations={{ prs: dariMagazineContent, ps: pashtoMagazineContent, en: englishMagazineContent }} /> : window.location.pathname.startsWith('/dashboard/scholarships') ? <ScholarshipsPage key={language} content={scholarshipsEditorContent} initialTranslations={{ prs: dariScholarshipsContent, ps: pashtoScholarshipsContent, en: englishScholarshipsContent }} /> : window.location.pathname.startsWith('/dashboard/opportunities') ? <OpportunitiesPage key={language} content={content} opportunities={opportunitiesContent} exams={guidesContent.exams} /> : window.location.pathname.startsWith('/dashboard/tourism') ? <OpportunitiesPage key={language} content={content} tourism={tourismContent} /> : window.location.pathname.startsWith('/dashboard/services') ? <OpportunitiesPage key={language} content={content} services={localizedServices} /> : window.location.pathname.startsWith('/dashboard/messages') ? <MessagesPage content={{ ...messagesContent, dashboard: content.overview }} language={language} /> : window.location.pathname.startsWith('/dashboard/media') ? <MediaLibraryPage key={language} content={mediaContent} /> : window.location.pathname.startsWith('/dashboard/settings') ? <SettingsPage key={language} content={settingsContent} language={language} /> : window.location.pathname.startsWith('/dashboard/profile') ? <ProfilePage content={profileContent} theme={theme} /> : <PlaceholderPage content={content} pageKey={window.location.pathname.split('/')[2]} />}</main><UnsavedChangesBar sidebarCollapsed={sidebarCollapsed} />
+      <main id="dashboard-content" className="min-h-[calc(100vh-5rem)] px-4 pt-6 pb-28 sm:px-8 sm:pt-8"><Suspense fallback={<ApplicationLoading contained />}>{activePage}</Suspense></main><UnsavedChangesBar sidebarCollapsed={sidebarCollapsed} />
     </div>
   </div></DeleteConfirmation>
+}
+
+function CmsAccessState({ title, action, onAction }) {
+  return <section className="grid min-h-[24rem] place-items-center rounded-2xl border border-admin-border bg-admin-card p-6 text-center"><div><h1 className="font-heading text-lg text-admin-heading">{title}</h1>{action && <button type="button" onClick={onAction} className="mt-4 min-h-10 rounded-xl bg-admin-brand px-5 text-xs font-semibold text-white">{action}</button>}</div></section>
 }
 
 export default DashboardLayout

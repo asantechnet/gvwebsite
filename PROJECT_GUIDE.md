@@ -6,9 +6,11 @@ This guide is the single source of truth for the Global Vision architecture, gen
 
 The public navigation includes dedicated opportunity, tourism, scholarship, magazine, services, and supporting-information entries. The opportunities group includes a localized investment directory and country-specific investment routes. Tourism includes localized Afghanistan and world directories with destination cards and detail routes. The independent `/services` directory presents all service posts as cards. The `/scholarships` directory provides localized country, degree, and funding filters, responsive scholarship cards, and slug-based scholarship detail routes rendered through the shared single-post design. Scholarship records are currently static localized seed data and are not yet connected to the backend.
 
-The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, separate website and CMS source areas, responsive localized `Header` and `Footer` components, and shared UI components for sections, containers, headings, action links, and repeated card patterns are configured. The home page includes responsive hero, opportunity, destination, process, service, testimonial, and consultation sections with Dari and Pashto content. Shared navigation data, matching localized layout translations, pathname-based page selection, slug-based magazine post routes, opportunity category and country-specific opportunity routes, localized service posts, IELTS/TOEFL guides, localized search results, a not-found page, dynamic page metadata, and frontend contact-form validation are implemented. A localized CMS dashboard shell is available at `/dashboard`, with a responsive RTL sidebar, top bar, overview metrics, content status, quick actions, language switching, and theme switching. Frontend-only home, about, contact, magazine, and scholarships page editors, plus media-library and website-settings screens, are available under their matching `/dashboard/*` routes; persistence is not yet connected. Shared CMS editor primitives own preview actions, tab bars, section headers, field groups, fields, and visibility controls, while the shared editor-tabs hook owns tab restoration and scroll-reset behavior. A routing library, Laravel backend, MariaDB integration, API, authentication, and persistent CMS editing have not started.
+The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, separate website and CMS source areas, responsive localized `Header` and `Footer` components, and shared UI components for sections, containers, headings, action links, and repeated card patterns are configured. The home page includes responsive hero, opportunity, destination, process, service, testimonial, and consultation sections with Dari and Pashto content. Shared navigation data, matching localized layout translations, pathname-based page selection, slug-based magazine post routes, opportunity category and country-specific opportunity routes, localized service posts, IELTS/TOEFL guides, localized search results, a not-found page, dynamic page metadata, and frontend contact-form validation are implemented. A localized CMS dashboard shell is available at `/dashboard`, with a responsive RTL sidebar, top bar, overview metrics, content status, quick actions, language switching, and theme switching. Frontend-only home, about, contact, magazine, scholarships, opportunities, tourism, and services editors, plus media-library and website-settings screens, are available under their matching `/dashboard/*` routes; backend persistence is not yet connected. CMS route paths are centralized in `src/cms/routes.js`. Recoverable browser drafts are shared across the main editors through `useCmsDraftState`, remain pending until the global Save Changes action is used, and are removed after saving or explicitly discarding navigation. Shared CMS editor primitives own preview actions, tab bars, section headers, field groups, fields, visibility controls, and safe rich-text previews, while focused hooks own tab restoration, collection draft behavior, and save/recovery behavior. The frontend now has normalized multilingual content records, environment-selected mock and API data sources, centralized API/auth/content/upload clients, normalized transport errors, contact and password validation, MIME-and-size upload policies, and CMS session/permission states. These are integration boundaries only: a routing library, Laravel backend, MariaDB integration, real authentication, and persistent server-side CMS editing have not started.
 
-The frontend includes dependency-free Node tests for localized catalog search and scholarship filtering plus a static validator for localized internal links, external URL syntax, and public asset references.
+The frontend includes dependency-free Node tests for localized catalog search, scholarship filtering, CMS route resolution, and new locale namespace parity, plus a static validator for localized internal links, external URL syntax, and public asset references.
+
+Shared modal keyboard behavior lives in `src/shared/hooks/useModalFocus.js`. Public and CMS dialogs use it to move focus into the dialog, contain Tab navigation, close with Escape, and restore focus to the invoking control. The website and CMS use a visible border-and-shadow keyboard focus treatment without browser outlines or Tailwind rings. Brand fills retain the canonical orange, while the semantic `accent-text` and `admin-brand-text` tokens use a contrast-safe darker orange in light mode and the existing bright orange in dark mode.
 
 The repository currently contains:
 
@@ -71,6 +73,9 @@ Do not describe planned functionality as implemented.
 | Tailwind Vite plugin | Tailwind and Vite integration | `^4.3.3` |
 | Lucide React | All general website and CMS interface icons | `^1.48.0` |
 | React Icons | Social media brand icons only | `^5.7.0` |
+| Tiptap | Shared CMS rich-text editing | `^3.32.0` |
+| DOMPurify | Allowlist-based rich-text sanitization before DOM rendering | `^3.4.17` |
+| tsParticles | Public decorative particle backgrounds | `^3.9.1` |
 | ESLint | Static analysis | `^10.11.0` |
 
 The frontend uses native ES modules through `"type": "module"`.
@@ -107,9 +112,18 @@ globalvision-website/
 │   │   │   ├── locales/         # Public Dari, Pashto, and English translations
 │   │   │   └── utils/           # Website-only utilities
 │   │   ├── cms/                 # CMS application mounted at /dashboard
+│   │   │   ├── auth/            # CMS session context, permissions, and route access policy
 │   │   │   ├── components/      # CMS layouts, pages, sections, and controls
+│   │   │   ├── hooks/           # CMS tab, draft, and collection state hooks
 │   │   │   └── locales/         # CMS Dari, Pashto, and English translations
-│   │   ├── shared/              # Cross-application hooks, services, and utilities
+│   │   │   ├── utils/           # CMS-only events and nonvisual helpers
+│   │   │   └── routes.js        # Canonical CMS paths and route matching
+│   │   ├── shared/              # Cross-application components, models, security, services, uploads, hooks, and utilities
+│   │   │   ├── models/          # Stable frontend records independent of API response shapes
+│   │   │   ├── security/        # Rich-text sanitization and frontend content-safety policy
+│   │   │   ├── services/        # Mock/API data sources and centralized API clients
+│   │   │   ├── uploads/         # File validation and local preview lifecycle helpers
+│   │   │   └── hooks/           # Behavior shared by website and CMS, including modal focus
 │   │   ├── assets/fonts/       # Bundled local fonts
 │   │   ├── App.jsx             # Website/CMS application boundary
 │   │   ├── index.css           # Tailwind, tokens, fonts, global defaults
@@ -154,6 +168,16 @@ Use aliases across source areas and relative imports for nearby files within one
 - Route decisions within each application belong in its layout or a dedicated router when routing is implemented.
 - Do not put page markup, content collections, or UI behavior in `main.jsx`.
 
+### Public SEO layer
+
+- Public runtime metadata and structured data are centralized in `src/website/seo/metadata.js`; do not add page-specific DOM metadata effects elsewhere.
+- Production builds run `scripts/generate-seo.mjs` after Vite to emit localized route snapshots, `sitemap.xml`, and `robots.txt`, then run `scripts/validate-seo.mjs`.
+- Configure the canonical production origin with `VITE_SITE_URL` or `SITE_URL`. The documented fallback is `https://globalvision.af`.
+- Indexable routes must provide localized title, description, canonical, social image, and matching Dari, Pashto, English, and `x-default` alternates.
+- Search, unknown routes, maintenance responses, and every CMS route remain `noindex`; never add CMS URLs to the sitemap.
+- Add new public collections to both runtime route resolution and the build-time route inventory. A route is not SEO-complete until `npm run build` validates its generated snapshot.
+- Structured data must describe only visible, factual content. Do not invent organization types, addresses, reviews, ratings, authors, or dates.
+
 ### Pages and sections
 
 - One page component represents one route.
@@ -181,6 +205,8 @@ Use aliases across source areas and relative imports for nearby files within one
 
 - Reusable stateful behavior belongs in the owning application's hooks directory, or `src/shared/hooks/` when both applications use it; hook names begin with `use`.
 - Hooks return the smallest useful API and clean up listeners, timers, and observers.
+- Main CMS editors use `useCmsDraftState` for recoverable pending values. Give every editor a stable route-scoped storage key, keep committed values separate from drafts, and do not write the final setting or content value until the global Save Changes event is received.
+- Opportunities, tourism, and services share collection normalization, status drafts, save commits, and post insertion through `useManagedCollection`; their presentation may vary without duplicating collection state rules.
 - Website content arrays and navigation belong in `src/website/data/`.
 - Nonvisual shared logic belongs under `src/shared/`; application-only logic stays under its owning application.
 - Define routes once and reuse their constants.
@@ -195,6 +221,19 @@ Use aliases across source areas and relative imports for nearby files within one
 - Convert API responses into stable frontend models in service adapters. Backend response changes should normally require edits in the API layer rather than throughout components and sections.
 - Keep display components prop driven so static data, translated content, loading data, and API data use the same component contracts.
 - Provide consistent loading, empty, error, and success states without coupling their presentation to Laravel response shapes.
+- Select the frontend source with `VITE_DATA_SOURCE=mock|api`; mock remains the default until the backend exists. Configure the real API origin with `VITE_API_BASE_URL` and request timeout with `VITE_API_TIMEOUT_MS`.
+- Use cookie-based sessions with `credentials: include` and the Laravel `XSRF-TOKEN` cookie. Never store access tokens or passwords in local storage.
+- Normalize unauthenticated, forbidden, validation, timeout, offline, cancellation, and transport failures before they reach UI components.
+- Treat frontend permission checks as presentation controls only. Laravel must independently authenticate and authorize every protected operation.
+
+### Frontend security and untrusted content
+
+- Render CMS-authored HTML only through `SafeRichText`, which applies the shared DOMPurify allowlist and safe URL policy. Never add a direct `dangerouslySetInnerHTML` consumer.
+- Sanitize rich text when loading it into the editor as defense in depth. The backend must still sanitize and validate the canonical stored value.
+- Reject executable URL schemes, inline event handlers, scripts, embedded documents, SVG markup, forms, and unsupported rich-text elements.
+- Validate uploads by MIME type and per-kind size policy before previewing or sending them. Browser validation improves feedback but never replaces backend file inspection, safe renaming, storage isolation, malware checks, and authorization.
+- Keep local file previews as temporary `blob:` URLs and revoke them when replaced or removed.
+- Keep authentication state in memory and model explicit loading, authenticated, unauthenticated, forbidden, and failed-session states.
 
 ### Translation architecture
 
@@ -212,7 +251,7 @@ Use aliases across source areas and relative imports for nearby files within one
 
 ## Routing Rules
 
-`App.jsx` selects the website or CMS from `window.location.pathname` without a routing dependency. `WebsiteLayout` currently selects public pages after removing the required `/dr`, `/ps`, or `/en` prefix. Magazine posts use stable paths in the form `/:language/magazine/post/:slug`; matching language records must share the same slug. Every child item under Opportunities and Services is content of type post, rendered with the shared single-post layout rather than a standalone page component. These posts use their localized canonical navigation path, such as `/dr/opportunities/study`. When routing expands or a routing library is introduced:
+`App.jsx` selects the website or CMS from `window.location.pathname` without a routing dependency. Canonical CMS paths, href generation, application-boundary detection, and CMS route-key matching are defined in `src/cms/routes.js` and consumed by the shell, sidebar, and top-bar search. `WebsiteLayout` currently selects public pages after removing the required `/dr`, `/ps`, or `/en` prefix. Magazine posts use stable paths in the form `/:language/magazine/post/:slug`; matching language records must share the same slug. Every child item under Opportunities and Services is content of type post, rendered with the shared single-post layout rather than a standalone page component. These posts use their localized canonical navigation path, such as `/dr/opportunities/study`. When routing expands or a routing library is introduced:
 
 `/:language/opportunities` is intentionally not a public route. Its header label is a non-navigating dropdown trigger; only its child routes are navigable. `/:language/services` is an independent directory route, and its cards link to localized service detail routes.
 
@@ -235,12 +274,15 @@ The CMS shell starts at `/dashboard`. Paths below `/dashboard/*` are reserved fo
 | Global Vision orange | `#f47e26` | Primary accent and calls to action |
 | Global Vision purple | `#80027f` | Secondary accent and important actions |
 | Global Vision white | `#ffffff` | Brand neutral and clean surfaces |
+| Light accent text | `#b6530d` | Contrast-safe orange-family text and icons on light surfaces |
 | Light background | `#fffaf5` | Light page background |
 | Light foreground | `#333333` | Light primary text and titles |
 | Dark background | `#1f2937` (`gray-800`) | Dark page background |
 | Dark foreground | `#fff8f3` | Dark primary text |
 
 Shared branding colors, fonts, light and dark class colors, and necessary global animation definitions live in `src/index.css`. CMS-only administrative tokens and primitive behaviors live in `src/cms/styles.css` and remain scoped to `.cms-root`. The site supports explicit `.light` and `.dark` theme classes. Components consume semantic tokens rather than hardcoded theme colors. Detailed component, section, page-shell, and layout styling belongs in JSX through Tailwind utilities.
+
+Use `bg-primary` / `bg-admin-brand` and matching border tokens for canonical orange fills and borders. Use `text-accent-text` on the public website and `text-admin-brand-text` in the CMS for orange-family text and icons so light-mode contrast remains accessible without changing brand-colored fills.
 
 ### Language and typography
 
@@ -269,6 +311,7 @@ Shared branding colors, fonts, light and dark class colors, and necessary global
 - Never apply `outline`, `outline-*`, `ring`, or `ring-*` to clickable controls.
 - Hover, active, selected, and keyboard focus states must use accessible changes in border, background, text color, opacity, or shadow.
 - Replacing browser focus presentation requires a clear accessible alternative.
+- Website and CMS controls use the shared semantic focus border and shadow treatment. Do not suppress it unless a component provides an equally visible state.
 
 ## Responsive Standards
 
@@ -285,6 +328,7 @@ Shared branding colors, fonts, light and dark class colors, and necessary global
 - Give meaningful images descriptive alternative text and decorative images empty alt text.
 - Give icon only controls accessible labels.
 - Make every interaction keyboard accessible.
+- Use `useModalFocus` for modal dialogs so focus enters the modal, remains contained, Escape closes it, and focus returns to its trigger.
 - Use semantic `header`, `nav`, `main`, `section`, `article`, and `footer` elements.
 - Use `aria-current="page"` for active navigation and breadcrumbs.
 - Never remove visible focus feedback without a clear replacement.
@@ -337,6 +381,7 @@ npm install
 npm run dev
 npm test
 npm run test:links
+npm run test:seo
 npm run lint
 npm run build
 npm run preview
@@ -387,3 +432,12 @@ When backend or content management work begins:
 - Record new global tokens and interaction rules.
 - Keep planned technology separate from installed technology.
 - Treat this file as the primary project reference.
+
+## Optimization Progress
+
+- Phase 1 — Inspection and baseline: completed on 2026-11-04. The baseline passed ESLint, Node tests, localized link/asset validation, and the production build. The initial production JavaScript bundle measured 1,692.41 kB raw and 480.46 kB gzip.
+- Phase 2 — Safe cleanup and architecture: completed on 2026-11-04. CMS routes were centralized, recoverable Save Changes drafts were standardized across the main editors, opportunities/services/tourism collection state was extracted to a focused hook, the duplicate add/edit collection modal was consolidated, and the unreachable legacy opportunity manager and obsolete reset-event code were removed. Route and locale architecture tests were added. Four representative baseline screenshots remained pixel-identical after the work.
+- Phase 3 — Styling and UI quality: completed on 2026-11-04. Shared page-grid constraints and off-canvas containment removed narrow-mobile CMS clipping, including long localized opportunity and scholarship cards. The required 320, 375, 430, 768, 1024, and 1280 viewport checks passed across RTL/LTR and light/dark samples. Shared modal focus management, semantic keyboard focus feedback, reduced-motion handling for moving language indicators, contrast-safe accent-text tokens, and maintenance-language retention were added without redesigning the interface.
+- Phase 4 — Database, API, and frontend security readiness: completed on 2026-11-04. Stable multilingual content models, centralized credentialed API clients, mock/API source selection, normalized request errors, CMS session and permission states, contact/password validation, MIME-and-size upload policies, progress-ready upload transport, and DOMPurify-backed rich-text rendering were introduced. The frontend remains on the mock source by default; Laravel must provide the documented contracts, authentication, authorization, validation, sanitization, upload inspection, and persistence. The dependency audit's high-severity development-tool findings were resolved through non-breaking updates; six moderate ESLint-chain advisories remain without a non-breaking fix.
+- Phase 5 — SEO, metadata, and indexability: completed on 2026-11-04. Centralized localized metadata, canonicals, hreflang, social previews, structured data, CMS SEO fields, build-time route snapshots, sitemap and robots generation, CMS noindex response headers, and automated validation now cover 258 public language URLs. Full body SSR, real HTTP 404 responses, persisted CMS SEO values, and final production-origin/server configuration remain Laravel or deployment dependencies documented in `SEO_REPORT.md`.
+- Phases 6–8 remain pending explicit approval. Current known limitations include the unsplit application bundle, incomplete messages behavior, mock-only persistence, and absent server-side enforcement. These belong to their approved later phases or backend implementation.

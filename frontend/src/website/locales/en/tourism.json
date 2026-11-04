@@ -7,7 +7,7 @@
         "slug": "bamyan",
         "name": "Bamiyan",
         "description": "Historical valleys, Band Amir and mountain views of Bamyan.",
-        "image": "/assets/images/destinations/hungary.jpg",
+        "image": "/assets/images/destinations/hungary.webp",
         "imageAlt": "Mountain landscape of Bamyan",
         "highlights": [
           "Band Amir",
@@ -20,7 +20,7 @@
         "slug": "herat",
         "name": "Herat",
         "description": "Historical architecture, Akhtaruddin Castle and urban culture of Herat.",
-        "image": "/assets/images/destinations/turkiye.jpg",
+        "image": "/assets/images/destinations/turkiye.webp",
         "imageAlt": "Historical architecture of Herat",
         "highlights": [
           "Akhtaruddin Castle",
@@ -33,7 +33,7 @@
         "slug": "kabul",
         "name": "Cable",
         "description": "Museums, gardens, markets and cultural heritage of the capital of Afghanistan.",
-        "image": "/assets/images/destinations/germany.jpg",
+        "image": "/assets/images/destinations/germany.webp",
         "imageAlt": "Urban view of Kabul",
         "highlights": [
           "Babar garden",
@@ -46,7 +46,7 @@
         "slug": "panjshir",
         "name": "Panjshir",
         "description": "Valley, river and natural scenery of Panjshir for planned trips.",
-        "image": "/assets/images/destinations/netherlands.jpg",
+        "image": "/assets/images/destinations/netherlands.webp",
         "imageAlt": "The natural landscape of Panjshir Valley",
         "highlights": [
           "Panjshir Valley",
@@ -96,7 +96,7 @@
         "slug": "italy",
         "name": "Italy",
         "description": "Historical cities, art, architecture and cultural diversity of Italy.",
-        "image": "/assets/images/destinations/italy.jpg",
+        "image": "/assets/images/destinations/italy.webp",
         "imageAlt": "A view of Italy",
         "highlights": [
           "Rome",
@@ -109,7 +109,7 @@
         "slug": "france",
         "name": "France",
         "description": "Museums, architecture, nature and cultural experiences of France.",
-        "image": "/assets/images/destinations/france.jpg",
+        "image": "/assets/images/destinations/france.webp",
         "imageAlt": "A view of France",
         "highlights": [
           "Paris",
@@ -122,7 +122,7 @@
         "slug": "turkiye",
         "name": "Türkiye",
         "description": "Linking history, nature and culture in different cities and regions of Türkiye.",
-        "image": "/assets/images/destinations/turkiye.jpg",
+        "image": "/assets/images/destinations/turkiye.webp",
         "imageAlt": "A view of Türkiye",
         "highlights": [
           "Istanbul",
@@ -135,7 +135,7 @@
         "slug": "netherlands",
         "name": "Holland",
         "description": "Holland's walkable cities, museums, and peaceful landscapes.",
-        "image": "/assets/images/destinations/netherlands.jpg",
+        "image": "/assets/images/destinations/netherlands.webp",
         "imageAlt": "A view of Holland",
         "highlights": [
           "Amsterdam",
@@ -150,7 +150,7 @@
       "category": "Tourism",
       "title": "Tourism Around the World",
       "description": "A guide to destination selection, budgeting and preparation for responsible international travel.",
-      "image": "/assets/images/destinations/italy.jpg",
+      "image": "/assets/images/destinations/italy.webp",
       "imageAlt": "A view of a global tourist destination"
     },
     "postDetail": {

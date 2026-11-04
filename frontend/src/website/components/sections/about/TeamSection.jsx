@@ -17,6 +17,8 @@ function TeamSection({ content }) {
                 <img
                   src={member.avatar}
                   alt={member.avatarAlt}
+                  loading="lazy"
+                  decoding="async"
                   className="size-full rounded-full object-cover grayscale transition-[filter] duration-500 ease-out group-hover:grayscale-0"
                 />
                 <svg aria-hidden="true" viewBox="0 0 100 100" className="pointer-events-none absolute inset-0 size-full -rotate-90">

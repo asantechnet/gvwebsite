@@ -21,7 +21,7 @@
       "slug": "consultation",
       "title": "Expert advice",
       "description": "Review the goal, conditions, budget, and realistic options to build a clear path.",
-      "image": "/assets/images/destinations/germany.jpg",
+      "image": "/assets/images/destinations/germany.webp",
       "audience": "For people who decide between several educational, work or immigration paths or need an evaluation to start a case.",
       "included": [
         "Purpose and background check",
@@ -46,7 +46,7 @@
       "slug": "scholarship-registration",
       "title": "Registration of scholarships",
       "description": "Choosing the right scholarship and regularly preparing the application based on the official requirements.",
-      "image": "/assets/images/destinations/hungary.jpg",
+      "image": "/assets/images/destinations/hungary.webp",
       "audience": "For applicants who have the basic conditions of the scholarship and want to make a complete and trackable application.",
       "included": [
         "Check the conditions of the scholarship",
@@ -71,7 +71,7 @@
       "slug": "exam-registration",
       "title": "Registration for exams",
       "description": "Guidance for choosing and registering for the required language or admission test.",
-      "image": "/assets/images/destinations/france.jpg",
+      "image": "/assets/images/destinations/france.webp",
       "audience": "For applicants who need to coordinate their exam type, center, date or registration information with their destination.",
       "included": [
         "Check the type of test",
@@ -96,7 +96,7 @@
       "slug": "migration-registration",
       "title": "Immigration registration",
       "description": "Step-by-step adjustment of immigration requests based on route and official reference.",
-      "image": "/assets/images/destinations/united-kingdom.jpg",
+      "image": "/assets/images/destinations/united-kingdom.webp",
       "audience": "For people who have a clear legal path and want help in setting up documents, forms and scheduling.",
       "included": [
         "Checking the selected route",
@@ -121,7 +121,7 @@
       "slug": "document-preparation",
       "title": "Preparation of documents",
       "description": "Set up, name and control documents for admission, scholarship, work or visa.",
-      "image": "/assets/images/destinations/netherlands.jpg",
+      "image": "/assets/images/destinations/netherlands.webp",
       "audience": "For every applicant who needs a complete, legible file according to the official destination list.",
       "included": [
         "Making a list of documents",
@@ -146,7 +146,7 @@
       "slug": "document-process",
       "title": "During the documentation process",
       "description": "Guidance for translation, verification, certification and administrative procedures of documents.",
-      "image": "/assets/images/destinations/italy.jpg",
+      "image": "/assets/images/destinations/italy.webp",
       "audience": "For cases whose documents require official translation, administrative approval or consular procedures.",
       "included": [
         "Identify the necessary steps",
@@ -171,7 +171,7 @@
       "slug": "application",
       "title": "Application",
       "description": "Prepare and submit applications for education, work, and immigration services with careful information review.",
-      "image": "/assets/images/destinations/france.jpg",
+      "image": "/assets/images/destinations/france.webp",
       "audience": "For applicants who need a complete and organized application for the relevant authority.",
       "included": ["Information review", "Form preparation", "Document check", "Submission guidance"],
       "process": ["Collect information", "Review requirements", "Complete the form", "Submit and follow up"],
@@ -181,7 +181,7 @@
       "slug": "coordination",
       "title": "Coordination",
       "description": "Coordinate communication, scheduling, and case steps for organized application progress.",
-      "image": "/assets/images/destinations/germany.jpg",
+      "image": "/assets/images/destinations/germany.webp",
       "audience": "For applicants who need coordination between advisers, institutions, and related authorities.",
       "included": ["Schedule planning", "Communication coordination", "Step tracking", "Status updates"],
       "process": ["Assign responsibilities", "Set the plan", "Coordinate execution", "Report progress"],
@@ -194,7 +194,7 @@
       ],
       "title": "Visa and residence",
       "description": "Preparation of visa and residence application based on admission, purpose of travel and destination regulations.",
-      "image": "/assets/images/destinations/turkiye.jpg",
+      "image": "/assets/images/destinations/turkiye.webp",
       "audience": "For applicants who have an acceptance, invitation or legal basis for travel and need to prepare their visa file.",
       "included": [
         "Checking the visa checklist",

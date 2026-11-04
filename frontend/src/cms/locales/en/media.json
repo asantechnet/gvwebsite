@@ -3,6 +3,7 @@
   "title": "Media library",
   "description": "Upload, organize, and reuse website images and files.",
   "upload": "Upload media",
+  "uploadError": "Some files were rejected because their type or size is not allowed.",
   "search": "Search media...",
   "all": "All",
   "images": "Images",

@@ -1,30 +1,10 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import Footer from './Footer.jsx'
 import MaintenancePage from '../MaintenancePage.jsx'
 import Header from './Header.jsx'
 import ScrollProgress from './ScrollProgress.jsx'
 import RouteProgress from '@shared/RouteProgress.jsx'
-import HomePage from '@pages/HomePage.jsx'
-import AboutPage from '@pages/AboutPage.jsx'
-import ContactPage from '@pages/ContactPage.jsx'
-import ScholarshipsPage from '@pages/ScholarshipsPage.jsx'
-import ScholarshipPostPage from '@pages/ScholarshipPostPage.jsx'
-import MagazinePage from '@pages/MagazinePage.jsx'
-import BlogPostPage from '@pages/BlogPostPage.jsx'
-import StudyOpportunityPage from '@pages/StudyOpportunityPage.jsx'
-import WorkOpportunityPage from '@pages/WorkOpportunityPage.jsx'
-import MigrationOpportunityPage from '@pages/MigrationOpportunityPage.jsx'
-import InvestmentOpportunityPage from '@pages/InvestmentOpportunityPage.jsx'
-import OpportunityCountryPostPage from '@pages/OpportunityCountryPostPage.jsx'
-import GuidePostPage from '@pages/GuidePostPage.jsx'
-import ServicePostPage from '@pages/ServicePostPage.jsx'
-import SearchPage from '@pages/SearchPage.jsx'
-import NotFoundPage from '@pages/NotFoundPage.jsx'
-import TourismPage from '@pages/TourismPage.jsx'
-import AfghanistanTourismPage from '@pages/AfghanistanTourismPage.jsx'
-import WorldTourismPage from '@pages/WorldTourismPage.jsx'
-import ServicesPage from '@pages/ServicesPage.jsx'
 import dariFooterContent from '@website/locales/prs/footer.json'
 import dariHeaderContent from '@website/locales/prs/header.json'
 import dariHomeContent from '@website/locales/prs/home.json'
@@ -64,9 +44,29 @@ import englishTourismContent from '@website/locales/en/tourism.json'
 import { searchCatalog } from '@website/utils/catalog.js'
 import { getLanguageConfig, localizeContentHrefs, localizeHref, parseLocalizedPathname, WEBSITE_LANGUAGE_STORAGE_KEY } from '@website/utils/language.js'
 import { WebsiteLanguageContext } from '@website/hooks/useWebsiteLanguage.js'
+import { applySeoMetadata, buildStructuredData, getSiteOrigin, toAbsoluteUrl } from '@website/seo/metadata.js'
 
-// Temporary while content is static. Replace with real API loading state when the backend is connected.
-const STATIC_SKELETON_MINIMUM_MS = 1000
+const HomePage = lazy(() => import('@pages/HomePage.jsx'))
+const AboutPage = lazy(() => import('@pages/AboutPage.jsx'))
+const ContactPage = lazy(() => import('@pages/ContactPage.jsx'))
+const ScholarshipsPage = lazy(() => import('@pages/ScholarshipsPage.jsx'))
+const ScholarshipPostPage = lazy(() => import('@pages/ScholarshipPostPage.jsx'))
+const MagazinePage = lazy(() => import('@pages/MagazinePage.jsx'))
+const BlogPostPage = lazy(() => import('@pages/BlogPostPage.jsx'))
+const StudyOpportunityPage = lazy(() => import('@pages/StudyOpportunityPage.jsx'))
+const WorkOpportunityPage = lazy(() => import('@pages/WorkOpportunityPage.jsx'))
+const MigrationOpportunityPage = lazy(() => import('@pages/MigrationOpportunityPage.jsx'))
+const InvestmentOpportunityPage = lazy(() => import('@pages/InvestmentOpportunityPage.jsx'))
+const OpportunityCountryPostPage = lazy(() => import('@pages/OpportunityCountryPostPage.jsx'))
+const GuidePostPage = lazy(() => import('@pages/GuidePostPage.jsx'))
+const ServicePostPage = lazy(() => import('@pages/ServicePostPage.jsx'))
+const SearchPage = lazy(() => import('@pages/SearchPage.jsx'))
+const NotFoundPage = lazy(() => import('@pages/NotFoundPage.jsx'))
+const TourismPage = lazy(() => import('@pages/TourismPage.jsx'))
+const AfghanistanTourismPage = lazy(() => import('@pages/AfghanistanTourismPage.jsx'))
+const WorldTourismPage = lazy(() => import('@pages/WorldTourismPage.jsx'))
+const ServicesPage = lazy(() => import('@pages/ServicesPage.jsx'))
+
 const rawLocalizedContent = {
   dr: {
     footer: dariFooterContent,
@@ -123,7 +123,6 @@ function formatPageTitle(pattern, values) {
 }
 
 function WebsiteLayout({ children = null }) {
-  const [isRouteLoading, setIsRouteLoading] = useState(true)
   const [maintenanceMode, setMaintenanceMode] = useState(() => window.localStorage.getItem('globalvision-maintenance-mode') === 'true')
   const scrollStorageKey = `globalvision-scroll:${window.location.pathname}${window.location.search}`
   const savedScrollPosition = useRef(Number(window.sessionStorage.getItem(scrollStorageKey)))
@@ -132,14 +131,22 @@ function WebsiteLayout({ children = null }) {
 
     return window.localStorage.getItem('globalvision-theme') || 'light'
   })
-  const { language, pagePath: page } = parseLocalizedPathname(window.location.pathname)
+  const parsedRoute = parseLocalizedPathname(window.location.pathname)
+  const [maintenanceLanguage] = useState(() => {
+    const hasExplicitLanguage = /^\/(dr|ps|en)(?:\/|$)/.test(window.location.pathname)
+    const savedLanguage = window.sessionStorage.getItem('globalvision-maintenance-language')
+    return hasExplicitLanguage ? parsedRoute.language : ['dr', 'ps', 'en'].includes(savedLanguage) ? savedLanguage : parsedRoute.language
+  })
+  const language = maintenanceMode ? maintenanceLanguage : parsedRoute.language
+  const page = parsedRoute.pagePath
 
   useLayoutEffect(() => {
     if (!maintenanceMode) return
+    window.sessionStorage.setItem('globalvision-maintenance-language', maintenanceLanguage)
     if (window.location.pathname === '/' && !window.location.search && !window.location.hash) return
 
     window.history.replaceState(window.history.state, '', '/')
-  }, [maintenanceMode])
+  }, [maintenanceLanguage, maintenanceMode])
 
   const {
     header: headerContent,
@@ -209,6 +216,64 @@ function WebsiteLayout({ children = null }) {
     || selectedPost?.title
     || navigationPageTitles[page]
     || searchContent.notFoundTitle
+  const currentSeoRecord = useMemo(() => tourismCard
+    || service
+    || selectedScholarship
+    || examGuide
+    || contextualOpportunityCountry
+    || tourism?.post
+    || opportunity?.post
+    || selectedPost
+    || {}, [contextualOpportunityCountry, examGuide, opportunity, selectedPost, selectedScholarship, service, tourism, tourismCard])
+  const seoTitle = currentSeoRecord.seoTitle || currentTitle
+  const isKnownPage = Boolean(
+    navigationPageTitles[page]
+    || selectedPost
+    || selectedScholarship
+    || service
+    || tourism
+    || tourismCard
+    || opportunity
+    || contextualOpportunityCountry
+    || examGuide,
+  )
+  const currentDescription = currentSeoRecord.metaDescription
+    || tourismCard?.description
+    || service?.description
+    || selectedScholarship?.summary
+    || examGuide?.summary
+    || contextualOpportunityCountry?.summary
+    || tourism?.post.description
+    || opportunity?.post.description
+    || selectedPost?.description
+    || (page === '/' ? homeContent.hero.description : null)
+    || (page === '/about' ? aboutContent.introduction.description : null)
+    || (page === '/contact' ? contactContent.contact.form.description : null)
+    || (page === '/services' ? servicesContent.ui.indexDescription : null)
+    || (page === '/scholarships' ? scholarshipsContent.hero.description : null)
+    || searchContent.description
+  const currentImage = currentSeoRecord.socialImage
+    || tourismCard?.image
+    || service?.image
+    || selectedScholarship?.image
+    || examGuide?.image
+    || tourism?.post.image
+    || opportunity?.post.image
+    || selectedPost?.image
+  const canonicalPage = service ? `/services/${service.slug}` : page
+  const seoBreadcrumbs = useMemo(() => {
+    const homeBreadcrumb = { name: headerContent.navigation.home, path: '/' }
+    const currentBreadcrumb = { name: currentTitle, path: canonicalPage }
+    if (page === '/') return [homeBreadcrumb]
+    if (service) return [homeBreadcrumb, { name: headerContent.navigation.services, path: '/services' }, currentBreadcrumb]
+    if (selectedScholarship) return [homeBreadcrumb, { name: headerContent.navigation.scholarships, path: '/scholarships' }, currentBreadcrumb]
+    if (selectedPost) return [homeBreadcrumb, { name: headerContent.navigation.magazine, path: '/magazine' }, currentBreadcrumb]
+    if (tourismCard && tourismDetail) return [homeBreadcrumb, { name: headerContent.navigation.tourism, path: `/tourism/${tourismDetail.id}` }, currentBreadcrumb]
+    if (tourism) return [homeBreadcrumb, { name: headerContent.navigation.tourism, path: canonicalPage }, currentBreadcrumb]
+    if (contextualOpportunityCountry && contextualOpportunityMatch) return [homeBreadcrumb, { name: headerContent.navigation.opportunities, path: `/opportunities/${contextualOpportunityMatch[1]}` }, currentBreadcrumb]
+    if (opportunity || examGuide) return [homeBreadcrumb, { name: headerContent.navigation.opportunities, path: canonicalPage }, currentBreadcrumb]
+    return [homeBreadcrumb, currentBreadcrumb]
+  }, [canonicalPage, contextualOpportunityCountry, contextualOpportunityMatch, currentTitle, examGuide, headerContent.navigation, opportunity, page, selectedPost, selectedScholarship, service, tourism, tourismCard, tourismDetail])
 
   useLayoutEffect(() => {
     document.documentElement.style.scrollBehavior = 'auto'
@@ -220,14 +285,7 @@ function WebsiteLayout({ children = null }) {
     return () => window.removeEventListener('pagehide', saveScrollPosition)
   }, [scrollStorageKey])
 
-  useEffect(() => {
-    const minimumTimer = window.setTimeout(() => setIsRouteLoading(false), STATIC_SKELETON_MINIMUM_MS)
-    return () => window.clearTimeout(minimumTimer)
-  }, [])
-
   useLayoutEffect(() => {
-    if (isRouteLoading) return undefined
-
     const navigationType = window.performance.getEntriesByType('navigation')[0]?.type
     if (navigationType === 'reload' && Number.isFinite(savedScrollPosition.current)) {
       window.scrollTo({ top: savedScrollPosition.current, behavior: 'auto' })
@@ -235,7 +293,7 @@ function WebsiteLayout({ children = null }) {
 
     const frame = window.requestAnimationFrame(() => document.documentElement.style.removeProperty('scroll-behavior'))
     return () => window.cancelAnimationFrame(frame)
-  }, [isRouteLoading])
+  }, [])
 
   useLayoutEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
@@ -253,40 +311,33 @@ function WebsiteLayout({ children = null }) {
   }, [language])
 
   useLayoutEffect(() => {
-    document.title = `${currentTitle} | ${headerContent.brandName}`
-    let robots = document.querySelector('meta[name="robots"]')
-    if (!robots) { robots = document.createElement('meta'); robots.name = 'robots'; document.head.appendChild(robots) }
-    robots.content = 'index, follow'
-    let descriptionMeta = document.querySelector('meta[name="description"]')
-    if (!descriptionMeta) {
-      descriptionMeta = document.createElement('meta')
-      descriptionMeta.name = 'description'
-      document.head.append(descriptionMeta)
-    }
-    descriptionMeta.content = tourismCard?.description || service?.description || selectedScholarship?.summary || examGuide?.summary || tourism?.post.description || opportunity?.post.description || selectedPost?.description || (page === '/services' ? servicesContent.ui.indexDescription : page === '/scholarships' ? scholarshipsContent.hero.description : searchContent.description)
-  }, [currentTitle, headerContent.brandName, tourismCard, service, selectedScholarship, examGuide, tourism, opportunity, selectedPost, page, servicesContent.ui.indexDescription, scholarshipsContent.hero.description, searchContent.description])
-
-  useEffect(() => {
-    const upsertLanguageLink = (rel, href, hreflang) => {
-      const selector = hreflang
-        ? `link[rel="${rel}"][hreflang="${hreflang}"]`
-        : `link[rel="${rel}"]:not([hreflang])`
-      let link = document.head.querySelector(selector)
-      if (!link) {
-        link = document.createElement('link')
-        link.rel = rel
-        if (hreflang) link.hreflang = hreflang
-        document.head.append(link)
-      }
-      link.href = new URL(href, window.location.origin).href
-    }
-
-    upsertLanguageLink('canonical', `${localizeHref(page, language)}${window.location.search}`)
-    upsertLanguageLink('alternate', localizeHref(page, 'dr'), 'fa-AF')
-    upsertLanguageLink('alternate', localizeHref(page, 'ps'), 'ps-AF')
-    upsertLanguageLink('alternate', localizeHref(page, 'en'), 'en')
-    upsertLanguageLink('alternate', localizeHref(page, 'dr'), 'x-default')
-  }, [language, page])
+    const canonicalUrl = toAbsoluteUrl(currentSeoRecord.canonicalUrl || localizeHref(canonicalPage, language), getSiteOrigin())
+    const structuredData = buildStructuredData({
+      language,
+      canonicalUrl,
+      title: seoTitle,
+      description: currentDescription,
+      image: currentImage,
+      brandName: headerContent.brandName,
+      email: contactContent.contact.details.find((detail) => detail.type === 'email')?.value,
+      breadcrumbs: seoBreadcrumbs,
+      article: selectedPost ? { headline: selectedPost.title, datePublished: selectedPost.date } : null,
+      service: service ? { name: service.title } : null,
+    })
+    applySeoMetadata({
+      language,
+      pagePath: page,
+      canonicalPath: canonicalPage,
+      canonicalUrl: currentSeoRecord.canonicalUrl,
+      title: seoTitle,
+      description: currentDescription,
+      image: currentImage,
+      brandName: headerContent.brandName,
+      indexable: isKnownPage && page !== '/search' && !maintenanceMode && currentSeoRecord.allowIndexing !== false,
+      type: selectedPost ? 'article' : 'website',
+      structuredData,
+    })
+  }, [language, page, canonicalPage, currentSeoRecord, seoTitle, currentDescription, currentImage, headerContent.brandName, contactContent.contact.details, isKnownPage, maintenanceMode, selectedPost, service, seoBreadcrumbs])
 
   useEffect(() => {
     const syncMaintenanceMode = (event) => { if (event.key === 'globalvision-maintenance-mode') setMaintenanceMode(event.newValue === 'true') }
@@ -294,22 +345,19 @@ function WebsiteLayout({ children = null }) {
     return () => window.removeEventListener('storage', syncMaintenanceMode)
   }, [])
 
-  if (isRouteLoading) {
-    const directoryItemCount = page === '/services'
-      ? servicesContent.services.length
-      : page === '/tourism/afghanistan' || page === '/tourism/world'
-        ? tourism?.cards.length || 0
-        : ['/opportunities/study', '/opportunities/work', '/opportunities/migration', '/opportunities/investment'].includes(page)
-            ? guidesContent.countries.length
-            : 0
-    return <RouteProgress path={page} hasSearchQuery={Boolean(searchQuery)} searchResultCount={searchResults.length} directoryItemCount={directoryItemCount} maintenanceMode={maintenanceMode} />
-  }
-
   if (maintenanceMode) return <MaintenancePage language={language} theme={theme} contactEmail={contactContent.contact.details.find((detail) => detail.type === 'email')?.value || 'info@globalvision.af'} onLanguageChange={(nextLanguage) => window.location.assign(localizeHref(`${page}${window.location.search}${window.location.hash}`, nextLanguage))} onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))} />
 
+  const directoryItemCount = page === '/services'
+    ? servicesContent.services.length
+    : page === '/tourism/afghanistan' || page === '/tourism/world'
+      ? tourism?.cards.length || 0
+      : ['/opportunities/study', '/opportunities/work', '/opportunities/migration', '/opportunities/investment'].includes(page)
+          ? guidesContent.countries.length
+          : 0
+
   return (
-    <WebsiteLanguageContext.Provider value={language}>
-      <div className="flex min-h-screen flex-col bg-background text-foreground">
+    <Suspense fallback={<RouteProgress path={page} hasSearchQuery={Boolean(searchQuery)} searchResultCount={searchResults.length} directoryItemCount={directoryItemCount} maintenanceMode={maintenanceMode} />}><WebsiteLanguageContext.Provider value={language}>
+      <div className="website-root flex min-h-screen flex-col bg-background text-foreground">
         <ScrollProgress />
         <Header
           content={headerContent}
@@ -323,7 +371,7 @@ function WebsiteLayout({ children = null }) {
         </main>
         <Footer content={footerContent} navigationContent={headerContent} language={language} theme={theme} />
       </div>
-    </WebsiteLanguageContext.Provider>
+    </WebsiteLanguageContext.Provider></Suspense>
   )
 }
 

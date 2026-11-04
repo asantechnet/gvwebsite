@@ -13,15 +13,15 @@
     "pageLabel": "موقعیت شماره",
     "viewsLabel": "بازدید",
     "items": [
-      { "slug": "new-study-consultation-season", "category": "خبر", "date": "2026-10-11T08:00:00+04:30", "title": "آغاز فصل تازه مشاوره‌های تحصیلی", "description": "آخرین خبرها و اطلاعیه‌های گلوبل ویژن را دنبال کنید.", "image": "/assets/images/destinations/united-kingdom.jpg", "href": "/magazine" },
-      { "slug": "new-opportunities-afghan-students", "category": "خبر", "date": "2026-10-07T08:00:00+04:30", "title": "فرصت‌های جدید برای دانشجویان افغانستان", "description": "گزینه‌های تازه و مهمی برای ادامه تحصیل معرفی شده است.", "image": "/assets/images/destinations/germany.jpg", "href": "/magazine" },
-      { "slug": "admission-visa-services-update", "category": "خبر", "date": "2026-09-11T08:00:00+04:30", "title": "به‌روزرسانی خدمات پذیرش و ویزه", "description": "روندهای جدید برای آماده‌سازی بهتر پرونده‌ها.", "image": "/assets/images/destinations/italy.jpg", "href": "/magazine" },
-      { "slug": "new-guidance-programs", "category": "خبر", "date": "2026-09-01T08:00:00+04:30", "title": "شروع برنامه‌های تازه راهنمایی", "description": "برای انتخاب مسیر مناسب، اطلاعات تازه و کاربردی آماده شده است.", "image": "/assets/images/destinations/france.jpg", "href": "/magazine" },
-      { "slug": "expanded-specialist-consultations", "category": "خبر", "date": "2026-08-21T08:00:00+04:30", "title": "جلسه‌های مشاوره تخصصی توسعه یافت", "description": "اکنون متقاضیان می‌توانند از راهنمایی دقیق‌تری استفاده کنند.", "image": "/assets/images/destinations/netherlands.jpg", "href": "/magazine" },
-      { "slug": "choosing-destination-country", "category": "خبر", "date": "2026-08-11T08:00:00+04:30", "title": "نکات تازه برای انتخاب کشور مقصد", "description": "اطلاعاتی برای مقایسه بهتر گزینه‌های تحصیلی و مهاجرتی.", "image": "/assets/images/destinations/turkiye.jpg", "href": "/magazine" },
-      { "slug": "online-application-workshop", "category": "خبر", "date": "2026-08-01T08:00:00+04:30", "title": "کارگاه آنلاین آمادگی پرونده برگزار شد", "description": "در این کارگاه، مراحل مهم آماده‌سازی اسناد بررسی شد.", "image": "/assets/images/destinations/hungary.jpg", "href": "/magazine" },
-      { "slug": "global-vision-services-guide", "category": "خبر", "date": "2026-07-21T08:00:00+04:30", "title": "راهنمای جدید خدمات گلوبل ویژن", "description": "جزئیات خدمات و مسیر دریافت پشتیبانی بهتر منتشر شد.", "image": "/assets/images/destinations/germany.jpg", "href": "/magazine" },
-      { "slug": "applicant-frequently-asked-questions", "category": "خبر", "date": "2026-07-11T08:00:00+04:30", "title": "پاسخ به پرسش‌های متداول متقاضیان", "description": "پاسخ‌های کوتاه به پرسش‌های رایج کاربران آماده شده است.", "image": "/assets/images/destinations/italy.jpg", "href": "/magazine" }
+      { "slug": "new-study-consultation-season", "category": "خبر", "date": "2026-10-11T08:00:00+04:30", "title": "آغاز فصل تازه مشاوره‌های تحصیلی", "description": "آخرین خبرها و اطلاعیه‌های گلوبل ویژن را دنبال کنید.", "image": "/assets/images/destinations/united-kingdom.webp", "href": "/magazine" },
+      { "slug": "new-opportunities-afghan-students", "category": "خبر", "date": "2026-10-07T08:00:00+04:30", "title": "فرصت‌های جدید برای دانشجویان افغانستان", "description": "گزینه‌های تازه و مهمی برای ادامه تحصیل معرفی شده است.", "image": "/assets/images/destinations/germany.webp", "href": "/magazine" },
+      { "slug": "admission-visa-services-update", "category": "خبر", "date": "2026-09-11T08:00:00+04:30", "title": "به‌روزرسانی خدمات پذیرش و ویزه", "description": "روندهای جدید برای آماده‌سازی بهتر پرونده‌ها.", "image": "/assets/images/destinations/italy.webp", "href": "/magazine" },
+      { "slug": "new-guidance-programs", "category": "خبر", "date": "2026-09-01T08:00:00+04:30", "title": "شروع برنامه‌های تازه راهنمایی", "description": "برای انتخاب مسیر مناسب، اطلاعات تازه و کاربردی آماده شده است.", "image": "/assets/images/destinations/france.webp", "href": "/magazine" },
+      { "slug": "expanded-specialist-consultations", "category": "خبر", "date": "2026-08-21T08:00:00+04:30", "title": "جلسه‌های مشاوره تخصصی توسعه یافت", "description": "اکنون متقاضیان می‌توانند از راهنمایی دقیق‌تری استفاده کنند.", "image": "/assets/images/destinations/netherlands.webp", "href": "/magazine" },
+      { "slug": "choosing-destination-country", "category": "خبر", "date": "2026-08-11T08:00:00+04:30", "title": "نکات تازه برای انتخاب کشور مقصد", "description": "اطلاعاتی برای مقایسه بهتر گزینه‌های تحصیلی و مهاجرتی.", "image": "/assets/images/destinations/turkiye.webp", "href": "/magazine" },
+      { "slug": "online-application-workshop", "category": "خبر", "date": "2026-08-01T08:00:00+04:30", "title": "کارگاه آنلاین آمادگی پرونده برگزار شد", "description": "در این کارگاه، مراحل مهم آماده‌سازی اسناد بررسی شد.", "image": "/assets/images/destinations/hungary.webp", "href": "/magazine" },
+      { "slug": "global-vision-services-guide", "category": "خبر", "date": "2026-07-21T08:00:00+04:30", "title": "راهنمای جدید خدمات گلوبل ویژن", "description": "جزئیات خدمات و مسیر دریافت پشتیبانی بهتر منتشر شد.", "image": "/assets/images/destinations/germany.webp", "href": "/magazine" },
+      { "slug": "applicant-frequently-asked-questions", "category": "خبر", "date": "2026-07-11T08:00:00+04:30", "title": "پاسخ به پرسش‌های متداول متقاضیان", "description": "پاسخ‌های کوتاه به پرسش‌های رایج کاربران آماده شده است.", "image": "/assets/images/destinations/italy.webp", "href": "/magazine" }
     ]
   },
   "popular": {
@@ -50,15 +50,15 @@
     "readMore": "ادامه مطلب",
     "pagination": { "navigation": "صفحه‌بندی نوشته‌ها", "first": "صفحه اول", "previous": "صفحه قبلی", "next": "صفحه بعدی", "last": "صفحه آخر", "page": "صفحه" },
     "items": [
-      { "category": "تحصیل", "title": "چگونه برای انتخاب دانشگاه مناسب آماده شویم؟", "description": "چند نکته کاربردی برای تصمیم‌گیری آگاهانه درباره آینده تحصیلی.", "href": "/magazine", "image": "/assets/images/destinations/hungary.jpg" },
-      { "category": "مهاجرت", "title": "مدارک مهم برای شروع یک پرونده موفق", "description": "راهنمایی کوتاه برای منظم‌سازی اسناد و مراحل ابتدایی.", "href": "/magazine", "image": "/assets/images/destinations/turkiye.jpg" },
-      { "category": "راهنما", "title": "از مشاوره تا رسیدن به هدف", "description": "چطور با برنامه‌ریزی درست، مسیر خود را روشن‌تر کنیم.", "href": "/magazine", "image": "/assets/images/destinations/france.jpg" },
-      { "category": "تحصیل", "title": "نکته‌هایی برای آماده‌سازی بهتر", "description": "با چند گام ساده، برنامه‌ریزی و آمادگی خود را بهتر کنید.", "href": "/magazine", "image": "/assets/images/destinations/netherlands.jpg" },
-      { "category": "بورسیه", "title": "چطور فرصت‌های بورسیه را پیدا کنیم؟", "description": "روش‌هایی برای جستجو و بررسی فرصت‌های مناسب تحصیلی.", "href": "/magazine", "image": "/assets/images/destinations/united-kingdom.jpg" },
-      { "category": "ویزه", "title": "آمادگی برای گفت‌وگوی ویزه", "description": "چند توصیه برای حضور مطمئن‌تر در مصاحبه ویزه.", "href": "/magazine", "image": "/assets/images/destinations/germany.jpg" },
-      { "category": "مهاجرت", "title": "اشتباه‌های رایج در آماده‌سازی اسناد", "description": "با شناخت خطاهای رایج، روند پرونده خود را بهتر مدیریت کنید.", "href": "/magazine", "image": "/assets/images/destinations/italy.jpg" },
-      { "category": "راهنما", "title": "برنامه‌ریزی برای یک مسیر روشن", "description": "چگونه هدف‌های خود را به گام‌های عملی تبدیل کنیم.", "href": "/magazine", "image": "/assets/images/destinations/france.jpg" },
-      { "category": "تجربه", "title": "درس‌هایی از تجربه متقاضیان موفق", "description": "تجربه‌هایی که می‌تواند مسیر تصمیم‌گیری شما را ساده‌تر کند.", "href": "/magazine", "image": "/assets/images/destinations/hungary.jpg" }
+      { "category": "تحصیل", "title": "چگونه برای انتخاب دانشگاه مناسب آماده شویم؟", "description": "چند نکته کاربردی برای تصمیم‌گیری آگاهانه درباره آینده تحصیلی.", "href": "/magazine", "image": "/assets/images/destinations/hungary.webp" },
+      { "category": "مهاجرت", "title": "مدارک مهم برای شروع یک پرونده موفق", "description": "راهنمایی کوتاه برای منظم‌سازی اسناد و مراحل ابتدایی.", "href": "/magazine", "image": "/assets/images/destinations/turkiye.webp" },
+      { "category": "راهنما", "title": "از مشاوره تا رسیدن به هدف", "description": "چطور با برنامه‌ریزی درست، مسیر خود را روشن‌تر کنیم.", "href": "/magazine", "image": "/assets/images/destinations/france.webp" },
+      { "category": "تحصیل", "title": "نکته‌هایی برای آماده‌سازی بهتر", "description": "با چند گام ساده، برنامه‌ریزی و آمادگی خود را بهتر کنید.", "href": "/magazine", "image": "/assets/images/destinations/netherlands.webp" },
+      { "category": "بورسیه", "title": "چطور فرصت‌های بورسیه را پیدا کنیم؟", "description": "روش‌هایی برای جستجو و بررسی فرصت‌های مناسب تحصیلی.", "href": "/magazine", "image": "/assets/images/destinations/united-kingdom.webp" },
+      { "category": "ویزه", "title": "آمادگی برای گفت‌وگوی ویزه", "description": "چند توصیه برای حضور مطمئن‌تر در مصاحبه ویزه.", "href": "/magazine", "image": "/assets/images/destinations/germany.webp" },
+      { "category": "مهاجرت", "title": "اشتباه‌های رایج در آماده‌سازی اسناد", "description": "با شناخت خطاهای رایج، روند پرونده خود را بهتر مدیریت کنید.", "href": "/magazine", "image": "/assets/images/destinations/italy.webp" },
+      { "category": "راهنما", "title": "برنامه‌ریزی برای یک مسیر روشن", "description": "چگونه هدف‌های خود را به گام‌های عملی تبدیل کنیم.", "href": "/magazine", "image": "/assets/images/destinations/france.webp" },
+      { "category": "تجربه", "title": "درس‌هایی از تجربه متقاضیان موفق", "description": "تجربه‌هایی که می‌تواند مسیر تصمیم‌گیری شما را ساده‌تر کند.", "href": "/magazine", "image": "/assets/images/destinations/hungary.webp" }
     ]
   }
 }

@@ -4,10 +4,10 @@ function TestimonialCard({ quote, name, role, avatar, avatarAlt }) {
   return (
     <figure className="group flex h-full flex-col rounded-3xl border border-border bg-surface p-5 shadow-sm transition-colors duration-300 hover:border-primary/40 hover:bg-primary/[0.015] dark:border-gray-600 dark:bg-gray-700 dark:hover:border-primary/60 dark:hover:bg-gray-700/70 sm:p-6">
       <div className="flex items-center justify-between">
-        <span className="grid size-11 place-items-center rounded-2xl bg-primary/10 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-brand-white">
+        <span className="grid size-11 place-items-center rounded-2xl bg-primary/10 text-accent-text transition-colors duration-300 group-hover:bg-primary group-hover:text-brand-white">
           <Quote aria-hidden="true" className="size-5" />
         </span>
-        <span className="flex gap-0.5 text-primary" aria-label="5 out of 5 stars">
+        <span className="flex gap-0.5 text-accent-text" aria-label="5 out of 5 stars">
           {Array.from({ length: 5 }, (_, index) => (
             <Star key={index} aria-hidden="true" className="size-3.5 fill-current" />
           ))}
@@ -24,6 +24,8 @@ function TestimonialCard({ quote, name, role, avatar, avatarAlt }) {
           alt={avatarAlt}
           width="40"
           height="40"
+          loading="lazy"
+          decoding="async"
           className="size-10 shrink-0 rounded-full object-cover"
         />
         <span className="flex flex-col gap-0.5">

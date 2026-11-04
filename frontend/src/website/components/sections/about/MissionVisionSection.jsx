@@ -19,7 +19,7 @@ function MissionVisionSection({ content }) {
                 key={item.title}
                 className={`text-center ${index === 0 ? 'rounded-tr-[10rem] rounded-bl-[10rem] bg-surface dark:bg-[#3a3028]' : 'rounded-tl-[10rem] rounded-br-[10rem] bg-[#ffe3d5] dark:bg-[#3a292d]'} border border-transparent px-8 py-10 md:px-12 md:py-14`}
               >
-                <div className={`mx-auto flex size-16 items-center justify-center rounded-2xl ${index === 0 ? 'bg-brand-orange/15 text-brand-orange' : 'bg-brand-red/15 text-brand-red'}`}>
+                <div className={`mx-auto flex size-16 items-center justify-center rounded-2xl ${index === 0 ? 'bg-brand-orange/15 text-accent-text' : 'bg-brand-red/15 text-brand-red'}`}>
                   <Icon aria-hidden="true" size={28} strokeWidth={1.8} />
                 </div>
                 <h3 className="mx-auto mt-5 max-w-xs font-heading text-2xl font-extrabold text-foreground md:max-w-xl md:text-3xl">

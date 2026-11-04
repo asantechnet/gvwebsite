@@ -37,6 +37,7 @@
   "currentPassword": "Current password",
   "password": "New password",
   "confirmPassword": "Repeat the new password",
+  "passwordValidation": "Use at least 12 characters and make sure both new passwords match.",
   "sendConfirmation": "Send confirmation",
   "close": "To close",
   "profileSaved": "Profile saved",

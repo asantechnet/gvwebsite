@@ -69,7 +69,7 @@
       {
         "id": "turkiye",
         "name": "Türkiye",
-        "image": "/assets/images/destinations/turkiye.jpg",
+        "image": "/assets/images/destinations/turkiye.webp",
         "imageAlt": "View of the city of Istanbul and the Blue Mosque",
         "flag": "/assets/flags/tr.svg",
         "href": "/opportunities/study/turkiye",
@@ -78,7 +78,7 @@
       {
         "id": "germany",
         "name": "Germany",
-        "image": "/assets/images/destinations/germany.jpg",
+        "image": "/assets/images/destinations/germany.webp",
         "imageAlt": "Brandenburg Gate in Berlin",
         "flag": "/assets/flags/de.svg",
         "href": "/opportunities/study/germany",
@@ -87,7 +87,7 @@
       {
         "id": "france",
         "name": "France",
-        "image": "/assets/images/destinations/france.jpg",
+        "image": "/assets/images/destinations/france.webp",
         "imageAlt": "The Eiffel Tower in Paris",
         "flag": "/assets/flags/fr.svg",
         "href": "/opportunities/study/france",
@@ -96,7 +96,7 @@
       {
         "id": "netherlands",
         "name": "Netherlands",
-        "image": "/assets/images/destinations/netherlands.jpg",
+        "image": "/assets/images/destinations/netherlands.webp",
         "imageAlt": "Canal and buildings of the city of Amsterdam",
         "flag": "/assets/flags/nl.svg",
         "href": "/opportunities/study/netherlands",
@@ -105,7 +105,7 @@
       {
         "id": "hungary",
         "name": "Hungary",
-        "image": "/assets/images/destinations/hungary.jpg",
+        "image": "/assets/images/destinations/hungary.webp",
         "imageAlt": "Budapest city view and Danube river",
         "flag": "/assets/flags/hu.svg",
         "href": "/opportunities/study/hungary",
@@ -114,7 +114,7 @@
       {
         "id": "italy",
         "name": "Italy",
-        "image": "/assets/images/destinations/italy.jpg",
+        "image": "/assets/images/destinations/italy.webp",
         "imageAlt": "The Grand Canal and the buildings of the city of Venice",
         "flag": "/assets/flags/it.svg",
         "href": "/opportunities/study/italy",
@@ -123,7 +123,7 @@
       {
         "id": "unitedKingdom",
         "name": "England",
-        "image": "/assets/images/destinations/united-kingdom.jpg",
+        "image": "/assets/images/destinations/united-kingdom.webp",
         "imageAlt": "View of the city of London and the River Thames",
         "flag": "/assets/flags/gb.svg",
         "href": "/opportunities/study/united-kingdom",

@@ -27,7 +27,7 @@
         "date": "2026-10-11T08:00:00+04:30",
         "title": "The beginning of the new academic counseling season",
         "description": "Follow the latest news and announcements from Global Vision.",
-        "image": "/assets/images/destinations/united-kingdom.jpg",
+        "image": "/assets/images/destinations/united-kingdom.webp",
         "href": "/magazine"
       },
       {
@@ -36,7 +36,7 @@
         "date": "2026-10-07T08:00:00+04:30",
         "title": "New opportunities for Afghan students",
         "description": "New and important options for continuing education have been introduced.",
-        "image": "/assets/images/destinations/germany.jpg",
+        "image": "/assets/images/destinations/germany.webp",
         "href": "/magazine"
       },
       {
@@ -45,7 +45,7 @@
         "date": "2026-09-11T08:00:00+04:30",
         "title": "Update of admission and visa services",
         "description": "New trends for better case preparation.",
-        "image": "/assets/images/destinations/italy.jpg",
+        "image": "/assets/images/destinations/italy.webp",
         "href": "/magazine"
       },
       {
@@ -54,7 +54,7 @@
         "date": "2026-09-01T08:00:00+04:30",
         "title": "The start of new guidance programs",
         "description": "New and useful information has been prepared to choose the right path.",
-        "image": "/assets/images/destinations/france.jpg",
+        "image": "/assets/images/destinations/france.webp",
         "href": "/magazine"
       },
       {
@@ -63,7 +63,7 @@
         "date": "2026-08-21T08:00:00+04:30",
         "title": "Specialized counseling sessions were developed",
         "description": "Applicants can now use more detailed guidance.",
-        "image": "/assets/images/destinations/netherlands.jpg",
+        "image": "/assets/images/destinations/netherlands.webp",
         "href": "/magazine"
       },
       {
@@ -72,7 +72,7 @@
         "date": "2026-08-11T08:00:00+04:30",
         "title": "New tips for choosing the destination country",
         "description": "Information to better compare education and immigration options.",
-        "image": "/assets/images/destinations/turkiye.jpg",
+        "image": "/assets/images/destinations/turkiye.webp",
         "href": "/magazine"
       },
       {
@@ -81,7 +81,7 @@
         "date": "2026-08-01T08:00:00+04:30",
         "title": "An online workshop for case preparation was held",
         "description": "In this workshop, the important stages of document preparation were reviewed.",
-        "image": "/assets/images/destinations/hungary.jpg",
+        "image": "/assets/images/destinations/hungary.webp",
         "href": "/magazine"
       },
       {
@@ -90,7 +90,7 @@
         "date": "2026-07-21T08:00:00+04:30",
         "title": "New Global Vision Service Guide",
         "description": "The details of the service and the way to get better support were published.",
-        "image": "/assets/images/destinations/germany.jpg",
+        "image": "/assets/images/destinations/germany.webp",
         "href": "/magazine"
       },
       {
@@ -99,7 +99,7 @@
         "date": "2026-07-11T08:00:00+04:30",
         "title": "Answers to frequently asked questions of applicants",
         "description": "Short answers to common user questions have been prepared.",
-        "image": "/assets/images/destinations/italy.jpg",
+        "image": "/assets/images/destinations/italy.webp",
         "href": "/magazine"
       }
     ]
@@ -170,63 +170,63 @@
         "title": "How to prepare for choosing the right university?",
         "description": "Some practical tips for making an informed decision about the future of education.",
         "href": "/magazine",
-        "image": "/assets/images/destinations/hungary.jpg"
+        "image": "/assets/images/destinations/hungary.webp"
       },
       {
         "category": "Immigration",
         "title": "Important documents to start a successful case",
         "description": "A short guide to organize documents and basic steps.",
         "href": "/magazine",
-        "image": "/assets/images/destinations/turkiye.jpg"
+        "image": "/assets/images/destinations/turkiye.webp"
       },
       {
         "category": "Guide",
         "title": "From advice to achieving the goal",
         "description": "How to make our path clearer with proper planning.",
         "href": "/magazine",
-        "image": "/assets/images/destinations/france.jpg"
+        "image": "/assets/images/destinations/france.webp"
       },
       {
         "category": "Education",
         "title": "Tips for better preparation",
         "description": "Improve your planning and preparation with a few simple steps.",
         "href": "/magazine",
-        "image": "/assets/images/destinations/netherlands.jpg"
+        "image": "/assets/images/destinations/netherlands.webp"
       },
       {
         "category": "Scholarship",
         "title": "How to find scholarship opportunities?",
         "description": "Methods to search for and review suitable study opportunities.",
         "href": "/magazine",
-        "image": "/assets/images/destinations/united-kingdom.jpg"
+        "image": "/assets/images/destinations/united-kingdom.webp"
       },
       {
         "category": "Visa",
         "title": "Preparing for the visa interview",
         "description": "Some recommendations to be more confident in the visa interview.",
         "href": "/magazine",
-        "image": "/assets/images/destinations/germany.jpg"
+        "image": "/assets/images/destinations/germany.webp"
       },
       {
         "category": "Immigration",
         "title": "Common mistakes in document preparation",
         "description": "Better manage your case process by recognizing common errors.",
         "href": "/magazine",
-        "image": "/assets/images/destinations/italy.jpg"
+        "image": "/assets/images/destinations/italy.webp"
       },
       {
         "category": "Guide",
         "title": "Planning a clear path",
         "description": "How to turn your goals into practical steps.",
         "href": "/magazine",
-        "image": "/assets/images/destinations/france.jpg"
+        "image": "/assets/images/destinations/france.webp"
       },
       {
         "category": "Experience",
         "title": "Lessons from the experience of successful applicants",
         "description": "Experiences that can simplify your decision-making process.",
         "href": "/magazine",
-        "image": "/assets/images/destinations/hungary.jpg"
+        "image": "/assets/images/destinations/hungary.webp"
       }
     ]
   }

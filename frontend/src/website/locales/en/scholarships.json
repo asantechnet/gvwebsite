@@ -87,7 +87,7 @@
       "deadlineFilter": "This month",
       "status": "active",
       "featured": true,
-      "image": "/assets/images/destinations/germany.jpg",
+      "image": "/assets/images/destinations/germany.webp",
       "summary": "Various opportunities for continuing education and research in German universities with a focus on international applicants.",
       "overview": "DAAD offers a range of scholarship programs for various fields and universities in Germany. The exact conditions depend on the selected program.",
       "eligibility": [
@@ -121,7 +121,7 @@
       "deadlineFilter": "This week",
       "status": "active",
       "featured": true,
-      "image": "/assets/images/destinations/united-kingdom.jpg",
+      "image": "/assets/images/destinations/united-kingdom.webp",
       "summary": "Master's scholarship for applicants with leadership capacity and a clear plan for professional and social impact.",
       "overview": "Chevening is the British government's international scholarship program for one-year master's studies at eligible universities.",
       "eligibility": [
@@ -155,7 +155,7 @@
       "deadlineFilter": "Three days",
       "status": "active",
       "featured": false,
-      "image": "/assets/images/destinations/turkiye.jpg",
+      "image": "/assets/images/destinations/turkiye.webp",
       "summary": "Turkish government program for various degrees with educational coverage and living support for international students.",
       "overview": "This program provides the possibility of applying for selected universities and fields in Türkiye through a central system.",
       "eligibility": [
@@ -189,7 +189,7 @@
       "deadlineFilter": "This month",
       "status": "active",
       "featured": false,
-      "image": "/assets/images/destinations/hungary.jpg",
+      "image": "/assets/images/destinations/hungary.webp",
       "summary": "The opportunity to study in Hungarian universities for different levels through the international educational cooperation program.",
       "overview": "Stipendium Hungaricum is the Hungarian government's scholarship program, and the fields available vary by sending country.",
       "eligibility": [
@@ -223,7 +223,7 @@
       "deadlineFilter": "Today",
       "status": "active",
       "featured": false,
-      "image": "/assets/images/destinations/italy.jpg",
+      "image": "/assets/images/destinations/italy.webp",
       "summary": "Study and internship program for selected master's programs in Italian universities.",
       "overview": "This program combines university studies with internship experience in Italian companies for eligible countries.",
       "eligibility": [
@@ -257,7 +257,7 @@
       "deadlineFilter": "This week",
       "status": "active",
       "featured": false,
-      "image": "/assets/images/destinations/united-kingdom.jpg",
+      "image": "/assets/images/destinations/united-kingdom.webp",
       "summary": "Competitive support for postgraduate researchers in eligible Irish disciplines and institutions.",
       "overview": "This program supports independent and high-quality research in research stages, and its application is coordinated with the host institution.",
       "eligibility": [

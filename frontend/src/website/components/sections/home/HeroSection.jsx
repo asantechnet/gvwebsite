@@ -14,6 +14,8 @@ function HeroVisual({ content }) {
         alt={content.imageAlt}
         width="1536"
         height="1536"
+        fetchPriority="high"
+        decoding="async"
         className="relative z-10 h-auto w-full object-contain drop-shadow-xl"
       />
     </div>
@@ -27,7 +29,7 @@ function HeroSection({ content }) {
         <div className="order-2 mx-auto flex max-w-2xl flex-col items-center text-center lg:order-1 lg:mx-0 lg:items-start lg:text-start">
           <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-foreground dark:text-gray-50 sm:text-5xl xl:text-6xl">
             {content.titleBefore}{" "}
-            <span className="text-primary">{content.titleHighlight}</span>{" "}
+            <span className="text-accent-text">{content.titleHighlight}</span>{" "}
             {content.titleAfter}
           </h1>
 

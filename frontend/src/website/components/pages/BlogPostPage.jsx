@@ -44,11 +44,11 @@ function RichPostContent({ content }) {
       const Icon = sectionIcons[index % sectionIcons.length]
       return <section key={section.title} className="border-b border-border pb-8 dark:border-gray-600">
         <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:text-start">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"><Icon aria-hidden="true" size={23} /></span>
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-accent-text"><Icon aria-hidden="true" size={23} /></span>
           <h2 className="font-heading text-xl font-extrabold text-foreground md:text-2xl">{section.title}</h2>
         </div>
         <p className="mt-4 text-base leading-8 text-foreground-muted">{section.body}</p>
-        {section.links?.length > 0 && <div className="mt-4 flex flex-wrap justify-start gap-2">{section.links.map((link) => <a key={link.href} href={localizedHref(getValidHref(link.href))} className="inline-flex items-center rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-start text-sm font-bold text-primary transition-colors hover:border-primary hover:bg-primary/20"><BidiLabel label={link.label} /><ArrowLeft aria-hidden="true" size={15} className="ms-1 shrink-0" /></a>)}</div>}
+        {section.links?.length > 0 && <div className="mt-4 flex flex-wrap justify-start gap-2">{section.links.map((link) => <a key={link.href} href={localizedHref(getValidHref(link.href))} className="inline-flex items-center rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-start text-sm font-bold text-accent-text transition-colors hover:border-primary hover:bg-primary/20"><BidiLabel label={link.label} /><ArrowLeft aria-hidden="true" size={15} className="ms-1 shrink-0" /></a>)}</div>}
         {section.items?.length > 0 && <ul className="mt-4 grid gap-3 sm:grid-cols-2">{section.items.map((item) => <li key={item} className="flex items-start gap-2 rounded-xl bg-surface px-3 py-3 text-sm leading-7 text-foreground-muted dark:bg-gray-800"><span className="mt-2 size-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />{item}</li>)}</ul>}
       </section>
     })}
@@ -57,15 +57,15 @@ function RichPostContent({ content }) {
       <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-3">
       {content.countries.map((country) => <a key={country.href} href={localizedHref(country.href)} aria-label={`${country.name}؛ ${content.countriesTitle}`} className="group overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 hover:border-primary hover:shadow-[0_12px_28px_rgba(54,69,77,0.12)] focus-visible:border-primary focus-visible:shadow-[0_0_0_3px_rgba(244,126,38,0.22)] dark:border-gray-600 dark:bg-gray-800">
           <div className="relative aspect-[16/9] overflow-hidden bg-surface-muted dark:bg-gray-700">
-            <img src={country.image} alt={country.imageAlt} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            <img src={country.image} alt={country.imageAlt} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
             <span className="absolute inset-x-3 bottom-3 rounded-lg bg-black/55 px-3 py-1.5 text-start text-xs font-bold text-white backdrop-blur-sm">{country.name}</span>
           </div>
           <div className="flex min-h-16 items-center justify-between gap-3 p-3.5">
             <span className="flex min-w-0 items-center gap-3">
-              <img src={country.flag} alt="" aria-hidden="true" className="h-6 w-9 shrink-0 rounded-sm object-cover shadow-sm" />
-              <span className="truncate font-heading font-extrabold text-foreground group-hover:text-primary">{country.name}</span>
+              <img src={country.flag} alt="" aria-hidden="true" loading="lazy" className="h-6 w-9 shrink-0 rounded-sm object-cover shadow-sm" />
+              <span className="truncate font-heading font-extrabold text-foreground group-hover:text-accent-text">{country.name}</span>
             </span>
-            <ArrowLeft aria-hidden="true" size={18} className="shrink-0 text-primary transition-transform duration-200 group-hover:-translate-x-1" />
+            <ArrowLeft aria-hidden="true" size={18} className="shrink-0 text-accent-text transition-transform duration-200 group-hover:-translate-x-1" />
           </div>
         </a>)}
       </div>
@@ -73,7 +73,7 @@ function RichPostContent({ content }) {
     {content.sources?.length > 0 && <section className="rounded-2xl border border-primary/30 bg-primary/10 p-5 md:p-6" aria-labelledby="official-sources-heading">
       <h2 id="official-sources-heading" className="font-heading text-xl font-extrabold text-foreground">{content.sourcesTitle}</h2>
       <p className="mt-2 text-sm leading-7 text-foreground-muted">{content.sourcesNote}</p>
-      <ul className="mt-4 grid gap-3 sm:grid-cols-2">{content.sources.map((source) => <li key={source.href}><a href={getValidHref(source.href)} target="_blank" rel="noreferrer" className="flex h-full items-center justify-between gap-3 rounded-xl border border-border bg-surface p-4 text-start font-bold text-foreground transition-colors hover:border-primary hover:text-primary focus-visible:border-primary dark:border-gray-600 dark:bg-gray-800"><span className="min-w-0 flex-1 text-start"><BidiLabel label={source.label} /></span><ExternalLink aria-hidden="true" size={17} className="shrink-0" /></a></li>)}</ul>
+      <ul className="mt-4 grid gap-3 sm:grid-cols-2">{content.sources.map((source) => <li key={source.href}><a href={getValidHref(source.href)} target="_blank" rel="noreferrer" className="flex h-full items-center justify-between gap-3 rounded-xl border border-border bg-surface p-4 text-start font-bold text-foreground transition-colors hover:border-primary hover:text-accent-text focus-visible:border-primary dark:border-gray-600 dark:bg-gray-800"><span className="min-w-0 flex-1 text-start"><BidiLabel label={source.label} /></span><ExternalLink aria-hidden="true" size={17} className="shrink-0" /></a></li>)}</ul>
     </section>}
   </div>
 }
@@ -92,9 +92,9 @@ function CountryCards({ content }) {
     }[country.name] || country.name),
   }))
   countries.push({
-    name: isPashto ? 'البانیا' : 'آلبانیا', flag: '/assets/flags/al.svg', image: '/assets/images/destinations/italy.jpg', imageAlt: isPashto ? 'په البانیا کې منظره' : 'نمایی از آلبانیا', href: '/opportunities/study/albania',
+    name: isPashto ? 'البانیا' : 'آلبانیا', flag: '/assets/flags/al.svg', image: '/assets/images/destinations/italy.webp', imageAlt: isPashto ? 'په البانیا کې منظره' : 'نمایی از آلبانیا', href: '/opportunities/study/albania',
   }, {
-    name: 'ایرلند', flag: '/assets/flags/ie.svg', image: '/assets/images/destinations/united-kingdom.jpg', imageAlt: isPashto ? 'په ایرلنډ کې منظره' : 'نمایی از ایرلند', href: '/opportunities/study/ireland',
+    name: 'ایرلند', flag: '/assets/flags/ie.svg', image: '/assets/images/destinations/united-kingdom.webp', imageAlt: isPashto ? 'په ایرلنډ کې منظره' : 'نمایی از ایرلند', href: '/opportunities/study/ireland',
   })
 
   return <section aria-labelledby="country-cards-heading">
@@ -102,10 +102,10 @@ function CountryCards({ content }) {
     <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-3">
       {countries.map((country) => <a key={country.href} href={localizeHref(country.href, language)} aria-label={`${country.name}؛ ${content.countriesTitle}`} className="group overflow-hidden rounded-2xl border border-border bg-surface shadow-sm transition-all duration-200 hover:border-primary hover:shadow-[0_12px_28px_rgba(54,69,77,0.12)] focus-visible:border-primary focus-visible:shadow-[0_0_0_3px_rgba(244,126,38,0.22)] dark:border-gray-600 dark:bg-gray-800">
         <div className="relative aspect-[16/9] overflow-hidden bg-surface-muted dark:bg-gray-700">
-          <img src={country.image} alt={country.imageAlt} className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+          <img src={country.image} alt={country.imageAlt} loading="lazy" decoding="async" className="block h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
           <span className="absolute inset-x-3 bottom-2 flex items-center justify-between gap-2 rounded-lg bg-black/55 px-3 py-1.5 text-start text-xs font-bold text-white backdrop-blur-sm">
             <span>{country.name}</span>
-            <img src={country.flag} alt="" aria-hidden="true" className="h-5 w-7 rounded-sm object-cover shadow-sm" />
+            <img src={country.flag} alt="" aria-hidden="true" loading="lazy" className="h-5 w-7 rounded-sm object-cover shadow-sm" />
           </span>
         </div>
       </a>)}
@@ -173,8 +173,8 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
       <Section padded={false} className="bg-background py-10 md:py-10 lg:py-14">
       <Container>
         {!hideBreadcrumb && <div className="mx-auto mb-2 max-w-6xl text-start text-sm text-foreground-muted md:mb-5">
-          <a href={localizedHref(parentHref)} className="transition-colors hover:text-primary">{parentLabel}</a>
-          <span className="mx-2 text-primary">/</span>
+          <a href={localizedHref(parentHref)} className="transition-colors hover:text-accent-text">{parentLabel}</a>
+          <span className="mx-2 text-accent-text">/</span>
           <span>{post.title}</span>
         </div>}
         <article className="mx-auto max-w-6xl rounded-[2rem] border border-border bg-surface shadow-sm dark:border-gray-700 dark:bg-[#2b3442]">
@@ -186,14 +186,14 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
             </div>
           </div>}
           <div className="flex items-center justify-start px-5 pt-5 text-sm text-foreground-muted lg:hidden">
-            <span className="rounded-full bg-primary/10 px-3 py-1 font-semibold text-primary">{post.category}</span>
+            <span className="rounded-full bg-primary/10 px-3 py-1 font-semibold text-accent-text">{post.category}</span>
           </div>
 
           <div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-6 lg:p-8">
             <div className="order-1 min-w-0 text-start lg:order-1">
               {content.countries?.length > 0 ? <CountryCards content={content} /> : <>
               <p className="text-lg font-medium leading-9 text-foreground-muted">{post.description}</p>
-              {post.facts?.length > 0 && <dl className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{post.facts.map((fact) => <div key={fact.label} className="rounded-2xl border border-border bg-background/70 p-4 dark:border-gray-600 dark:bg-gray-800"><dt className="text-xs font-bold text-primary">{fact.label}</dt><dd className="mt-2 text-sm font-extrabold text-foreground">{fact.value}</dd></div>)}</dl>}
+              {post.facts?.length > 0 && <dl className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{post.facts.map((fact) => <div key={fact.label} className="rounded-2xl border border-border bg-background/70 p-4 dark:border-gray-600 dark:bg-gray-800"><dt className="text-xs font-bold text-accent-text">{fact.label}</dt><dd className="mt-2 text-sm font-extrabold text-foreground">{fact.value}</dd></div>)}</dl>}
               <div className="my-8 rounded-2xl border-r-4 border-primary bg-primary/10 px-5 py-4 text-base font-semibold leading-8 text-foreground">
                 {content.highlight}
               </div>
@@ -202,15 +202,15 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
               {content.media && <MediaShowcase post={post} media={content.media} />}
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3 border-t border-border pt-5 dark:border-gray-600 lg:justify-end">
                 <span className="text-sm text-foreground-muted">{content.shareLabel}</span>
-                <button type="button" onClick={copyPostLink} className="group relative flex size-9 items-center justify-center rounded-xl border border-border bg-surface text-foreground-muted transition-colors hover:border-primary hover:text-primary focus:outline-none dark:border-gray-600 dark:bg-transparent" aria-label={isLinkCopied ? copySuccessLabel : content.copyLabel}><LinkIcon size={16} /><span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded-lg bg-foreground px-2.5 py-1.5 text-xs font-medium text-background opacity-0 shadow-lg transition-opacity group-hover:opacity-100">{isLinkCopied ? copySuccessLabel : content.copyLabel}</span></button>
+                <button type="button" onClick={copyPostLink} className="group relative flex size-9 items-center justify-center rounded-xl border border-border bg-surface text-foreground-muted transition-colors hover:border-primary hover:text-accent-text focus:outline-none dark:border-gray-600 dark:bg-transparent" aria-label={isLinkCopied ? copySuccessLabel : content.copyLabel}><LinkIcon size={16} /><span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded-lg bg-foreground px-2.5 py-1.5 text-xs font-medium text-background opacity-0 shadow-lg transition-opacity group-hover:opacity-100">{isLinkCopied ? copySuccessLabel : content.copyLabel}</span></button>
                 <span ref={shareMenuRef} className="group relative z-20">
-                  <button type="button" aria-label={content.shareLabel} aria-expanded={isShareMenuOpen} onClick={() => setIsShareMenuOpen((isOpen) => !isOpen)} className="flex size-9 items-center justify-center rounded-xl border border-border bg-surface text-foreground-muted transition-colors hover:border-primary hover:text-primary focus:outline-none dark:border-gray-600 dark:bg-transparent"><Share2 size={16} /></button>
+                  <button type="button" aria-label={content.shareLabel} aria-expanded={isShareMenuOpen} onClick={() => setIsShareMenuOpen((isOpen) => !isOpen)} className="flex size-9 items-center justify-center rounded-xl border border-border bg-surface text-foreground-muted transition-colors hover:border-primary hover:text-accent-text focus:outline-none dark:border-gray-600 dark:bg-transparent"><Share2 size={16} /></button>
                   <span className={`absolute bottom-full left-0 z-30 flex translate-y-1 gap-1 rounded-xl border border-border bg-surface p-1.5 shadow-lg transition-all group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100 ltr:left-auto ltr:right-0 dark:border-gray-600 ${isShareMenuOpen ? 'pointer-events-auto translate-y-0 opacity-100' : 'pointer-events-none opacity-0'}`}>
-                    <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodedShareUrl}`} target="_blank" rel="noreferrer" onClick={() => setIsShareMenuOpen(false)} aria-label="فیس‌بوک" className="flex size-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-primary/10 hover:text-primary"><FaFacebookF size={15} /></a>
-                    <a href={`https://wa.me/?text=${encodedShareTitle}%20${encodedShareUrl}`} target="_blank" rel="noreferrer" onClick={() => setIsShareMenuOpen(false)} aria-label="واتساپ" className="flex size-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-primary/10 hover:text-primary"><FaWhatsapp size={17} /></a>
-                    <a href={`https://t.me/share/url?url=${encodedShareUrl}&text=${encodedShareTitle}`} target="_blank" rel="noreferrer" onClick={() => setIsShareMenuOpen(false)} aria-label="تلگرام" className="flex size-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-primary/10 hover:text-primary"><FaTelegramPlane size={17} /></a>
-                    <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedShareUrl}`} target="_blank" rel="noreferrer" onClick={() => setIsShareMenuOpen(false)} aria-label="لینکدین" className="flex size-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-primary/10 hover:text-primary"><FaLinkedinIn size={16} /></a>
-                    <a href={`https://twitter.com/intent/tweet?url=${encodedShareUrl}&text=${encodedShareTitle}`} target="_blank" rel="noreferrer" onClick={() => setIsShareMenuOpen(false)} aria-label="ایکس" className="flex size-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-primary/10 hover:text-primary"><FaXTwitter size={16} /></a>
+                    <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodedShareUrl}`} target="_blank" rel="noreferrer" onClick={() => setIsShareMenuOpen(false)} aria-label="فیس‌بوک" className="flex size-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-primary/10 hover:text-accent-text"><FaFacebookF size={15} /></a>
+                    <a href={`https://wa.me/?text=${encodedShareTitle}%20${encodedShareUrl}`} target="_blank" rel="noreferrer" onClick={() => setIsShareMenuOpen(false)} aria-label="واتساپ" className="flex size-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-primary/10 hover:text-accent-text"><FaWhatsapp size={17} /></a>
+                    <a href={`https://t.me/share/url?url=${encodedShareUrl}&text=${encodedShareTitle}`} target="_blank" rel="noreferrer" onClick={() => setIsShareMenuOpen(false)} aria-label="تلگرام" className="flex size-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-primary/10 hover:text-accent-text"><FaTelegramPlane size={17} /></a>
+                    <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedShareUrl}`} target="_blank" rel="noreferrer" onClick={() => setIsShareMenuOpen(false)} aria-label="لینکدین" className="flex size-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-primary/10 hover:text-accent-text"><FaLinkedinIn size={16} /></a>
+                    <a href={`https://twitter.com/intent/tweet?url=${encodedShareUrl}&text=${encodedShareTitle}`} target="_blank" rel="noreferrer" onClick={() => setIsShareMenuOpen(false)} aria-label="ایکس" className="flex size-8 items-center justify-center rounded-lg text-foreground-muted transition-colors hover:bg-primary/10 hover:text-accent-text"><FaXTwitter size={16} /></a>
                   </span>
                 </span>
               </div>

@@ -18,7 +18,7 @@ function getMobilePageItems(totalPages) {
 
 function PostPagination({ currentPage, totalPages, onPageChange, labels, className = '', compact = false }) {
   if (totalPages <= 1) return null
-  const buttonClass = `flex ${compact ? 'size-7 text-xs sm:size-8 sm:rounded-lg' : 'size-8 text-sm sm:size-9 sm:rounded-xl'} shrink-0 items-center justify-center rounded-lg border border-[#e8cdbb] bg-background font-semibold text-foreground-muted transition-colors hover:border-primary hover:bg-primary/10 hover:text-primary focus:outline-none focus-visible:border-primary focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-600 dark:bg-[#222d3b] dark:text-gray-200 dark:hover:border-primary dark:hover:bg-primary/20 dark:hover:text-primary`
+  const buttonClass = `flex ${compact ? 'size-7 text-xs sm:size-8 sm:rounded-lg' : 'size-8 text-sm sm:size-9 sm:rounded-xl'} shrink-0 items-center justify-center rounded-lg border border-[#e8cdbb] bg-background font-semibold text-foreground-muted transition-colors hover:border-primary hover:bg-primary/10 hover:text-accent-text focus:outline-none focus-visible:border-primary focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-600 dark:bg-[#222d3b] dark:text-gray-200 dark:hover:border-primary dark:hover:bg-primary/20 dark:hover:text-accent-text`
   const pageItems = getPageItems(totalPages)
   const mobilePageItems = getMobilePageItems(totalPages)
 

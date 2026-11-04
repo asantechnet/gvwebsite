@@ -1,9 +1,9 @@
 const variants = {
   primary: 'border-primary bg-primary text-brand-white shadow-md hover:border-primary-hover hover:bg-primary-hover',
-  secondary: 'border-primary bg-surface text-primary shadow-sm hover:bg-primary hover:text-brand-white dark:bg-gray-700 dark:hover:bg-primary',
+  secondary: 'border-primary bg-surface text-accent-text shadow-sm hover:bg-primary hover:text-brand-white dark:bg-gray-700 dark:hover:bg-primary',
   outline: 'border-border bg-surface/80 text-foreground shadow-sm hover:border-primary hover:bg-primary/10 dark:border-gray-500 dark:bg-gray-700/70 dark:text-gray-100 dark:hover:bg-gray-700',
   ghost: 'border-transparent bg-transparent text-foreground hover:bg-surface-muted',
-  light: 'border-brand-white bg-brand-white text-primary shadow-md hover:bg-white/90',
+  light: 'border-brand-white bg-brand-white text-accent-text shadow-md hover:bg-white/90',
   onPrimary: 'border-brand-white/60 bg-white/10 text-brand-white hover:border-brand-white hover:bg-white/20',
   neutral: 'border-foreground bg-foreground text-brand-white shadow-md hover:bg-foreground/90',
 }

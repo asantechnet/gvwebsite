@@ -34,7 +34,9 @@ html.cms-modal-open { background: rgb(8 12 20 / .62); }
   --color-on-secondary: var(--theme-on-secondary);
   --color-link: var(--theme-link);
   --color-focus: var(--theme-focus);
+  --color-accent-text: var(--theme-accent-text);
   --color-admin-brand: var(--admin-brand);
+  --color-admin-brand-text: var(--admin-brand-text);
   --color-admin-brand-soft: var(--admin-brand-soft);
   --color-admin-heading: var(--admin-heading);
   --color-admin-muted: var(--admin-muted);
@@ -67,6 +69,7 @@ html.cms-modal-open { background: rgb(8 12 20 / .62); }
   --theme-on-secondary: var(--brand-white);
   --theme-link: #a91319;
   --theme-focus: #b6530d;
+  --theme-accent-text: #b6530d;
 }
 
 .dark {
@@ -85,6 +88,7 @@ html.cms-modal-open { background: rgb(8 12 20 / .62); }
   --theme-on-secondary: #ffffff;
   --theme-link: #ff9a4d;
   --theme-focus: #ff963f;
+  --theme-accent-text: #ff963f;
 }
 
 :lang(fa),
@@ -117,8 +121,13 @@ html:dir(ltr) .cms-root .text-right { text-align: left; }
 @media (min-width: 1024px) { html:dir(ltr) .cms-root .lg\:text-right { text-align: left; } }
 
 body {
-  min-width: 320px; min-height: 100vh; margin: 0;
+  min-width: 0; min-height: 100vh; margin: 0;
   background: var(--theme-background); color: var(--theme-foreground);
+}
+.website-root :where(a, button, [role="button"], input, textarea, select):focus-visible {
+  outline: none;
+  border-color: var(--theme-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-focus) 28%, transparent);
 }
 button, input, select, textarea { font: inherit; }
 @keyframes skeletonShimmerSweep { from { transform: translateX(-115%); } to { transform: translateX(115%); } }

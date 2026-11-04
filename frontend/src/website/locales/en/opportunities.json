@@ -5,7 +5,7 @@
       "category": "Study Opportunities",
       "title": "Educational opportunities for Afghan students",
       "description": "Guidance to know study options, scholarships and prepare a clear path to continue studying abroad.",
-      "image": "/assets/images/destinations/germany.jpg",
+      "image": "/assets/images/destinations/germany.webp",
       "imageAlt": "Students in a modern educational environment"
     },
     "postDetail": {
@@ -25,17 +25,17 @@
         "imageLabel": "Some popular study destinations in Europe",
         "gallery": [
           {
-            "src": "/assets/images/destinations/germany.jpg",
+            "src": "/assets/images/destinations/germany.webp",
             "alt": "A view of the urban and university atmosphere of Germany",
             "label": "Germany; Destination of academic programs and DAAD scholarships"
           },
           {
-            "src": "/assets/images/destinations/united-kingdom.jpg",
+            "src": "/assets/images/destinations/united-kingdom.webp",
             "alt": "A view of the city of London in the United Kingdom",
             "label": "Britain; Admission and visa with separate official regulations"
           },
           {
-            "src": "/assets/images/destinations/france.jpg",
+            "src": "/assets/images/destinations/france.webp",
             "alt": "A view of the city of Paris in France",
             "label": "France; One of the destinations of the European higher education network"
           }
@@ -231,7 +231,7 @@
       "category": "Migration Opportunities",
       "title": "Migration routes; From choosing the way to staying",
       "description": "A practical guide to comparing educational, work and family immigration, preparing your case and distinguishing valid information from false promises.",
-      "image": "/assets/images/destinations/united-kingdom.jpg",
+      "image": "/assets/images/destinations/united-kingdom.webp",
       "imageAlt": "A view of an immigrant-friendly city"
     },
     "postDetail": {
@@ -351,7 +351,7 @@
       "category": "Work Opportunities",
       "title": "Work abroad; From resume preparation to work permit",
       "description": "A practical guide to find legal work, evaluate a job offer, prepare documents and understand the responsibilities of a migrant worker.",
-      "image": "/assets/images/destinations/united-kingdom.jpg",
+      "image": "/assets/images/destinations/united-kingdom.webp",
       "imageAlt": "International work environment"
     },
     "postDetail": {
@@ -471,7 +471,7 @@
       "category": "Investment Opportunities",
       "title": "Investment abroad; From assessment to legal action",
       "description": "A practical guide for comparing investment routes, assessing risk, reviewing documents and choosing the right destination.",
-      "image": "/assets/images/destinations/germany.jpg",
+      "image": "/assets/images/destinations/germany.webp",
       "imageAlt": "A view of an international economic center"
     },
     "postDetail": {
@@ -565,7 +565,7 @@
       "category": "Exams",
       "title": "Language and admission exams; The right choice and targeted preparation",
       "description": "A guide to choosing a test, knowing the difference between language tests and preparing an acceptable result for university, work or visa.",
-      "image": "/assets/images/destinations/france.jpg",
+      "image": "/assets/images/destinations/france.webp",
       "imageAlt": "Student preparing for the exam"
     },
     "postDetail": {

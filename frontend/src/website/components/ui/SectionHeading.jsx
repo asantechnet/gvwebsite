@@ -5,7 +5,7 @@ function SectionHeading({ id, titleBefore, titleHighlight, className = "" }) {
       className={`font-heading text-xl font-extrabold leading-tight text-foreground dark:text-gray-50 sm:text-2xl lg:text-3xl ${className}`.trim()}
     >
       {titleBefore}{" "}
-      <span className="text-primary">{titleHighlight}</span>
+      <span className="text-accent-text">{titleHighlight}</span>
     </h2>
   );
 }

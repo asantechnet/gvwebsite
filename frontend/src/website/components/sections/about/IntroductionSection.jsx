@@ -15,7 +15,7 @@ function IntroductionSection({ content }) {
         <div className="mx-auto mt-10 grid max-w-4xl grid-cols-3 gap-1 md:gap-0">
           {content.values.map((value, index) => (
             <div key={value.title} className="relative px-1 text-center md:px-8 md:first:ps-0 md:last:pe-0 md:not-first:border-s md:border-border md:dark:border-gray-600">
-              <span className="mx-auto flex size-7 items-center justify-center rounded-full border border-primary/50 text-[10px] font-black text-primary md:size-9 md:text-xs">
+              <span className="mx-auto flex size-7 items-center justify-center rounded-full border border-primary/50 text-[10px] font-black text-accent-text md:size-9 md:text-xs">
                 0{index + 1}
               </span>
               <h3 className="mt-3 font-heading text-[11px] font-extrabold text-foreground sm:text-xs md:mt-4 md:text-base">{value.title}</h3>

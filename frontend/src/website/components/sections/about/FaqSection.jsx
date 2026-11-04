@@ -30,7 +30,7 @@ function FaqSection({ content }) {
                   className="flex min-h-12 w-full items-center justify-between gap-4 px-5 py-2 text-start font-heading text-sm font-extrabold text-foreground md:px-6 md:py-2.5 md:text-base"
                 >
                   <span>{item.question}</span>
-                  <ChevronDown aria-hidden="true" className={`shrink-0 text-primary transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} size={20} />
+                  <ChevronDown aria-hidden="true" className={`shrink-0 text-accent-text transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} size={20} />
                 </Button>
                 <div id={`about-faq-answer-${index}`} className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
                   <div className="min-h-0 overflow-hidden">

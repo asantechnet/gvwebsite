@@ -5,7 +5,7 @@ import Container from "@ui/Container.jsx";
 import { localizeHref } from "@website/utils/language.js";
 
 const focusClasses =
-  "focus:outline-none focus-visible:outline-none focus-visible:border-primary focus-visible:text-primary";
+  "focus:outline-none focus-visible:outline-none focus-visible:border-primary focus-visible:text-accent-text";
 
 function FooterLink({ href, children }) {
   const isActive = window.location.pathname === href;
@@ -14,7 +14,7 @@ function FooterLink({ href, children }) {
     <a
       href={href}
       aria-current={isActive ? "page" : undefined}
-      className={`inline-flex min-h-9 items-center border-b border-transparent text-sm transition-colors hover:text-primary dark:hover:text-primary ${focusClasses} ${isActive ? "font-extrabold text-primary" : "text-foreground-muted dark:text-gray-200"}`}
+      className={`inline-flex min-h-9 items-center border-b border-transparent text-sm transition-colors hover:text-accent-text dark:hover:text-accent-text ${focusClasses} ${isActive ? "font-extrabold text-accent-text" : "text-foreground-muted dark:text-gray-200"}`}
     >
       {children}
     </a>
@@ -58,8 +58,10 @@ function Footer({ content, navigationContent, language, theme, className = "" })
               <img
                 src={theme === "dark" ? "/assets/branding/new%20logo%20white.webp" : "/assets/branding/new%20logo.webp"}
                 alt={navigationContent.logoAlt}
-                width="1431"
-                height="974"
+                width="1200"
+                height="432"
+                loading="lazy"
+                decoding="async"
                 className="h-12 w-auto object-contain md:h-14"
               />
             </a>
@@ -101,7 +103,7 @@ function Footer({ content, navigationContent, language, theme, className = "" })
               >
                 <BriefcaseBusiness
                   aria-hidden="true"
-                  className="size-4 text-primary"
+                  className="size-4 text-accent-text"
                 />
                 {navigationContent.navigation.opportunities}
               </h2>
@@ -122,7 +124,7 @@ function Footer({ content, navigationContent, language, theme, className = "" })
               id="footer-services-heading"
               className="font-heading mb-4 inline-flex items-center gap-2 text-base font-extrabold text-foreground dark:text-gray-100"
             >
-              <Wrench aria-hidden="true" className="size-4 text-primary" />
+              <Wrench aria-hidden="true" className="size-4 text-accent-text" />
               {navigationContent.navigation.services}
             </h2>
             <ul className="grid grid-cols-1 justify-items-center gap-y-1 md:justify-items-start">

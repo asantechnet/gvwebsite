@@ -23,7 +23,7 @@ function StandardsSection({ content }) {
 
               return (
                 <div key={item.title} className="text-center md:text-start">
-                  <Icon aria-hidden="true" className="mx-auto text-primary md:mx-0" size={25} strokeWidth={1.8} />
+                  <Icon aria-hidden="true" className="mx-auto text-accent-text md:mx-0" size={25} strokeWidth={1.8} />
                   <h3 className="mt-3 font-heading text-base font-extrabold text-foreground">{item.title}</h3>
                   <p className="mt-1 text-sm leading-7 text-foreground-muted">{item.description}</p>
                 </div>

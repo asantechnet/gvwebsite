@@ -69,7 +69,7 @@
       {
         "id": "turkiye",
         "name": "ترکیه",
-        "image": "/assets/images/destinations/turkiye.jpg",
+        "image": "/assets/images/destinations/turkiye.webp",
         "imageAlt": "د استانبول ښار او نیلي جومات منظره",
         "flag": "/assets/flags/tr.svg",
         "href": "/opportunities/study/turkiye",
@@ -78,7 +78,7 @@
       {
         "id": "germany",
         "name": "جرمني",
-        "image": "/assets/images/destinations/germany.jpg",
+        "image": "/assets/images/destinations/germany.webp",
         "imageAlt": "په برلین کې د براندنبورګ دروازه",
         "flag": "/assets/flags/de.svg",
         "href": "/opportunities/study/germany",
@@ -87,7 +87,7 @@
       {
         "id": "france",
         "name": "فرانسه",
-        "image": "/assets/images/destinations/france.jpg",
+        "image": "/assets/images/destinations/france.webp",
         "imageAlt": "په پاریس کې د ایفل برج",
         "flag": "/assets/flags/fr.svg",
         "href": "/opportunities/study/france",
@@ -96,7 +96,7 @@
       {
         "id": "netherlands",
         "name": "هالنډ",
-        "image": "/assets/images/destinations/netherlands.jpg",
+        "image": "/assets/images/destinations/netherlands.webp",
         "imageAlt": "د امستردام کانال او ودانۍ",
         "flag": "/assets/flags/nl.svg",
         "href": "/opportunities/study/netherlands",
@@ -105,7 +105,7 @@
       {
         "id": "hungary",
         "name": "هنګري",
-        "image": "/assets/images/destinations/hungary.jpg",
+        "image": "/assets/images/destinations/hungary.webp",
         "imageAlt": "د بوداپست ښار او د ډانیوب سیند منظره",
         "flag": "/assets/flags/hu.svg",
         "href": "/opportunities/study/hungary",
@@ -114,7 +114,7 @@
       {
         "id": "italy",
         "name": "ایټالیا",
-        "image": "/assets/images/destinations/italy.jpg",
+        "image": "/assets/images/destinations/italy.webp",
         "imageAlt": "د وینس لوی کانال او ودانۍ",
         "flag": "/assets/flags/it.svg",
         "href": "/opportunities/study/italy",
@@ -123,7 +123,7 @@
       {
         "id": "unitedKingdom",
         "name": "انګلستان",
-        "image": "/assets/images/destinations/united-kingdom.jpg",
+        "image": "/assets/images/destinations/united-kingdom.webp",
         "imageAlt": "د لندن ښار او د ټیمز سیند منظره",
         "flag": "/assets/flags/gb.svg",
         "href": "/opportunities/study/united-kingdom",

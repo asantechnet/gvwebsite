@@ -22,7 +22,7 @@ import { headerNavigation } from "@website/data/navigation.js";
 import LanguageSwitcher from "@ui/LanguageSwitcher.jsx";
 import { localizeHref } from "@website/utils/language.js";
 
-const noFocusOutline = "outline-none focus:outline-none focus-visible:outline-none focus-visible:ring-0";
+const noFocusOutline = "outline-none focus:outline-none focus-visible:border-focus focus-visible:shadow-[0_0_0_3px_rgba(244,126,38,0.28)]";
 const iconButtonClasses =
   "grid size-10 place-items-center rounded-xl border border-border bg-surface-muted text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700";
 const navIcons = {
@@ -37,7 +37,7 @@ const navIcons = {
   contact: Phone,
 };
 const navLinkClasses = `relative flex min-h-10 items-center gap-1.5 rounded-xl border border-transparent px-2 text-sm font-bold whitespace-nowrap text-foreground-muted transition-colors after:absolute after:inset-x-2 after:bottom-0.5 after:h-0.5 after:origin-right after:scale-x-0 after:rounded-full after:bg-primary after:transition-transform after:duration-300 hover:text-foreground hover:after:scale-x-100 ltr:after:origin-left ltr:font-semibold dark:text-gray-100 rtl:gap-2.5 rtl:px-2 rtl:text-[0.9375rem] 2xl:gap-2 2xl:px-3 2xl:text-base rtl:2xl:gap-3 rtl:2xl:px-3 rtl:2xl:text-base max-xl:text-base max-xl:!font-semibold ltr:max-md:!text-sm ltr:max-md:!font-medium rtl:max-md:!text-sm rtl:max-md:!font-semibold ${noFocusOutline}`;
-const activeNavLinkClasses = "text-primary after:scale-x-100";
+const activeNavLinkClasses = "text-accent-text after:scale-x-100";
 
 function NavigationIcon({ id }) {
   const Icon = navIcons[id];
@@ -239,7 +239,7 @@ function Header({
                         aria-current={
                           currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "page" : undefined
                         }
-                        className={`rounded-lg px-3 py-2 text-start text-sm transition-colors hover:bg-surface-muted hover:text-foreground dark:hover:bg-gray-700 ${currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "font-extrabold text-primary" : "font-medium text-foreground-muted dark:text-gray-100"}`}
+                        className={`rounded-lg px-3 py-2 text-start text-sm transition-colors hover:bg-surface-muted hover:text-foreground dark:hover:bg-gray-700 ${currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "font-extrabold text-accent-text" : "font-medium text-foreground-muted dark:text-gray-100"}`}
                       >
                         {content.subNavigation[item.id][child.id]}
                       </a>
@@ -415,7 +415,7 @@ function Header({
                           aria-current={
                             currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "page" : undefined
                           }
-                          className={`rounded-lg px-3 py-1.5 text-start text-sm transition-colors hover:text-foreground dark:hover:text-white ${currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "font-extrabold text-primary dark:text-primary" : "text-foreground-muted dark:text-gray-300"}`}
+                          className={`rounded-lg px-3 py-1.5 text-start text-sm transition-colors hover:text-foreground dark:hover:text-white ${currentPath === child.href || currentPath.startsWith(`${child.href}/`) ? "font-extrabold text-accent-text dark:text-accent-text" : "text-foreground-muted dark:text-gray-300"}`}
                         >
                           {content.subNavigation[item.id][child.id]}
                         </a>

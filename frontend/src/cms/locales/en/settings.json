@@ -3,6 +3,19 @@
   "title": "Settings",
   "description": "Manage website defaults, regional preferences, search visibility, and administrative notifications.",
   "contentLanguage": "Content language",
+  "branding": {
+    "logo": "Website logo",
+    "lightLogo": "Light mode logo",
+    "darkLogo": "Dark mode logo",
+    "logoHelp": "Used on the public website and CMS.",
+    "choose": "Upload logo",
+    "replace": "Change logo",
+    "remove": "Delete logo",
+    "colors": "Brand colors",
+    "primary": "Primary color",
+    "secondary": "Secondary color",
+    "colorsHelp": "Applied to the public website and CMS."
+  },
   "general": {
     "eyebrow": "Website",
     "title": "General settings",

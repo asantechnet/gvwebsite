@@ -14,7 +14,7 @@ function Breadcrumbs({ items = [], ariaLabel = 'Breadcrumb', centered = false })
       <ol className={`flex flex-wrap items-center justify-center gap-1.5 text-sm text-foreground-muted ${centered ? '' : 'lg:justify-start'}`.trim()}>
         {items.map((item, index) => (
           <li key={`${item.label}-${index}`} className="flex items-center gap-1.5">
-            {index > 0 && <ChevronLeft aria-hidden="true" size={15} className="text-brand-orange" />}
+            {index > 0 && <ChevronLeft aria-hidden="true" size={15} className="text-accent-text" />}
             {item.href && index !== items.length - 1 ? (
               <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
             ) : (
