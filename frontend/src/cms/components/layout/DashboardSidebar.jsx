@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { Award, BookOpenText, BriefcaseBusiness, FileText, Flag, FolderOpen, GraduationCap, House, Info, LayoutDashboard, LogOut, MessageSquareText, PanelLeftClose, PanelLeftOpen, PhoneCall, Settings, X } from 'lucide-react'
+import { Award, BookOpenText, BriefcaseBusiness, Compass, FileText, Flag, FolderOpen, House, Info, LayoutDashboard, LogOut, MapPinned, MessageSquareText, PanelLeftClose, PanelLeftOpen, PhoneCall, Settings, X } from 'lucide-react'
 
-const icons = { home: House, about: Info, contact: PhoneCall, opportunities: GraduationCap, scholarships: Award, services: BriefcaseBusiness, magazine: BookOpenText, guides: Flag, messages: MessageSquareText, consultations: FileText, media: FolderOpen, settings: Settings }
+const icons = { home: House, about: Info, contact: PhoneCall, opportunities: Compass, tourism: MapPinned, scholarships: Award, services: BriefcaseBusiness, magazine: BookOpenText, guides: Flag, messages: MessageSquareText, consultations: FileText, media: FolderOpen, settings: Settings }
 
 function DashboardSidebar({ content, theme, open, collapsed, onCollapseToggle, onClose }) {
   const navRef = useRef(null); const [scrollbar, setScrollbar] = useState({ visible: false, height: 100, top: 0 })

@@ -27,6 +27,10 @@
           "key": "opportunities"
         },
         {
+          "label": "Tourism",
+          "key": "tourism"
+        },
+        {
           "label": "Scholarships",
           "key": "scholarships"
         },
@@ -37,10 +41,6 @@
         {
           "label": "Magazine",
           "key": "magazine"
-        },
-        {
-          "label": "Countries and guides",
-          "key": "guides"
         }
       ]
     },
@@ -153,7 +153,45 @@
     "contentLanguage": "Content language",
     "dari": "Dari",
     "heroSettings": "Main banner settings",
-    "heroTitle": "Main banner title"
+    "heroTitle": "Main banner title",
+    "manager": {
+      "title": "Opportunities",
+      "description": "Choose an opportunity type, then manage its country-specific content.",
+      "study": "Study",
+      "work": "Work",
+      "migration": "Migration",
+      "investment": "Investment",
+      "typeLabel": "Opportunity type",
+      "addCountry": "Add country",
+      "search": "Search countries...",
+      "all": "All statuses",
+      "published": "Published",
+      "draft": "Draft",
+      "countries": "countries",
+      "updated": "Updated today",
+      "edit": "Edit country opportunity",
+      "preview": "Preview",
+      "more": "More actions",
+      "back": "Back to countries",
+      "editorDescription": "Country opportunity editor",
+      "countryContent": "Country opportunity content",
+      "languageHint": "Switch languages without losing your drafts.",
+      "contentLanguage": "Content language",
+      "cardContent": "Country card",
+      "cardTitle": "Card title",
+      "pageTitle": "Page title",
+      "shortDescription": "Short description",
+      "opportunityContent": "Opportunity information",
+      "introduction": "Introduction",
+      "mainContent": "Main content",
+      "seo": "Search engine settings",
+      "seoTitle": "SEO title",
+      "slug": "URL slug",
+      "metaDescription": "Meta description",
+      "status": "Publication status",
+      "image": "Country image",
+      "save": "Save changes"
+    }
   },
   "logout": "Departure"
 }

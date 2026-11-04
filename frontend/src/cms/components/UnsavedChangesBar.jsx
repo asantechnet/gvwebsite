@@ -57,6 +57,19 @@ function UnsavedChangesBar({ sidebarCollapsed = false }) {
   }, [dirty])
 
   useEffect(() => {
+    const interceptReloadShortcut = (event) => {
+      const reloadShortcut = event.key === 'F5' || ((event.ctrlKey || event.metaKey) && event.key.toLocaleLowerCase() === 'r')
+      if (!dirty || !reloadShortcut) return
+      event.preventDefault()
+      event.stopPropagation()
+      setPendingHref(window.location.href)
+      setLeavePrompt(true)
+    }
+    window.addEventListener('keydown', interceptReloadShortcut, true)
+    return () => window.removeEventListener('keydown', interceptReloadShortcut, true)
+  }, [dirty])
+
+  useEffect(() => {
     if (!leavePrompt) return undefined
     const bodyOverflow = document.body.style.overflow
     const documentOverflow = document.documentElement.style.overflow

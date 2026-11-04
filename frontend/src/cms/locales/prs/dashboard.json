@@ -12,10 +12,10 @@
       { "label": "درباره ما", "key": "about" },
       { "label": "تماس با ما", "key": "contact" },
       { "label": "فرصت‌ها", "key": "opportunities" },
+      { "label": "سیاحت", "key": "tourism" },
       { "label": "بورسیه‌ها", "key": "scholarships" },
       { "label": "خدمات", "key": "services" },
-      { "label": "مجله", "key": "magazine" },
-      { "label": "کشورها و راهنماها", "key": "guides" }
+      { "label": "مجله", "key": "magazine" }
     ] },
     { "label": "مدیریت", "items": [
       { "label": "کتابخانه رسانه", "key": "media" },
@@ -35,6 +35,6 @@
   "activity": { "title": "فعالیت‌های اخیر", "description": "تغییرات محتوا در اینجا نمایش داده می‌شوند.", "emptyTitle": "هنوز فعالیتی وجود ندارد", "emptyDescription": "تغییرات ذخیره‌شده و درخواست‌های تازه در این بخش ظاهر خواهند شد." },
   "inbox": { "eyebrow": "صندوق پیام‌ها", "title": "پیام‌های اخیر", "description": "آخرین درخواست‌های رسیده از وب‌سایت", "empty": "هنوز پیام تازه‌ای ثبت نشده است.", "view": "مشاهده همه پیام‌ها" },
   "quick": { "title": "دسترسی سریع", "description": "به بخش‌هایی که بیشتر ویرایش می‌شوند بروید.", "items": ["افزودن مطلب مجله", "ویرایش خدمات", "مدیریت کشورهای مقصد"] },
-  "opportunities": { "settings": "تنظیمات صفحه فرصت‌ها", "pageTitle": "عنوان صفحه", "postCategory": "دسته‌بندی نوشته‌ها", "allCategories": "همه دسته‌بندی‌ها", "status": "وضعیت صفحه فرصت‌ها", "pageStatus": "وضعیت صفحه", "published": "منتشرشده", "lastUpdate": "آخرین به‌روزرسانی", "today": "امروز", "contentLanguage": "زبان محتوا", "dari": "دری", "heroSettings": "تنظیمات بنر اصلی", "heroTitle": "عنوان بنر اصلی" },
+  "opportunities": { "settings": "تنظیمات صفحه فرصت‌ها", "pageTitle": "عنوان صفحه", "postCategory": "دسته‌بندی نوشته‌ها", "allCategories": "همه دسته‌بندی‌ها", "status": "وضعیت صفحه فرصت‌ها", "pageStatus": "وضعیت صفحه", "published": "منتشرشده", "lastUpdate": "آخرین به‌روزرسانی", "today": "امروز", "contentLanguage": "زبان محتوا", "dari": "دری", "heroSettings": "تنظیمات بنر اصلی", "heroTitle": "عنوان بنر اصلی", "manager": { "title": "فرصت‌ها", "description": "نوع فرصت را انتخاب کنید و محتوای مربوط به هر کشور را مدیریت کنید.", "study": "تحصیل", "work": "کار", "migration": "مهاجرت", "investment": "سرمایه‌گذاری", "typeLabel": "نوع فرصت", "addCountry": "افزودن کشور", "search": "جستجوی کشورها...", "all": "همه وضعیت‌ها", "published": "منتشرشده", "draft": "پیش‌نویس", "countries": "کشور", "updated": "به‌روزرسانی امروز", "edit": "ویرایش فرصت کشور", "preview": "پیش‌نمایش", "more": "عملیات بیشتر", "back": "بازگشت به کشورها", "editorDescription": "ویرایش فرصت کشور", "countryContent": "محتوای فرصت کشور", "languageHint": "زبان را بدون از دست رفتن پیش‌نویس‌ها تغییر دهید.", "contentLanguage": "زبان محتوا", "cardContent": "کارت کشور", "cardTitle": "عنوان کارت", "pageTitle": "عنوان صفحه", "shortDescription": "توضیح کوتاه", "opportunityContent": "اطلاعات فرصت", "introduction": "مقدمه", "mainContent": "محتوای اصلی", "seo": "تنظیمات موتور جستجو", "seoTitle": "عنوان SEO", "slug": "نامک نشانی", "metaDescription": "توضیحات متا", "status": "وضعیت انتشار", "image": "تصویر کشور", "save": "ذخیره تغییرات" } },
   "logout": "خروج"
 }
