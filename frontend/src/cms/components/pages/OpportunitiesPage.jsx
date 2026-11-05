@@ -51,7 +51,7 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
   const [status, setStatus] = useState('all')
   const [editing, setEditing] = useState(null)
   const [viewing, setViewing] = useState(null)
-  const { cards, savePost, toggleStatus } = useManagedCollection({ pageKey, label, services, tourism, opportunities, exams })
+  const { cards, removePost, savePost, toggleStatus } = useManagedCollection({ pageKey, label, services, tourism, opportunities, exams })
   const labels = { ...content.opportunities, ...content.opportunities.collection }
   const typeLabels = isTourism
     ? { afghanistan: labels.tourismAfghanistan, world: labels.tourismWorld, typeLabel: label }
@@ -61,6 +61,10 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
   const visibleCards = isServices ? cards : isTourism ? cards.filter((card) => card.type === activeType) : cards.filter((card) => card.id === activeType)
   const filteredCards = useMemo(() => visibleCards.filter((card) => { const filterStatus = card.savedStatus ?? card.status; return (status === 'all' || filterStatus === status) && `${card.title} ${card.description} ${card.category || ''}`.toLocaleLowerCase().includes(query.toLocaleLowerCase()) }), [visibleCards, query, status])
   const modalContent = { ...content, editItem: labels.editPost || 'ویرایش نوشته', editItemTitle: labels.editPostTitle || 'ویرایش نوشته فرصت', close: labels.close || 'بستن', itemTitle: labels.postTitle || 'عنوان نوشته', itemDescription: labels.postDescription || 'خلاصه نوشته', itemAction: labels.postAction || 'متن دکمه', itemLink: labels.postLink || 'پیوند نوشته', cancel: labels.cancel || 'انصراف', save: labels.save || 'ذخیره', categoryOptions }
+  const requestRemove = async (card) => {
+    const confirmed = await window.cmsConfirmDelete?.({ title: labels.deletePost || 'حذف نوشته', description: labels.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })
+    if (confirmed) removePost(card)
+  }
   return <PageContainer><PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.groups?.[0]?.label || content.overview }, { label }]} action={<EditorPreviewLink>{content.topbar.visitPage}</EditorPreviewLink>} />
     <section className={isServices ? 'overflow-hidden rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)]' : 'overflow-visible bg-transparent'}><div className={`grid gap-1 border-b border-admin-border bg-admin-control-soft p-1 md:grid-cols-[minmax(12rem,1fr)_minmax(12rem,.7fr)_minmax(14rem,.8fr)] ${isServices ? 'rounded-t-2xl' : 'mb-3 rounded-2xl border border-admin-border shadow-[0_12px_34px_rgb(15_23_42_/.055)]'}`}>
 <button type="button" onClick={() => setEditing({ id: `new-${Date.now()}`, title: '', description: '', action: '', href: '', image: '' })} className="box-border flex h-9 min-h-0 w-full items-center justify-center gap-1.5 rounded-xl border border-admin-brand bg-admin-brand px-3 text-xs font-semibold text-white transition hover:bg-orange-500 md:w-fit md:justify-self-start md:px-4">
@@ -103,7 +107,7 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 <button type="button" className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft" onClick={() => setEditing(card)} aria-label={labels.editPost || 'ویرایش'}>
 <Pencil size={16} />
 </button>
-<button type="button" className="grid size-9 place-items-center rounded-xl border border-red-500/25 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" onClick={() => window.cmsConfirmDelete?.({ title: labels.deletePost || 'حذف نوشته', description: labels.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })} aria-label={labels.deletePost || 'حذف'}>
+<button type="button" className="grid size-9 place-items-center rounded-xl border border-red-500/25 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" onClick={() => requestRemove(card)} aria-label={labels.deletePost || 'حذف'}>
 <Trash2 size={16} />
 </button>
 </div>
@@ -123,14 +127,14 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 <button type="button" className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-brand-text hover:border-admin-brand hover:bg-admin-brand-soft" onClick={() => setEditing(card)} aria-label={labels.editPost || 'ویرایش'}>
 <Pencil size={15} />
 </button>
-<button type="button" className="grid size-8 place-items-center rounded-xl border border-red-500/25 text-red-500 hover:border-red-500 hover:bg-red-500/10" onClick={() => window.cmsConfirmDelete?.({ title: labels.deletePost || 'حذف نوشته', description: labels.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })} aria-label={labels.deletePost || 'حذف'}>
+<button type="button" className="grid size-8 place-items-center rounded-xl border border-red-500/25 text-red-500 hover:border-red-500 hover:bg-red-500/10" onClick={() => requestRemove(card)} aria-label={labels.deletePost || 'حذف'}>
 <Trash2 size={15} />
 </button>
 </div>
 </div>
 </article>)}</section>
     {!filteredCards.length && <div className="grid min-h-44 place-items-center rounded-2xl border border-admin-border bg-admin-card text-sm text-admin-muted">{labels.empty || 'نوشته‌ای پیدا نشد.'}</div>}
-    {viewing && <OpportunityPostPreviewModal post={viewing} content={modalContent} onClose={() => setViewing(null)} onEdit={() => { setViewing(null); setEditing(viewing) }} />}
+    {viewing && <OpportunityPostPreviewModal post={viewing} content={modalContent} onClose={() => setViewing(null)} onDelete={() => { removePost(viewing); setViewing(null) }} onEdit={() => { setViewing(null); setEditing(viewing) }} />}
     {editing && <OpportunityPostModal post={editing} content={modalContent} isServices={isServices} onClose={() => setEditing(null)} onSave={(savedPost) => { savePost(savedPost, activeType); setEditing(null) }} />}
   </PageContainer>
 }
@@ -157,7 +161,7 @@ function FeaturedToggle({ label, checked, onChange, full = true }) {
   return <div className={`flex items-center justify-between gap-3 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-4 text-xs font-semibold text-admin-heading ${full ? 'min-h-12 sm:col-span-2' : 'h-11 min-h-11 self-end'}`}><span>{label}</span><button type="button" role="switch" aria-checked={checked} aria-label={label} onClick={() => onChange(!checked)} className={`relative h-5 w-9 shrink-0 rounded-full border transition-colors duration-200 ease-out ${checked ? 'border-admin-brand bg-admin-brand' : 'border-admin-border bg-[var(--admin-toggle-off)]'}`}><span aria-hidden="true" className={`absolute top-1/2 start-1 size-3 -translate-y-1/2 rounded-full bg-white shadow-sm transition-transform duration-200 ease-out motion-reduce:transition-none ${checked ? 'translate-x-4 rtl:-translate-x-4' : 'translate-x-0'}`} /></button></div>
 }
 
-function OpportunityPostPreviewModal({ post, content, onClose, onEdit }) {
+function OpportunityPostPreviewModal({ post, content, onClose, onDelete, onEdit }) {
   const interfaceLanguage = currentCmsLanguage()
   const [closing, setClosing] = useState(false)
   const [contentLanguage, setContentLanguage] = useState(interfaceLanguage)
@@ -186,7 +190,7 @@ function OpportunityPostPreviewModal({ post, content, onClose, onEdit }) {
   }, [])
   const requestDelete = async () => {
     const confirmed = await window.cmsConfirmDelete?.({ title: content.deletePost || 'حذف نوشته', description: content.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })
-    if (confirmed) close()
+    if (confirmed) onDelete()
   }
   return <div className={`cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-4 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onMouseDown={close}>
     <section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="post-preview-title" className={`relative z-10 flex max-h-[calc(100svh-2rem)] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-admin-border bg-admin-page shadow-2xl ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`} onMouseDown={(event) => event.stopPropagation()}>

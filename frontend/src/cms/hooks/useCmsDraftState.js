@@ -6,6 +6,7 @@ import {
   CMS_CHANGES_SAVED_EVENT,
   getCmsDraftStorageKey,
 } from '@cms/utils/draftEvents.js'
+import { dataSource } from '@/shared/services/data/index.js'
 
 function resolveInitialValue(initialValue) {
   return typeof initialValue === 'function' ? initialValue() : initialValue
@@ -31,6 +32,20 @@ function useCmsDraftState(scope, initialValue, { commit } = {}) {
   const savedValue = useRef(savedInitialValue)
   const dirty = useRef(initial.recovered)
 
+  useEffect(() => {
+    let active = true
+    if (initial.recovered) return undefined
+    dataSource.snapshots.get(scope)
+      .then((snapshot) => {
+        if (active && snapshot?.payload && !dirty.current) {
+          savedValue.current = structuredClone(snapshot.payload)
+          setDraftState(structuredClone(snapshot.payload))
+        }
+      })
+      .catch(() => {})
+    return () => { active = false }
+  }, [initial.recovered, scope])
+
   const setDraft = (update) => {
     dirty.current = true
     announceCmsDraftChange()
@@ -47,14 +62,23 @@ function useCmsDraftState(scope, initialValue, { commit } = {}) {
   }, [draft, storageKey])
 
   useEffect(() => {
-    const saveDraft = () => {
-      dirty.current = false
-      window.localStorage.removeItem(storageKey)
-      if (commit) setDraftState((current) => commit(current))
+    const saveDraft = async (event) => {
+      if (event.detail) event.detail.handled = true
+      try {
+        const current = commit ? commit(draft) : draft
+        await dataSource.snapshots.save(scope, current)
+        dirty.current = false
+        savedValue.current = structuredClone(current)
+        window.localStorage.removeItem(storageKey)
+        if (commit) setDraftState(current)
+        event.detail?.resolve?.()
+      } catch (error) {
+        event.detail?.reject?.(error)
+      }
     }
     window.addEventListener(CMS_CHANGES_SAVED_EVENT, saveDraft)
     return () => window.removeEventListener(CMS_CHANGES_SAVED_EVENT, saveDraft)
-  }, [commit, storageKey])
+  }, [commit, draft, scope, storageKey])
 
   useEffect(() => {
     const discardDraft = () => {

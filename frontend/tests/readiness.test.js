@@ -3,15 +3,19 @@ import test from 'node:test'
 
 import englishDashboard from '../src/cms/locales/en/dashboard.json' with { type: 'json' }
 import englishMedia from '../src/cms/locales/en/media.json' with { type: 'json' }
+import englishMessages from '../src/cms/locales/en/messages.json' with { type: 'json' }
 import englishProfile from '../src/cms/locales/en/profile.json' with { type: 'json' }
 import dariDashboard from '../src/cms/locales/prs/dashboard.json' with { type: 'json' }
 import dariMedia from '../src/cms/locales/prs/media.json' with { type: 'json' }
+import dariMessages from '../src/cms/locales/prs/messages.json' with { type: 'json' }
 import dariProfile from '../src/cms/locales/prs/profile.json' with { type: 'json' }
 import pashtoDashboard from '../src/cms/locales/ps/dashboard.json' with { type: 'json' }
 import pashtoMedia from '../src/cms/locales/ps/media.json' with { type: 'json' }
+import pashtoMessages from '../src/cms/locales/ps/messages.json' with { type: 'json' }
 import pashtoProfile from '../src/cms/locales/ps/profile.json' with { type: 'json' }
 import { ALL_CMS_PERMISSIONS, CMS_PERMISSIONS, can, canAccessCmsRoute, normalizeSession } from '../src/cms/auth/permissions.js'
 import { normalizeContentRecord, serializeContentRecord } from '../src/shared/models/content.js'
+import { normalizeMessage, serializeMessageState } from '../src/shared/models/message.js'
 import { isSafeContentUrl } from '../src/shared/security/sanitizeRichText.js'
 import { getUploadKind, validateUploadFile } from '../src/shared/uploads/files.js'
 import { validateContactForm, validatePasswordChange } from '../src/shared/utils/validation.js'
@@ -24,6 +28,17 @@ test('content records expose stable language-neutral and translated fields', () 
   assert.equal(record.translations.prs.title, 'عنوان')
   assert.deepEqual(Object.keys(record.translations), ['prs', 'ps', 'en'])
   assert.equal('savedStatus' in serializeContentRecord(record), false)
+})
+
+test('message records normalize transport fields and read state', () => {
+  const message = normalizeMessage({ id: 7, name: 'A User', subject: 'Consultation', message: 'Hello', created_at: '2026-11-04T08:30:00Z', read_at: null })
+
+  assert.equal(message.id, '7')
+  assert.equal(message.title, 'A User')
+  assert.equal(message.service, 'Consultation')
+  assert.equal(message.body, 'Hello')
+  assert.equal(message.unread, true)
+  assert.deepEqual(serializeMessageState(false), { unread: false })
 })
 
 test('CMS sessions normalize known permissions and enforce route access', () => {
@@ -68,4 +83,9 @@ test('Phase 4 interface labels retain locale parity', () => {
   for (const locale of [pashtoDashboard, englishDashboard]) assert.deepEqual(Object.keys(locale.auth).sort(), Object.keys(dariDashboard.auth).sort())
   for (const locale of [dariMedia, pashtoMedia, englishMedia]) assert.equal(typeof locale.uploadError, 'string')
   for (const locale of [dariProfile, pashtoProfile, englishProfile]) assert.equal(typeof locale.passwordValidation, 'string')
+})
+
+test('message workflow labels retain locale parity', () => {
+  const keys = Object.keys(dariMessages).sort()
+  for (const locale of [pashtoMessages, englishMessages]) assert.deepEqual(Object.keys(locale).sort(), keys)
 })

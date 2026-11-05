@@ -5,19 +5,23 @@
   "description": "Review and manage consultation requests and messages received from the website.",
   "search": "Search messages...",
   "categories": {
-    "all": "Everyone",
+    "all": "All",
     "seen": "Read",
     "unread": "Unread"
   },
   "inbox": "Message box",
   "unread": "Unread",
   "empty": "Your inbox is empty.",
+  "filterEmpty": "There are no messages in this category.",
   "noMatches": "No message was found with this search.",
   "select": "Select a message",
   "selectDescription": "Select a request from the list to view and manage it.",
   "noMessages": "There are no messages yet",
   "noMessagesDescription": "New consultation requests from the website are displayed here.",
   "loading": "Loading messages...",
+  "loadError": "Messages could not be loaded. Please try again.",
+  "retry": "Try again",
+  "actionError": "The message could not be updated. Please try again.",
   "messageCategory": "Request for advice",
   "service": "Service",
   "timeline": "Timing",
@@ -25,5 +29,7 @@
   "markRead": "Read",
   "markUnread": "Unread",
   "delete": "Delete message",
+  "deleteTitle": "Delete this message?",
+  "deleteDescription": "This message will be permanently removed.",
   "reply": "Reply by email"
 }

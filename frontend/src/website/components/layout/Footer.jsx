@@ -21,7 +21,7 @@ function FooterLink({ href, children }) {
   );
 }
 
-function Footer({ content, navigationContent, language, theme, className = "" }) {
+function Footer({ content, navigationContent, language, theme, logo, className = "" }) {
   const navigation = headerNavigation.map((item) => ({
     ...item,
     href: item.href ? localizeHref(item.href, language) : item.href,
@@ -56,7 +56,7 @@ function Footer({ content, navigationContent, language, theme, className = "" })
               className={`rounded-xl border border-border bg-white p-2 shadow-sm dark:border-gray-600 dark:bg-[#1d2a3a] ${focusClasses}`}
             >
               <img
-                src={theme === "dark" ? "/assets/branding/new%20logo%20white.webp" : "/assets/branding/new%20logo.webp"}
+                src={logo || (theme === "dark" ? "/assets/branding/new%20logo%20white.webp" : "/assets/branding/new%20logo.webp")}
                 alt={navigationContent.logoAlt}
                 width="1200"
                 height="432"

@@ -4,18 +4,20 @@ This guide is the single source of truth for the Global Vision architecture, gen
 
 ## Current Status
 
-The public navigation includes dedicated opportunity, tourism, scholarship, magazine, services, and supporting-information entries. The opportunities group includes a localized investment directory and country-specific investment routes. Tourism includes localized Afghanistan and world directories with destination cards and detail routes. The independent `/services` directory presents all service posts as cards. The `/scholarships` directory provides localized country, degree, and funding filters, responsive scholarship cards, and slug-based scholarship detail routes rendered through the shared single-post design. Scholarship records are currently static localized seed data and are not yet connected to the backend.
+The public navigation includes dedicated opportunity, tourism, scholarship, magazine, services, and supporting-information entries. The opportunities group includes a localized investment directory and country-specific investment routes. Tourism includes localized Afghanistan and world directories with destination cards and detail routes. The independent `/services` directory presents all service posts as cards. The `/scholarships` directory provides localized country, degree, and funding filters, responsive scholarship cards, and slug-based scholarship detail routes rendered through the shared single-post design. Static localized records provide the deployment fallback, while published CMS snapshots override supported page and collection content in API mode.
 
-The project is at the frontend foundation stage. React, Vite, Tailwind CSS, brand color tokens, RTL document settings, Dari and Pashto fonts, separate website and CMS source areas, responsive localized `Header` and `Footer` components, and shared UI components for sections, containers, headings, action links, and repeated card patterns are configured. The home page includes responsive hero, opportunity, destination, process, service, testimonial, and consultation sections with Dari and Pashto content. Shared navigation data, matching localized layout translations, pathname-based page selection, slug-based magazine post routes, opportunity category and country-specific opportunity routes, localized service posts, IELTS/TOEFL guides, localized search results, a not-found page, dynamic page metadata, and frontend contact-form validation are implemented. A localized CMS dashboard shell is available at `/dashboard`, with a responsive RTL sidebar, top bar, overview metrics, content status, quick actions, language switching, and theme switching. Frontend-only home, about, contact, magazine, scholarships, opportunities, tourism, and services editors, plus media-library and website-settings screens, are available under their matching `/dashboard/*` routes; backend persistence is not yet connected. CMS route paths are centralized in `src/cms/routes.js`. Recoverable browser drafts are shared across the main editors through `useCmsDraftState`, remain pending until the global Save Changes action is used, and are removed after saving or explicitly discarding navigation. Shared CMS editor primitives own preview actions, tab bars, section headers, field groups, fields, visibility controls, and safe rich-text previews, while focused hooks own tab restoration, collection draft behavior, and save/recovery behavior. The frontend now has normalized multilingual content records, environment-selected mock and API data sources, centralized API/auth/content/upload clients, normalized transport errors, contact and password validation, MIME-and-size upload policies, and CMS session/permission states. These are integration boundaries only: a routing library, Laravel backend, MariaDB integration, real authentication, and persistent server-side CMS editing have not started.
+The project now includes the React frontend and a Laravel 13 application. The frontend provides the localized public website and CMS described below. The backend provides MariaDB-compatible migrations, first-party Sanctum cookie authentication, administrator and super-user role enforcement, password recovery, contact-message persistence and queued notifications, a paginated message inbox, multilingual content CRUD, published editor snapshots, server-side rich-text sanitization, scanned uploads, and an administrator audit log. The dedicated super-user workspace manages administrator identities, email access, passwords, reset delivery, and account removal without exposing website content. In API mode, the CMS editors hydrate and save through versioned snapshots; public content consumes published snapshots with static localized content as its availability fallback. Mock mode remains the frontend default for standalone development.
 
-The frontend includes dependency-free Node tests for localized catalog search, scholarship filtering, CMS route resolution, and new locale namespace parity, plus a static validator for localized internal links, external URL syntax, and public asset references.
+The frontend includes dependency-free Node tests for localized catalog search, scholarship filtering, CMS route resolution, and locale namespace parity, plus static validators for localized internal links, external URL syntax, public asset references, SEO output, and the initial JavaScript budget. Laravel feature tests cover authentication, recovery, authorization, messages, snapshots, uploads, audit history, public snapshots, contact intake, and SPA response status behavior.
+
+The CMS and public website are separate lazy application entries. Public translation content is grouped into Dari, Pashto, and English payloads and loaded only for the active route language; adding a public locale namespace requires registering it in the matching localized-content module. Production builds enforce a 300 kB raw initial-JavaScript budget before route, page, and locale payloads are loaded.
 
 Shared modal keyboard behavior lives in `src/shared/hooks/useModalFocus.js`. Public and CMS dialogs use it to move focus into the dialog, contain Tab navigation, close with Escape, and restore focus to the invoking control. The website and CMS use a visible border-and-shadow keyboard focus treatment without browser outlines or Tailwind rings. Brand fills retain the canonical orange, while the semantic `accent-text` and `admin-brand-text` tokens use a contrast-safe darker orange in light mode and the existing bright orange in dark mode.
 
 The repository currently contains:
 
 - `frontend/`: the React website application.
-- `backend/`: reserved for a future backend and currently empty.
+- `backend/`: Laravel 13 API, Sanctum authentication, policies, migrations, models, resources, uploads, seed configuration, and PHPUnit tests.
 - `AGENTS.md`: repository instructions.
 - `PROJECT_GUIDE.md`: this guide.
 
@@ -78,6 +80,16 @@ Do not describe planned functionality as implemented.
 | tsParticles | Public decorative particle backgrounds | `^3.9.1` |
 | ESLint | Static analysis | `^10.11.0` |
 
+## Installed Backend Packages
+
+| Technology | Purpose | Installed version |
+| --- | --- | --- |
+| Laravel Framework | API, validation, authorization, persistence, and server logic | `13.40.0` |
+| Laravel Sanctum | First-party SPA cookie authentication | `4.3.3` |
+| Laravel Boost | Laravel-aware development guidance and tooling | `2.10.4` |
+| PHPUnit | Backend feature tests | `12.5.43` |
+| Laravel Pint | PHP code formatting | `1.32.1` |
+
 The frontend uses native ES modules through `"type": "module"`.
 
 ## Required and Planned Additions
@@ -91,8 +103,7 @@ Install planned tools only when their feature is actively implemented.
 | React Testing Library | User focused UI and accessibility tests | When automated component testing begins |
 | Playwright | Responsive end to end testing | When critical journeys exist |
 | Prettier | Automated formatting | When a formatting workflow is introduced |
-| Laravel | Required API, validation, authentication, and server logic | When backend work begins |
-| MariaDB | Required persistent application and CMS data | When backend persistence begins |
+| MariaDB server | Production persistence | During deployment; migrations and connection configuration are implemented |
 
 Do not add a dependency when the existing stack can implement the requirement clearly. Every dependency needs an active use case, active maintenance, and no overlap with existing tools.
 
@@ -100,7 +111,7 @@ Do not add a dependency when the existing stack can implement the requirement cl
 
 ```text
 globalvision-website/
-├── backend/                    # Future Laravel backend and API
+├── backend/                    # Laravel API, authentication, persistence, uploads, and tests
 ├── frontend/
 │   ├── public/
 │   │   ├── .htaccess           # Apache fallback for client-side application routes
@@ -164,6 +175,7 @@ Use aliases across source areas and relative imports for nearby files within one
 
 - `main.jsx` imports global CSS, mounts React, and renders `App`.
 - `src/App.jsx` is the application boundary: `/dashboard` and `/dashboard/*` render the CMS, while `/` and all other public routes render the website.
+- `/dashboard/login`, `/dashboard/forgot-password`, and `/dashboard/reset-password` use dedicated full-screen authentication views. Credentials determine whether the authenticated account enters the administrator CMS or the isolated `/dashboard/super` security center.
 - `WebsiteLayout` composes the public `Header`, main content region, and `Footer`; `DashboardLayout` composes the CMS sidebar, top bar, and content region.
 - Route decisions within each application belong in its layout or a dedicated router when routing is implemented.
 - Do not put page markup, content collections, or UI behavior in `main.jsx`.
@@ -217,14 +229,17 @@ Use aliases across source areas and relative imports for nearby files within one
 - Treat `src/shared/services/api/` as the frontend integration layer between React and Laravel. It serves the middleware-like role of isolating transport and backend contracts from presentation files.
 - Keep the base URL, credentials policy, headers, request execution, response parsing, normalized errors, cancellation, and authentication handling in the API service infrastructure.
 - Group endpoint operations into domain service modules such as content, projects, publications, contact, authentication, and CMS services.
+- Keep CMS message operations behind the message data source. The current API contract uses `GET /cms/messages`, `PATCH /cms/messages/:id` with an `unread` boolean, and `DELETE /cms/messages/:id`; Laravel must authenticate, authorize, validate, paginate as records grow, and return normalized message fields.
 - Components and sections consume hooks or service functions; they never call `fetch`, Axios, or Laravel URLs directly.
 - Convert API responses into stable frontend models in service adapters. Backend response changes should normally require edits in the API layer rather than throughout components and sections.
 - Keep display components prop driven so static data, translated content, loading data, and API data use the same component contracts.
 - Provide consistent loading, empty, error, and success states without coupling their presentation to Laravel response shapes.
-- Select the frontend source with `VITE_DATA_SOURCE=mock|api`; mock remains the default until the backend exists. Configure the real API origin with `VITE_API_BASE_URL` and request timeout with `VITE_API_TIMEOUT_MS`.
+- Select the frontend source with `VITE_DATA_SOURCE=mock|api`; mock remains the default for standalone frontend development. Configure the Laravel API origin with `VITE_API_BASE_URL` and request timeout with `VITE_API_TIMEOUT_MS`.
 - Use cookie-based sessions with `credentials: include` and the Laravel `XSRF-TOKEN` cookie. Never store access tokens or passwords in local storage.
 - Normalize unauthenticated, forbidden, validation, timeout, offline, cancellation, and transport failures before they reach UI components.
 - Treat frontend permission checks as presentation controls only. Laravel must independently authenticate and authorize every protected operation.
+- The `super_user` role is isolated from content management and may manage administrator accounts only through current-password-confirmed, rate-limited APIs. Account password replacement and recovery revoke persisted sessions.
+- Production HTML responses use a restrictive Content Security Policy with hashes for generated inline metadata scripts; API responses use `default-src 'none'` and `no-store`.
 
 ### Frontend security and untrusted content
 
@@ -382,6 +397,7 @@ npm run dev
 npm test
 npm run test:links
 npm run test:seo
+npm run test:bundle
 npm run lint
 npm run build
 npm run preview
@@ -439,5 +455,9 @@ When backend or content management work begins:
 - Phase 2 — Safe cleanup and architecture: completed on 2026-11-04. CMS routes were centralized, recoverable Save Changes drafts were standardized across the main editors, opportunities/services/tourism collection state was extracted to a focused hook, the duplicate add/edit collection modal was consolidated, and the unreachable legacy opportunity manager and obsolete reset-event code were removed. Route and locale architecture tests were added. Four representative baseline screenshots remained pixel-identical after the work.
 - Phase 3 — Styling and UI quality: completed on 2026-11-04. Shared page-grid constraints and off-canvas containment removed narrow-mobile CMS clipping, including long localized opportunity and scholarship cards. The required 320, 375, 430, 768, 1024, and 1280 viewport checks passed across RTL/LTR and light/dark samples. Shared modal focus management, semantic keyboard focus feedback, reduced-motion handling for moving language indicators, contrast-safe accent-text tokens, and maintenance-language retention were added without redesigning the interface.
 - Phase 4 — Database, API, and frontend security readiness: completed on 2026-11-04. Stable multilingual content models, centralized credentialed API clients, mock/API source selection, normalized request errors, CMS session and permission states, contact/password validation, MIME-and-size upload policies, progress-ready upload transport, and DOMPurify-backed rich-text rendering were introduced. The frontend remains on the mock source by default; Laravel must provide the documented contracts, authentication, authorization, validation, sanitization, upload inspection, and persistence. The dependency audit's high-severity development-tool findings were resolved through non-breaking updates; six moderate ESLint-chain advisories remain without a non-breaking fix.
-- Phase 5 — SEO, metadata, and indexability: completed on 2026-11-04. Centralized localized metadata, canonicals, hreflang, social previews, structured data, CMS SEO fields, build-time route snapshots, sitemap and robots generation, CMS noindex response headers, and automated validation now cover 258 public language URLs. Full body SSR, real HTTP 404 responses, persisted CMS SEO values, and final production-origin/server configuration remain Laravel or deployment dependencies documented in `SEO_REPORT.md`.
-- Phases 6–8 remain pending explicit approval. Current known limitations include the unsplit application bundle, incomplete messages behavior, mock-only persistence, and absent server-side enforcement. These belong to their approved later phases or backend implementation.
+- Phase 5 — SEO, metadata, and indexability: completed on 2026-11-04. Centralized localized metadata, canonicals, hreflang, social previews, structured data, CMS SEO fields, build-time route snapshots, sitemap and robots generation, CMS noindex response headers, and automated validation cover 258 public language URLs. Laravel now returns real 404 responses from the generated route manifest, and production builds can read published CMS snapshots through `CMS_API_URL`. Full body SSR and final production-origin/search-console configuration remain deployment decisions documented in `SEO_REPORT.md`.
+- Phase 6 — Application delivery performance: completed on 2026-11-04. The CMS and public website now load through separate application entries, public locale records load only for the active language, and production builds enforce a 300 kB raw initial-JavaScript budget. The root entry fell from 325.44 kB raw / 81.15 kB gzip to 5.77 kB raw / 2.68 kB gzip; each public route then loads one localized content payload instead of all three. Route-level pages, the chart-heavy dashboard, and rich-text editing remain deferred chunks.
+- Phase 7 — CMS message workflow: completed on 2026-11-04. A normalized message model, CMS API contract, focused CMS state hook, persistent Laravel source, and standalone mock source power inbox loading, retry, localized search and filters, read/unread mutations, deletion confirmation, reply links, dashboard totals, permission-aware unread badges, queued contact notifications, and audit events.
+- Phase 8 — Laravel persistence and server enforcement: completed on 2026-11-04. Laravel 13 and Sanctum provide first-party cookie sessions, localized CMS sign-in and password recovery, configurable administrator seeding, permission policies, rate-limited contact intake, paginated messages, multilingual content CRUD, canonical rich-text sanitization, constrained uploads, CORS configuration, MariaDB-ready migrations, and focused endpoint tests.
+- Phase 9 — Production readiness and durable CMS publishing: completed on 2026-11-05. All primary editors hydrate and publish versioned server snapshots, collection records feed the public website, uploads support configurable fail-closed ClamAV scanning and managed deletion, queued mail and workers are documented, audit history is visible to administrators, security headers and retention schedules are active, generated route manifests provide real public 404 responses, and Nginx/Supervisor/deployment examples cover the production handoff. External infrastructure activation—database, SMTP, TLS/domain, ClamAV, queue process, scheduler, backups, monitoring, and webmaster submission—must be completed in the target hosting environment.
+- Phase 10 — Account security and super-user control: completed on 2026-11-05. Malan-inspired localized login and password-recovery screens now provide password visibility, persistent-login choice, missing/expired-link handling, and session-revoking resets. An isolated super-user security center manages administrator accounts behind current-password confirmation and rate limits. Strong mixed-case/number password rules, role and mass-assignment isolation, injection-shaped input regression coverage, CSP, cross-origin headers, private API caching, and production dependency auditing extend the security baseline.

@@ -1,11 +1,11 @@
 import { lazy, Suspense } from 'react'
 
 import { isCmsPath } from '@cms/routes.js'
-import WebsiteLayout from '@layout/WebsiteLayout.jsx'
 import ApplicationLoading from '@/shared/components/ApplicationLoading.jsx'
 import { localizeHref, parseLocalizedPathname } from '@website/utils/language.js'
 
 const CmsApp = lazy(() => import('@cms/CmsApp.jsx'))
+const WebsiteApp = lazy(() => import('@website/WebsiteApp.jsx'))
 
 function App() {
   const path = window.location.pathname.replace(/\/$/, '') || '/'
@@ -18,7 +18,7 @@ function App() {
     return null
   }
 
-  return <WebsiteLayout />
+  return <Suspense fallback={<ApplicationLoading />}><WebsiteApp language={route.language} /></Suspense>
 }
 
 export default App

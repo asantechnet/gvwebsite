@@ -5,44 +5,8 @@ import MaintenancePage from '../MaintenancePage.jsx'
 import Header from './Header.jsx'
 import ScrollProgress from './ScrollProgress.jsx'
 import RouteProgress from '@shared/RouteProgress.jsx'
-import dariFooterContent from '@website/locales/prs/footer.json'
-import dariHeaderContent from '@website/locales/prs/header.json'
-import dariHomeContent from '@website/locales/prs/home.json'
-import dariAboutContent from '@website/locales/prs/about.json'
-import dariContactContent from '@website/locales/prs/contact.json'
-import dariMagazineContent from '@website/locales/prs/magazine.json'
-import pashtoFooterContent from '@website/locales/ps/footer.json'
-import pashtoHeaderContent from '@website/locales/ps/header.json'
-import pashtoHomeContent from '@website/locales/ps/home.json'
-import pashtoAboutContent from '@website/locales/ps/about.json'
-import pashtoContactContent from '@website/locales/ps/contact.json'
-import pashtoMagazineContent from '@website/locales/ps/magazine.json'
-import dariScholarshipsContent from '@website/locales/prs/scholarships.json'
-import pashtoScholarshipsContent from '@website/locales/ps/scholarships.json'
-import dariOpportunitiesContent from '@website/locales/prs/opportunities.json'
-import pashtoOpportunitiesContent from '@website/locales/ps/opportunities.json'
-import dariGuidesContent from '@website/locales/prs/guides.json'
-import pashtoGuidesContent from '@website/locales/ps/guides.json'
-import dariServicesContent from '@website/locales/prs/services.json'
-import pashtoServicesContent from '@website/locales/ps/services.json'
-import dariSearchContent from '@website/locales/prs/search.json'
-import pashtoSearchContent from '@website/locales/ps/search.json'
-import dariTourismContent from '@website/locales/prs/tourism.json'
-import pashtoTourismContent from '@website/locales/ps/tourism.json'
-import englishFooterContent from '@website/locales/en/footer.json'
-import englishHeaderContent from '@website/locales/en/header.json'
-import englishHomeContent from '@website/locales/en/home.json'
-import englishAboutContent from '@website/locales/en/about.json'
-import englishContactContent from '@website/locales/en/contact.json'
-import englishMagazineContent from '@website/locales/en/magazine.json'
-import englishScholarshipsContent from '@website/locales/en/scholarships.json'
-import englishOpportunitiesContent from '@website/locales/en/opportunities.json'
-import englishGuidesContent from '@website/locales/en/guides.json'
-import englishServicesContent from '@website/locales/en/services.json'
-import englishSearchContent from '@website/locales/en/search.json'
-import englishTourismContent from '@website/locales/en/tourism.json'
 import { searchCatalog } from '@website/utils/catalog.js'
-import { getLanguageConfig, localizeContentHrefs, localizeHref, parseLocalizedPathname, WEBSITE_LANGUAGE_STORAGE_KEY } from '@website/utils/language.js'
+import { getLanguageConfig, localizeHref, parseLocalizedPathname, WEBSITE_LANGUAGE_STORAGE_KEY } from '@website/utils/language.js'
 import { WebsiteLanguageContext } from '@website/hooks/useWebsiteLanguage.js'
 import { applySeoMetadata, buildStructuredData, getSiteOrigin, toAbsoluteUrl } from '@website/seo/metadata.js'
 
@@ -67,63 +31,14 @@ const AfghanistanTourismPage = lazy(() => import('@pages/AfghanistanTourismPage.
 const WorldTourismPage = lazy(() => import('@pages/WorldTourismPage.jsx'))
 const ServicesPage = lazy(() => import('@pages/ServicesPage.jsx'))
 
-const rawLocalizedContent = {
-  dr: {
-    footer: dariFooterContent,
-    header: dariHeaderContent,
-    home: dariHomeContent,
-    about: dariAboutContent,
-    contact: dariContactContent,
-    magazine: dariMagazineContent,
-    scholarships: dariScholarshipsContent,
-    opportunities: dariOpportunitiesContent,
-    guides: dariGuidesContent,
-    services: dariServicesContent,
-    search: dariSearchContent,
-    tourism: dariTourismContent,
-  },
-  ps: {
-    footer: pashtoFooterContent,
-    header: pashtoHeaderContent,
-    home: pashtoHomeContent,
-    about: pashtoAboutContent,
-    contact: pashtoContactContent,
-    magazine: pashtoMagazineContent,
-    scholarships: pashtoScholarshipsContent,
-    opportunities: pashtoOpportunitiesContent,
-    guides: pashtoGuidesContent,
-    services: pashtoServicesContent,
-    search: pashtoSearchContent,
-    tourism: pashtoTourismContent,
-  },
-  en: {
-    footer: englishFooterContent,
-    header: englishHeaderContent,
-    home: englishHomeContent,
-    about: englishAboutContent,
-    contact: englishContactContent,
-    magazine: englishMagazineContent,
-    scholarships: englishScholarshipsContent,
-    opportunities: englishOpportunitiesContent,
-    guides: englishGuidesContent,
-    services: englishServicesContent,
-    search: englishSearchContent,
-    tourism: englishTourismContent,
-  },
-}
-const localizedContent = Object.fromEntries(
-  Object.entries(rawLocalizedContent).map(([language, content]) => [
-    language,
-    localizeContentHrefs(content, language),
-  ]),
-)
-
 function formatPageTitle(pattern, values) {
   return pattern.replace(/\{(\w+)\}/g, (placeholder, key) => values[key] ?? placeholder)
 }
 
-function WebsiteLayout({ children = null }) {
-  const [maintenanceMode, setMaintenanceMode] = useState(() => window.localStorage.getItem('globalvision-maintenance-mode') === 'true')
+function WebsiteLayout({ children = null, content }) {
+  const siteSettings = content.siteSettings
+  const [localMaintenanceMode, setLocalMaintenanceMode] = useState(() => window.localStorage.getItem('globalvision-maintenance-mode') === 'true')
+  const maintenanceMode = siteSettings?.settings?.maintenanceMode ?? localMaintenanceMode
   const scrollStorageKey = `globalvision-scroll:${window.location.pathname}${window.location.search}`
   const savedScrollPosition = useRef(Number(window.sessionStorage.getItem(scrollStorageKey)))
   const [theme, setTheme] = useState(() => {
@@ -139,6 +54,13 @@ function WebsiteLayout({ children = null }) {
   })
   const language = maintenanceMode ? maintenanceLanguage : parsedRoute.language
   const page = parsedRoute.pagePath
+  const activeLogo = theme === 'dark' ? siteSettings?.branding?.darkLogo : siteSettings?.branding?.lightLogo
+
+  useEffect(() => {
+    if (!siteSettings) return
+    if (siteSettings.branding?.primary) document.documentElement.style.setProperty('--brand-orange', siteSettings.branding.primary)
+    if (siteSettings.branding?.secondary) document.documentElement.style.setProperty('--brand-red', siteSettings.branding.secondary)
+  }, [siteSettings])
 
   useLayoutEffect(() => {
     if (!maintenanceMode) return
@@ -161,7 +83,7 @@ function WebsiteLayout({ children = null }) {
     services: servicesContent,
     search: searchContent,
     tourism: tourismContent,
-  } = localizedContent[language]
+  } = content
   const isBlogPost = page.startsWith('/magazine/post/')
   const postSlug = isBlogPost ? decodeURIComponent(page.slice('/magazine/post/'.length)) : ''
   const selectedPost = magazineContent.news.items.find((post) => post.slug === postSlug)
@@ -340,7 +262,7 @@ function WebsiteLayout({ children = null }) {
   }, [language, page, canonicalPage, currentSeoRecord, seoTitle, currentDescription, currentImage, headerContent.brandName, contactContent.contact.details, isKnownPage, maintenanceMode, selectedPost, service, seoBreadcrumbs])
 
   useEffect(() => {
-    const syncMaintenanceMode = (event) => { if (event.key === 'globalvision-maintenance-mode') setMaintenanceMode(event.newValue === 'true') }
+    const syncMaintenanceMode = (event) => { if (event.key === 'globalvision-maintenance-mode') setLocalMaintenanceMode(event.newValue === 'true') }
     window.addEventListener('storage', syncMaintenanceMode)
     return () => window.removeEventListener('storage', syncMaintenanceMode)
   }, [])
@@ -364,12 +286,13 @@ function WebsiteLayout({ children = null }) {
           language={language}
           theme={theme}
           onLanguageChange={(nextLanguage) => window.location.assign(localizeHref(`${page}${window.location.search}${window.location.hash}`, nextLanguage))}
+          logo={activeLogo}
           onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))}
         />
         <main key={language} className="flex-1 pt-8 md:pt-16 xl:pt-14">
           {children ?? (page === '/' ? <HomePage content={homeContent} /> : page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} language={language} /> : selectedScholarship ? <ScholarshipPostPage scholarship={selectedScholarship} content={scholarshipsContent} postShell={opportunitiesContent.migration.postDetail} /> : page === '/scholarships' ? <ScholarshipsPage key={language} content={scholarshipsContent} language={language} /> : page === '/search' ? <SearchPage content={searchContent} query={searchQuery} results={searchResults} /> : page === '/services' ? <ServicesPage content={servicesContent} sidebarContent={opportunitiesContent.migration.postDetail} /> : tourismCard ? <TourismPage content={tourismDetail} card={tourismCard} /> : tourism?.id === 'afghanistan' ? <AfghanistanTourismPage content={tourism} sidebarContent={opportunitiesContent.migration.postDetail} /> : tourism?.id === 'world' ? <WorldTourismPage content={tourism} sidebarContent={opportunitiesContent.migration.postDetail} /> : service ? <ServicePostPage service={service} content={servicesContent} postShell={opportunitiesContent.migration.postDetail} /> : contextualOpportunityCountry && contextualOpportunity ? <OpportunityCountryPostPage country={contextualOpportunityCountry} opportunity={contextualOpportunity} type={contextualOpportunityMatch[1]} /> : examGuide ? <GuidePostPage guide={examGuide} content={guidesContent} type="exam" postShell={opportunitiesContent.exams.postDetail} /> : opportunitySlug === 'study' ? <StudyOpportunityPage content={opportunitiesContent.study.postDetail} countries={guidesContent.countries} title={language === 'en' ? 'Choose your preferred country' : language === 'ps' ? 'خپل مطلوب هېواد وټاکئ' : 'کشور مورد نظرتان را انتخاب کنید'} /> : opportunitySlug === 'work' ? <WorkOpportunityPage content={opportunitiesContent.work.postDetail} countries={guidesContent.countries} title={opportunitiesContent.work.post.category} /> : opportunitySlug === 'migration' ? <MigrationOpportunityPage content={opportunitiesContent.migration.postDetail} countries={guidesContent.countries} title={opportunitiesContent.migration.post.category} /> : opportunitySlug === 'investment' ? <InvestmentOpportunityPage content={opportunitiesContent.investment.postDetail} countries={guidesContent.countries} title={opportunitiesContent.investment.post.category} /> : isBlogPost && selectedPost ? <BlogPostPage post={selectedPost} content={magazineContent.postDetail} relatedPosts={magazineContent.news.items.filter((relatedPost) => relatedPost.slug !== selectedPost.slug && relatedPost.category === selectedPost.category).slice(0, 5)} /> : page === '/magazine' ? <MagazinePage content={magazineContent} language={language} /> : <NotFoundPage content={searchContent} />)}
         </main>
-        <Footer content={footerContent} navigationContent={headerContent} language={language} theme={theme} />
+        <Footer content={footerContent} navigationContent={headerContent} language={language} theme={theme} logo={activeLogo} />
       </div>
     </WebsiteLanguageContext.Provider></Suspense>
   )

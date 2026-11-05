@@ -5,6 +5,8 @@ import PageContainer from '@cms/components/PageContainer.jsx'
 import PageHeading from '@cms/components/PageHeading.jsx'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import { createLocalUpload, revokeLocalUpload } from '@/shared/uploads/files.js'
+import { removeUpload, uploadFile } from '@/shared/services/api/uploads.js'
+import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 
 const seedMedia = [
   ['/assets/images/home/hero-globe.webp', 'hero-globe.webp', 'image'],
@@ -44,7 +46,7 @@ function MediaPreviewModal({ item, content, onClose }) {
 
 function MediaLibraryPage({ content }) {
   const inputRef = useRef(null)
-  const [items, setItems] = useState(seedMedia)
+  const [items, setItems] = useCmsDraftState('media', seedMedia)
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
   const [selectedIds, setSelectedIds] = useState(() => new Set())
@@ -55,20 +57,29 @@ function MediaLibraryPage({ content }) {
 
   useEffect(() => () => { items.filter((item) => item.local).forEach(revokeLocalUpload) }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const upload = (event) => {
+  const upload = async (event) => {
     const files = [...(event.target.files || [])]
     event.target.value = ''
     const prepared = files.map((file) => createLocalUpload(file))
     const accepted = prepared.filter((item) => item.valid)
     setUploadError(accepted.length === prepared.length ? '' : content.uploadError)
-    const uploaded = accepted.map((item) => { const type = item.kind === 'document' ? 'file' : item.kind || getMediaType(item.name); return { id: `local-${crypto.randomUUID()}`, name: item.name, url: item.previewUrl, size: item.size, type, meta: `${formatBytes(item.size)} · ${content[type] || content.file}`, local: true } })
-    setItems((current) => [...uploaded, ...current])
+    try {
+      const uploaded = await Promise.all(accepted.map(async (item) => {
+        const result = await uploadFile(item.file, { metadata: { kind: item.kind } })
+        revokeLocalUpload(item)
+        const type = result.kind === 'document' ? 'file' : result.kind || getMediaType(result.name)
+        return { id: result.path, name: result.name, url: result.url, size: result.size, type, meta: `${formatBytes(result.size)} · ${content[type] || content.file}`, local: false }
+      }))
+      setItems((current) => [...uploaded, ...current])
+    } catch (error) { accepted.forEach(revokeLocalUpload); setUploadError(error.message) }
   }
   const toggleSelection = (id) => setSelectedIds((current) => { const next = new Set(current); if (next.has(id)) next.delete(id); else next.add(id); return next })
   const toggleAll = () => setSelectedIds((current) => { const next = new Set(current); filtered.forEach(({ id }) => { if (allVisibleSelected) next.delete(id); else next.add(id) }); return next })
   const remove = async (ids) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: ids.length === 1 ? content.deleteTitle : content.bulkDeleteTitle.replace('{count}', ids.length), description: content.deleteDescription })
     if (!confirmed) return
+    const removable = items.filter((item) => ids.includes(item.id) && !String(item.id).startsWith('seed-'))
+    try { await Promise.all(removable.map((item) => removeUpload(item.id))) } catch (error) { setUploadError(error.message); return }
     setItems((current) => { current.filter((item) => ids.includes(item.id) && item.local).forEach(revokeLocalUpload); return current.filter((item) => !ids.includes(item.id)) })
     setSelectedIds((current) => { const next = new Set(current); ids.forEach((id) => next.delete(id)); return next })
     if (preview && ids.includes(preview.id)) setPreview(null)

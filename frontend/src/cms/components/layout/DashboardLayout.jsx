@@ -67,8 +67,10 @@ import pashtoSettingsContent from '@cms/locales/ps/settings.json'
 import englishSettingsContent from '@cms/locales/en/settings.json'
 import { getCmsRouteKey } from '@cms/routes.js'
 import useAuth from '@cms/auth/useAuth.js'
-import { canAccessCmsRoute } from '@cms/auth/permissions.js'
+import { canAccessCmsRoute, CMS_PERMISSIONS } from '@cms/auth/permissions.js'
+import useMessages from '@cms/hooks/useMessages.js'
 import ApplicationLoading from '@/shared/components/ApplicationLoading.jsx'
+import AuthPage from '@cms/components/pages/AuthPage.jsx'
 
 const DashboardPage = lazy(() => import('@cms/components/pages/DashboardPage.jsx'))
 const HomePage = lazy(() => import('@cms/components/pages/HomePage.jsx'))
@@ -81,6 +83,7 @@ const MessagesPage = lazy(() => import('@cms/components/pages/MessagesPage.jsx')
 const ProfilePage = lazy(() => import('@cms/components/pages/ProfilePage.jsx'))
 const MediaLibraryPage = lazy(() => import('@cms/components/pages/MediaLibraryPage.jsx'))
 const SettingsPage = lazy(() => import('@cms/components/pages/SettingsPage.jsx'))
+const SuperUserPage = lazy(() => import('@cms/components/pages/SuperUserPage.jsx'))
 
 function DashboardLayout() {
   const auth = useAuth()
@@ -107,7 +110,20 @@ function DashboardLayout() {
   const servicesContent = select(dariServicesContent, pashtoServicesContent, englishServicesContent)
   const mediaContent = select(dariMediaContent, pashtoMediaContent, englishMediaContent)
   const settingsContent = select(dariSettingsContent, pashtoSettingsContent, englishSettingsContent)
+  const canManageMessages = auth.status === 'authenticated' && auth.can(CMS_PERMISSIONS.MANAGE_MESSAGES)
+  const messageState = useMessages(canManageMessages)
   const serviceSources = { prs: dariServicesContent.services, ps: pashtoServicesContent.services, en: englishServicesContent.services }
+  const opportunitySources = { prs: dariOpportunitiesContent, ps: pashtoOpportunitiesContent, en: englishOpportunitiesContent }
+  const localizedOpportunities = Object.fromEntries(Object.entries(opportunitiesContent).map(([type, section]) => [type, !section?.post ? section : {
+    ...section,
+    post: {
+      ...section.post,
+      translations: Object.fromEntries(Object.entries(opportunitySources).map(([locale, source]) => {
+        const localized = source[type]?.post || {}
+        return [locale, { title: localized.title || localized.category || '', excerpt: localized.description || '', content: localized.content || '', tags: localized.tags || [], seoTitle: localized.seoTitle || localized.title || '', metaDescription: localized.metaDescription || localized.description || '', imageAlt: localized.imageAlt || '' }]
+      })),
+    },
+  }]))
   const localizedServices = servicesContent.services.map((service) => ({
     ...service,
     translations: Object.fromEntries(Object.entries(serviceSources).map(([locale, records]) => {
@@ -115,7 +131,7 @@ function DashboardLayout() {
       return [locale, { title: localized.title || '', excerpt: localized.description || '', content: localized.content || '', tags: localized.tags || [], seoTitle: localized.seoTitle || localized.title || '', metaDescription: localized.metaDescription || localized.description || '', imageAlt: localized.imageAlt || '' }]
     })),
   }))
-  const counts = { posts: dariMagazineContent.news.items.length, scholarships: dariScholarshipsContent.items.length, countries: dariGuidesContent.countries.length, services: dariServicesContent.services.length, guides: dariGuidesContent.countries.length + dariGuidesContent.exams.length, messages: 0 }
+  const counts = { posts: dariMagazineContent.news.items.length, scholarships: dariScholarshipsContent.items.length, countries: dariGuidesContent.countries.length, services: dariServicesContent.services.length, guides: dariGuidesContent.countries.length + dariGuidesContent.exams.length, messages: messageState.records.length }
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
@@ -144,8 +160,16 @@ function DashboardLayout() {
     }
   }, [sidebarOpen])
 
+  useEffect(() => {
+    if (auth.status !== 'authenticated') return
+    const isAuthenticationPath = ['/dashboard/login', '/dashboard/forgot-password', '/dashboard/reset-password'].includes(window.location.pathname)
+    if (auth.session.user.role === 'super_user' && window.location.pathname !== '/dashboard/super') window.history.replaceState(window.history.state, '', '/dashboard/super')
+    else if (auth.session.user.role !== 'super_user' && isAuthenticationPath) window.history.replaceState(window.history.state, '', '/dashboard')
+  }, [auth.session, auth.status])
+
   const toggleSidebar = () => setSidebarCollapsed((current) => { window.localStorage.setItem('globalvision-cms-sidebar-collapsed', String(!current)); return !current })
-  const routeKey = getCmsRouteKey(window.location.pathname)
+  const authPath = ['/dashboard/login', '/dashboard/forgot-password', '/dashboard/reset-password'].includes(window.location.pathname)
+  const routeKey = authPath && auth.status === 'authenticated' ? 'overview' : getCmsRouteKey(window.location.pathname)
   const routePages = {
     overview: <DashboardPage content={content} counts={counts} />,
     home: <HomePage content={homeEditorContent} initialTranslations={{ prs: dariHomeContent, ps: pashtoHomeContent, en: englishHomeContent }} />,
@@ -153,22 +177,23 @@ function DashboardLayout() {
     contact: <ContactPage key={language} content={contactEditorContent} initialTranslations={{ prs: dariContactContent, ps: pashtoContactContent, en: englishContactContent }} />,
     magazine: <MagazinePage key={language} content={magazineEditorContent} initialTranslations={{ prs: dariMagazineContent, ps: pashtoMagazineContent, en: englishMagazineContent }} />,
     scholarships: <ScholarshipsPage key={language} content={scholarshipsEditorContent} initialTranslations={{ prs: dariScholarshipsContent, ps: pashtoScholarshipsContent, en: englishScholarshipsContent }} />,
-    opportunities: <OpportunitiesPage key={language} content={content} opportunities={opportunitiesContent} exams={guidesContent.exams} />,
+    opportunities: <OpportunitiesPage key={language} content={content} opportunities={localizedOpportunities} exams={guidesContent.exams} />,
     tourism: <OpportunitiesPage key={language} content={content} tourism={tourismContent} />,
     services: <OpportunitiesPage key={language} content={content} services={localizedServices} />,
-    messages: <MessagesPage content={{ ...messagesContent, dashboard: content.overview }} language={language} />,
+    messages: <MessagesPage content={{ ...messagesContent, dashboard: content.overview }} language={language} messageState={messageState} />,
     media: <MediaLibraryPage key={language} content={mediaContent} />,
     settings: <SettingsPage key={language} content={settingsContent} language={language} />,
     profile: <ProfilePage content={profileContent} theme={theme} />,
   }
   const accessLabels = content.auth || {}
+  if (auth.status === 'unauthenticated') return <div className="cms-root" data-theme={theme} dir={language === 'en' ? 'ltr' : 'rtl'}><AuthPage auth={auth} content={accessLabels} /></div>
+  if (auth.status === 'authenticated' && auth.session.user.role === 'super_user') return <Suspense fallback={<ApplicationLoading />}><SuperUserPage auth={auth} content={content} /></Suspense>
+
   const activePage = auth.status === 'loading'
     ? <CmsAccessState title={accessLabels.loading || 'Loading account…'} />
     : auth.status === 'error'
       ? <CmsAccessState title={accessLabels.error || 'The account could not be loaded.'} action={accessLabels.retry || 'Retry'} onAction={auth.retry} />
-      : auth.status === 'unauthenticated'
-        ? <CmsAccessState title={accessLabels.unauthenticated || 'Your session has expired.'} />
-        : !canAccessCmsRoute(auth.session, routeKey)
+      : !canAccessCmsRoute(auth.session, routeKey)
           ? <CmsAccessState title={accessLabels.forbidden || 'You do not have access to this page.'} />
           : routePages[routeKey] || <PlaceholderPage content={content} pageKey={window.location.pathname.split('/')[2]} />
   const canAccess = (key) => canAccessCmsRoute(auth.session, key)
@@ -177,7 +202,7 @@ function DashboardLayout() {
     <a href="#dashboard-content" className="fixed start-3 top-3 z-[70] -translate-y-20 rounded-xl bg-admin-heading px-4 py-3 text-white transition-transform focus:translate-y-0">{content.overview}</a>
     <DashboardSidebar content={content} theme={theme} open={sidebarOpen} collapsed={sidebarCollapsed} canAccess={canAccess} onCollapseToggle={toggleSidebar} onClose={() => setSidebarOpen(false)} onLogout={auth.logout} />
     <div className={`admin-shell min-h-screen min-w-0 max-w-full transition-[padding] duration-250 rtl:lg:pr-(--sidebar-width) ltr:lg:pl-(--sidebar-width) ${sidebarCollapsed ? 'rtl:lg:pr-21 ltr:lg:pl-21' : ''}`}>
-      <DashboardTopbar content={content.topbar} searchItems={content.groups.flatMap((group) => group.items)} language={language} theme={theme} onMenuOpen={() => setSidebarOpen(true)} onThemeToggle={() => setTheme((current) => current === 'light' ? 'dark' : 'light')} onLanguageChange={setLanguage} />
+      <DashboardTopbar content={content.topbar} searchItems={content.groups.flatMap((group) => group.items)} language={language} theme={theme} unreadCount={messageState.unreadCount} canAccessMessages={canManageMessages} onMenuOpen={() => setSidebarOpen(true)} onThemeToggle={() => setTheme((current) => current === 'light' ? 'dark' : 'light')} onLanguageChange={setLanguage} />
       <main id="dashboard-content" className="min-h-[calc(100vh-5rem)] px-4 pt-6 pb-28 sm:px-8 sm:pt-8"><Suspense fallback={<ApplicationLoading contained />}>{activePage}</Suspense></main><UnsavedChangesBar sidebarCollapsed={sidebarCollapsed} />
     </div>
   </div></DeleteConfirmation>

@@ -2,6 +2,9 @@
   "brand": "Global Vision",
   "documentTitle": "Managing the Global Vision website",
   "role": "Website manager",
+  "superUser": {
+    "eyebrow": "Account security center", "title": "Email and password access", "description": "Create administrator accounts and recover credentials. This workspace has no access to website content.", "refresh": "Refresh", "create": "Create administrator", "owners": "Security owners", "administrators": "Administrators", "loading": "Loading accounts…", "you": "You", "owner": "Super user", "administrator": "Administrator", "edit": "Edit account", "reset": "Send reset link", "setPassword": "Set password", "delete": "Delete account", "close": "Close", "createDescription": "Create credentials for a website administrator.", "name": "Account name", "email": "Email address", "password": "Password", "confirmPassword": "Confirm password", "currentPassword": "Your current super-user password", "deleteWarning": "This permanently removes the administrator and revokes all active sessions.", "cancel": "Cancel", "confirm": "Confirm action", "wait": "Please wait…", "showPassword": "Show password", "hidePassword": "Hide password", "actions": { "create": "Create administrator", "edit": "Edit account", "reset": "Send password reset", "password": "Set a new password", "delete": "Delete administrator" }
+  },
   "createService": "Create new service",
   "overview": "Overview",
   "expand": "Open the sidebar",
@@ -240,7 +243,19 @@
     "error": "The account could not be loaded.",
     "retry": "Retry",
     "unauthenticated": "Your session has expired. Sign in again to continue.",
+    "signIn": "Sign in",
+    "signingIn": "Signing in…",
+    "email": "Email address",
+    "password": "Password",
+    "invalid": "The email or password is incorrect.",
+    "forgotPassword": "Forgot password?",
+    "resetPassword": "Reset password",
+    "confirmPassword": "Confirm password",
+    "sendReset": "Send reset link",
+    "resetSent": "If an account matches that email, a reset link has been sent.",
+    "backToLogin": "Back to sign in",
     "forbidden": "You do not have permission to view this page."
+    ,"remember": "Keep me signed in", "secureAccess": "Secure access", "welcome": "Welcome back to your CMS.", "protectedAccess": "Protected administrator access", "contentWorkspace": "CMS-powered website content", "responsiveWorkspace": "Responsive publishing workspace", "backToWebsite": "Back to website", "recovery": "Account recovery", "forgotDescription": "Enter your account email and we will send a secure reset link.", "sending": "Sending…", "resetting": "Resetting…", "choosePassword": "Choose a new password", "newPassword": "New password", "passwordRules": "Use at least 12 characters with uppercase and lowercase letters and numbers.", "resetLinkRequired": "This reset link is incomplete or expired.", "requestNewLink": "Request a new link", "resetComplete": "Password reset", "resetCompleteDescription": "Your new password is ready. Previously active sessions have been signed out.", "showPassword": "Show password", "hidePassword": "Hide password"
   },
   "logout": "Departure"
 }

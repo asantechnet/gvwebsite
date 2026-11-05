@@ -7,6 +7,14 @@ export function announceCmsDraftChange() {
   window.dispatchEvent(new Event(CMS_DRAFT_DIRTY_EVENT))
 }
 
+export function requestCmsSave() {
+  return new Promise((resolve, reject) => {
+    const detail = { handled: false, resolve, reject }
+    window.dispatchEvent(new CustomEvent(CMS_CHANGES_SAVED_EVENT, { detail }))
+    if (!detail.handled) resolve()
+  })
+}
+
 export function getCmsDraftStorageKey(scope) {
   return `${CMS_DRAFT_STORAGE_PREFIX}${scope}`
 }

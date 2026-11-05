@@ -94,6 +94,7 @@ function Header({
   language,
   onThemeToggle,
   onLanguageChange,
+  logo,
   className = "",
 }) {
   const navigation = headerNavigation.map((item) => ({
@@ -194,7 +195,7 @@ function Header({
             className={`m-0 shrink-0 rounded-2xl border border-transparent p-0 transition-colors ${noFocusOutline}`}
           >
             <img
-              src={theme === "dark" ? "/assets/branding/new%20logo%20white.webp" : "/assets/branding/new%20logo.webp"}
+              src={logo || (theme === "dark" ? "/assets/branding/new%20logo%20white.webp" : "/assets/branding/new%20logo.webp")}
               alt={content.logoAlt}
               width="1431"
               height="974"
@@ -338,7 +339,7 @@ function Header({
             className={`flex justify-start ${noFocusOutline}`}
           >
             <img
-              src={theme === "dark" ? "/assets/branding/new%20logo%20white.webp" : "/assets/branding/new%20logo.webp"}
+              src={logo || (theme === "dark" ? "/assets/branding/new%20logo%20white.webp" : "/assets/branding/new%20logo.webp")}
               alt={content.logoAlt}
               width="1431"
               height="974"

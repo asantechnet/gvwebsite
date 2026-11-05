@@ -11,7 +11,7 @@ function removeSavedStatus(item) {
   return committed
 }
 
-function createInitialDraft({ isServices, isTourism, services, tourism }) {
+function createInitialDraft({ isServices, isTourism, services, tourism, opportunities, exams }) {
   if (isServices) return services || []
   if (isTourism) {
     return Object.entries(tourism || {}).flatMap(([type, section]) => section.cards.map((card) => ({
@@ -24,7 +24,17 @@ function createInitialDraft({ isServices, isTourism, services, tourism }) {
       status: 'published',
     })))
   }
-  return {}
+  const records = opportunityKeys.flatMap((key) => opportunities?.[key]?.post ? [{
+    ...opportunities[key].post,
+    id: key,
+    slug: opportunities[key].post.slug || key,
+    type: key,
+    href: `/opportunities/${key}`,
+    status: 'published',
+  }] : [])
+  const ielts = exams?.find((exam) => exam.slug === 'ielts')
+  if (ielts) records.push({ ...ielts, id: 'ielts', type: 'exams', title: ielts.name, description: ielts.summary, href: '/opportunities/exams/ielts', status: 'published' })
+  return records
 }
 
 function commitDraft(draft) {
@@ -38,7 +48,7 @@ function useManagedCollection({ pageKey, label, services, tourism, opportunities
   const isTourism = Boolean(tourism)
   const [draft, setDraft] = useCmsDraftState(
     `collection:${pageKey}`,
-    () => createInitialDraft({ isServices, isTourism, services, tourism }),
+    () => createInitialDraft({ isServices, isTourism, services, tourism, opportunities, exams }),
     { commit: commitDraft },
   )
 
@@ -54,65 +64,42 @@ function useManagedCollection({ pageKey, label, services, tourism, opportunities
     }
     if (isTourism) return draft.map(normalizeContentRecord)
 
-    const opportunityCards = opportunityKeys.flatMap((key) => opportunities?.[key]?.post ? [{
-      ...opportunities[key].post,
-      id: key,
-      href: `/opportunities/${key}`,
-      status: draft[key]?.status || 'published',
-      savedStatus: draft[key]?.savedStatus,
-    }] : [])
-    const ielts = exams?.find((exam) => exam.slug === 'ielts')
-    if (ielts) {
-      opportunityCards.push({
-        title: ielts.name,
-        description: ielts.summary,
-        category: ielts.category,
-        image: ielts.image || '/assets/images/destinations/france.webp',
-        href: '/opportunities/exams/ielts',
-        id: 'ielts',
-        status: draft.ielts?.status || 'published',
-        savedStatus: draft.ielts?.savedStatus,
-      })
-    }
-    return opportunityCards.map(normalizeContentRecord)
-  }, [draft, exams, isServices, isTourism, label, opportunities])
+    return draft.map(normalizeContentRecord)
+  }, [draft, isServices, isTourism, label])
 
   const toggleStatus = (card) => {
     setDraft((current) => {
       if (Array.isArray(current)) {
-        const identityKey = isServices ? 'slug' : 'id'
-        const identity = isServices ? card.slug : card.id
-        return current.map((item) => item[identityKey] === identity ? {
+        return current.map((item) => item.id === card.id || item.slug === card.slug ? {
           ...item,
           status: item.status === 'draft' ? 'published' : 'draft',
           savedStatus: item.savedStatus ?? item.status,
         } : item)
       }
-      return {
-        ...current,
-        [card.id]: {
-          status: card.status === 'draft' ? 'published' : 'draft',
-          savedStatus: current[card.id]?.savedStatus ?? card.status,
-        },
-      }
+      return current
     })
   }
 
   const savePost = (savedPost, activeType) => {
-    if (!isServices && !isTourism) return
     setDraft((current) => {
       if (isServices) {
         return current.some((service) => service.slug === savedPost.slug)
           ? current.map((service) => service.slug === savedPost.slug ? { ...service, ...savedPost } : service)
           : [...current, savedPost]
       }
-      return current.some((item) => item.id === savedPost.id)
+      if (isTourism) return current.some((item) => item.id === savedPost.id)
         ? current.map((item) => item.id === savedPost.id ? { ...item, ...savedPost, title: savedPost.title || item.title } : item)
         : [...current, { ...savedPost, id: `${activeType}:${savedPost.slug}`, type: activeType, title: savedPost.title, href: `/tourism/${activeType}/${savedPost.slug}` }]
+      const identity = savedPost.id || activeType
+      return current.some((item) => item.id === identity)
+        ? current.map((item) => item.id === identity ? { ...item, ...savedPost, id: identity, type: activeType, href: `/opportunities/${activeType}` } : item)
+        : [...current, { ...savedPost, id: identity, type: activeType, href: `/opportunities/${activeType}/${savedPost.slug}` }]
     })
   }
 
-  return { cards, isServices, isTourism, savePost, toggleStatus }
+  const removePost = (card) => setDraft((current) => current.filter((item) => item.id !== card.id && item.slug !== card.slug))
+
+  return { cards, isServices, isTourism, removePost, savePost, toggleStatus }
 }
 
 export default useManagedCollection

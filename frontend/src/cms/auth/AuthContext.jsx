@@ -33,10 +33,28 @@ export function AuthProvider({ children }) {
     ...state,
     can: (permission) => hasPermission(state.session, permission),
     retry: loadSession,
+    async login(credentials) {
+      setState({ session: null, status: 'loading', error: null })
+      try {
+        const session = await dataSource.auth.login(credentials)
+        setState({ session, status: 'authenticated', error: null })
+        return session
+      } catch (error) {
+        setState({ session: null, status: 'unauthenticated', error })
+        throw error
+      }
+    },
     async logout() {
       await dataSource.auth.logout()
       if (dataSource.mode === 'api') setState({ session: null, status: 'unauthenticated', error: null })
     },
+    async changePassword(values) {
+      const response = await dataSource.auth.changePassword(values)
+      setState({ session: null, status: 'unauthenticated', error: null })
+      return response
+    },
+    forgotPassword: (values) => dataSource.auth.forgotPassword(values),
+    resetPassword: (values) => dataSource.auth.resetPassword(values),
   }), [loadSession, state])
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

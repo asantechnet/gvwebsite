@@ -58,6 +58,25 @@
     "maintenance": "Website under development",
     "maintenanceDescription": "Temporarily hide the public website while administrators continue working."
   },
+  "audit": {
+    "title": "Recent activity",
+    "description": "Security and content changes recorded by the server.",
+    "loading": "Loading recent activity…",
+    "error": "Recent activity could not be loaded.",
+    "empty": "No activity has been recorded yet.",
+    "refresh": "Refresh recent activity",
+    "systemActor": "System",
+    "actions": {
+      "auth.login": "Administrator signed in",
+      "auth.password_changed": "Password changed",
+      "message.marked_read": "Message marked as read",
+      "message.marked_unread": "Message marked as unread",
+      "message.deleted": "Message deleted",
+      "site_snapshot.updated": "Website content saved",
+      "media.uploaded": "Media uploaded",
+      "media.deleted": "Media deleted"
+    }
+  },
   "defaults": {
     "seoDescription": "Global Vision provides educational consulting, scholarship guidance, and international opportunity services."
   }

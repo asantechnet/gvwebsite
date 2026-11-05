@@ -11,6 +11,7 @@ const languageDetails = {
   en: { htmlLang: 'en', direction: 'ltr', hreflang: 'en', ogLocale: 'en_US' },
 }
 const siteOrigin = (process.env.VITE_SITE_URL || process.env.SITE_URL || 'https://globalvision.af').replace(/\/$/, '')
+const cmsApiUrl = (process.env.CMS_API_URL || '').replace(/\/$/, '')
 const logo = `${siteOrigin}/assets/branding/new%20logo.webp`
 
 const readJson = async (language, name) => JSON.parse(await readFile(path.join(frontendRoot, 'src/website/locales', localeRoots[language], `${name}.json`), 'utf8'))
@@ -19,10 +20,36 @@ const absolute = (value) => value ? new URL(value, `${siteOrigin}/`).href : logo
 const localizedUrl = (language, route) => `${siteOrigin}/${language}${route === '/' ? '' : route}`
 const format = (pattern, values) => pattern.replace(/\{(\w+)\}/g, (token, key) => values[key] ?? token)
 
+const snapshotPromise = cmsApiUrl
+  ? fetch(`${cmsApiUrl}/site/snapshots`, { headers: { Accept: 'application/json' } })
+      .then((response) => response.ok ? response.json() : Promise.reject(new Error(`Snapshot API returned ${response.status}`)))
+      .then((payload) => new Map((payload.data || []).map((snapshot) => [snapshot.key, snapshot.payload])))
+  : Promise.resolve(new Map())
+
+const localizedRecords = (records, locale) => (records || [])
+  .filter((record) => record.status !== 'draft' && record.translations?.[locale])
+  .map((record) => ({ ...record, ...record.translations[locale], description: record.translations[locale].excerpt || record.description || '' }))
+
 async function getRoutes(language) {
-  const [header, home, about, contact, magazine, scholarships, opportunities, guides, services, search, tourism] = await Promise.all(
+  let [header, home, about, contact, magazine, scholarships, opportunities, guides, services, search, tourism] = await Promise.all(
     ['header', 'home', 'about', 'contact', 'magazine', 'scholarships', 'opportunities', 'guides', 'services', 'search', 'tourism'].map((name) => readJson(language, name)),
   )
+  const snapshots = await snapshotPromise
+  const locale = localeRoots[language]
+  home = snapshots.get('home')?.[locale] || home
+  about = snapshots.get('about')?.[locale] || about
+  contact = snapshots.get('contact')?.[locale] || contact
+  magazine = snapshots.get('magazine')?.[locale] || magazine
+  scholarships = snapshots.get('scholarships')?.[locale] || scholarships
+  const savedServices = localizedRecords(snapshots.get('collection:services'), locale)
+  if (savedServices.length) services = { ...services, services: savedServices }
+  for (const record of localizedRecords(snapshots.get('collection:opportunities'), locale)) {
+    if (opportunities[record.type]?.post) opportunities[record.type].post = { ...opportunities[record.type].post, ...record }
+  }
+  for (const type of Object.keys(tourism)) {
+    const records = localizedRecords(snapshots.get('collection:tourism'), locale).filter((record) => record.type === type)
+    if (records.length) tourism[type].cards = records.map((record) => ({ ...record, name: record.title }))
+  }
   const routes = [
     { route: '/', title: header.navigation.home, description: home.hero.description },
     { route: '/about', title: header.navigation.about, description: about.introduction.description },
@@ -140,6 +167,7 @@ Sitemap: ${siteOrigin}/sitemap.xml
   await Promise.all([
     writeFile(path.join(distRoot, 'sitemap.xml'), sitemap),
     writeFile(path.join(distRoot, 'robots.txt'), robots),
+    writeFile(path.join(distRoot, 'route-manifest.json'), JSON.stringify([...new Set(sitemapEntries.map(({ language, route }) => `/${language}${route === '/' ? '' : route}`))].sort(), null, 2)),
   ])
   console.log(`Generated SEO snapshots for ${sitemapEntries.length} localized URLs using ${siteOrigin}`)
 }
