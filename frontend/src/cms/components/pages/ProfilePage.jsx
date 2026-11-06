@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Camera,
   KeyRound,
   Laptop,
   Mail,
@@ -10,17 +9,13 @@ import {
   X,
 } from "lucide-react";
 
-import Breadcrumbs from "@cms/components/Breadcrumbs.jsx";
 import ContentLanguageSwitcher from "@cms/components/ContentLanguageSwitcher.jsx";
+import PageHeading from "@cms/components/PageHeading.jsx";
 import PasswordInput from "@cms/components/PasswordInput.jsx";
 import useAuth from "@cms/auth/useAuth.js";
 import useCmsDraftState from "@cms/hooks/useCmsDraftState.js";
+import { announceCmsDraftChange } from "@cms/utils/draftEvents.js";
 import useModalFocus from "@/shared/hooks/useModalFocus.js";
-import { uploadFile } from "@/shared/services/api/uploads.js";
-import {
-  createLocalUpload,
-  revokeLocalUpload,
-} from "@/shared/uploads/files.js";
 import { validatePasswordChange } from "@/shared/utils/validation.js";
 
 const defaultCompanyNames = {
@@ -48,17 +43,13 @@ function ProfilePage({ content, theme }) {
       ? document.documentElement.lang
       : "prs",
   );
-  const [companyNames, setCompanyNames, { recovered }] = useCmsDraftState(
+  const [companyNames, setCompanyNames] = useCmsDraftState(
     "profile",
     readCompanyNames,
   );
   const [profileImage, setProfileImage] = useState(
     () => window.localStorage.getItem("globalvision-profile-image") || "",
   );
-  const [imageError, setImageError] = useState("");
-  const [uploadingImage, setUploadingImage] = useState(false);
-  const imageInputRef = useRef(null);
-  const [dirty, setDirty] = useState(recovered);
   const [modal, setModal] = useState(null);
   useEffect(() => {
     const save = () => {
@@ -69,43 +60,10 @@ function ProfilePage({ content, theme }) {
       if (profileImage)
         window.localStorage.setItem("globalvision-profile-image", profileImage);
       else window.localStorage.removeItem("globalvision-profile-image");
-      setDirty(false);
     };
     window.addEventListener("cms:changes-saved", save);
     return () => window.removeEventListener("cms:changes-saved", save);
   }, [companyNames, profileImage]);
-  const chooseProfileImage = async (file) => {
-    const local = createLocalUpload(file, ["image"]);
-    if (!local.valid) {
-      setImageError(
-        content.imageUploadError ||
-          "Choose a JPG, PNG, WebP, or GIF image under 5 MB.",
-      );
-      return;
-    }
-    const previousImage = profileImage;
-    setProfileImage(local.previewUrl);
-    setImageError("");
-    setUploadingImage(true);
-    try {
-      const uploaded = await uploadFile(file, {
-        metadata: { kind: local.kind },
-      });
-      setProfileImage(uploaded.url);
-      setDirty(true);
-    } catch (error) {
-      setProfileImage(previousImage);
-      setImageError(
-        error?.message ||
-          content.imageUploadError ||
-          "The image could not be uploaded.",
-      );
-    } finally {
-      revokeLocalUpload(local);
-      setUploadingImage(false);
-      if (imageInputRef.current) imageInputRef.current.value = "";
-    }
-  };
   const companyName = companyNames[contentLanguage];
   const defaultProfileImage =
     theme === "dark"
@@ -118,80 +76,11 @@ function ProfilePage({ content, theme }) {
   const input =
     "mt-[.55rem] min-h-[2.5rem] w-full rounded-[.72rem] border border-(--editor-field-border) bg-(--editor-input) px-[.9rem] py-[.4rem] text-[.875rem] font-normal text-admin-heading shadow-[inset_0_1px_2px_rgb(15_23_42_/.035)] outline-none transition focus:border focus:border-admin-brand";
   return (
-    <div className="mx-auto grid w-full max-w-[78rem] gap-4 pb-16 sm:gap-[1.65rem]">
-      <section className="relative grid grid-cols-[1fr_auto] items-end gap-5 overflow-hidden rounded-[1.15rem] border border-admin-border bg-[linear-gradient(125deg,var(--admin-card),color-mix(in_srgb,var(--admin-brand)_5%,var(--admin-card)))] px-6 pt-[1.35rem] pb-6 shadow-[0_14px_40px_rgb(15_23_42_/.07)] max-[700px]:grid-cols-1">
-        <div className="col-span-full">
-          <Breadcrumbs
-            items={[
-              { label: content.dashboard },
-              { label: content.administration },
-              { label: content.title },
-            ]}
-          />
-        </div>
-        <div className="flex items-center gap-[1.1rem] max-[700px]:flex-col max-[700px]:items-center max-[700px]:text-center">
-          <div className="relative">
-            <img
-              className="block size-[5.4rem] rounded-[1.45rem] border-4 border-admin-card object-contain shadow-[0_0_0_1px_var(--admin-border),0_14px_30px_rgb(15_23_42_/.16)] max-[700px]:size-[4.8rem]"
-              src={profileImage || defaultProfileImage}
-              alt="Global Vision"
-            />
-            <button
-              type="button"
-              aria-label={content.change}
-              disabled={uploadingImage}
-              onClick={() => imageInputRef.current?.click()}
-              className="absolute -right-[.35rem] -bottom-[.35rem] grid size-8 place-items-center rounded-[.65rem] border-[3px] border-admin-card bg-admin-brand text-white disabled:cursor-wait disabled:opacity-60"
-            >
-              <Camera size={16} />
-            </button>
-            {profileImage && (
-              <button
-                type="button"
-                aria-label={content.delete || "حذف تصویر"}
-                onClick={() => {
-                  setProfileImage("");
-                  setImageError("");
-                  setDirty(true);
-                }}
-                className="absolute -bottom-[.35rem] -left-[.35rem] grid size-8 place-items-center rounded-[.65rem] border-[3px] border-admin-card bg-red-600 text-white transition hover:bg-red-700"
-              >
-                <Trash2 size={15} />
-              </button>
-            )}
-            <input
-              ref={imageInputRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              className="sr-only"
-              onChange={(event) => chooseProfileImage(event.target.files?.[0])}
-            />
-          </div>
-          <div>
-            <span className="text-[.625rem] font-semibold tracking-[.12em] text-admin-brand-text">
-              {content.role}
-            </span>
-            <h1 className="mt-1 mb-[.2rem] font-heading text-[clamp(1.55rem,3vw,2.15rem)] tracking-[-.035em] text-admin-brand-text">
-              {companyName}
-            </h1>
-            {imageError && (
-              <p
-                role="alert"
-                className="mt-1 max-w-xs text-xs text-red-600 dark:text-red-300"
-              >
-                {imageError}
-              </p>
-            )}
-          </div>
-        </div>
-        <div className="flex items-center gap-[.8rem] max-[700px]:flex-col max-[700px]:items-center max-[700px]:text-center">
-          <span
-            className={`text-[.75rem] font-semibold whitespace-nowrap ${dirty ? "text-admin-brand-text" : "text-[#168a52]"}`}
-          >
-            {dirty ? content.unsaved : content.saved}
-          </span>
-        </div>
-      </section>
+    <div className="mx-auto grid w-full max-w-312 gap-4 pb-16 sm:gap-[1.65rem]">
+      <PageHeading
+        className="min-h-0! px-0! pt-0! pb-3!"
+        breadcrumbs={[{ label: content.dashboard }, { label: content.title }]}
+      />
       <div className="grid grid-cols-[minmax(0,1.5fr)_minmax(17rem,.65fr)] items-start gap-4 max-[700px]:grid-cols-1">
         <form
           className="grid gap-4"
@@ -239,7 +128,6 @@ function ProfilePage({ content, theme }) {
                       ...current,
                       [contentLanguage]: event.target.value,
                     }));
-                    setDirty(true);
                   }}
                 />
               </label>
@@ -249,6 +137,7 @@ function ProfilePage({ content, theme }) {
                   className={`${input} min-w-0 cursor-not-allowed opacity-75`}
                   value="info@globalvision.af"
                   readOnly
+                  disabled
                 />
               </label>
               <label className="text-[.8125rem] font-semibold text-admin-heading">
@@ -294,11 +183,26 @@ function ProfilePage({ content, theme }) {
         </form>
         <aside className="grid gap-4">
           <section className={`${card} p-[1.3rem] text-center`}>
-            <img
-              className="mx-auto mb-[.8rem] size-14 rounded-2xl border border-admin-border object-contain shadow-[0_8px_20px_rgb(15_23_42_/.12)]"
-              src={profileImage || defaultProfileImage}
-              alt="Global Vision"
-            />
+            <div className="relative mx-auto mb-[.8rem] w-fit">
+              <img
+                className="block size-14 rounded-2xl border border-admin-border object-contain shadow-[0_8px_20px_rgb(15_23_42_/.12)]"
+                src={profileImage || defaultProfileImage}
+                alt="Global Vision"
+              />
+              {profileImage && (
+                <button
+                  type="button"
+                  aria-label={content.delete || "حذف تصویر"}
+                  onClick={() => {
+                    setProfileImage("");
+                    announceCmsDraftChange();
+                  }}
+                  className="absolute -bottom-2 -left-2 grid size-7 place-items-center rounded-lg border-2 border-admin-card bg-red-600 text-white transition hover:bg-red-700"
+                >
+                  <Trash2 size={13} />
+                </button>
+              )}
+            </div>
             <h2 className="font-heading text-[.98rem] text-admin-heading">
               {content.overview}
             </h2>
@@ -339,13 +243,13 @@ function ProfilePage({ content, theme }) {
             </div>
           </section>
           <section
-            className={`${card} flex items-center justify-start gap-[.75rem] px-[1.1rem] py-4 text-end rtl:justify-start ltr:justify-start`}
+            className={`${card} flex items-center justify-start gap-3 px-[1.1rem] py-4 text-end rtl:justify-start ltr:justify-start`}
           >
             <span className="grid size-9 flex-none place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text">
               <KeyRound size={17} />
             </span>
             <div>
-              <h2 className="m-0 font-heading text-[.98rem] !font-normal text-admin-heading">
+              <h2 className="m-0 font-heading text-[.98rem] font-normal! text-admin-heading">
                 {content.latestPassword}
               </h2>
             </div>
@@ -378,7 +282,7 @@ function SecurityRow({ icon: Icon, title, action, onClick }) {
       <button
         type="button"
         onClick={onClick}
-        className="inline-flex min-h-8 items-center justify-center rounded-[.55rem] border border-admin-border bg-admin-control px-[.7rem] py-[.25rem] text-[.6875rem] font-semibold text-admin-muted hover:border-admin-brand hover:text-admin-brand-text"
+        className="inline-flex min-h-8 items-center justify-center rounded-[.55rem] border border-admin-border bg-admin-control px-[.7rem] py-1 text-[.6875rem] font-semibold text-admin-muted hover:border-admin-brand hover:text-admin-brand-text"
       >
         {action}
       </button>
@@ -434,11 +338,12 @@ function ProfileModal({
 
   return (
     <div
-      className={`cms-modal-backdrop fixed inset-0 z-[120] isolate grid place-items-center p-4 ${closing ? "animate-cms-modal-backdrop-out" : "animate-cms-modal-backdrop-in"}`}
+      className={`cms-modal-backdrop fixed inset-0 z-120 isolate grid place-items-center p-4 ${closing ? "animate-cms-modal-backdrop-out" : "animate-cms-modal-backdrop-in"}`}
       onClick={close}
     >
       <section
         ref={dialogRef}
+        data-cms-draft-ignore
         tabIndex={-1}
         role="dialog"
         aria-modal="true"

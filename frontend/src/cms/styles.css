@@ -119,15 +119,21 @@ html.dark .cms-root .cms-logout-button:hover { background: rgb(239 68 68 / .2); 
 @keyframes cms-modal-backdrop-out { from { opacity: 1; } to { opacity: 0; } }
 @keyframes cms-modal-panel-in { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes cms-modal-panel-out { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(10px) scale(.98); } }
+@keyframes cms-save-control-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes cms-save-control-out { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(16px); } }
 .cms-root .animate-cms-modal-backdrop-in { animation: cms-modal-backdrop-in .22s cubic-bezier(.22, 1, .36, 1) both; }
 .cms-root .animate-cms-modal-backdrop-out { animation: cms-modal-backdrop-out .2s ease-in both; }
 .cms-root .animate-cms-modal-panel-in { animation: cms-modal-panel-in .22s cubic-bezier(.22, 1, .36, 1) both; }
 .cms-root .animate-cms-modal-panel-out { animation: cms-modal-panel-out .2s ease-in both; }
+.cms-root .animate-cms-save-control-in { animation: cms-save-control-in .32s cubic-bezier(.22, 1, .36, 1) both; }
+.cms-root .animate-cms-save-control-out { animation: cms-save-control-out .26s cubic-bezier(.4, 0, 1, 1) both; }
 @media (prefers-reduced-motion: reduce) {
   .cms-root .animate-cms-modal-backdrop-in,
   .cms-root .animate-cms-modal-backdrop-out,
   .cms-root .animate-cms-modal-panel-in,
-  .cms-root .animate-cms-modal-panel-out { animation-duration: 1ms; }
+  .cms-root .animate-cms-modal-panel-out,
+  .cms-root .animate-cms-save-control-in,
+  .cms-root .animate-cms-save-control-out { animation-duration: 1ms; }
 }
 .cms-root .sidebar-custom-scrollbar { position: absolute; top: 0; inset-inline-end: 2px; width: 4px; border-radius: 999px; background: var(--sidebar-border); cursor: grab; touch-action: none; }
 .cms-root .sidebar-custom-scrollbar:active { cursor: grabbing; }

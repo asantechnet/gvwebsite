@@ -41,7 +41,33 @@ function SettingsSkeleton() {
 }
 
 function ProfileSkeleton() {
-  return <><PageHeadingSkeleton action={false} /><div className="grid gap-5 xl:grid-cols-[.8fr_1.2fr]"><aside className="rounded-2xl border border-admin-border bg-admin-card p-6 text-center"><Block className="mx-auto size-24 rounded-full bg-admin-brand/15" /><Block className="mx-auto mt-4 h-6 w-40" /><Block className="mx-auto mt-3 h-4 w-52" /><div className="mt-6 space-y-3">{list(4).map((item) => <div key={item} className="flex justify-between border-t border-admin-border pt-3"><Block className="h-3 w-20" /><Block className="h-3 w-28" /></div>)}</div></aside><div className="space-y-5">{list(3).map((section) => <section key={section} className="rounded-2xl border border-admin-border bg-admin-card p-5"><Block className="h-6 w-40" /><div className="mt-5 space-y-3">{list(section === 0 ? 3 : 2).map((item) => <div key={item} className="flex items-center gap-3 rounded-xl border border-admin-border p-4"><Block className="size-9 bg-admin-brand/15" /><div className="flex-1 space-y-2"><Block className="h-4 w-36" /><Block className="h-3 w-48 max-w-full" /></div><Block className="h-9 w-24" /></div>)}</div></section>)}</div></div></>
+  const card = 'overflow-hidden rounded-2xl border border-admin-border bg-admin-card'
+  return <>
+    <header className="mb-4 border-b border-(--admin-tab-bar-border) pb-3 sm:mb-[1.65rem]"><Block className="h-3 w-36" /></header>
+    <div className="grid grid-cols-[minmax(0,1.5fr)_minmax(17rem,.65fr)] items-start gap-4 max-[700px]:grid-cols-1">
+      <div className="grid gap-4">
+        <section className={card}>
+          <header className="flex flex-wrap items-center justify-between gap-4 border-b border-admin-border bg-admin-control-soft px-5 py-4">
+            <Block className="h-5 w-32" />
+            <div className="flex items-center gap-3"><Block className="h-10 w-64 max-w-[55vw] rounded-xl" /><Block className="size-10 rounded-xl bg-admin-brand/15" /></div>
+          </header>
+          <div className="grid grid-cols-2 gap-5 p-5 max-[700px]:grid-cols-1">
+            <div className="col-span-full max-[700px]:col-auto"><Block className="h-3 w-24" /><Block className="mt-2 h-10 w-full rounded-xl" /></div>
+            {list(2).map((item) => <div key={item}><Block className="h-3 w-20" /><Block className="mt-2 h-10 w-full rounded-xl" /></div>)}
+          </div>
+        </section>
+        <section className={card}>
+          <header className="flex items-center justify-between border-b border-admin-border bg-admin-control-soft px-5 py-4"><Block className="h-5 w-36" /><Block className="size-10 rounded-xl bg-admin-brand/15" /></header>
+          <div className="grid gap-3 p-5">{list(2).map((item) => <div key={item} className="flex min-h-12 items-center gap-3 rounded-xl border border-admin-border bg-admin-control-soft px-4"><Block className="size-8 rounded-xl bg-admin-brand/15" /><Block className="h-3 w-32 flex-1 max-w-44" /><Block className="h-8 w-16 rounded-lg" /></div>)}</div>
+        </section>
+      </div>
+      <aside className="grid gap-4">
+        <section className={`${card} p-5 text-center`}><Block className="mx-auto size-14 rounded-2xl bg-admin-brand/15" /><Block className="mx-auto mt-3 h-5 w-28" /><div className="mt-4">{list(3).map((item) => <div key={item} className="flex items-center justify-between border-t border-admin-border py-3"><Block className="h-3 w-16" /><Block className="h-3 w-20" /></div>)}</div></section>
+        <section className={card}><div className="flex items-center justify-between px-4 py-4"><Block className="h-5 w-28" /><Block className="size-6 rounded-lg bg-admin-brand/15" /></div><div className="flex items-center gap-3 border-t border-admin-border px-4 py-3"><Block className="size-9 rounded-xl bg-admin-brand/15" /><div className="flex-1 space-y-2"><Block className="h-3 w-28" /><Block className="h-3 w-36 max-w-full" /></div><Block className="size-2 rounded-full bg-admin-brand/20" /></div></section>
+        <section className={`${card} flex items-center gap-3 px-4 py-4`}><Block className="size-9 rounded-xl bg-admin-brand/15" /><Block className="h-4 w-32" /></section>
+      </aside>
+    </div>
+  </>
 }
 
 function AuthSkeleton() {
