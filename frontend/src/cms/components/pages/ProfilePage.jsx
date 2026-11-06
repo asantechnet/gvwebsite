@@ -1,72 +1,621 @@
-import { useEffect, useState } from 'react'
-import { Camera, KeyRound, Laptop, Mail, Save, ShieldCheck, Trash2, X } from 'lucide-react'
+import { useEffect, useRef, useState } from "react";
+import {
+  Camera,
+  KeyRound,
+  Laptop,
+  Mail,
+  Save,
+  ShieldCheck,
+  Trash2,
+  X,
+} from "lucide-react";
 
-import Breadcrumbs from '@cms/components/Breadcrumbs.jsx'
-import ContentLanguageSwitcher from '@cms/components/ContentLanguageSwitcher.jsx'
-import useAuth from '@cms/auth/useAuth.js'
-import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
-import useModalFocus from '@/shared/hooks/useModalFocus.js'
-import { validatePasswordChange } from '@/shared/utils/validation.js'
+import Breadcrumbs from "@cms/components/Breadcrumbs.jsx";
+import ContentLanguageSwitcher from "@cms/components/ContentLanguageSwitcher.jsx";
+import PasswordInput from "@cms/components/PasswordInput.jsx";
+import useAuth from "@cms/auth/useAuth.js";
+import useCmsDraftState from "@cms/hooks/useCmsDraftState.js";
+import useModalFocus from "@/shared/hooks/useModalFocus.js";
+import { uploadFile } from "@/shared/services/api/uploads.js";
+import {
+  createLocalUpload,
+  revokeLocalUpload,
+} from "@/shared/uploads/files.js";
+import { validatePasswordChange } from "@/shared/utils/validation.js";
 
-const defaultCompanyNames = { prs: 'گلوبل ویژن', ps: 'ګلوبل ویژن', en: 'Global Vision' }
-function readCompanyNames() { try { return { ...defaultCompanyNames, ...JSON.parse(window.localStorage.getItem('globalvision-company-names') || '{}') } } catch { return defaultCompanyNames } }
+const defaultCompanyNames = {
+  prs: "گلوبل ویژن",
+  ps: "ګلوبل ویژن",
+  en: "Global Vision",
+};
+function readCompanyNames() {
+  try {
+    return {
+      ...defaultCompanyNames,
+      ...JSON.parse(
+        window.localStorage.getItem("globalvision-company-names") || "{}",
+      ),
+    };
+  } catch {
+    return defaultCompanyNames;
+  }
+}
 
 function ProfilePage({ content, theme }) {
-  const auth = useAuth()
-  const [contentLanguage, setContentLanguage] = useState(() => ['prs', 'ps', 'en'].includes(document.documentElement.lang) ? document.documentElement.lang : 'prs')
-  const [companyNames, setCompanyNames, { recovered }] = useCmsDraftState('profile', readCompanyNames)
-  const [dirty, setDirty] = useState(recovered)
-  const [modal, setModal] = useState(null)
+  const auth = useAuth();
+  const [contentLanguage, setContentLanguage] = useState(() =>
+    ["prs", "ps", "en"].includes(document.documentElement.lang)
+      ? document.documentElement.lang
+      : "prs",
+  );
+  const [companyNames, setCompanyNames, { recovered }] = useCmsDraftState(
+    "profile",
+    readCompanyNames,
+  );
+  const [profileImage, setProfileImage] = useState(
+    () => window.localStorage.getItem("globalvision-profile-image") || "",
+  );
+  const [imageError, setImageError] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const imageInputRef = useRef(null);
+  const [dirty, setDirty] = useState(recovered);
+  const [modal, setModal] = useState(null);
   useEffect(() => {
-    const save = () => { window.localStorage.setItem('globalvision-company-names', JSON.stringify(companyNames)); setDirty(false) }
-    window.addEventListener('cms:changes-saved', save)
-    return () => window.removeEventListener('cms:changes-saved', save)
-  }, [companyNames])
-  const companyName = companyNames[contentLanguage]
-  const card = 'profile-card overflow-hidden rounded-2xl border border-admin-border bg-admin-card shadow-[0_1px_2px_rgb(15_23_42_/.04),0_12px_34px_rgb(15_23_42_/.055)]'
-  const heading = 'flex flex-wrap items-center justify-between gap-4 border-b border-admin-border bg-[linear-gradient(100deg,var(--editor-field),var(--admin-card))] px-[1.2rem] py-4 max-[700px]:flex-row max-[700px]:items-center [&>div:first-child>span:first-child]:hidden'
-  const input = 'mt-[.55rem] min-h-[3.15rem] w-full rounded-[.72rem] border border-(--editor-field-border) bg-(--editor-input) px-[.9rem] py-[.8rem] text-[.875rem] font-normal text-admin-heading shadow-[inset_0_1px_2px_rgb(15_23_42_/.035)] outline-none transition focus:border focus:border-admin-brand'
-  return <div className="mx-auto grid w-full max-w-[78rem] gap-4 pb-16 sm:gap-[1.65rem]">
-    <section className="relative grid grid-cols-[1fr_auto] items-end gap-5 overflow-hidden rounded-[1.15rem] border border-admin-border bg-[linear-gradient(125deg,var(--admin-card),color-mix(in_srgb,var(--admin-brand)_5%,var(--admin-card)))] px-6 pt-[1.35rem] pb-6 shadow-[0_14px_40px_rgb(15_23_42_/.07)] max-[700px]:grid-cols-1"><div className="col-span-full"><Breadcrumbs items={[{ label: content.dashboard }, { label: content.administration }, { label: content.title }]} /></div><div className="flex items-center gap-[1.1rem] max-[700px]:flex-col max-[700px]:items-center max-[700px]:text-center"><div className="relative"><img className="block size-[5.4rem] rounded-[1.45rem] border-4 border-admin-card object-contain shadow-[0_0_0_1px_var(--admin-border),0_14px_30px_rgb(15_23_42_/.16)] max-[700px]:size-[4.8rem]" src={theme === "dark" ? "/assets/branding/icon%20white.webp" : "/assets/branding/icon.webp"} alt="Global Vision" /><button type="button" aria-label={content.change} className="absolute -right-[.35rem] -bottom-[.35rem] grid size-8 place-items-center rounded-[.65rem] border-[3px] border-admin-card bg-admin-brand text-white"><Camera size={16} /></button><button type="button" aria-label={content.delete || 'حذف تصویر'} onClick={(event) => { setDirty(true); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className="absolute -bottom-[.35rem] -left-[.35rem] grid size-8 place-items-center rounded-[.65rem] border-[3px] border-admin-card bg-red-600 text-white transition hover:bg-red-700"><Trash2 size={15} /></button></div><div><span className="text-[.625rem] font-semibold tracking-[.12em] text-admin-brand-text">{content.role}</span><h1 className="mt-1 mb-[.2rem] font-heading text-[clamp(1.55rem,3vw,2.15rem)] tracking-[-.035em] text-admin-brand-text">{companyName}</h1></div></div><div className="flex items-center gap-[.8rem] max-[700px]:flex-col max-[700px]:items-center max-[700px]:text-center"><span className={`text-[.75rem] font-semibold whitespace-nowrap ${dirty ? 'text-admin-brand-text' : 'text-[#168a52]'}`}>{dirty ? content.unsaved : content.saved}</span></div></section>
-    <div className="grid grid-cols-[minmax(0,1.5fr)_minmax(17rem,.65fr)] items-start gap-4 max-[700px]:grid-cols-1"><form className="grid gap-4" onSubmit={(event) => event.preventDefault()}>
-      <section className={card}><div className={heading}><div className="max-[700px]:order-1 max-[700px]:flex-1"><span className="text-[.625rem] font-semibold tracking-[.12em] text-admin-brand-text">{content.company}</span><h2 className="mt-[.2rem] mb-0 font-heading text-[.98rem] text-admin-heading">{content.about}</h2></div><div className="flex items-center gap-3 max-[700px]:contents"><span className="max-[700px]:order-3 max-[700px]:basis-full max-[700px]:pt-2"><ContentLanguageSwitcher label={content.language || (document.documentElement.lang === 'en' ? 'Content language' : document.documentElement.lang === 'ps' ? 'د منځپانګې ژبه' : 'زبان محتوا')} value={contentLanguage} onChange={setContentLanguage} /></span><span className="grid size-10 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text max-[700px]:order-2"><ShieldCheck size={19} /></span></div></div><div className="grid grid-cols-2 gap-[1.3rem] p-5 max-[700px]:grid-cols-1"><label className="col-span-full text-[.8125rem] font-semibold text-admin-heading max-[700px]:col-auto"><span>{content.companyNameLabel}</span><input dir={contentLanguage === 'en' ? 'ltr' : 'rtl'} className={`${input} ${contentLanguage === 'en' ? 'text-left' : 'text-right'}`} value={companyName} onChange={(event) => { setCompanyNames((current) => ({ ...current, [contentLanguage]: event.target.value })); setDirty(true) }} /></label><label className="text-[.8125rem] font-semibold text-admin-heading"><span>{content.email}</span><input className={`${input} min-w-0`} value="info@globalvision.af" readOnly /></label><label className="text-[.8125rem] font-semibold text-admin-heading"><span>{content.roleLabel}</span><input className={`${input} cursor-not-allowed opacity-75`} value={content.role} readOnly disabled /></label></div></section>
-      <section className={card}><div className={heading}><div><span className="text-[.625rem] font-semibold tracking-[.12em] text-admin-brand-text">{content.security}</span><h2 className="mt-[.2rem] mb-0 font-heading text-[.98rem] text-admin-heading">{content.passwordSettings}</h2></div><span className="grid size-10 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text"><KeyRound size={19} /></span></div><div className="grid gap-[.8rem] p-[1.15rem]"><SecurityRow icon={ShieldCheck} title={content.changePassword} action={content.change} onClick={() => setModal('password')} /><SecurityRow icon={KeyRound} title={content.resetPassword} action={content.change} onClick={() => setModal('reset')} /></div></section>
-    </form><aside className="grid gap-4"><section className={`${card} p-[1.3rem] text-center`}><img className="mx-auto mb-[.8rem] size-14 rounded-2xl border border-admin-border object-contain shadow-[0_8px_20px_rgb(15_23_42_/.12)]" src={theme === "dark" ? "/assets/branding/icon%20white.webp" : "/assets/branding/icon.webp"} alt="Global Vision" /><h2 className="font-heading text-[.98rem] text-admin-heading">{content.overview}</h2><dl className="mt-[1.1rem] grid text-right"><Info label={content.roleLabel} value={content.role} /><Info label={content.memberSince} value="2026" /><Info label={content.status} value={content.active} /></dl></section><section className={card}><div className="flex items-start justify-between px-[1.1rem] py-4"><div><h2 className="m-0 font-heading text-[.98rem] text-admin-heading">{content.sessions}</h2></div><span className="grid size-[1.55rem] place-items-center rounded-lg bg-admin-brand-soft text-[.6875rem] font-semibold text-admin-brand-text">1</span></div><div className="border-t border-admin-border px-4 py-[.85rem]"><div className="flex items-center gap-[.65rem]"><span className="grid size-[2.2rem] place-items-center rounded-[.65rem] border border-admin-border bg-admin-control-soft text-admin-muted"><Laptop size={18} /></span><div className="grid flex-1 gap-[.15rem]"><strong className="text-[.75rem] text-admin-heading">{content.deviceName}</strong><small className="text-[.6875rem] leading-[1.45] text-admin-muted">{content.currentDevice}<br />{content.location}</small></div><i className="size-2 rounded-full bg-[#22a06b] shadow-[0_0_0_4px_rgb(34_160_107_/.12)]" /></div></div></section><section className={`${card} flex items-center justify-start gap-[.75rem] px-[1.1rem] py-4 text-end rtl:justify-start ltr:justify-start`}><span className="grid size-9 flex-none place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text"><KeyRound size={17} /></span><div><h2 className="m-0 font-heading text-[.98rem] !font-normal text-admin-heading">{content.latestPassword}</h2></div></section></aside></div>
-    {modal && <ProfileModal mode={modal} content={content} email={auth.session.user.email} onChangePassword={auth.changePassword} onResetPassword={auth.forgotPassword} onClose={() => setModal(null)} />}
-  </div>
-}
-
-function SecurityRow({ icon: Icon, title, action, onClick }) { return <div className="flex items-center gap-[.8rem] rounded-[.82rem] border border-admin-border bg-(--editor-field) px-4 py-[.85rem] max-[700px]:flex-wrap"><span className="grid size-[2.35rem] flex-none place-items-center rounded-[.7rem] bg-admin-brand-soft text-admin-brand-text"><Icon size={17} /></span><span className="grid flex-1 gap-[.2rem]"><strong className="text-[.75rem] text-admin-heading">{title}</strong></span><button type="button" onClick={onClick} className="inline-flex min-h-9 items-center justify-center rounded-[.55rem] border border-admin-border bg-admin-control px-[.7rem] py-[.42rem] text-[.6875rem] font-semibold text-admin-muted hover:border-admin-brand hover:text-admin-brand-text">{action}</button></div> }
-function Info({ label, value }) { return <div className="flex items-center justify-between border-t border-admin-border py-3"><dt className="text-[.6875rem] text-admin-muted">{label}</dt><dd className="m-0 text-[.6875rem] font-semibold text-admin-heading">{value}</dd></div> }
-function ProfileModal({ mode, content, email, onChangePassword, onResetPassword, onClose }) {
-  const [closing, setClosing] = useState(false)
-  const [values, setValues] = useState({ currentPassword: '', password: '', confirmPassword: '' })
-  const [validationError, setValidationError] = useState('')
-  const [submitting, setSubmitting] = useState(false)
-  const [complete, setComplete] = useState(false)
-  const close = () => { if (closing) return; setClosing(true); window.setTimeout(onClose, 200) }
-  const dialogRef = useModalFocus({ onClose: close })
-
-  useEffect(() => {
-    const previousBodyOverflow = document.body.style.overflow
-    const previousDocumentOverflow = document.documentElement.style.overflow
-    document.body.style.overflow = 'hidden'
-    document.documentElement.style.overflow = 'hidden'
-    document.documentElement.classList.add('cms-modal-open')
-    return () => {
-      document.body.style.overflow = previousBodyOverflow
-      document.documentElement.style.overflow = previousDocumentOverflow
-      document.documentElement.classList.remove('cms-modal-open')
+    const save = () => {
+      window.localStorage.setItem(
+        "globalvision-company-names",
+        JSON.stringify(companyNames),
+      );
+      if (profileImage)
+        window.localStorage.setItem("globalvision-profile-image", profileImage);
+      else window.localStorage.removeItem("globalvision-profile-image");
+      setDirty(false);
+    };
+    window.addEventListener("cms:changes-saved", save);
+    return () => window.removeEventListener("cms:changes-saved", save);
+  }, [companyNames, profileImage]);
+  const chooseProfileImage = async (file) => {
+    const local = createLocalUpload(file, ["image"]);
+    if (!local.valid) {
+      setImageError(
+        content.imageUploadError ||
+          "Choose a JPG, PNG, WebP, or GIF image under 5 MB.",
+      );
+      return;
     }
-  }, [])
-
-  return <div className={`cms-modal-backdrop fixed inset-0 z-[120] isolate grid place-items-center p-4 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onClick={close}>
-    <section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="profile-dialog-title" aria-describedby="profile-dialog-description" className={`relative z-10 w-full max-w-lg overflow-hidden rounded-[1.15rem] border border-admin-border bg-admin-card shadow-[0_30px_90px_rgb(5_10_20_/.35)] ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`} onClick={(event) => event.stopPropagation()}>
-      <header className="flex items-start gap-3 border-b border-admin-border p-5"><span className="grid size-10 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text">{mode === 'reset' ? <KeyRound size={19} /> : <Mail size={19} />}</span><div className="flex-1"><span className="text-[.625rem] font-semibold tracking-[.12em] text-admin-brand-text">{mode === 'reset' ? content.resetPassword : content.changePassword}</span><h2 id="profile-dialog-title" className="mt-1 mb-0 font-heading text-base text-admin-heading">{mode === 'reset' ? content.resetPassword : content.changePassword}</h2><p id="profile-dialog-description" className="mt-1 mb-0 text-xs leading-5 text-admin-muted">{content.securityDescription}</p></div><button type="button" className="grid size-8 place-items-center border-0 bg-transparent text-admin-muted" onClick={close} aria-label={content.close}><X size={18} /></button></header>
-      {complete ? <div className="grid justify-items-center gap-3 p-7 text-center"><ShieldCheck className="text-emerald-600" size={32} /><h3 className="font-heading text-base text-admin-heading">{content.resetSentTitle || content.resetPassword}</h3><p className="text-xs leading-5 text-admin-muted">{content.resetSentDescription || content.resetPasswordDescription}</p><button type="button" className="min-h-10 rounded-xl bg-admin-brand px-5 text-xs font-semibold text-white" onClick={close}>{content.done}</button></div> : <form className="grid gap-4 p-5" onSubmit={async (event) => { event.preventDefault(); setValidationError(''); setSubmitting(true); try { if (mode === 'reset') { await onResetPassword({ email }); setComplete(true) } else { const result = validatePasswordChange(values); if (!result.valid) { setValidationError(content.passwordValidation); return } await onChangePassword(values); close() } } catch (error) { setValidationError(error?.message || content.passwordValidation) } finally { setSubmitting(false) } }}>{mode === 'reset' ? <div className="rounded-xl border border-admin-border bg-admin-control-soft p-4 text-xs leading-6 text-admin-muted">{content.resetPasswordDescription}<strong className="mt-2 block text-admin-heading" dir="ltr">{email}</strong></div> : <><label className="text-[.8125rem] font-semibold text-admin-heading"><span>{content.currentPassword}</span><input className={inputClass} name="currentPassword" autoComplete="current-password" value={values.currentPassword} onChange={(event) => setValues((current) => ({ ...current, currentPassword: event.target.value }))} type="password" required /></label><label className="text-[.8125rem] font-semibold text-admin-heading"><span>{content.password}</span><input className={inputClass} name="password" autoComplete="new-password" value={values.password} onChange={(event) => setValues((current) => ({ ...current, password: event.target.value }))} type="password" minLength={12} required /></label><label className="text-[.8125rem] font-semibold text-admin-heading"><span>{content.confirmPassword}</span><input className={inputClass} name="confirmPassword" autoComplete="new-password" value={values.confirmPassword} onChange={(event) => setValues((current) => ({ ...current, confirmPassword: event.target.value }))} type="password" minLength={12} required /></label></>}{validationError && <p role="alert" className="rounded-lg bg-red-500/10 px-3 py-2 text-xs text-red-600 dark:text-red-300">{validationError}</p>}<footer className="flex justify-end gap-2"><button type="button" className="inline-flex min-h-9 items-center justify-center rounded-[.55rem] border border-admin-border bg-admin-control px-[.7rem] text-[.6875rem] font-semibold text-admin-muted" onClick={close}>{content.cancel}</button><button disabled={submitting} className="inline-flex min-h-9 items-center justify-center gap-2 rounded-[.55rem] border border-admin-brand bg-admin-brand px-[.7rem] text-[.6875rem] font-semibold text-white disabled:cursor-wait disabled:opacity-70"><Save size={14} />{mode === 'reset' ? content.resetPassword : content.save}</button></footer></form>}
-    </section>
-  </div>
+    const previousImage = profileImage;
+    setProfileImage(local.previewUrl);
+    setImageError("");
+    setUploadingImage(true);
+    try {
+      const uploaded = await uploadFile(file, {
+        metadata: { kind: local.kind },
+      });
+      setProfileImage(uploaded.url);
+      setDirty(true);
+    } catch (error) {
+      setProfileImage(previousImage);
+      setImageError(
+        error?.message ||
+          content.imageUploadError ||
+          "The image could not be uploaded.",
+      );
+    } finally {
+      revokeLocalUpload(local);
+      setUploadingImage(false);
+      if (imageInputRef.current) imageInputRef.current.value = "";
+    }
+  };
+  const companyName = companyNames[contentLanguage];
+  const defaultProfileImage =
+    theme === "dark"
+      ? "/assets/branding/icon%20white.webp"
+      : "/assets/branding/icon.webp";
+  const card =
+    "profile-card overflow-hidden rounded-2xl border border-admin-border bg-admin-card shadow-[0_1px_2px_rgb(15_23_42_/.04),0_12px_34px_rgb(15_23_42_/.055)]";
+  const heading =
+    "flex flex-wrap items-center justify-between gap-4 border-b border-admin-border bg-[linear-gradient(100deg,var(--editor-field),var(--admin-card))] px-[1.2rem] py-4 max-[700px]:flex-row max-[700px]:items-center [&>div:first-child>span:first-child]:hidden";
+  const input =
+    "mt-[.55rem] min-h-[2.5rem] w-full rounded-[.72rem] border border-(--editor-field-border) bg-(--editor-input) px-[.9rem] py-[.4rem] text-[.875rem] font-normal text-admin-heading shadow-[inset_0_1px_2px_rgb(15_23_42_/.035)] outline-none transition focus:border focus:border-admin-brand";
+  return (
+    <div className="mx-auto grid w-full max-w-[78rem] gap-4 pb-16 sm:gap-[1.65rem]">
+      <section className="relative grid grid-cols-[1fr_auto] items-end gap-5 overflow-hidden rounded-[1.15rem] border border-admin-border bg-[linear-gradient(125deg,var(--admin-card),color-mix(in_srgb,var(--admin-brand)_5%,var(--admin-card)))] px-6 pt-[1.35rem] pb-6 shadow-[0_14px_40px_rgb(15_23_42_/.07)] max-[700px]:grid-cols-1">
+        <div className="col-span-full">
+          <Breadcrumbs
+            items={[
+              { label: content.dashboard },
+              { label: content.administration },
+              { label: content.title },
+            ]}
+          />
+        </div>
+        <div className="flex items-center gap-[1.1rem] max-[700px]:flex-col max-[700px]:items-center max-[700px]:text-center">
+          <div className="relative">
+            <img
+              className="block size-[5.4rem] rounded-[1.45rem] border-4 border-admin-card object-contain shadow-[0_0_0_1px_var(--admin-border),0_14px_30px_rgb(15_23_42_/.16)] max-[700px]:size-[4.8rem]"
+              src={profileImage || defaultProfileImage}
+              alt="Global Vision"
+            />
+            <button
+              type="button"
+              aria-label={content.change}
+              disabled={uploadingImage}
+              onClick={() => imageInputRef.current?.click()}
+              className="absolute -right-[.35rem] -bottom-[.35rem] grid size-8 place-items-center rounded-[.65rem] border-[3px] border-admin-card bg-admin-brand text-white disabled:cursor-wait disabled:opacity-60"
+            >
+              <Camera size={16} />
+            </button>
+            {profileImage && (
+              <button
+                type="button"
+                aria-label={content.delete || "حذف تصویر"}
+                onClick={() => {
+                  setProfileImage("");
+                  setImageError("");
+                  setDirty(true);
+                }}
+                className="absolute -bottom-[.35rem] -left-[.35rem] grid size-8 place-items-center rounded-[.65rem] border-[3px] border-admin-card bg-red-600 text-white transition hover:bg-red-700"
+              >
+                <Trash2 size={15} />
+              </button>
+            )}
+            <input
+              ref={imageInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              className="sr-only"
+              onChange={(event) => chooseProfileImage(event.target.files?.[0])}
+            />
+          </div>
+          <div>
+            <span className="text-[.625rem] font-semibold tracking-[.12em] text-admin-brand-text">
+              {content.role}
+            </span>
+            <h1 className="mt-1 mb-[.2rem] font-heading text-[clamp(1.55rem,3vw,2.15rem)] tracking-[-.035em] text-admin-brand-text">
+              {companyName}
+            </h1>
+            {imageError && (
+              <p
+                role="alert"
+                className="mt-1 max-w-xs text-xs text-red-600 dark:text-red-300"
+              >
+                {imageError}
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="flex items-center gap-[.8rem] max-[700px]:flex-col max-[700px]:items-center max-[700px]:text-center">
+          <span
+            className={`text-[.75rem] font-semibold whitespace-nowrap ${dirty ? "text-admin-brand-text" : "text-[#168a52]"}`}
+          >
+            {dirty ? content.unsaved : content.saved}
+          </span>
+        </div>
+      </section>
+      <div className="grid grid-cols-[minmax(0,1.5fr)_minmax(17rem,.65fr)] items-start gap-4 max-[700px]:grid-cols-1">
+        <form
+          className="grid gap-4"
+          onSubmit={(event) => event.preventDefault()}
+        >
+          <section className={card}>
+            <div className={heading}>
+              <div className="max-[700px]:order-1 max-[700px]:flex-1">
+                <span className="text-[.625rem] font-semibold tracking-[.12em] text-admin-brand-text">
+                  {content.company}
+                </span>
+                <h2 className="mt-[.2rem] mb-0 font-heading text-[.98rem] text-admin-heading">
+                  {content.about}
+                </h2>
+              </div>
+              <div className="flex items-center gap-3 max-[700px]:contents">
+                <span className="max-[700px]:order-3 max-[700px]:basis-full max-[700px]:pt-2">
+                  <ContentLanguageSwitcher
+                    label={
+                      content.language ||
+                      (document.documentElement.lang === "en"
+                        ? "Content language"
+                        : document.documentElement.lang === "ps"
+                          ? "د منځپانګې ژبه"
+                          : "زبان محتوا")
+                    }
+                    value={contentLanguage}
+                    onChange={setContentLanguage}
+                  />
+                </span>
+                <span className="grid size-10 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text max-[700px]:order-2">
+                  <ShieldCheck size={19} />
+                </span>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-[1.3rem] p-5 max-[700px]:grid-cols-1">
+              <label className="col-span-full text-[.8125rem] font-semibold text-admin-heading max-[700px]:col-auto">
+                <span>{content.companyNameLabel}</span>
+                <input
+                  dir={contentLanguage === "en" ? "ltr" : "rtl"}
+                  className={`${input} ${contentLanguage === "en" ? "text-left" : "text-right"}`}
+                  value={companyName}
+                  onChange={(event) => {
+                    setCompanyNames((current) => ({
+                      ...current,
+                      [contentLanguage]: event.target.value,
+                    }));
+                    setDirty(true);
+                  }}
+                />
+              </label>
+              <label className="text-[.8125rem] font-semibold text-admin-heading">
+                <span>{content.email}</span>
+                <input
+                  className={`${input} min-w-0 cursor-not-allowed opacity-75`}
+                  value="info@globalvision.af"
+                  readOnly
+                />
+              </label>
+              <label className="text-[.8125rem] font-semibold text-admin-heading">
+                <span>{content.roleLabel}</span>
+                <input
+                  className={`${input} cursor-not-allowed opacity-75`}
+                  value={content.role}
+                  readOnly
+                  disabled
+                />
+              </label>
+            </div>
+          </section>
+          <section className={card}>
+            <div className={heading}>
+              <div>
+                <span className="text-[.625rem] font-semibold tracking-[.12em] text-admin-brand-text">
+                  {content.security}
+                </span>
+                <h2 className="mt-[.2rem] mb-0 font-heading text-[.98rem] text-admin-heading">
+                  {content.passwordSettings}
+                </h2>
+              </div>
+              <span className="grid size-10 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text">
+                <KeyRound size={19} />
+              </span>
+            </div>
+            <div className="grid gap-[.8rem] p-[1.15rem]">
+              <SecurityRow
+                icon={ShieldCheck}
+                title={content.changePassword}
+                action={content.change}
+                onClick={() => setModal("password")}
+              />
+              <SecurityRow
+                icon={KeyRound}
+                title={content.resetPassword}
+                action={content.change}
+                onClick={() => setModal("reset")}
+              />
+            </div>
+          </section>
+        </form>
+        <aside className="grid gap-4">
+          <section className={`${card} p-[1.3rem] text-center`}>
+            <img
+              className="mx-auto mb-[.8rem] size-14 rounded-2xl border border-admin-border object-contain shadow-[0_8px_20px_rgb(15_23_42_/.12)]"
+              src={profileImage || defaultProfileImage}
+              alt="Global Vision"
+            />
+            <h2 className="font-heading text-[.98rem] text-admin-heading">
+              {content.overview}
+            </h2>
+            <dl className="mt-[1.1rem] grid text-right">
+              <Info label={content.roleLabel} value={content.role} />
+              <Info label={content.memberSince} value="2026" />
+              <Info label={content.status} value={content.active} />
+            </dl>
+          </section>
+          <section className={card}>
+            <div className="flex items-start justify-between px-[1.1rem] py-4">
+              <div>
+                <h2 className="m-0 font-heading text-[.98rem] text-admin-heading">
+                  {content.sessions}
+                </h2>
+              </div>
+              <span className="grid size-[1.55rem] place-items-center rounded-lg bg-admin-brand-soft text-[.6875rem] font-semibold text-admin-brand-text">
+                1
+              </span>
+            </div>
+            <div className="border-t border-admin-border px-4 py-[.85rem]">
+              <div className="flex items-center gap-[.65rem]">
+                <span className="grid size-[2.2rem] place-items-center rounded-[.65rem] border border-admin-border bg-admin-control-soft text-admin-muted">
+                  <Laptop size={18} />
+                </span>
+                <div className="grid flex-1 gap-[.15rem]">
+                  <strong className="text-[.75rem] text-admin-heading">
+                    {content.deviceName}
+                  </strong>
+                  <small className="text-[.6875rem] leading-[1.45] text-admin-muted">
+                    {content.currentDevice}
+                    <br />
+                    {content.location}
+                  </small>
+                </div>
+                <i className="size-2 rounded-full bg-[#22a06b] shadow-[0_0_0_4px_rgb(34_160_107_/.12)]" />
+              </div>
+            </div>
+          </section>
+          <section
+            className={`${card} flex items-center justify-start gap-[.75rem] px-[1.1rem] py-4 text-end rtl:justify-start ltr:justify-start`}
+          >
+            <span className="grid size-9 flex-none place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text">
+              <KeyRound size={17} />
+            </span>
+            <div>
+              <h2 className="m-0 font-heading text-[.98rem] !font-normal text-admin-heading">
+                {content.latestPassword}
+              </h2>
+            </div>
+          </section>
+        </aside>
+      </div>
+      {modal && (
+        <ProfileModal
+          mode={modal}
+          content={content}
+          email={auth.session.user.email}
+          onChangePassword={auth.changePassword}
+          onResetPassword={auth.forgotPassword}
+          onClose={() => setModal(null)}
+        />
+      )}
+    </div>
+  );
 }
-const inputClass = 'mt-[.55rem] min-h-11 w-full rounded-[.72rem] border border-(--editor-field-border) bg-(--editor-input) px-[.9rem] py-0 text-[.875rem] font-normal text-admin-heading outline-none transition focus:border focus:border-admin-brand'
 
-export default ProfilePage
+function SecurityRow({ icon: Icon, title, action, onClick }) {
+  return (
+    <div className="flex items-center gap-[.8rem] rounded-[.82rem] border border-admin-border bg-(--editor-field) px-4 py-[.55rem] max-[700px]:flex-wrap">
+      <span className="grid size-8 flex-none place-items-center rounded-[.65rem] bg-admin-brand-soft text-admin-brand-text">
+        <Icon size={16} />
+      </span>
+      <span className="grid flex-1 gap-[.2rem]">
+        <strong className="text-[.75rem] text-admin-heading">{title}</strong>
+      </span>
+      <button
+        type="button"
+        onClick={onClick}
+        className="inline-flex min-h-8 items-center justify-center rounded-[.55rem] border border-admin-border bg-admin-control px-[.7rem] py-[.25rem] text-[.6875rem] font-semibold text-admin-muted hover:border-admin-brand hover:text-admin-brand-text"
+      >
+        {action}
+      </button>
+    </div>
+  );
+}
+function Info({ label, value }) {
+  return (
+    <div className="flex items-center justify-between border-t border-admin-border py-3">
+      <dt className="text-[.6875rem] text-admin-muted">{label}</dt>
+      <dd className="m-0 text-[.6875rem] font-semibold text-admin-heading">
+        {value}
+      </dd>
+    </div>
+  );
+}
+function ProfileModal({
+  mode,
+  content,
+  email,
+  onChangePassword,
+  onResetPassword,
+  onClose,
+}) {
+  const [closing, setClosing] = useState(false);
+  const [values, setValues] = useState({
+    currentPassword: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [validationError, setValidationError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [complete, setComplete] = useState(false);
+  const close = () => {
+    if (closing) return;
+    setClosing(true);
+    window.setTimeout(onClose, 200);
+  };
+  const dialogRef = useModalFocus({ onClose: close });
+
+  useEffect(() => {
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousDocumentOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+    document.documentElement.classList.add("cms-modal-open");
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousDocumentOverflow;
+      document.documentElement.classList.remove("cms-modal-open");
+    };
+  }, []);
+
+  return (
+    <div
+      className={`cms-modal-backdrop fixed inset-0 z-[120] isolate grid place-items-center p-4 ${closing ? "animate-cms-modal-backdrop-out" : "animate-cms-modal-backdrop-in"}`}
+      onClick={close}
+    >
+      <section
+        ref={dialogRef}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="profile-dialog-title"
+        className={`relative z-10 w-full max-w-lg overflow-hidden rounded-[1.15rem] border border-admin-border bg-admin-card shadow-[0_30px_90px_rgb(5_10_20_/.35)] ${closing ? "animate-cms-modal-panel-out" : "animate-cms-modal-panel-in"}`}
+        onClick={(event) => event.stopPropagation()}
+      >
+        <header className="flex items-center gap-3 border-b border-admin-border p-5">
+          <span className="grid size-10 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text">
+            {mode === "reset" ? <KeyRound size={19} /> : <Mail size={19} />}
+          </span>
+          <div className="flex flex-1 items-center">
+            <h2
+              id="profile-dialog-title"
+              className="m-0 font-heading text-base text-admin-heading"
+            >
+              {mode === "reset"
+                ? content.resetPassword
+                : content.changePassword}
+            </h2>
+          </div>
+          <button
+            type="button"
+            className="grid size-9 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-control-soft hover:text-admin-heading focus-visible:border-admin-brand focus-visible:shadow-[0_0_0_2px_rgb(245_155_34_/.2)]"
+            onClick={close}
+            aria-label={content.close}
+          >
+            <X size={18} />
+          </button>
+        </header>
+        {complete ? (
+          <div className="grid justify-items-center gap-3 p-7 text-center">
+            <ShieldCheck className="text-emerald-600" size={32} />
+            <h3 className="font-heading text-base text-admin-heading">
+              {content.resetSentTitle || content.resetPassword}
+            </h3>
+            <p className="text-xs leading-5 text-admin-muted">
+              {content.resetSentDescription || content.resetPasswordDescription}
+            </p>
+            <strong className="text-xs text-admin-heading" dir="ltr">
+              {email}
+            </strong>
+            <button
+              type="button"
+              className="min-h-10 rounded-xl bg-admin-brand px-5 text-xs font-semibold text-white"
+              onClick={close}
+            >
+              {content.done}
+            </button>
+          </div>
+        ) : (
+          <form
+            className="grid gap-4 p-5"
+            onSubmit={async (event) => {
+              event.preventDefault();
+              setValidationError("");
+              setSubmitting(true);
+              try {
+                if (mode === "reset") {
+                  await onResetPassword({ email });
+                  setComplete(true);
+                } else {
+                  const result = validatePasswordChange(values);
+                  if (!result.valid) {
+                    setValidationError(content.passwordValidation);
+                    return;
+                  }
+                  await onChangePassword(values);
+                  close();
+                }
+              } catch (error) {
+                setValidationError(
+                  error?.message || content.passwordValidation,
+                );
+              } finally {
+                setSubmitting(false);
+              }
+            }}
+          >
+            {mode === "reset" ? (
+              <div className="rounded-xl border border-admin-border bg-admin-control-soft p-4 text-xs leading-6 text-admin-muted">
+                {content.resetPasswordDescription}
+                <strong className="mt-2 block text-admin-heading" dir="ltr">
+                  {email}
+                </strong>
+              </div>
+            ) : (
+              <>
+                <label className="text-[.8125rem] font-semibold text-admin-heading">
+                  <span>{content.currentPassword}</span>
+                  <PasswordInput
+                    className={inputClass}
+                    name="currentPassword"
+                    autoComplete="current-password"
+                    showLabel={content.showPassword}
+                    hideLabel={content.hidePassword}
+                    value={values.currentPassword}
+                    onChange={(event) =>
+                      setValues((current) => ({
+                        ...current,
+                        currentPassword: event.target.value,
+                      }))
+                    }
+                    required
+                  />
+                </label>
+                <label className="text-[.8125rem] font-semibold text-admin-heading">
+                  <span>{content.password}</span>
+                  <PasswordInput
+                    className={inputClass}
+                    name="password"
+                    autoComplete="new-password"
+                    showLabel={content.showPassword}
+                    hideLabel={content.hidePassword}
+                    value={values.password}
+                    onChange={(event) =>
+                      setValues((current) => ({
+                        ...current,
+                        password: event.target.value,
+                      }))
+                    }
+                    minLength={12}
+                    required
+                  />
+                </label>
+                <label className="text-[.8125rem] font-semibold text-admin-heading">
+                  <span>{content.confirmPassword}</span>
+                  <PasswordInput
+                    className={inputClass}
+                    name="confirmPassword"
+                    autoComplete="new-password"
+                    showLabel={content.showPassword}
+                    hideLabel={content.hidePassword}
+                    value={values.confirmPassword}
+                    onChange={(event) =>
+                      setValues((current) => ({
+                        ...current,
+                        confirmPassword: event.target.value,
+                      }))
+                    }
+                    minLength={12}
+                    required
+                  />
+                </label>
+              </>
+            )}
+            {validationError && (
+              <p
+                role="alert"
+                className="rounded-lg bg-red-500/10 px-3 py-2 text-xs text-red-600 dark:text-red-300"
+              >
+                {validationError}
+              </p>
+            )}
+            <footer className="flex justify-end gap-2">
+              <button
+                type="button"
+                className="inline-flex min-h-9 items-center justify-center rounded-[.55rem] border border-admin-border bg-admin-control px-[.7rem] text-[.6875rem] font-semibold text-admin-muted"
+                onClick={close}
+              >
+                {content.cancel}
+              </button>
+              <button
+                disabled={submitting}
+                className="inline-flex min-h-9 items-center justify-center gap-2 rounded-[.55rem] border border-admin-brand bg-admin-brand px-[.7rem] text-[.6875rem] font-semibold text-white disabled:cursor-wait disabled:opacity-70"
+              >
+                <Save size={14} />
+                {mode === "reset" ? content.resetPassword : content.save}
+              </button>
+            </footer>
+          </form>
+        )}
+      </section>
+    </div>
+  );
+}
+const inputClass =
+  "mt-[.55rem] min-h-11 w-full rounded-[.72rem] border border-(--editor-field-border) bg-(--editor-input) px-[.9rem] py-0 text-[.875rem] font-normal text-admin-heading outline-none transition focus:border focus:border-admin-brand";
+
+export default ProfilePage;

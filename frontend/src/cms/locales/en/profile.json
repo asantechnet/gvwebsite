@@ -19,6 +19,8 @@
   "changePasswordDescription": "Update the current administrator password with security.",
   "resetPassword": "Password recovery",
   "resetPasswordDescription": "Send a secure password reset link to your email.",
+  "resetSentTitle": "Reset link sent",
+  "resetSentDescription": "A password reset link has been sent to your email address.",
   "save": "Save profile",
   "saved": "Profile is up to date",
   "unsaved": "Unsaved changes",
@@ -32,7 +34,7 @@
   "latestPassword": "Last password change",
   "noPassword": "Password change has not been registered yet.",
   "cancel": "Cancel",
-  "done": "All",
+  "done": "Done",
   "newEmail": "New email address",
   "currentPassword": "Current password",
   "password": "New password",
@@ -40,6 +42,8 @@
   "passwordValidation": "Use at least 12 characters and make sure both new passwords match.",
   "sendConfirmation": "Send confirmation",
   "close": "To close",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
   "profileSaved": "Profile saved",
   "profileSavedDescription": "Your account details have been successfully updated."
 }

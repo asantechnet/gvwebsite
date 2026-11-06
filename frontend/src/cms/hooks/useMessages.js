@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { normalizeMessage } from '@/shared/models/message.js'
 import { dataSource } from '@/shared/services/data/index.js'
+import { withSkeletonPreview } from '@/shared/utils/loading.js'
 
 function useMessages(enabled = true) {
   const [records, setRecords] = useState([])
@@ -14,7 +15,7 @@ function useMessages(enabled = true) {
     setStatus('loading')
     setError(null)
     try {
-      const messages = await dataSource.messages.list({ signal })
+      const messages = await withSkeletonPreview(dataSource.messages.list({ signal }))
       if (signal?.aborted) return
       setRecords(messages.map(normalizeMessage))
       setStatus('ready')

@@ -3,16 +3,15 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import Button from '@ui/Button.jsx'
 import PostCard from '@ui/PostCard.jsx'
-
-const getVisibleCount = () => typeof window === 'undefined' ? 1 : window.innerWidth >= 1024 ? 4 : window.innerWidth >= 768 ? 2 : 1
+import { getCarouselVisibleCount } from '@website/utils/cardCounts.js'
 
 function PostCarousel({ items, category, labels, language }) {
   const isLtr = language === 'en'
   const viewportRef = useRef(null)
   const pointerStartRef = useRef(null)
-  const [visibleCount, setVisibleCount] = useState(getVisibleCount)
+  const [visibleCount, setVisibleCount] = useState(getCarouselVisibleCount)
   const [viewportWidth, setViewportWidth] = useState(0)
-  const [activeIndex, setActiveIndex] = useState(getVisibleCount())
+  const [activeIndex, setActiveIndex] = useState(getCarouselVisibleCount())
   const [paused, setPaused] = useState(false)
   const [resetting, setResetting] = useState(false)
   const first = visibleCount
@@ -23,7 +22,7 @@ function PostCarousel({ items, category, labels, language }) {
   const gap = 12
 
   useLayoutEffect(() => {
-    const resize = () => { const count = getVisibleCount(); setVisibleCount(count); setActiveIndex(count); setViewportWidth(viewportRef.current?.clientWidth || 0) }
+    const resize = () => { const count = getCarouselVisibleCount(); setVisibleCount(count); setActiveIndex(count); setViewportWidth(viewportRef.current?.clientWidth || 0) }
     resize()
     window.addEventListener('resize', resize)
     return () => window.removeEventListener('resize', resize)

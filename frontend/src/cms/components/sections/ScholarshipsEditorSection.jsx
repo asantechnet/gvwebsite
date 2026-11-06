@@ -70,7 +70,7 @@ function ScholarshipList({ items, options, content, onEdit, onDelete, onToggleSt
   const filterControls = <>
 <label className="flex h-9 min-w-0 items-center gap-2 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3 text-admin-muted focus-within:border-admin-brand md:col-span-2 md:row-start-2 md:mt-[1.1rem] xl:col-span-4">
 <Search size={15} />
-<input className="min-w-0 flex-1 bg-transparent text-xs text-admin-heading outline-none" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={content.search} />
+<input className="search-field min-w-0 flex-1 bg-transparent text-xs text-admin-heading outline-none" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={content.search} />
 </label>
 <StatusSelect value={status} onChange={setStatus} content={content} className="md:col-span-2 md:row-start-3 xl:col-span-1 xl:row-start-2" />
 <button type="button" onClick={resetFilters} aria-label={content.reset} title={content.reset} className="inline-flex h-[2.25rem] min-h-0 box-border items-center justify-center gap-1.5 rounded-xl border border-admin-border leading-none bg-admin-brand-soft px-3 text-xs font-semibold text-admin-muted transition hover:border-admin-brand dark:bg-admin-control hover:bg-admin-brand-soft hover:text-admin-brand-text md:self-end xl:col-start-5 xl:row-start-1 xl:mt-[1.25rem]">
@@ -82,7 +82,7 @@ function ScholarshipList({ items, options, content, onEdit, onDelete, onToggleSt
 <button type="button" onClick={() => setFilterModalOpen(true)} className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-xl border border-admin-border bg-admin-control px-3 text-xs font-semibold text-admin-heading transition hover:border-admin-brand hover:text-admin-brand-text"><SlidersHorizontal size={15} />{content.filters.title || 'فیلترها'}</button>
 <label className="col-span-2 flex h-9 min-w-0 items-center gap-2 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3 text-admin-muted focus-within:border-admin-brand">
 <Search size={15} />
-<input className="min-w-0 flex-1 bg-transparent text-xs text-admin-heading outline-none" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={content.search} />
+<input className="search-field min-w-0 flex-1 bg-transparent text-xs text-admin-heading outline-none" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={content.search} />
 </label>
 </div>
   return <div className="grid gap-4">

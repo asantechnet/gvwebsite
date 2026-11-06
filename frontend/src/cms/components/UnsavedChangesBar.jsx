@@ -16,8 +16,8 @@ const copy = {
   en: { actions: 'Page actions', saved: 'Changes saved', failed: 'Changes could not be saved. Try again.', saving: 'Saving…', dirty: 'You have unsaved changes.', clean: 'There are no changes to save.', reset: 'Reset', saveChanges: 'Save changes', leave: 'Leave without saving?', leaveDescription: 'Your changes have not been saved yet.', cancel: 'Cancel', discard: 'Discard', save: 'Save' },
 }
 
-function UnsavedChangesBar({ sidebarCollapsed = false }) {
-  const labels = copy[document.documentElement.lang] || copy.prs
+function UnsavedChangesBar({ language = 'prs', sidebarCollapsed = false }) {
+  const labels = copy[language] || copy.prs
   const [dirty, setDirty] = useState(() => hasRecoverableCmsDraft(getCmsRouteKey(window.location.pathname)))
   const [saved, setSaved] = useState(false)
   const [saving, setSaving] = useState(false)

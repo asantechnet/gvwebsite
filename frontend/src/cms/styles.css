@@ -16,11 +16,20 @@
 .cms-root :where(small, time) { font-weight: 400; }
 .cms-root :where(input, textarea, select) { font-size: .8125rem; font-weight: 400; }
 .cms-root :where(button, a) { -webkit-tap-highlight-color: transparent; }
-.cms-root :where(a, button, [role="button"], input, textarea, select):focus-visible {
+@media (hover: hover) {
+  .cms-root button:not(:disabled):hover { filter: brightness(.94); }
+}
+.cms-root :where(a, button, [role="button"]):focus-visible {
   outline: none;
   border-color: var(--admin-brand);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--admin-brand) 28%, transparent);
 }
+.cms-root :where(input, textarea, select):focus-visible {
+  outline: none;
+  border-color: var(--admin-brand);
+  box-shadow: none;
+}
+.cms-root input.search-field:focus-visible { border-color: var(--header-control-border); box-shadow: none; }
 
 .cms-root .cms-opportunity-prose :where(h2, h3) { margin-block: 1rem .5rem; color: var(--admin-heading); font-family: var(--font-heading); font-weight: 800; line-height: 1.5; }
 .cms-root .cms-opportunity-prose h2 { font-size: 1.35rem; }
@@ -61,17 +70,22 @@
   border-color: var(--admin-card); box-shadow: 0 0 0 3px var(--admin-card), 0 0 0 5px var(--brand-orange), 0 9px 24px color-mix(in srgb, var(--brand-orange) 28%, transparent);
 }
 .cms-root .cms-opportunity-prose [data-editor-button] a:active { background: color-mix(in srgb, var(--brand-orange) 84%, #8f3a07); box-shadow: 0 4px 12px color-mix(in srgb, var(--brand-orange) 24%, transparent); color: #1b0d04; }
-.cms-root[data-theme="dark"] .cms-opportunity-prose [data-editor-button] a {
+.cms-root[data-theme="dark"] .cms-opportunity-prose [data-editor-button] a,
+html.dark .cms-root .cms-opportunity-prose [data-editor-button] a {
   border-color: color-mix(in srgb, var(--brand-orange) 82%, white); background: var(--brand-orange); box-shadow: 0 7px 20px color-mix(in srgb, var(--brand-orange) 20%, transparent); color: #172033;
 }
-.cms-root[data-theme="dark"] .cms-opportunity-prose [data-editor-button] a:hover {
+.cms-root[data-theme="dark"] .cms-opportunity-prose [data-editor-button] a:hover,
+html.dark .cms-root .cms-opportunity-prose [data-editor-button] a:hover {
   border-color: color-mix(in srgb, var(--brand-orange) 70%, white); background: color-mix(in srgb, var(--brand-orange) 88%, white); box-shadow: 0 9px 26px color-mix(in srgb, var(--brand-orange) 28%, transparent); color: #111827;
 }
-.cms-root[data-theme="dark"] .cms-opportunity-prose [data-editor-button] a:focus-visible { border-color: var(--admin-card); box-shadow: 0 0 0 3px var(--admin-card), 0 0 0 5px var(--brand-orange), 0 9px 26px color-mix(in srgb, var(--brand-orange) 26%, transparent); }
-.cms-root[data-theme="dark"] .cms-opportunity-prose [data-editor-button] a:active { background: color-mix(in srgb, var(--brand-orange) 82%, black); box-shadow: 0 4px 12px color-mix(in srgb, var(--brand-orange) 18%, transparent); color: #111827; }
+.cms-root[data-theme="dark"] .cms-opportunity-prose [data-editor-button] a:focus-visible,
+html.dark .cms-root .cms-opportunity-prose [data-editor-button] a:focus-visible { border-color: var(--admin-card); box-shadow: 0 0 0 3px var(--admin-card), 0 0 0 5px var(--brand-orange), 0 9px 26px color-mix(in srgb, var(--brand-orange) 26%, transparent); }
+.cms-root[data-theme="dark"] .cms-opportunity-prose [data-editor-button] a:active,
+html.dark .cms-root .cms-opportunity-prose [data-editor-button] a:active { background: color-mix(in srgb, var(--brand-orange) 82%, black); box-shadow: 0 4px 12px color-mix(in srgb, var(--brand-orange) 18%, transparent); color: #111827; }
 @media (max-width: 640px) { .cms-root .cms-opportunity-prose :where(ul, ol)[data-columns] { columns: 1; } }
 .cms-root :lang(ps) { font-family: Vazirmatn, Tahoma, sans-serif; }
-.cms-root[data-theme="dark"] {
+.cms-root[data-theme="dark"],
+html.dark .cms-root {
   --admin-brand: #f7a33a; --admin-brand-text: #f7a33a; --admin-brand-soft: color-mix(in srgb, var(--admin-brand) 18%, transparent);
   --admin-heading: #f7f9fd; --admin-muted: #b4bfd1; --admin-border: #39465b; --admin-card: #192230;
   --admin-sidebar: #141e2c; --sidebar-heading: #f7f9fd; --sidebar-text: #c1cada; --sidebar-muted: #909db2;
@@ -82,7 +96,8 @@
   background-image: radial-gradient(circle at 12% -8%, color-mix(in srgb, var(--admin-brand) 11%, transparent), transparent 32rem);
 }
 .cms-root .sidebar-scroll-nav { scrollbar-width: none; }
-.cms-root[data-theme="dark"] .cms-logout-button:hover { background: rgb(239 68 68 / .2); color: #fda4af; box-shadow: inset 0 0 0 1px rgb(251 113 133 / .18), 0 6px 18px rgb(239 68 68 / .1); }
+.cms-root[data-theme="dark"] .cms-logout-button:hover,
+html.dark .cms-root .cms-logout-button:hover { background: rgb(239 68 68 / .2); color: #fda4af; box-shadow: inset 0 0 0 1px rgb(251 113 133 / .18), 0 6px 18px rgb(239 68 68 / .1); }
 .cms-root .sidebar-scroll-nav::-webkit-scrollbar { width: 0; height: 0; }
 .cms-root .cms-tabs-scroll { direction: inherit; scrollbar-width: thin; scrollbar-color: var(--admin-brand) var(--admin-control-soft); -webkit-overflow-scrolling: touch; touch-action: pan-x; }
 .cms-root .cms-tabs-scroll::-webkit-scrollbar { display: block !important; width: 4px !important; height: 4px !important; }
@@ -122,6 +137,6 @@
 .cms-root .overflow-y-auto:not(.sidebar-scroll-nav)::-webkit-scrollbar-thumb { min-height: 3rem; border: 2px solid var(--admin-control-soft); border-radius: 999px; background: var(--admin-brand); }
 .cms-root .overflow-y-auto:not(.sidebar-scroll-nav)::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--admin-brand) 82%, var(--admin-heading)); }
 .cms-clock-separator { width: .45em; animation: cms-clock-blink 2s steps(1, end) infinite; }
-.cms-root form > .profile-card:first-child label > input { min-height: 3.15rem; }
+.cms-root form > .profile-card:first-child label > input { min-height: 2.5rem; }
 @keyframes cms-clock-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: .18; } }
 @media (prefers-reduced-motion: reduce) { .cms-clock-separator { animation: none; } }

@@ -7,7 +7,7 @@ import dariDashboard from '../src/cms/locales/prs/dashboard.json' with { type: '
 import dariSettings from '../src/cms/locales/prs/settings.json' with { type: 'json' }
 import pashtoDashboard from '../src/cms/locales/ps/dashboard.json' with { type: 'json' }
 import pashtoSettings from '../src/cms/locales/ps/settings.json' with { type: 'json' }
-import { CMS_PATHS, getCmsHref, getCmsRouteKey, isCmsPath } from '../src/cms/routes.js'
+import { CMS_PATHS, CMS_QUICK_ROUTE_KEYS, getCmsHref, getCmsRouteKey, isCmsPath } from '../src/cms/routes.js'
 
 test('CMS paths resolve from one canonical route table', () => {
   assert.equal(isCmsPath('/dashboard'), true)
@@ -17,6 +17,10 @@ test('CMS paths resolve from one canonical route table', () => {
   assert.equal(getCmsRouteKey('/dashboard/tourism/world'), 'tourism')
   assert.equal(getCmsRouteKey('/dashboard/unknown'), 'placeholder')
   assert.equal(getCmsHref('messages'), CMS_PATHS.messages)
+  for (const routeKey of CMS_QUICK_ROUTE_KEYS) {
+    assert.ok(CMS_PATHS[routeKey])
+    assert.notEqual(getCmsRouteKey(getCmsHref(routeKey)), 'placeholder')
+  }
 })
 
 test('new CMS collection and branding labels have locale parity', () => {

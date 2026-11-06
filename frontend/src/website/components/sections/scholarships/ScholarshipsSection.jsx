@@ -16,11 +16,11 @@ import Container from "@ui/Container.jsx";
 import PostPagination from "@ui/PostPagination.jsx";
 import Section from "@ui/Section.jsx";
 import { filterScholarships } from "@website/utils/catalog.js";
+import { SCHOLARSHIPS_PER_PAGE } from "@website/utils/cardCounts.js";
 import { useLocalizedHref } from "@website/hooks/useWebsiteLanguage.js";
 import useModalFocus from "@/shared/hooks/useModalFocus.js";
 
 const initialFilters = { country: "", degree: "", funding: "", deadline: "" };
-const scholarshipsPerPage = 10;
 const pashtoDeadlineDates = {
   "د ټاکل شوي پروګرام له مخې": "25 لړم 1405",
   "د رسمي غوښتنلیک دورې مطابق": "3 لیندۍ 1405",
@@ -187,11 +187,11 @@ function ScholarshipsSection({ content, language = "dr" }) {
     [content.items, filters],
   );
   const totalPages = Math.ceil(
-    filteredScholarships.length / scholarshipsPerPage,
+    filteredScholarships.length / SCHOLARSHIPS_PER_PAGE,
   );
   const visibleScholarships = filteredScholarships.slice(
-    (currentPage - 1) * scholarshipsPerPage,
-    currentPage * scholarshipsPerPage,
+    (currentPage - 1) * SCHOLARSHIPS_PER_PAGE,
+    currentPage * SCHOLARSHIPS_PER_PAGE,
   );
 
   const updateFilter = (key, value) => {

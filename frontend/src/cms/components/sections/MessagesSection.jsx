@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react'
 
 import PageHeading from '@cms/components/PageHeading.jsx'
 import { EditorPreviewLink } from '@cms/components/EditorPrimitives.jsx'
+import SkeletonBlock from '@/shared/components/SkeletonBlock.jsx'
 
 const dateLocales = { prs: 'fa-AF-u-nu-latn', ps: 'ps-AF-u-nu-latn', en: 'en-GB' }
 const messageActionClass = 'grid size-8 flex-none place-items-center rounded-lg border border-transparent bg-transparent text-admin-muted transition-colors hover:border-admin-border hover:bg-admin-control-soft hover:text-admin-heading disabled:cursor-wait disabled:opacity-45'
@@ -55,12 +56,12 @@ function MessagesSection({ content, language = 'prs', messageState }) {
           <label className="flex min-w-0 flex-1 items-center gap-2 rounded-[.62rem] border border-(--editor-field-border) bg-(--editor-input) px-[.7rem] text-admin-muted focus-within:border-admin-brand">
             <Search size={16} aria-hidden="true" />
             <span className="sr-only">{content.search}</span>
-            <input type="search" className="w-full border-0 bg-transparent py-[.72rem] text-[.8125rem] text-admin-heading outline-none" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={content.search} />
+            <input type="search" className="search-field w-full border-0 bg-transparent py-[.72rem] text-[.8125rem] text-admin-heading outline-none" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={content.search} />
           </label>
         </div>
         <div className="px-3 pt-3"><div className="flex min-w-0 items-center gap-[.2rem] overflow-x-auto rounded-[.7rem] border border-(--editor-field-border) bg-(--editor-input) p-[.22rem]">{filters.map(([key, label, count]) => <button type="button" key={key} aria-pressed={filter === key} onClick={() => { setFilter(key); setSelectedId(null) }} className={`min-h-9 flex-1 rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${filter === key ? 'bg-admin-brand-soft text-admin-heading shadow-sm' : 'text-admin-muted hover:bg-admin-brand-soft'}`}>{label}<span className="ms-2 inline-block text-[.625rem] opacity-75">{count}</span></button>)}</div></div>
         <div className="flex items-center justify-between px-4 pt-[.9rem] pb-[.6rem]"><strong className="text-[.8125rem] text-admin-heading">{content.inbox}</strong><span className="text-[.6875rem] text-admin-muted">{unreadCount} {content.unread}</span></div>
-        {status === 'loading' && <p role="status" className="px-4 py-8 text-center text-xs text-admin-muted">{content.loading}</p>}
+        {status === 'loading' && <MessageListSkeleton />}
         {status === 'error' && <div role="alert" className="grid justify-items-center gap-3 px-4 py-8 text-center"><p className="m-0 text-xs leading-relaxed text-red-600">{content.loadError}</p><button type="button" onClick={refresh} className="min-h-9 rounded-lg border border-admin-brand bg-admin-brand-soft px-4 text-xs font-semibold text-admin-brand-text transition hover:bg-admin-brand hover:text-white">{content.retry}</button></div>}
         {status === 'ready' && visible.map((message) => <div key={message.id} className="flex items-center border-t border-admin-border">
           <button type="button" onClick={() => setSelectedId(message.id)} aria-current={selectedId === message.id ? 'true' : undefined} className={`grid min-w-0 flex-1 grid-cols-[.45rem_1fr] gap-2 border-0 px-4 py-[.9rem] text-start ${selectedId === message.id ? 'bg-admin-card shadow-[inset_3px_0_var(--admin-brand)] rtl:shadow-[inset_-3px_0_var(--admin-brand)]' : 'bg-transparent hover:bg-admin-control'}`}><span className={`mt-[.38rem] size-[.42rem] rounded-full ${message.unread ? 'bg-admin-brand shadow-[0_0_0_3px_var(--admin-brand-soft)]' : ''}`} /><span className="min-w-0"><span className="flex items-center justify-between gap-2"><strong className="truncate text-[.75rem] text-admin-heading">{message.title}</strong><time dateTime={message.createdAt} className="shrink-0 text-[.625rem] text-admin-muted">{formatMessageDate(message.createdAt, language)}</time></span><small className="mt-[.2rem] block truncate text-[.6875rem] text-admin-brand-text">{message.service}</small><span className="mt-[.45rem] block overflow-hidden text-[.6875rem] leading-[1.45] text-ellipsis whitespace-nowrap text-admin-muted">{message.body}</span></span></button>
@@ -77,6 +78,10 @@ function MessagesSection({ content, language = 'prs', messageState }) {
       </article> : <div className="message-detail flex min-h-80 flex-col items-center justify-center px-6 py-16 text-center sm:min-h-96" role="status"><span className="mb-5 grid size-16 place-items-center rounded-2xl border border-[color-mix(in_srgb,var(--admin-brand)_18%,var(--admin-border))] bg-admin-brand-soft text-admin-brand-text shadow-[0_8px_24px_color-mix(in_srgb,var(--admin-brand)_8%,transparent)]"><Mail className="text-admin-heading" size={28} strokeWidth={1.75} aria-hidden="true" /></span><h3 className="m-0 font-heading text-base tracking-tight text-admin-heading">{messages.length ? content.select : content.noMessages}</h3><p className="mt-2 mb-0 max-w-64 text-[.8125rem] leading-relaxed text-admin-muted">{messages.length ? content.selectDescription : content.noMessagesDescription}</p></div>}
     </section>
   </div>
+}
+
+function MessageListSkeleton() {
+  return <div role="status" aria-label="Loading messages" className="border-t border-admin-border"><span className="sr-only">Loading messages</span>{Array.from({ length: 7 }, (_, index) => <div key={index} className="flex min-h-[5.1rem] items-start gap-3 border-b border-admin-border px-4 py-3"><SkeletonBlock className="mt-1 size-2 shrink-0 rounded-full bg-admin-brand/20" /><div className="min-w-0 flex-1 space-y-2"><div className="flex justify-between gap-3"><SkeletonBlock className="h-4 w-2/5 bg-admin-heading/10" /><SkeletonBlock className="h-3 w-16 bg-admin-heading/10" /></div><SkeletonBlock className="h-3 w-1/3 bg-admin-brand/15" /><SkeletonBlock className="h-3 w-full bg-admin-heading/10" /></div></div>)}</div>
 }
 
 export default MessagesSection

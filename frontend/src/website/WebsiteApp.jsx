@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 
-import ApplicationLoading from '@/shared/components/ApplicationLoading.jsx'
 import WebsiteLayout from '@layout/WebsiteLayout.jsx'
+import RouteProgress from '@website/components/shared/RouteProgress.jsx'
 import { loadWebsiteContent } from '@website/data/loadWebsiteContent.js'
+import { parseLocalizedPathname } from '@website/utils/language.js'
 
 function WebsiteApp({ language }) {
   const [content, setContent] = useState(null)
@@ -19,7 +20,7 @@ function WebsiteApp({ language }) {
     }
   }, [language])
 
-  if (!content) return <ApplicationLoading />
+  if (!content) return <RouteProgress path={parseLocalizedPathname(window.location.pathname).pagePath} />
 
   return <WebsiteLayout content={content} />
 }

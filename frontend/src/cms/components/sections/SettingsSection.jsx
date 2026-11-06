@@ -5,6 +5,8 @@ import { EditorVisibilityToggle } from '@cms/components/EditorPrimitives.jsx'
 import MediaUploadField from '@cms/components/MediaUploadField.jsx'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 import { dataSource } from '@/shared/services/data/index.js'
+import SkeletonBlock from '@/shared/components/SkeletonBlock.jsx'
+import { withSkeletonPreview } from '@/shared/utils/loading.js'
 const cardClass = 'relative rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)]'
 
 function SettingsSection({ content }) {
@@ -49,14 +51,14 @@ function SettingsSection({ content }) {
 
   const loadAudit = () => {
     setAudit((current) => ({ ...current, status: 'loading' }))
-    dataSource.auditLogs.list()
+    withSkeletonPreview(dataSource.auditLogs.list())
       .then((entries) => setAudit({ entries, status: 'ready' }))
       .catch(() => setAudit((current) => ({ ...current, status: 'error' })))
   }
 
   useEffect(() => {
     let active = true
-    dataSource.auditLogs.list()
+    withSkeletonPreview(dataSource.auditLogs.list())
       .then((entries) => { if (active) setAudit({ entries, status: 'ready' }) })
       .catch(() => { if (active) setAudit((current) => ({ ...current, status: 'error' })) })
     return () => { active = false }
@@ -85,7 +87,7 @@ function AuditHistory({ copy, audit, onRetry }) {
       <button type="button" onClick={onRetry} aria-label={copy.refresh} className="grid size-10 shrink-0 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:text-admin-brand-text focus:border-admin-brand focus:shadow-[0_0_0_2px_var(--admin-brand-soft)]"><RefreshCw size={17} className={audit.status === 'loading' ? 'animate-spin motion-reduce:animate-none' : ''} /></button>
     </header>
     <div className="p-4 sm:p-5">
-      {audit.status === 'loading' && <p className="text-sm text-admin-muted" role="status">{copy.loading}</p>}
+      {audit.status === 'loading' && <AuditSkeleton />}
       {audit.status === 'error' && <p className="text-sm text-red-600" role="alert">{copy.error}</p>}
       {audit.status === 'ready' && audit.entries.length === 0 && <p className="text-sm text-admin-muted">{copy.empty}</p>}
       {audit.entries.length > 0 && <ol className="grid gap-3">{audit.entries.slice(0, 12).map((entry) => <li key={entry.id} className="flex flex-col gap-1 rounded-xl border border-admin-border bg-(--editor-field) px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
@@ -94,6 +96,10 @@ function AuditHistory({ copy, audit, onRetry }) {
       </li>)}</ol>}
     </div>
   </section>
+}
+
+function AuditSkeleton() {
+  return <div className="grid gap-3" role="status" aria-label="Loading audit history"><span className="sr-only">Loading audit history</span>{Array.from({ length: 6 }, (_, index) => <div key={index} className="flex flex-col gap-3 rounded-xl border border-admin-border bg-(--editor-field) px-4 py-3 sm:flex-row sm:items-center sm:justify-between"><div className="space-y-2"><SkeletonBlock className="h-4 w-44 bg-admin-heading/10" /><SkeletonBlock className="h-3 w-28 bg-admin-heading/10" /></div><SkeletonBlock className="h-3 w-32 bg-admin-heading/10" /></div>)}</div>
 }
 
 function BrandingLogo({ copy, lightLogo, darkLogo, onLogo }) { return <section className={`${cardClass} p-4 sm:p-5`}><div className="flex items-center gap-3"><span className="grid size-10 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text"><ImagePlus size={19} /></span><h2 className="font-heading text-base text-admin-heading">{copy.logo}</h2></div><div className="mt-5 grid gap-4 sm:grid-cols-2"><div><span className="text-xs font-semibold text-admin-heading">{copy.lightLogo}</span><MediaUploadField iconOnly value={lightLogo || '/assets/branding/new%20logo.webp'} onChange={(logo) => onLogo('lightLogo', logo)} content={{ countryImage: '', choose: copy.choose, drop: '', replace: copy.replace, remove: copy.remove }} /></div><div><span className="text-xs font-semibold text-admin-heading">{copy.darkLogo}</span><MediaUploadField iconOnly value={darkLogo || '/assets/branding/new%20logo%20white.webp'} onChange={(logo) => onLogo('darkLogo', logo)} content={{ countryImage: '', choose: copy.choose, drop: '', replace: copy.replace, remove: copy.remove }} /></div></div></section> }

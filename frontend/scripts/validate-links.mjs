@@ -3,6 +3,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { getCmsRouteKey } from '../src/cms/routes.js'
+
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const sourceRoot = path.join(projectRoot, 'src')
 const websiteRoot = path.join(sourceRoot, 'website')
@@ -36,7 +38,9 @@ function validInternalRoute(route, data) {
   const pathname = route.split(/[?#]/)[0].replace(/\/$/, '') || '/'
   const exactRoutes = ['/', '/about', '/contact', '/services', '/scholarships', '/magazine', '/search']
   if (exactRoutes.includes(pathname)) return true
-  if (pathname === '/dashboard' || pathname.startsWith('/dashboard/')) return true
+  if (pathname === '/dashboard') return true
+  if (['/dashboard/login', '/dashboard/forgot-password', '/dashboard/reset-password', '/dashboard/super'].includes(pathname)) return true
+  if (pathname.startsWith('/dashboard/')) return getCmsRouteKey(pathname) !== 'placeholder'
   if (/^\/opportunities\/(study|work|migration|investment|exams)$/.test(pathname)) return true
   if (/^\/tourism\/(afghanistan|world)$/.test(pathname)) return true
 

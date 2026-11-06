@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import Footer from './Footer.jsx'
 import MaintenancePage from '../MaintenancePage.jsx'
@@ -9,27 +9,31 @@ import { searchCatalog } from '@website/utils/catalog.js'
 import { getLanguageConfig, localizeHref, parseLocalizedPathname, WEBSITE_LANGUAGE_STORAGE_KEY } from '@website/utils/language.js'
 import { WebsiteLanguageContext } from '@website/hooks/useWebsiteLanguage.js'
 import { applySeoMetadata, buildStructuredData, getSiteOrigin, toAbsoluteUrl } from '@website/seo/metadata.js'
+import { lazyWithSkeletonPreview, SKELETON_PREVIEW_DELAY_MS } from '@/shared/utils/loading.js'
+import { isReloadNavigation, restoreScrollPosition, saveScrollPosition } from '@website/utils/scrollRestoration.js'
+import { STUDY_DIRECTORY_CARD_LIMIT, getVisibleCardCount } from '@website/utils/cardCounts.js'
 
-const HomePage = lazy(() => import('@pages/HomePage.jsx'))
-const AboutPage = lazy(() => import('@pages/AboutPage.jsx'))
-const ContactPage = lazy(() => import('@pages/ContactPage.jsx'))
-const ScholarshipsPage = lazy(() => import('@pages/ScholarshipsPage.jsx'))
-const ScholarshipPostPage = lazy(() => import('@pages/ScholarshipPostPage.jsx'))
-const MagazinePage = lazy(() => import('@pages/MagazinePage.jsx'))
-const BlogPostPage = lazy(() => import('@pages/BlogPostPage.jsx'))
-const StudyOpportunityPage = lazy(() => import('@pages/StudyOpportunityPage.jsx'))
-const WorkOpportunityPage = lazy(() => import('@pages/WorkOpportunityPage.jsx'))
-const MigrationOpportunityPage = lazy(() => import('@pages/MigrationOpportunityPage.jsx'))
-const InvestmentOpportunityPage = lazy(() => import('@pages/InvestmentOpportunityPage.jsx'))
-const OpportunityCountryPostPage = lazy(() => import('@pages/OpportunityCountryPostPage.jsx'))
-const GuidePostPage = lazy(() => import('@pages/GuidePostPage.jsx'))
-const ServicePostPage = lazy(() => import('@pages/ServicePostPage.jsx'))
-const SearchPage = lazy(() => import('@pages/SearchPage.jsx'))
-const NotFoundPage = lazy(() => import('@pages/NotFoundPage.jsx'))
-const TourismPage = lazy(() => import('@pages/TourismPage.jsx'))
-const AfghanistanTourismPage = lazy(() => import('@pages/AfghanistanTourismPage.jsx'))
-const WorldTourismPage = lazy(() => import('@pages/WorldTourismPage.jsx'))
-const ServicesPage = lazy(() => import('@pages/ServicesPage.jsx'))
+const delayed = (importer) => lazy(() => lazyWithSkeletonPreview(importer))
+const HomePage = delayed(() => import('@pages/HomePage.jsx'))
+const AboutPage = delayed(() => import('@pages/AboutPage.jsx'))
+const ContactPage = delayed(() => import('@pages/ContactPage.jsx'))
+const ScholarshipsPage = delayed(() => import('@pages/ScholarshipsPage.jsx'))
+const ScholarshipPostPage = delayed(() => import('@pages/ScholarshipPostPage.jsx'))
+const MagazinePage = delayed(() => import('@pages/MagazinePage.jsx'))
+const BlogPostPage = delayed(() => import('@pages/BlogPostPage.jsx'))
+const StudyOpportunityPage = delayed(() => import('@pages/StudyOpportunityPage.jsx'))
+const WorkOpportunityPage = delayed(() => import('@pages/WorkOpportunityPage.jsx'))
+const MigrationOpportunityPage = delayed(() => import('@pages/MigrationOpportunityPage.jsx'))
+const InvestmentOpportunityPage = delayed(() => import('@pages/InvestmentOpportunityPage.jsx'))
+const OpportunityCountryPostPage = delayed(() => import('@pages/OpportunityCountryPostPage.jsx'))
+const GuidePostPage = delayed(() => import('@pages/GuidePostPage.jsx'))
+const ServicePostPage = delayed(() => import('@pages/ServicePostPage.jsx'))
+const SearchPage = delayed(() => import('@pages/SearchPage.jsx'))
+const NotFoundPage = delayed(() => import('@pages/NotFoundPage.jsx'))
+const TourismPage = delayed(() => import('@pages/TourismPage.jsx'))
+const AfghanistanTourismPage = delayed(() => import('@pages/AfghanistanTourismPage.jsx'))
+const WorldTourismPage = delayed(() => import('@pages/WorldTourismPage.jsx'))
+const ServicesPage = delayed(() => import('@pages/ServicesPage.jsx'))
 
 function formatPageTitle(pattern, values) {
   return pattern.replace(/\{(\w+)\}/g, (placeholder, key) => values[key] ?? placeholder)
@@ -39,8 +43,6 @@ function WebsiteLayout({ children = null, content }) {
   const siteSettings = content.siteSettings
   const [localMaintenanceMode, setLocalMaintenanceMode] = useState(() => window.localStorage.getItem('globalvision-maintenance-mode') === 'true')
   const maintenanceMode = siteSettings?.settings?.maintenanceMode ?? localMaintenanceMode
-  const scrollStorageKey = `globalvision-scroll:${window.location.pathname}${window.location.search}`
-  const savedScrollPosition = useRef(Number(window.sessionStorage.getItem(scrollStorageKey)))
   const [theme, setTheme] = useState(() => {
     if (typeof window === 'undefined') return 'light'
 
@@ -202,19 +204,26 @@ function WebsiteLayout({ children = null, content }) {
   }, [])
 
   useEffect(() => {
-    const saveScrollPosition = () => window.sessionStorage.setItem(scrollStorageKey, String(window.scrollY))
     window.addEventListener('pagehide', saveScrollPosition)
     return () => window.removeEventListener('pagehide', saveScrollPosition)
-  }, [scrollStorageKey])
+  }, [])
 
   useLayoutEffect(() => {
-    const navigationType = window.performance.getEntriesByType('navigation')[0]?.type
-    if (navigationType === 'reload' && Number.isFinite(savedScrollPosition.current)) {
-      window.scrollTo({ top: savedScrollPosition.current, behavior: 'auto' })
-    }
+    const shouldRestore = isReloadNavigation()
+    let frame = 0
+    if (shouldRestore) restoreScrollPosition('proportional')
 
-    const frame = window.requestAnimationFrame(() => document.documentElement.style.removeProperty('scroll-behavior'))
-    return () => window.cancelAnimationFrame(frame)
+    const timeout = window.setTimeout(() => {
+      frame = window.requestAnimationFrame(() => {
+        if (shouldRestore) restoreScrollPosition('exact')
+        document.documentElement.style.removeProperty('scroll-behavior')
+      })
+    }, SKELETON_PREVIEW_DELAY_MS + 100)
+
+    return () => {
+      window.clearTimeout(timeout)
+      if (frame) window.cancelAnimationFrame(frame)
+    }
   }, [])
 
   useLayoutEffect(() => {
@@ -273,12 +282,14 @@ function WebsiteLayout({ children = null, content }) {
     ? servicesContent.services.length
     : page === '/tourism/afghanistan' || page === '/tourism/world'
       ? tourism?.cards.length || 0
-      : ['/opportunities/study', '/opportunities/work', '/opportunities/migration', '/opportunities/investment'].includes(page)
+      : page === '/opportunities/study'
+        ? getVisibleCardCount(guidesContent.countries.length, STUDY_DIRECTORY_CARD_LIMIT)
+        : ['/opportunities/work', '/opportunities/migration', '/opportunities/investment'].includes(page)
           ? guidesContent.countries.length
           : 0
 
   return (
-    <Suspense fallback={<RouteProgress path={page} hasSearchQuery={Boolean(searchQuery)} searchResultCount={searchResults.length} directoryItemCount={directoryItemCount} maintenanceMode={maintenanceMode} />}><WebsiteLanguageContext.Provider value={language}>
+    <Suspense fallback={<RouteProgress path={page} hasSearchQuery={Boolean(searchQuery)} searchResultCount={searchResults.length} directoryItemCount={directoryItemCount} scholarshipItemCount={scholarshipsContent.items.length} magazineItemCount={magazineContent.news.items.length} maintenanceMode={maintenanceMode} />}><WebsiteLanguageContext.Provider value={language}>
       <div className="website-root flex min-h-screen flex-col bg-background text-foreground">
         <ScrollProgress />
         <Header

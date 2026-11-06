@@ -72,7 +72,7 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 <StatusSelect value={status} onChange={setStatus} labels={labels} compact />
 <label className="flex h-9 min-w-0 items-center gap-2 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3 text-admin-muted focus-within:border-admin-brand">
 <Search size={15} />
-<input className="min-w-0 flex-1 bg-transparent text-xs text-admin-heading outline-none" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={labels.search || 'جستجوی نوشته‌ها...'} />
+<input className="search-field min-w-0 flex-1 bg-transparent text-xs text-admin-heading outline-none" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={labels.search || 'جستجوی نوشته‌ها...'} />
 </label>
 </div>
     {!isServices && <SectionTabBar sections={typeSections} icons={isTourism ? tourismTabIcons : opportunityTabIcons} selectedSection={activeType} onSelect={setActiveType} ariaLabel={typeLabels.typeLabel || label} />}

@@ -13,6 +13,8 @@ export const CMS_ROUTE_KEYS = [
   'profile',
 ]
 
+export const CMS_QUICK_ROUTE_KEYS = ['magazine', 'services', 'opportunities']
+
 export const CMS_PATHS = Object.freeze({
   overview: '/dashboard',
   ...Object.fromEntries(CMS_ROUTE_KEYS.map((key) => [key, `/dashboard/${key}`])),

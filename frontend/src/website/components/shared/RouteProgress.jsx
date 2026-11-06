@@ -1,7 +1,12 @@
-import SkeletonBlock from '@ui/SkeletonBlock.jsx'
+import { useLayoutEffect } from 'react'
+
+import SkeletonBlock from '@/shared/components/SkeletonBlock.jsx'
+import { isReloadNavigation, restoreScrollPosition } from '@website/utils/scrollRestoration.js'
 import { headerNavigation } from '@website/data/navigation.js'
+import { SCHOLARSHIPS_PER_PAGE, getCarouselVisibleCount, getMagazinePostsPerPage, getVisibleCardCount } from '@website/utils/cardCounts.js'
 
 const list = (count) => Array.from({ length: count }, (_, index) => index)
+const collectionSkeletonCount = (count) => Math.max(0, Number(count) || 0)
 const Lines = () => <div className="space-y-3"><SkeletonBlock className="h-3.5 w-full" /><SkeletonBlock className="h-3.5 w-[90%]" /><SkeletonBlock className="h-3.5 w-[68%]" /></div>
 const Heading = ({ start = false }) => <div className={`flex max-w-2xl flex-col gap-4 ${start ? 'items-start' : 'mx-auto items-center'}`}><SkeletonBlock className="h-3 w-28 bg-primary/20" /><SkeletonBlock className="h-9 w-3/4" /><SkeletonBlock className="h-4 w-2/3" /></div>
 
@@ -51,37 +56,47 @@ function AboutSkeleton() {
   </>
 }
 
-function ScholarshipDirectorySkeleton() {
+function ScholarshipDirectorySkeleton({ count }) {
   return <div className="relative bg-background px-4 pb-7 pt-12 dark:bg-gray-800 md:px-6 md:pt-8 lg:pt-10"><div className="mx-auto max-w-6xl">
     <SkeletonBlock className="mx-auto h-9 w-52 rounded-full bg-primary/15" />
     <div className="mt-3 rounded-2xl border border-white/90 bg-white/55 p-2 dark:border-gray-600 dark:bg-gray-800/65"><div className="grid gap-3 sm:grid-cols-[repeat(4,minmax(0,1fr))_auto] sm:items-end">{list(4).map((item) => <div key={item}><SkeletonBlock className="mb-1 h-3 w-20" /><SkeletonBlock className="h-9 w-full rounded-xl" /></div>)}<SkeletonBlock className="mx-auto mt-2 h-9 w-28 rounded-xl bg-primary/15 sm:mt-0" /></div></div>
-    <div className="mt-6 grid gap-4 lg:grid-cols-2">{list(6).map((item) => <div key={item} className="rounded-3xl border border-border bg-surface p-3 dark:border-gray-700 dark:bg-[#2b3442] md:p-4"><div className="grid gap-4 rounded-2xl bg-surface-muted/55 p-4 md:min-h-32 md:grid-cols-[7rem_minmax(0,1fr)]"><SkeletonBlock className="min-h-28 rounded-xl md:min-h-0" /><div className="flex flex-col justify-center gap-3 py-2"><SkeletonBlock className="h-6 w-4/5 bg-primary/15" /><SkeletonBlock className="h-4 w-28" /><div className="flex gap-2"><SkeletonBlock className="h-7 w-20 rounded-lg" /><SkeletonBlock className="h-7 w-24 rounded-lg" /><SkeletonBlock className="h-7 flex-1 rounded-lg" /></div></div></div></div>)}</div>
+    <div className="mt-6 grid gap-4 lg:grid-cols-2">{list(getVisibleCardCount(count, SCHOLARSHIPS_PER_PAGE)).map((item) => <div key={item} className="rounded-3xl border border-border bg-surface p-3 dark:border-gray-700 dark:bg-[#2b3442] md:p-4"><div className="grid gap-4 rounded-2xl bg-surface-muted/55 p-4 md:min-h-32 md:grid-cols-[7rem_minmax(0,1fr)]"><SkeletonBlock className="min-h-28 rounded-xl md:min-h-0" /><div className="flex flex-col justify-center gap-3 py-2"><SkeletonBlock className="h-6 w-4/5 bg-primary/15" /><SkeletonBlock className="h-4 w-28" /><div className="flex gap-2"><SkeletonBlock className="h-7 w-20 rounded-lg" /><SkeletonBlock className="h-7 w-24 rounded-lg" /><SkeletonBlock className="h-7 flex-1 rounded-lg" /></div></div></div></div>)}</div>
     <div className="mt-4 flex items-center justify-between border-t border-border pt-2"><SkeletonBlock className="h-9 w-52" /><SkeletonBlock className="h-5 w-48" /></div>
   </div></div>
 }
 
-function OpportunityDirectorySkeleton({ count = 7 }) {
-  return <section className="bg-background px-4 py-6 md:px-6 md:py-10 lg:py-14"><div className="mx-auto max-w-6xl"><div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:p-8"><main><SkeletonBlock className="mb-4 h-7 w-56" /><div className="grid grid-cols-2 gap-2 md:grid-cols-3">{list(count).map((item) => <SkeletonBlock key={item} className="aspect-video rounded-2xl border border-border" />)}</div></main><aside className="space-y-5 border-t border-border pt-5 lg:border-t-0 lg:border-r lg:pt-0 lg:pr-6 ltr:lg:border-r-0 ltr:lg:border-l ltr:lg:pr-0 ltr:lg:pl-6"><SkeletonBlock className="h-7 w-28 rounded-full bg-primary/15" /><SkeletonBlock className="h-px rounded-none" /><SkeletonBlock className="h-6 w-36" /><div className="grid grid-cols-2 gap-2">{list(6).map((item) => <SkeletonBlock key={item} className="h-16 rounded-xl" />)}</div></aside></div></div></section>
+function SidebarCardGridSkeleton({ count }) {
+  return <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-2">{list(count).map((item) => <div key={item} className="flex min-h-[4.25rem] flex-col items-center justify-center gap-2 rounded-xl border border-border px-2 py-3"><SkeletonBlock className="size-5 rounded-md bg-primary/15" /><SkeletonBlock className="h-3 w-3/5" /></div>)}</div>
+}
+
+function ContentSidebarSkeleton({ category = false, className = '' }) {
+  return <aside className={`order-2 h-fit self-start text-start text-sm lg:border-r lg:pr-6 ltr:lg:border-r-0 ltr:lg:border-l ltr:lg:pr-0 ltr:lg:pl-6 ${className}`.trim()}>{category && <div className="flex flex-col items-start gap-3"><SkeletonBlock className="h-7 w-24 rounded-full bg-primary/15" /></div>}<div className={`${category ? 'mt-5 border-t border-border pt-5' : ''} w-full text-start`.trim()}><SkeletonBlock className="mx-auto mb-4 h-6 w-32 lg:mx-0" /><SidebarCardGridSkeleton count={4} /><div className="mt-4 pt-2"><SkeletonBlock className="mx-auto mb-4 h-6 w-28 lg:mx-0" /><SidebarCardGridSkeleton count={6} /></div></div></aside>
+}
+
+function OpportunityDirectorySkeleton({ count = 0 }) {
+  return <section className="bg-background px-4 py-6 md:px-6 md:py-10 lg:py-14"><div className="mx-auto max-w-6xl"><div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:p-8"><main className="order-1 h-fit min-w-0 self-start"><SkeletonBlock className="mb-4 h-7 w-56" /><div className="grid grid-cols-2 gap-2 md:grid-cols-3">{list(collectionSkeletonCount(count)).map((item) => <SkeletonBlock key={item} className="aspect-video rounded-2xl border border-border" />)}</div></main><ContentSidebarSkeleton className="border-t border-border pt-5 lg:border-t-0 lg:pt-0" /></div></div></section>
 }
 
 function ContactSkeleton() {
   return <><PageHero /><section className="bg-background px-4 pb-12 pt-0 md:px-6"><div className="mx-auto max-w-5xl"><div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-24"><div><SkeletonBlock className="h-9 w-52" /><div className="mt-10 grid gap-6 sm:grid-cols-3 lg:grid-cols-1">{list(3).map((item) => <div key={item} className="flex gap-4"><SkeletonBlock className="size-12 shrink-0 rounded-full bg-primary/15" /><div className="flex-1 space-y-2"><SkeletonBlock className="h-3 w-20" /><SkeletonBlock className="h-5 w-full max-w-44" /></div></div>)}</div><div className="mt-10 flex gap-3">{list(4).map((item) => <SkeletonBlock key={item} className="size-10 rounded-full" />)}</div></div><div className="space-y-5">{list(3).map((item) => <div key={item} className="space-y-2"><SkeletonBlock className="h-4 w-24" /><SkeletonBlock className="h-12" /></div>)}<div className="space-y-2"><SkeletonBlock className="h-4 w-24" /><SkeletonBlock className="h-32" /></div><SkeletonBlock className="h-10 w-full sm:w-32" /></div></div><SkeletonBlock className="mt-12 h-72 w-full rounded-3xl sm:h-96" /></div></section></>
 }
 
-function Carousel() {
-  return <section className="bg-background px-4 pb-16 md:px-6 lg:pb-24"><div className="mx-auto max-w-7xl"><SkeletonBlock className="mx-auto mb-8 h-8 w-48" /><div className="relative px-12"><SkeletonBlock className="absolute start-0 top-1/2 size-10 -translate-y-1/2 rounded-full" /><div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">{list(5).map((item) => <div key={item} className={item === 0 ? '' : item === 1 ? 'hidden md:block' : item < 4 ? 'hidden lg:block' : 'hidden xl:block'}><Card compact /></div>)}</div><SkeletonBlock className="absolute end-0 top-1/2 size-10 -translate-y-1/2 rounded-full" /></div><div className="mt-5 flex justify-center gap-2">{list(7).map((item) => <SkeletonBlock key={item} className="size-2 rounded-full" />)}</div></div></section>
+function Carousel({ count }) {
+  const visibleCount = getVisibleCardCount(count, getCarouselVisibleCount())
+  return <section className="bg-background px-4 pb-16 md:px-6 lg:pb-24"><div className="mx-auto max-w-7xl"><SkeletonBlock className="mx-auto mb-8 h-8 w-48" /><div className="relative px-12"><SkeletonBlock className="absolute start-0 top-1/2 size-10 -translate-y-1/2 rounded-full" /><div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">{list(visibleCount).map((item) => <Card key={item} compact />)}</div><SkeletonBlock className="absolute end-0 top-1/2 size-10 -translate-y-1/2 rounded-full" /></div><div className="mt-5 flex justify-center gap-2">{list(count).map((item) => <SkeletonBlock key={item} className="size-2 rounded-full" />)}</div></div></section>
 }
 
-function MagazineSkeleton() {
-  return <><PageHero /><Carousel /><section className="bg-surface-muted px-4 py-16 md:px-6 lg:py-24"><div className="mx-auto max-w-7xl"><SkeletonBlock className="mx-auto mb-8 h-8 w-48" /><div className="grid gap-3 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">{list(9).map((item) => <Card key={item} compact />)}</div></div></section><Carousel /></>
+function MagazineSkeleton({ count }) {
+  const articleCount = getVisibleCardCount(count, getMagazinePostsPerPage())
+  return <><PageHero /><Carousel count={count} /><section className="bg-surface-muted px-4 py-16 md:px-6 lg:py-24"><div className="mx-auto max-w-7xl"><SkeletonBlock className="mx-auto mb-8 h-8 w-48" /><div className="grid gap-3 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">{list(articleCount).map((item) => <Card key={item} compact />)}</div></div></section><Carousel count={count} /></>
 }
 
 function SearchSkeleton({ hasQuery, resultCount }) {
-  return <><PageHero /><section className="bg-background px-4 pb-20 md:px-6"><div className="mx-auto max-w-5xl"><SkeletonBlock className="h-7 w-64" />{hasQuery && resultCount === 0 ? <SkeletonBlock className="mt-8 h-44 w-full rounded-3xl border border-border" /> : <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{list(resultCount).map((item) => <Card key={item} media={false} />)}</div>}</div></section></>
+  return <><PageHero /><section className="bg-background px-4 pb-20 md:px-6"><div className="mx-auto max-w-5xl"><SkeletonBlock className="h-7 w-64" />{hasQuery && resultCount === 0 ? <SkeletonBlock className="mt-8 h-44 w-full rounded-3xl border border-border" /> : <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{list(collectionSkeletonCount(resultCount)).map((item) => <Card key={item} media={false} />)}</div>}</div></section></>
 }
 
 function ArticleSkeleton() {
-  return <section className="bg-background px-4 py-6 md:px-6 md:py-10 lg:py-14"><div className="mx-auto max-w-6xl"><SkeletonBlock className="mb-5 h-4 w-52" /><div className="overflow-hidden rounded-[2rem] border border-border bg-surface"><SkeletonBlock className="aspect-[16/8] w-full rounded-none md:aspect-[16/7]" /><div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:p-8"><div className="space-y-8"><SkeletonBlock className="h-7 w-full" /><Lines /><SkeletonBlock className="h-24 w-full rounded-2xl bg-primary/10" />{list(4).map((item) => <div key={item} className="space-y-4 border-b border-border pb-8"><div className="flex gap-3"><SkeletonBlock className="size-11 rounded-xl bg-primary/15" /><SkeletonBlock className="h-8 w-1/2" /></div><Lines /><div className="grid gap-3 sm:grid-cols-2"><SkeletonBlock className="h-12" /><SkeletonBlock className="h-12" /></div></div>)}</div><aside className="space-y-5 border-b border-border pb-5 lg:border-b-0 lg:border-r lg:pr-6 ltr:lg:border-r-0 ltr:lg:border-l ltr:lg:pr-0 ltr:lg:pl-6"><SkeletonBlock className="h-7 w-24 rounded-full" /><SkeletonBlock className="h-px rounded-none" /><SkeletonBlock className="h-6 w-32" /><div className="grid grid-cols-2 gap-2">{list(6).map((item) => <SkeletonBlock key={item} className="h-16 rounded-xl" />)}</div></aside></div></div></div></section>
+  return <section className="bg-background px-4 py-6 md:px-6 md:py-10 lg:py-14"><div className="mx-auto max-w-6xl"><SkeletonBlock className="mb-5 h-4 w-52" /><div className="overflow-hidden rounded-[2rem] border border-border bg-surface"><SkeletonBlock className="aspect-[16/8] w-full rounded-none md:aspect-[16/5]" /><div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:p-8"><div className="order-1 min-w-0 space-y-8"><SkeletonBlock className="h-7 w-full" /><Lines /><SkeletonBlock className="h-24 w-full rounded-2xl bg-primary/10" />{list(4).map((item) => <div key={item} className="space-y-4 border-b border-border pb-8"><div className="flex gap-3"><SkeletonBlock className="size-11 rounded-xl bg-primary/15" /><SkeletonBlock className="h-8 w-1/2" /></div><Lines /><div className="grid gap-3 sm:grid-cols-2"><SkeletonBlock className="h-12" /><SkeletonBlock className="h-12" /></div></div>)}</div><ContentSidebarSkeleton category className="border-b border-border pb-5 lg:border-b-0 lg:pb-0" /></div></div></div></section>
 }
 
 function NotFoundSkeleton() {
@@ -92,12 +107,12 @@ function MaintenanceSkeleton() {
   return <main className="grid min-h-screen place-items-center bg-background px-5 py-10"><section className="relative flex w-full max-w-2xl items-center justify-center rounded-[2rem] border border-border bg-surface px-6 pt-28 pb-8 shadow-2xl shadow-brand-orange/10 sm:px-12 sm:pt-28 sm:pb-10 lg:py-10"><div className="absolute left-4 top-4 flex gap-2"><SkeletonBlock className="h-10 w-32 rounded-xl" /><SkeletonBlock className="size-10 rounded-xl" /></div><div className="mx-auto flex w-full max-w-xl flex-col items-center"><SkeletonBlock className="h-12 w-48 rounded-xl bg-primary/15" /><SkeletonBlock className="mt-7 h-3 w-24 bg-primary/20" /><SkeletonBlock className="mt-4 h-10 w-[min(100%,30rem)]" /><SkeletonBlock className="mt-6 h-4 w-[min(100%,27rem)]" /><SkeletonBlock className="mt-3 h-4 w-[min(82%,22rem)]" /><SkeletonBlock className="mt-7 h-4 w-52 bg-primary/15" /></div></section></main>
 }
 
-function Content({ path, hasSearchQuery, searchResultCount, directoryItemCount }) {
+function Content({ path, hasSearchQuery, searchResultCount, directoryItemCount, scholarshipItemCount, magazineItemCount }) {
   if (path === '/') return <HomeSkeleton />
   if (path === '/about') return <AboutSkeleton />
   if (path === '/contact') return <ContactSkeleton />
-  if (path === '/scholarships') return <ScholarshipDirectorySkeleton />
-  if (path === '/magazine') return <MagazineSkeleton />
+  if (path === '/scholarships') return <ScholarshipDirectorySkeleton count={scholarshipItemCount} />
+  if (path === '/magazine') return <MagazineSkeleton count={magazineItemCount} />
   if (path === '/services') return <OpportunityDirectorySkeleton count={directoryItemCount} />
   if (path === '/tourism/afghanistan' || path === '/tourism/world') return <OpportunityDirectorySkeleton count={directoryItemCount} />
   if (path === '/search') return <SearchSkeleton hasQuery={hasSearchQuery} resultCount={searchResultCount} />
@@ -107,6 +122,10 @@ function Content({ path, hasSearchQuery, searchResultCount, directoryItemCount }
   return <NotFoundSkeleton />
 }
 
-export default function RouteProgress({ path, hasSearchQuery = false, searchResultCount = 0, directoryItemCount = 0, maintenanceMode = false }) {
-  return <div className="overflow-hidden bg-background" role="status" aria-live="polite" aria-busy="true" aria-label="در حال بارگذاری محتوای وب‌سایت"><span className="sr-only">در حال بارگذاری محتوای وب‌سایت</span>{maintenanceMode ? <MaintenanceSkeleton /> : <><HeaderSkeleton /><Content path={path} hasSearchQuery={hasSearchQuery} searchResultCount={searchResultCount} directoryItemCount={directoryItemCount} /><FooterSkeleton /></>}</div>
+export default function RouteProgress({ path, hasSearchQuery = false, searchResultCount = 0, directoryItemCount = 0, scholarshipItemCount = 0, magazineItemCount = 0, maintenanceMode = false }) {
+  useLayoutEffect(() => {
+    if (isReloadNavigation()) restoreScrollPosition('proportional')
+  }, [])
+
+  return <div className="overflow-hidden bg-background" role="status" aria-live="polite" aria-busy="true" aria-label="در حال بارگذاری محتوای وب‌سایت"><span className="sr-only">در حال بارگذاری محتوای وب‌سایت</span>{maintenanceMode ? <MaintenanceSkeleton /> : <><HeaderSkeleton /><Content path={path} hasSearchQuery={hasSearchQuery} searchResultCount={searchResultCount} directoryItemCount={directoryItemCount} scholarshipItemCount={scholarshipItemCount} magazineItemCount={magazineItemCount} /><FooterSkeleton /></>}</div>
 }

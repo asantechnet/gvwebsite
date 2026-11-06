@@ -69,21 +69,23 @@ import { getCmsRouteKey } from '@cms/routes.js'
 import useAuth from '@cms/auth/useAuth.js'
 import { canAccessCmsRoute, CMS_PERMISSIONS } from '@cms/auth/permissions.js'
 import useMessages from '@cms/hooks/useMessages.js'
-import ApplicationLoading from '@/shared/components/ApplicationLoading.jsx'
 import AuthPage from '@cms/components/pages/AuthPage.jsx'
+import { CmsPageProgress, SuperUserSkeleton } from '@cms/components/CmsRouteProgress.jsx'
+import { lazyWithSkeletonPreview } from '@/shared/utils/loading.js'
 
-const DashboardPage = lazy(() => import('@cms/components/pages/DashboardPage.jsx'))
-const HomePage = lazy(() => import('@cms/components/pages/HomePage.jsx'))
-const AboutPage = lazy(() => import('@cms/components/pages/AboutPage.jsx'))
-const MagazinePage = lazy(() => import('@cms/components/pages/MagazinePage.jsx'))
-const ScholarshipsPage = lazy(() => import('@cms/components/pages/ScholarshipsPage.jsx'))
-const ContactPage = lazy(() => import('@cms/components/pages/ContactPage.jsx'))
-const OpportunitiesPage = lazy(() => import('@cms/components/pages/OpportunitiesPage.jsx'))
-const MessagesPage = lazy(() => import('@cms/components/pages/MessagesPage.jsx'))
-const ProfilePage = lazy(() => import('@cms/components/pages/ProfilePage.jsx'))
-const MediaLibraryPage = lazy(() => import('@cms/components/pages/MediaLibraryPage.jsx'))
-const SettingsPage = lazy(() => import('@cms/components/pages/SettingsPage.jsx'))
-const SuperUserPage = lazy(() => import('@cms/components/pages/SuperUserPage.jsx'))
+const delayed = (importer) => lazy(() => lazyWithSkeletonPreview(importer))
+const DashboardPage = delayed(() => import('@cms/components/pages/DashboardPage.jsx'))
+const HomePage = delayed(() => import('@cms/components/pages/HomePage.jsx'))
+const AboutPage = delayed(() => import('@cms/components/pages/AboutPage.jsx'))
+const MagazinePage = delayed(() => import('@cms/components/pages/MagazinePage.jsx'))
+const ScholarshipsPage = delayed(() => import('@cms/components/pages/ScholarshipsPage.jsx'))
+const ContactPage = delayed(() => import('@cms/components/pages/ContactPage.jsx'))
+const OpportunitiesPage = delayed(() => import('@cms/components/pages/OpportunitiesPage.jsx'))
+const MessagesPage = delayed(() => import('@cms/components/pages/MessagesPage.jsx'))
+const ProfilePage = delayed(() => import('@cms/components/pages/ProfilePage.jsx'))
+const MediaLibraryPage = delayed(() => import('@cms/components/pages/MediaLibraryPage.jsx'))
+const SettingsPage = delayed(() => import('@cms/components/pages/SettingsPage.jsx'))
+const SuperUserPage = delayed(() => import('@cms/components/pages/SuperUserPage.jsx'))
 
 function DashboardLayout() {
   const auth = useAuth()
@@ -136,8 +138,10 @@ function DashboardLayout() {
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
     document.documentElement.classList.toggle('light', theme === 'light')
+    document.documentElement.dataset.application = 'cms'
     document.documentElement.lang = language
     document.documentElement.dir = language === 'en' ? 'ltr' : 'rtl'
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#0a1019' : '#edf1f6')
     document.title = content.documentTitle
     let robots = document.querySelector('meta[name="robots"]')
     if (!robots) { robots = document.createElement('meta'); robots.name = 'robots'; document.head.appendChild(robots) }
@@ -187,10 +191,10 @@ function DashboardLayout() {
   }
   const accessLabels = content.auth || {}
   if (auth.status === 'unauthenticated') return <div className="cms-root" data-theme={theme} dir={language === 'en' ? 'ltr' : 'rtl'}><AuthPage auth={auth} content={accessLabels} /></div>
-  if (auth.status === 'authenticated' && auth.session.user.role === 'super_user') return <Suspense fallback={<ApplicationLoading />}><SuperUserPage auth={auth} content={content} /></Suspense>
+  if (auth.status === 'authenticated' && auth.session.user.role === 'super_user') return <Suspense fallback={<div className="cms-root"><SuperUserSkeleton /></div>}><SuperUserPage auth={auth} content={content} /></Suspense>
 
   const activePage = auth.status === 'loading'
-    ? <CmsAccessState title={accessLabels.loading || 'Loading account…'} />
+    ? <CmsPageProgress routeKey={routeKey} />
     : auth.status === 'error'
       ? <CmsAccessState title={accessLabels.error || 'The account could not be loaded.'} action={accessLabels.retry || 'Retry'} onAction={auth.retry} />
       : !canAccessCmsRoute(auth.session, routeKey)
@@ -203,7 +207,7 @@ function DashboardLayout() {
     <DashboardSidebar content={content} theme={theme} open={sidebarOpen} collapsed={sidebarCollapsed} canAccess={canAccess} onCollapseToggle={toggleSidebar} onClose={() => setSidebarOpen(false)} onLogout={auth.logout} />
     <div className={`admin-shell min-h-screen min-w-0 max-w-full transition-[padding] duration-250 rtl:lg:pr-(--sidebar-width) ltr:lg:pl-(--sidebar-width) ${sidebarCollapsed ? 'rtl:lg:pr-21 ltr:lg:pl-21' : ''}`}>
       <DashboardTopbar content={content.topbar} searchItems={content.groups.flatMap((group) => group.items)} language={language} theme={theme} unreadCount={messageState.unreadCount} canAccessMessages={canManageMessages} onMenuOpen={() => setSidebarOpen(true)} onThemeToggle={() => setTheme((current) => current === 'light' ? 'dark' : 'light')} onLanguageChange={setLanguage} />
-      <main id="dashboard-content" className="min-h-[calc(100vh-5rem)] px-4 pt-6 pb-28 sm:px-8 sm:pt-8"><Suspense fallback={<ApplicationLoading contained />}>{activePage}</Suspense></main><UnsavedChangesBar sidebarCollapsed={sidebarCollapsed} />
+      <main id="dashboard-content" className="min-h-[calc(100vh-5rem)] px-4 pt-6 pb-28 sm:px-8 sm:pt-8"><Suspense fallback={<CmsPageProgress routeKey={routeKey} />}>{activePage}</Suspense></main><UnsavedChangesBar language={language} sidebarCollapsed={sidebarCollapsed} />
     </div>
   </div></DeleteConfirmation>
 }

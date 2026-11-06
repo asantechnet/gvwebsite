@@ -7,15 +7,26 @@
     <style>
       html, body { background: #fffaf5; }
       html.dark, html.dark body { background: #1f2937; }
+      html[data-application="cms"], html[data-application="cms"] body { background: #edf1f6; }
+      html[data-application="cms"].dark, html[data-application="cms"].dark body { background: #0a1019; }
     </style>
     <script>
       (() => {
-        const theme = window.localStorage.getItem('globalvision-theme') || 'light'
-        document.documentElement.classList.add(theme === 'dark' ? 'dark' : 'light')
-        document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#1f2937' : '#fffaf5')
-
         const isDashboard = window.location.pathname === '/dashboard' || window.location.pathname.startsWith('/dashboard/')
-        if (!isDashboard) {
+        const theme = window.localStorage.getItem('globalvision-theme') || 'light'
+        document.documentElement.dataset.application = isDashboard ? 'cms' : 'website'
+        document.documentElement.classList.add(theme === 'dark' ? 'dark' : 'light')
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', isDashboard
+          ? theme === 'dark' ? '#0a1019' : '#edf1f6'
+          : theme === 'dark' ? '#1f2937' : '#fffaf5')
+
+        if (isDashboard) {
+          const savedLanguage = window.sessionStorage.getItem('globalvision-language')
+          const language = ['prs', 'ps', 'en'].includes(savedLanguage) ? savedLanguage : 'prs'
+          document.documentElement.dataset.language = language
+          document.documentElement.lang = language
+          document.documentElement.dir = language === 'en' ? 'ltr' : 'rtl'
+        } else {
           const possibleLanguage = window.location.pathname.split('/')[1]
           const language = ['dr', 'ps', 'en'].includes(possibleLanguage) ? possibleLanguage : 'dr'
           const languageSettings = {

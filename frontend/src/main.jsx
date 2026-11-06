@@ -5,6 +5,11 @@ import App from './App.jsx'
 
 import './index.css'
 
+if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'
+
+const navigationType = window.performance.getEntriesByType('navigation')[0]?.type
+if (navigationType === 'reload') document.documentElement.style.scrollBehavior = 'auto'
+
 window.addEventListener('vite:preloadError', (event) => {
   event.preventDefault()
   const recoveryKey = 'globalvision-preload-recovery'

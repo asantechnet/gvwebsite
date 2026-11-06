@@ -141,7 +141,7 @@ function Footer({ content, navigationContent, language, theme, logo, className =
 
         <div className="flex flex-col items-center justify-between gap-3 py-4 text-center text-xs leading-6 text-foreground-muted dark:text-gray-300 sm:text-sm md:flex-row md:text-start">
           <p>{content.copyright}</p>
-          <p>{content.tagline}</p>
+          <p dir="auto">{content.tagline}</p>
         </div>
       </Container>
     </footer>

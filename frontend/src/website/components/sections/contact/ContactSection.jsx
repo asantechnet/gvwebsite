@@ -80,7 +80,7 @@ function ContactSection({ content }) {
               </label>
               <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.emailLabel}
-                <input required maxLength={254} name="email" autoComplete="email" placeholder={content.form.emailPlaceholder} dir="ltr" className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-start text-sm font-light text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" type="email" />
+                <input required maxLength={254} name="email" autoComplete="email" placeholder={content.form.emailPlaceholder} dir="ltr" className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-start text-sm font-light text-foreground outline-none transition-colors placeholder:text-left rtl:placeholder:text-right focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" type="email" />
               </label>
               <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.subjectLabel}

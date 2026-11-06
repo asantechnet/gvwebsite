@@ -4,23 +4,16 @@ import Container from '@ui/Container.jsx'
 import PostCard from '@ui/PostCard.jsx'
 import PostPagination from '@ui/PostPagination.jsx'
 import Section from '@ui/Section.jsx'
-
-function getPostsPerPage() {
-  if (typeof window === 'undefined') return 4
-  if (window.innerWidth >= 1536) return 9
-  if (window.innerWidth >= 1024) return 8
-  if (window.innerWidth >= 768) return 6
-  return 4
-}
+import { getMagazinePostsPerPage } from '@website/utils/cardCounts.js'
 
 function MagazineArticlesSection({ content }) {
   const [currentPage, setCurrentPage] = useState(1)
-  const [postsPerPage, setPostsPerPage] = useState(getPostsPerPage)
+  const [postsPerPage, setPostsPerPage] = useState(getMagazinePostsPerPage)
   const totalPages = Math.ceil(content.items.length / postsPerPage)
   const visiblePosts = content.items.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage)
 
   useEffect(() => {
-    const handleResize = () => { setPostsPerPage(getPostsPerPage()); setCurrentPage(1) }
+    const handleResize = () => { setPostsPerPage(getMagazinePostsPerPage()); setCurrentPage(1) }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])

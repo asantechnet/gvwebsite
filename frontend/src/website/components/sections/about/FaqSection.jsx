@@ -4,8 +4,10 @@ import { ChevronDown } from 'lucide-react'
 import Container from '@ui/Container.jsx'
 import Button from '@ui/Button.jsx'
 import Section from '@ui/Section.jsx'
+import useWebsiteLanguage from '@website/hooks/useWebsiteLanguage.js'
 
 function FaqSection({ content }) {
+  const language = useWebsiteLanguage()
   const [openIndex, setOpenIndex] = useState(null)
 
   return (
@@ -27,7 +29,7 @@ function FaqSection({ content }) {
                   aria-expanded={isOpen}
                   aria-controls={`about-faq-answer-${index}`}
                   onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="flex min-h-12 w-full items-center justify-between gap-4 px-5 py-2 text-start font-heading text-sm font-extrabold text-foreground md:px-6 md:py-2.5 md:text-base"
+                  className={`flex min-h-12 w-full items-center justify-between gap-4 px-5 py-2 text-start font-heading text-sm text-foreground md:px-6 md:py-2.5 md:text-base ${language === 'en' ? 'font-medium' : 'font-semibold'}`}
                 >
                   <span>{item.question}</span>
                   <ChevronDown aria-hidden="true" className={`shrink-0 text-accent-text transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} size={20} />

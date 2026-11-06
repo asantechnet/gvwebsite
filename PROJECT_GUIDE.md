@@ -12,7 +12,7 @@ The frontend includes dependency-free Node tests for localized catalog search, s
 
 The CMS and public website are separate lazy application entries. Public translation content is grouped into Dari, Pashto, and English payloads and loaded only for the active route language; adding a public locale namespace requires registering it in the matching localized-content module. Production builds enforce a 300 kB raw initial-JavaScript budget before route, page, and locale payloads are loaded.
 
-Shared modal keyboard behavior lives in `src/shared/hooks/useModalFocus.js`. Public and CMS dialogs use it to move focus into the dialog, contain Tab navigation, close with Escape, and restore focus to the invoking control. The website and CMS use a visible border-and-shadow keyboard focus treatment without browser outlines or Tailwind rings. Brand fills retain the canonical orange, while the semantic `accent-text` and `admin-brand-text` tokens use a contrast-safe darker orange in light mode and the existing bright orange in dark mode.
+Shared modal keyboard behavior lives in `src/shared/hooks/useModalFocus.js`. Public and CMS dialogs use it to move focus into the dialog, contain Tab navigation, close with Escape, and restore focus to the invoking control. The website and CMS use a visible border-and-shadow keyboard focus treatment without browser outlines or Tailwind rings. Brand fills retain the canonical orange, while the semantic `accent-text` and `admin-brand-text` tokens use a contrast-safe darker orange in light mode and the existing bright orange in dark mode. Public and CMS loading states use the shared `src/shared/components/SkeletonBlock.jsx` shimmer primitive and route-specific skeleton compositions that mirror each destination. A temporary one-second skeleton preview delay is centralized in `src/shared/utils/loading.js` for visual review and must be removed before production launch.
 
 The repository currently contains:
 
@@ -37,7 +37,7 @@ Do not describe planned functionality as implemented.
 10. The website and CMS support Dari, Pashto, and English. Dari and Pashto are right to left; English is left to right.
 11. Use locally hosted IRANYekan for Dari body text, Vazirmatn for Pashto, Poppins for English, and the shared `font-heading` token for display headings.
 12. Route loading states must mirror the order, responsive layout, and recognizable shapes of destination sections.
-13. Every visible skeleton must use a future shared `SkeletonBlock` component for consistent shimmer and reduced motion behavior.
+13. Every visible skeleton must use the shared `SkeletonBlock` component for consistent shimmer and reduced motion behavior.
 14. Use Lucide React for all general interface icons. Use React Icons only for social media brand icons.
 15. Keep frontend rendering independent of backend implementation through a dedicated `src/shared/services/api/` layer. Components, sections, and pages must never call Laravel endpoints directly.
 16. Keep public website code under `src/website/`, CMS code under `src/cms/`, and code genuinely reused by both applications under `src/shared/`.

@@ -129,6 +129,7 @@ body {
   border-color: var(--theme-focus);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-focus) 28%, transparent);
 }
+.website-root input.search-field:focus-visible { border-color: transparent; box-shadow: none; }
 button, input, select, textarea { font: inherit; }
 @keyframes skeletonShimmerSweep { from { transform: translateX(-115%); } to { transform: translateX(115%); } }
 @keyframes growShrink { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
