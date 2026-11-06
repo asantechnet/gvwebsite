@@ -14,6 +14,7 @@
     "whatsappLabel": "په واټساپ کې له موږ سره اړیکه ونیسئ",
     "details": [
       { "type": "phone", "label": "ټیلیفون", "value": "+93 700 000 000" },
+      { "type": "whatsapp", "label": "واټساپ", "value": "+93 700 000 000" },
       { "type": "email", "label": "برېښنالیک", "value": "info@globalvision.af" },
       { "type": "address", "label": "پته", "value": "کابل، افغانستان" }
     ],

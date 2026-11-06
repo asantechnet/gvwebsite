@@ -7,6 +7,8 @@
     "logo": "Website logo",
     "lightLogo": "Light mode logo",
     "darkLogo": "Dark mode logo",
+    "lightIcon": "Light mode icon",
+    "darkIcon": "Dark mode icon",
     "logoHelp": "Used on the public website and CMS.",
     "choose": "Upload logo",
     "replace": "Change logo",

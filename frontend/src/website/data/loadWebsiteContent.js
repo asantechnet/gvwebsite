@@ -34,6 +34,11 @@ function applySnapshots(staticContent, snapshots, language) {
     if (byKey.get(key)?.[locale]) content[key] = byKey.get(key)[locale]
   })
 
+  const fallbackWhatsApp = staticContent.contact.contact.details.find((detail) => detail.type === 'whatsapp')
+  if (fallbackWhatsApp && !content.contact.contact.details.some((detail) => detail.type === 'whatsapp')) {
+    content.contact.contact.details.push(structuredClone(fallbackWhatsApp))
+  }
+
   const services = localizedCollection(byKey.get('collection:services') || [], locale)
   if (services.length) content.services.services = services
 

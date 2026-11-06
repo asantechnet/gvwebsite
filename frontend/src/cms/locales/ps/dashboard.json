@@ -12,13 +12,13 @@
   "groups": [
     { "label": "د وېب‌سایټ منځپانګه", "items": [
       { "label": "اصلي پاڼه", "key": "home" },
-      { "label": "زموږ په اړه", "key": "about" },
-      { "label": "له موږ سره اړیکه", "key": "contact" },
       { "label": "فرصتونه", "key": "opportunities" },
-      { "label": "سیاحت", "key": "tourism" },
-      { "label": "بورسونه", "key": "scholarships" },
       { "label": "خدمتونه", "key": "services" },
-      { "label": "مجله", "key": "magazine" }
+      { "label": "بورسونه", "key": "scholarships" },
+      { "label": "سیاحت", "key": "tourism" },
+      { "label": "مجله", "key": "magazine" },
+      { "label": "زموږ په اړه", "key": "about" },
+      { "label": "له موږ سره اړیکه", "key": "contact" }
     ] },
     { "label": "مدیریت", "items": [
       { "label": "رسنیز کتابتون", "key": "media" },

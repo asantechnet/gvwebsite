@@ -18,32 +18,32 @@
           "key": "home"
         },
         {
-          "label": "About us",
-          "key": "about"
-        },
-        {
-          "label": "Contact us",
-          "key": "contact"
-        },
-        {
           "label": "Opportunities",
           "key": "opportunities"
-        },
-        {
-          "label": "Tourism",
-          "key": "tourism"
-        },
-        {
-          "label": "Scholarships",
-          "key": "scholarships"
         },
         {
           "label": "Services",
           "key": "services"
         },
         {
+          "label": "Scholarships",
+          "key": "scholarships"
+        },
+        {
+          "label": "Tourism",
+          "key": "tourism"
+        },
+        {
           "label": "Magazine",
           "key": "magazine"
+        },
+        {
+          "label": "About us",
+          "key": "about"
+        },
+        {
+          "label": "Contact us",
+          "key": "contact"
         }
       ]
     },

@@ -12,7 +12,7 @@ import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
 
 const tabIcons = { hero: FileText, details: ContactRound, form: MessageSquareText, connections: MapPinned, social: Globe2 }
-const detailIcons = { phone: Phone, email: AtSign, address: MapPinned }
+const detailIcons = { phone: Phone, email: AtSign, address: MapPinned, whatsapp: FaWhatsapp }
 const defaultSocialUrls = { facebook: 'https://facebook.com/', instagram: 'https://instagram.com/', linkedin: 'https://linkedin.com/', telegram: 'https://t.me/', youtube: 'https://youtube.com/', whatsapp: 'https://wa.me/', twitter: 'https://x.com/', tiktok: 'https://tiktok.com/' }
 const defaultMapUrl = 'https://www.google.com/maps?q=34.529568145213474,69.17050772740252&z=15&output=embed'
 const socialOptions = [
@@ -43,11 +43,13 @@ function ContactEditorSection({ content, initialTranslations }) {
   const setDraft = (update) => setDrafts((current) => ({ ...current, [contentLanguage]: typeof update === 'function' ? update(current[contentLanguage]) : update }))
   const [addingSocial, setAddingSocial] = useState(false)
   const [visibility, setVisibility] = useState(() => Object.fromEntries(Object.keys(tabIcons).map((key) => [key, true])))
+  const fallbackWhatsApp = initialTranslations[contentLanguage].contact.details.find((detail) => detail.type === 'whatsapp')
+  const contactDetails = draft.contact.details.some((detail) => detail.type === 'whatsapp') ? draft.contact.details : [...draft.contact.details, fallbackWhatsApp]
 
   const updateHero = (key, value) => setDraft((current) => ({ ...current, hero: { ...current.hero, [key]: value } }))
   const updateContact = (key, value) => setDraft((current) => ({ ...current, contact: { ...current.contact, [key]: value } }))
   const updateForm = (key, value) => setDraft((current) => ({ ...current, contact: { ...current.contact, form: { ...current.contact.form, [key]: value } } }))
-  const updateDetail = (index, key, value) => setDraft((current) => ({ ...current, contact: { ...current.contact, details: current.contact.details.map((detail, detailIndex) => detailIndex === index ? { ...detail, [key]: value } : detail) } }))
+  const updateDetail = (type, key, value) => setDraft((current) => { const exists = current.contact.details.some((detail) => detail.type === type); return { ...current, contact: { ...current.contact, details: exists ? current.contact.details.map((detail) => detail.type === type ? { ...detail, [key]: value } : detail) : [...current.contact.details, { ...fallbackWhatsApp, [key]: value }] } } })
   const updateSocial = (index, key, value) => setDraft((current) => ({ ...current, contact: { ...current.contact, socials: current.contact.socials.map((social, socialIndex) => socialIndex === index ? { ...social, [key]: value } : social) } }))
   const addSocial = (social) => setDraft((current) => ({ ...current, contact: { ...current.contact, socials: [...current.contact.socials, social] } }))
   const deleteSocial = (index) => setDraft((current) => ({ ...current, contact: { ...current.contact, socials: current.contact.socials.filter((_, socialIndex) => socialIndex !== index) } }))
@@ -65,7 +67,7 @@ function ContactEditorSection({ content, initialTranslations }) {
       <div className="p-5 sm:p-6">
         {selectedTab === 'hero' && <EditorFieldGroup columns={false} className="sm:p-5"><EditorField label={content.fields.heroTitle} value={draft.hero.title} onChange={(value) => updateHero('title', value)} /></EditorFieldGroup>}
 
-        {selectedTab === 'details' && <div className="grid gap-5"><EditorField label={content.fields.sectionTitle} value={draft.contact.title} onChange={(value) => updateContact('title', value)} /><div className="grid gap-3 lg:grid-cols-3">{draft.contact.details.map((detail, index) => { const Icon = detailIcons[detail.type]; return <article key={detail.type} className="rounded-2xl border border-admin-border bg-(--editor-field) p-4"><span className="mb-4 grid size-10 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text"><Icon size={18} /></span><EditorField label={detail.label} value={detail.value} dir={detail.type === 'phone' || detail.type === 'email' ? 'ltr' : undefined} onChange={(value) => updateDetail(index, 'value', value)} /></article> })}</div></div>}
+        {selectedTab === 'details' && <div className="grid gap-5"><EditorField label={content.fields.sectionTitle} value={draft.contact.title} onChange={(value) => updateContact('title', value)} /><div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">{contactDetails.map((detail) => { const Icon = detailIcons[detail.type]; return <article key={detail.type} className="rounded-2xl border border-admin-border bg-(--editor-field) p-4"><span className="mb-4 grid size-10 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text"><Icon size={18} /></span><EditorField label={detail.label} value={detail.value} dir={detail.type === 'phone' || detail.type === 'email' || detail.type === 'whatsapp' ? 'ltr' : undefined} onChange={(value) => updateDetail(detail.type, 'value', value)} /></article> })}</div></div>}
 
         {selectedTab === 'form' && <div className="grid gap-5"><EditorFieldGroup title={content.formFields} className="sm:p-5">{['nameLabel', 'namePlaceholder', 'emailLabel', 'emailPlaceholder', 'subjectLabel', 'subjectPlaceholder', 'messageLabel', 'messagePlaceholder'].map((field) => <EditorField key={field} label={content.fields[field]} value={draft.contact.form[field] || ''} onChange={(value) => updateForm(field, value)} />)}</EditorFieldGroup><EditorFieldGroup title={content.formFeedback} columns={false} className="sm:p-5"><EditorField label={content.fields.successMessage} value={draft.contact.form.successMessage} multiline onChange={(value) => updateForm('successMessage', value)} /><EditorField label={content.fields.requiredMessage} value={draft.contact.form.requiredMessage} multiline onChange={(value) => updateForm('requiredMessage', value)} /></EditorFieldGroup></div>}
 

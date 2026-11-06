@@ -3,13 +3,13 @@ import FloatingWhatsApp from '@sections/contact/FloatingWhatsApp.jsx'
 import PageHero from '@shared/PageHero.jsx'
 
 function ContactPage({ content, language }) {
-  const phone = content.contact.details.find((detail) => detail.type === 'phone')?.value ?? ''
+  const whatsappNumber = content.contact.details.find((detail) => detail.type === 'whatsapp')?.value ?? ''
 
   return (
     <>
       <PageHero {...content.hero} />
       <ContactSection content={content.contact} />
-      <FloatingWhatsApp phone={phone} label={content.contact.whatsappLabel} language={language} />
+      <FloatingWhatsApp phone={whatsappNumber} label={content.contact.whatsappLabel} language={language} />
     </>
   )
 }

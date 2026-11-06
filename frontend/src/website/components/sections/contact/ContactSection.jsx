@@ -38,9 +38,9 @@ function ContactSection({ content }) {
             <h2 id="contact-section-title" className="font-heading text-xl font-extrabold leading-tight md:text-2xl lg:text-3xl">
               {content.title}
             </h2>
-            <div className="mt-10 grid gap-6 sm:grid-cols-3 lg:grid-cols-1">
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
               {content.details.map((detail) => {
-                const icons = { phone: Phone, email: Mail, address: MapPin }
+                const icons = { phone: Phone, email: Mail, address: MapPin, whatsapp: FaWhatsapp }
                 const Icon = icons[detail.type]
 
                 return (
@@ -50,7 +50,7 @@ function ContactSection({ content }) {
                     </span>
                     <div>
                       <p className="text-xs text-foreground-muted">{detail.label}</p>
-                      {detail.type === 'phone' || detail.type === 'email' ? <a href={detail.type === 'phone' ? `tel:${detail.value.replaceAll(' ', '')}` : `mailto:${detail.value}`} dir="ltr" className={`mt-1 block text-sm font-bold text-foreground transition-colors hover:text-accent-text ${detail.type === 'phone' ? 'whitespace-nowrap' : ''}`}>{detail.value}</a> : <p className="mt-1 text-sm font-bold text-foreground">{detail.value}</p>}
+                      {detail.type === 'phone' || detail.type === 'email' || detail.type === 'whatsapp' ? <a href={detail.type === 'phone' ? `tel:${detail.value.replaceAll(' ', '')}` : detail.type === 'email' ? `mailto:${detail.value}` : `https://wa.me/${detail.value.replace(/\D/g, '')}`} target={detail.type === 'whatsapp' ? '_blank' : undefined} rel={detail.type === 'whatsapp' ? 'noreferrer' : undefined} dir="ltr" className={`mt-1 block text-sm font-bold text-foreground transition-colors hover:text-accent-text ${detail.type === 'phone' || detail.type === 'whatsapp' ? 'whitespace-nowrap' : ''}`}>{detail.value}</a> : <p className="mt-1 text-sm font-bold text-foreground">{detail.value}</p>}
                     </div>
                   </div>
                 )
