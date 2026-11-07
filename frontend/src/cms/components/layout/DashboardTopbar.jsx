@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ExternalLink, Menu, MessagesSquare, Moon, Search, Sun } from 'lucide-react'
 
-import LanguageSwitcher from '@cms/components/LanguageSwitcher.jsx'
+import LanguageSwitcher from '@/shared/components/LanguageSwitcher.jsx'
 import { getCmsHref } from '@cms/routes.js'
 
 function DashboardTopbar({ content, searchItems = [], language, theme, unreadCount = 0, canAccessMessages = false, onMenuOpen, onThemeToggle, onLanguageChange }) {

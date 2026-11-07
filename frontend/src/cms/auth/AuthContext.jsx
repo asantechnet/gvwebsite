@@ -46,7 +46,7 @@ export function AuthProvider({ children }) {
     },
     async logout() {
       await dataSource.auth.logout()
-      if (dataSource.mode === 'api') setState({ session: null, status: 'unauthenticated', error: null })
+      setState({ session: null, status: 'unauthenticated', error: null })
     },
     async changePassword(values) {
       const response = await dataSource.auth.changePassword(values)

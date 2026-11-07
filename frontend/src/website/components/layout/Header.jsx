@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 
 import { headerNavigation } from "@website/data/navigation.js";
-import LanguageSwitcher from "@ui/LanguageSwitcher.jsx";
+import LanguageSwitcher from "@/shared/components/LanguageSwitcher.jsx";
 import { localizeHref } from "@website/utils/language.js";
 
 const noFocusOutline = "outline-none focus:outline-none focus-visible:border-focus focus-visible:shadow-[0_0_0_3px_rgba(244,126,38,0.28)]";
@@ -253,7 +253,7 @@ function Header({
 
           <div className="flex shrink-0 items-center gap-1.5 2xl:gap-2">
             <div className="flex shrink-0 items-center gap-1.5 2xl:gap-2">
-              <LanguageSwitcher language={language} onChange={onLanguageChange} />
+              <LanguageSwitcher language={language} languageIds={{ prs: 'dr' }} onChange={onLanguageChange} />
               <button
                 type="button"
                 aria-label={content.themeToggleLabel}

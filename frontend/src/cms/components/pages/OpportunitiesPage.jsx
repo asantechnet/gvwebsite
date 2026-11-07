@@ -99,7 +99,7 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 <button type="button" className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft" onClick={() => setEditing(card)} aria-label={labels.editPost || 'ویرایش'}>
 <Pencil size={16} />
 </button>
-<button type="button" className="grid size-9 place-items-center rounded-xl border border-red-500/25 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" onClick={() => requestRemove(card)} aria-label={labels.deletePost || 'حذف'}>
+<button type="button" className="grid size-9 place-items-center rounded-xl border border-red-500/25 dark:border-red-500/50 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" onClick={() => requestRemove(card)} aria-label={labels.deletePost || 'حذف'}>
 <Trash2 size={16} />
 </button>
 </div>
@@ -119,7 +119,7 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 <button type="button" className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-brand-text hover:border-admin-brand hover:bg-admin-brand-soft" onClick={() => setEditing(card)} aria-label={labels.editPost || 'ویرایش'}>
 <Pencil size={15} />
 </button>
-<button type="button" className="grid size-8 place-items-center rounded-xl border border-red-500/25 text-red-500 hover:border-red-500 hover:bg-red-500/10" onClick={() => requestRemove(card)} aria-label={labels.deletePost || 'حذف'}>
+<button type="button" className="grid size-8 place-items-center rounded-xl border border-red-500/25 dark:border-red-500/50 text-red-500 hover:border-red-500 hover:bg-red-500/10" onClick={() => requestRemove(card)} aria-label={labels.deletePost || 'حذف'}>
 <Trash2 size={15} />
 </button>
 </div>
@@ -187,7 +187,7 @@ function OpportunityPostPreviewModal({ post, content, onClose, onDelete, onEdit 
     if (confirmed) onDelete()
   }
   const closeButton = <button type="button" onClick={close} className="grid size-9 shrink-0 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" aria-label={content.close || 'بستن'}><X size={17} /></button>
-  const actionButtons = <div className="flex shrink-0 items-center gap-2" dir={interfaceLanguage === 'en' ? 'rtl' : 'ltr'}><button type="button" onClick={onEdit} className="grid size-9 place-items-center rounded-lg border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft" aria-label={content.editPost || 'ویرایش'}><Pencil size={16} /></button><button type="button" onClick={requestDelete} className="grid size-9 place-items-center rounded-lg border border-red-500/25 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" aria-label={content.deletePost || 'حذف'}><Trash2 size={16} /></button></div>
+  const actionButtons = <div className="flex shrink-0 items-center gap-2" dir={interfaceLanguage === 'en' ? 'rtl' : 'ltr'}><button type="button" onClick={onEdit} className="grid size-9 place-items-center rounded-lg border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft" aria-label={content.editPost || 'ویرایش'}><Pencil size={16} /></button><button type="button" onClick={requestDelete} className="grid size-9 place-items-center rounded-lg border border-red-500/25 dark:border-red-500/50 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" aria-label={content.deletePost || 'حذف'}><Trash2 size={16} /></button></div>
   const languageSwitcher = <ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} />
   return <div className={`cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-4 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onMouseDown={close}>
     <section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="post-preview-title" className={`cms-overview-modal relative z-10 w-full max-w-5xl overflow-hidden rounded-2xl border border-admin-border bg-admin-page shadow-2xl ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`} onMouseDown={(event) => event.stopPropagation()}>

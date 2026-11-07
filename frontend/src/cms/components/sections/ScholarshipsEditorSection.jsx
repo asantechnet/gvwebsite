@@ -131,7 +131,7 @@ function ScholarshipList({ items, translations, initialLanguage, options, conten
 <button type="button" onClick={() => onEdit(index)} aria-label={content.edit} className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft">
 <Pencil size={16} />
 </button>
-<button type="button" onClick={() => onDelete(index)} aria-label={content.delete} className="grid size-9 place-items-center rounded-xl border border-red-500/25 text-red-500 transition hover:border-red-500 hover:bg-red-500/10">
+<button type="button" onClick={() => onDelete(index)} aria-label={content.delete} className="grid size-9 place-items-center rounded-xl border border-red-500/25 dark:border-red-500/50 text-red-500 transition hover:border-red-500 hover:bg-red-500/10">
 <Trash2 size={16} />
 </button>
 </div>
@@ -152,7 +152,7 @@ function ScholarshipList({ items, translations, initialLanguage, options, conten
 <button type="button" onClick={() => onEdit(index)} aria-label={content.edit} className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-brand-text hover:border-admin-brand hover:bg-admin-brand-soft">
 <Pencil size={15} />
 </button>
-<button type="button" onClick={() => onDelete(index)} aria-label={content.delete} className="grid size-8 place-items-center rounded-xl border border-red-500/25 text-red-500 hover:border-red-500 hover:bg-red-500/10">
+<button type="button" onClick={() => onDelete(index)} aria-label={content.delete} className="grid size-8 place-items-center rounded-xl border border-red-500/25 dark:border-red-500/50 text-red-500 hover:border-red-500 hover:bg-red-500/10">
 <Trash2 size={15} />
 </button>
 </div>
@@ -179,7 +179,7 @@ function ScholarshipPreviewModal({ item, index, translations, initialLanguage, c
       <header dir={interfaceDirection} className="flex items-center gap-3 border-b border-admin-border bg-admin-card px-4 py-3 sm:px-6">
         <h2 id="scholarship-preview-title" dir={interfaceDirection} className="min-w-0 flex-1 text-start font-heading text-lg text-admin-heading sm:text-xl">{displayItem.title}</h2>
         <ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} />
-        <div className="flex shrink-0 items-center gap-2" dir="ltr"><button type="button" onClick={onEdit} className="grid size-9 place-items-center rounded-lg border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft" aria-label={content.edit}><Pencil size={16} /></button><button type="button" onClick={onDelete} className="grid size-9 place-items-center rounded-lg border border-red-500/25 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" aria-label={content.delete}><Trash2 size={16} /></button></div>
+        <div className="flex shrink-0 items-center gap-2" dir="ltr"><button type="button" onClick={onEdit} className="grid size-9 place-items-center rounded-lg border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft" aria-label={content.edit}><Pencil size={16} /></button><button type="button" onClick={onDelete} className="grid size-9 place-items-center rounded-lg border border-red-500/25 dark:border-red-500/50 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" aria-label={content.delete}><Trash2 size={16} /></button></div>
         <button type="button" onClick={onClose} className="grid size-9 shrink-0 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" aria-label={content.close}><X size={17} /></button>
       </header>
       <div className="cms-overview-modal-content grid gap-5 p-4 sm:p-6" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>

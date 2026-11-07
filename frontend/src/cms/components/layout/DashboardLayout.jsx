@@ -73,6 +73,7 @@ import useMessages from '@cms/hooks/useMessages.js'
 import { CmsLanguageProvider } from '@cms/hooks/useCmsLanguage.js'
 import AuthPage from '@cms/components/pages/AuthPage.jsx'
 import { CmsPageProgress, SuperUserSkeleton } from '@cms/components/CmsRouteProgress.jsx'
+import { dataSource } from '@/shared/services/data/index.js'
 import { lazyWithSkeletonPreview } from '@/shared/utils/loading.js'
 
 const delayed = (importer) => lazy(() => lazyWithSkeletonPreview(importer))
@@ -91,6 +92,7 @@ const SuperUserPage = delayed(() => import('@cms/components/pages/SuperUserPage.
 
 function DashboardLayout() {
   const auth = useAuth()
+  const isMockDataSource = dataSource.mode === 'mock'
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => window.localStorage.getItem('globalvision-cms-sidebar-collapsed') === 'true')
   const [theme, setTheme] = useState(() => window.localStorage.getItem('globalvision-theme') || 'light')
@@ -168,11 +170,11 @@ function DashboardLayout() {
   }, [sidebarOpen])
 
   useEffect(() => {
-    if (auth.status !== 'authenticated') return
+    if (auth.status !== 'authenticated' || isMockDataSource) return
     const isAuthenticationPath = ['/dashboard/login', '/dashboard/forgot-password', '/dashboard/reset-password'].includes(window.location.pathname)
     if (auth.session.user.role === 'super_user' && window.location.pathname !== '/dashboard/super') window.history.replaceState(window.history.state, '', '/dashboard/super')
     else if (auth.session.user.role !== 'super_user' && isAuthenticationPath) window.history.replaceState(window.history.state, '', '/dashboard')
-  }, [auth.session, auth.status])
+  }, [auth.session, auth.status, isMockDataSource])
 
   const toggleSidebar = () => setSidebarCollapsed((current) => { window.localStorage.setItem('globalvision-cms-sidebar-collapsed', String(!current)); return !current })
   const authPath = ['/dashboard/login', '/dashboard/forgot-password', '/dashboard/reset-password'].includes(window.location.pathname)
@@ -193,7 +195,7 @@ function DashboardLayout() {
     profile: <ProfilePage content={profileContent} theme={theme} />,
   }
   const accessLabels = content.auth || {}
-  if (auth.status === 'unauthenticated') return <div className="cms-root" data-theme={theme} dir={language === 'en' ? 'ltr' : 'rtl'}><AuthPage auth={auth} content={accessLabels} /></div>
+  if (auth.status === 'unauthenticated' || (isMockDataSource && authPath)) return <div className="cms-root" data-theme={theme} dir={language === 'en' ? 'ltr' : 'rtl'}><AuthPage auth={auth} content={accessLabels} /></div>
   if (auth.status === 'authenticated' && auth.session.user.role === 'super_user') return <Suspense fallback={<div className="cms-root"><SuperUserSkeleton /></div>}><SuperUserPage auth={auth} content={content} /></Suspense>
 
   const activePage = auth.status === 'loading'
