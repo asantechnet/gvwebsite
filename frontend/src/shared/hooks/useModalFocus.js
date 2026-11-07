@@ -9,6 +9,18 @@ const focusableSelector = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(',')
 
+let modalScrollLockCount = 0
+
+function lockModalScroll() {
+  modalScrollLockCount += 1
+  document.documentElement.classList.add('cms-scroll-locked')
+}
+
+function unlockModalScroll() {
+  modalScrollLockCount = Math.max(0, modalScrollLockCount - 1)
+  if (modalScrollLockCount === 0) document.documentElement.classList.remove('cms-scroll-locked')
+}
+
 function useModalFocus({ active = true, initialFocusRef, onClose } = {}) {
   const dialogRef = useRef(null)
   const closeRef = useRef(onClose)
@@ -22,6 +34,7 @@ function useModalFocus({ active = true, initialFocusRef, onClose } = {}) {
 
     const previouslyFocused = document.activeElement
     const dialog = dialogRef.current
+    lockModalScroll()
     const focusDialog = window.requestAnimationFrame(() => {
       const target = initialFocusRef?.current || dialog?.querySelector(focusableSelector) || dialog
       target?.focus({ preventScroll: true })
@@ -57,6 +70,7 @@ function useModalFocus({ active = true, initialFocusRef, onClose } = {}) {
     return () => {
       window.cancelAnimationFrame(focusDialog)
       document.removeEventListener('keydown', handleKeyDown)
+      unlockModalScroll()
       if (previouslyFocused instanceof HTMLElement && previouslyFocused.isConnected) previouslyFocused.focus({ preventScroll: true })
     }
   }, [active, initialFocusRef])

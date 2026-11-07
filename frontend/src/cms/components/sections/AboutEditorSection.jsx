@@ -10,13 +10,16 @@ import { EditorField, EditorFieldGroup, EditorPreviewLink, EditorSectionHeader, 
 import useEditorTabs from '@cms/hooks/useEditorTabs.js'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
+import { showRecordToast } from '@cms/utils/toast.js'
+import { closeCmsModal } from '@cms/utils/modalTransition.js'
+import { useCmsContentLanguage } from '@cms/hooks/useCmsLanguage.js'
 
 const sectionIcons = { hero: LayoutTemplate, introduction: Sparkles, missionVision: Eye, story: History, faq: CircleHelp, team: Users, cta: Flag }
 const collectionKeys = { introduction: 'values', story: 'milestones', faq: 'items', team: 'members' }
 
 function AboutEditorSection({ content, initialTranslations }) {
   const [selectedSection, setSelectedSection] = useEditorTabs({ defaultTab: 'hero', storageKey: 'globalvision-cms-about-tab', tabs: Object.keys(sectionIcons) })
-  const [contentLanguage, setContentLanguage] = useState(() => ['prs', 'ps', 'en'].includes(document.documentElement.lang) ? document.documentElement.lang : 'prs')
+  const [contentLanguage, setContentLanguage] = useCmsContentLanguage()
   const [drafts, setDrafts] = useCmsDraftState('about', () => structuredClone(initialTranslations))
   const draft = drafts[contentLanguage]
   const setDraft = (update) => setDrafts((current) => ({ ...current, [contentLanguage]: typeof update === 'function' ? update(current[contentLanguage]) : update }))
@@ -35,7 +38,10 @@ function AboutEditorSection({ content, initialTranslations }) {
   })))
   const deleteCollectionItem = async (index) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: content.deleteItemTitle, description: content.deleteItemDescription })
-    if (confirmed) setDraft((current) => ({ ...current, [selectedSection]: { ...current[selectedSection], [collectionKey]: current[selectedSection][collectionKey].filter((_, itemIndex) => itemIndex !== index) } }))
+    if (confirmed) {
+      setDraft((current) => ({ ...current, [selectedSection]: { ...current[selectedSection], [collectionKey]: current[selectedSection][collectionKey].filter((_, itemIndex) => itemIndex !== index) } }))
+      showRecordToast('recordDeleted')
+    }
   }
 
   return <PageContainer>
@@ -58,17 +64,17 @@ function AboutEditorSection({ content, initialTranslations }) {
           </div>
         </div>
 
-        {collectionKey && <div className="border-t border-admin-border pt-5"><div className="flex flex-wrap items-center justify-between gap-3"><h3 className="m-0 font-heading text-sm text-admin-heading">{content.items[selectedSection]}</h3>{(selectedSection === 'team' || selectedSection === 'faq') && <button type="button" onClick={() => { setEditingItem(null); setAddingItem(true) }} className="inline-flex min-h-9 items-center justify-center gap-2 rounded-lg border border-admin-border bg-admin-control px-3 text-[.6875rem] font-semibold text-admin-muted transition hover:border-admin-brand hover:text-admin-brand-text"><Plus size={14} />{content.addItem}</button>}</div><div className="mt-4 grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">{collection.map((item, index) => <article key={`${item.title || item.question || item.name}-${index}`} className="flex min-w-0 items-center gap-3 rounded-xl border border-admin-border bg-(--editor-field) p-3"><span className="grid size-9 shrink-0 place-items-center rounded-lg border border-[color-mix(in_srgb,var(--admin-brand)_28%,var(--admin-border))] bg-[color-mix(in_srgb,var(--admin-brand)_15%,var(--admin-card))] text-admin-brand-text"><CheckCircle2 size={16} /></span><span className="min-w-0 flex-1"><strong className="block truncate text-[.75rem] text-admin-heading">{item.title || item.question || item.name}</strong></span><span className="flex shrink-0 items-center gap-1.5"><button type="button" onClick={() => { setEditingItem(index); setAddingItem(true) }} className="grid size-8 place-items-center rounded-lg border border-admin-border bg-admin-control text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" aria-label={content.editItem}><Pencil size={14} /></button><button type="button" onClick={() => deleteCollectionItem(index)} className="grid size-8 place-items-center rounded-lg border border-red-500/25 bg-admin-control text-red-500 transition hover:border-red-500 hover:bg-red-500/10" aria-label={content.deleteItem}><Trash2 size={14} /></button></span></article>)}</div></div>}
+        {collectionKey && <div className="border-t border-admin-border pt-5"><div className="flex flex-wrap items-center justify-between gap-3"><h3 className="m-0 font-heading text-sm text-admin-heading">{content.items[selectedSection]}</h3>{(selectedSection === 'team' || selectedSection === 'faq') && <button type="button" onClick={() => { setEditingItem(null); setAddingItem(true) }} className="inline-flex min-h-9 items-center justify-center gap-2 rounded-xl border border-admin-brand bg-admin-brand px-3 text-[.6875rem] font-semibold text-white transition hover:bg-orange-500"><Plus size={14} />{content.addItem}</button>}</div><div className="mt-4 grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">{collection.map((item, index) => <article key={`${item.title || item.question || item.name}-${index}`} className="flex min-w-0 items-center gap-3 rounded-xl border border-admin-border bg-(--editor-field) p-3"><span className="grid size-9 shrink-0 place-items-center rounded-lg border border-[color-mix(in_srgb,var(--admin-brand)_28%,var(--admin-border))] bg-[color-mix(in_srgb,var(--admin-brand)_15%,var(--admin-card))] text-admin-brand-text"><CheckCircle2 size={16} /></span><span className="min-w-0 flex-1"><strong className="block truncate text-[.75rem] text-admin-heading">{item.title || item.question || item.name}</strong></span><span className="flex shrink-0 items-center gap-1.5"><button type="button" onClick={() => { setEditingItem(index); setAddingItem(true) }} className="grid size-8 place-items-center rounded-lg border border-admin-border bg-admin-control text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" aria-label={content.editItem}><Pencil size={14} /></button><button type="button" onClick={() => deleteCollectionItem(index)} className="grid size-8 place-items-center rounded-lg border border-red-500/25 bg-admin-control text-red-500 transition hover:border-red-500 hover:bg-red-500/10" aria-label={content.deleteItem}><Trash2 size={14} /></button></span></article>)}</div></div>}
       </div>
     </section>
 
-    {addingItem && <AboutItemModal content={content} type={selectedSection} initialLanguage={contentLanguage} initialTranslations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, editingItem === null ? null : languageDraft[selectedSection][collectionKey]?.[editingItem] || null]))} onClose={() => setAddingItem(false)} onSave={(localizedItems) => { saveCollectionTranslations(localizedItems); setAddingItem(false) }} />}
+    {addingItem && <AboutItemModal content={content} type={selectedSection} initialLanguage={contentLanguage} initialTranslations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, editingItem === null ? null : languageDraft[selectedSection][collectionKey]?.[editingItem] || null]))} onClose={() => closeCmsModal(() => setAddingItem(false))} onSave={(localizedItems) => closeCmsModal(() => { saveCollectionTranslations(localizedItems); setAddingItem(false); if (editingItem === null) showRecordToast('recordAdded') })} />}
   </PageContainer>
 }
 
 function AboutItemModal({ content, type, initialLanguage, initialTranslations, onClose, onSave }) {
   const emptyItem = type === 'faq' ? { question: '', answer: '' } : type === 'team' ? { name: '', role: '', avatar: '', avatarAlt: '' } : { title: '', description: '' }
-  const [contentLanguage, setContentLanguage] = useState(initialLanguage)
+  const [contentLanguage, setContentLanguage] = useCmsContentLanguage(initialLanguage)
   const [popupDrafts, setPopupDrafts] = useState(() => Object.fromEntries(['prs', 'ps', 'en'].map((language) => [language, { ...emptyItem, ...initialTranslations[language] }])))
   const draft = popupDrafts[contentLanguage]
   const setDraft = (update) => setPopupDrafts((current) => ({ ...current, [contentLanguage]: typeof update === 'function' ? update(current[contentLanguage]) : update }))

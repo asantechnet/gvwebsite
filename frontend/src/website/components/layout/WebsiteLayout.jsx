@@ -264,7 +264,7 @@ function WebsiteLayout({ children = null, content }) {
       description: currentDescription,
       image: currentImage,
       brandName: headerContent.brandName,
-      indexable: isKnownPage && page !== '/search' && !maintenanceMode && currentSeoRecord.allowIndexing !== false,
+      indexable: isKnownPage && page !== '/search' && !maintenanceMode,
       type: selectedPost ? 'article' : 'website',
       structuredData,
     })

@@ -12,7 +12,10 @@ function removeSavedStatus(item) {
 }
 
 function createInitialDraft({ isServices, isTourism, services, tourism, opportunities, exams }) {
-  if (isServices) return services || []
+  if (isServices) return (services || []).map((service) => ({
+    ...service,
+    status: service.status === 'draft' ? 'draft' : 'published',
+  }))
   if (isTourism) {
     return Object.entries(tourism || {}).flatMap(([type, section]) => section.cards.map((card) => ({
       ...card,
@@ -70,11 +73,15 @@ function useManagedCollection({ pageKey, label, services, tourism, opportunities
   const toggleStatus = (card) => {
     setDraft((current) => {
       if (Array.isArray(current)) {
-        return current.map((item) => item.id === card.id || item.slug === card.slug ? {
-          ...item,
-          status: item.status === 'draft' ? 'published' : 'draft',
-          savedStatus: item.savedStatus ?? item.status,
-        } : item)
+        return current.map((item) => {
+          if (item.id !== card.id && item.slug !== card.slug) return item
+          const currentStatus = item.status === 'draft' ? 'draft' : 'published'
+          return {
+            ...item,
+            status: currentStatus === 'draft' ? 'published' : 'draft',
+            savedStatus: item.savedStatus ?? currentStatus,
+          }
+        })
       }
       return current
     })

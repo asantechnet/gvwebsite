@@ -6,6 +6,13 @@
     "eyebrow": "مرکز امنیت حساب‌ها", "title": "دسترسی ایمیل و رمز عبور", "description": "حساب‌های مدیر را ایجاد و اطلاعات ورود را بازیابی کنید. این بخش به محتوای وب‌سایت دسترسی ندارد.", "refresh": "تازه‌سازی", "create": "ایجاد مدیر", "owners": "مالکان امنیت", "administrators": "مدیران", "loading": "حساب‌ها در حال بارگذاری است…", "you": "شما", "owner": "کاربر ارشد", "administrator": "مدیر", "edit": "ویرایش حساب", "reset": "ارسال پیوند بازنشانی", "setPassword": "تعیین رمز عبور", "delete": "حذف حساب", "close": "بستن", "createDescription": "اطلاعات ورود مدیر وب‌سایت را ایجاد کنید.", "name": "نام حساب", "email": "نشانی ایمیل", "password": "رمز عبور", "confirmPassword": "تکرار رمز عبور", "currentPassword": "رمز عبور فعلی کاربر ارشد", "deleteWarning": "این کار مدیر را برای همیشه حذف و همه نشست‌های فعال او را لغو می‌کند.", "cancel": "لغو", "confirm": "تأیید عملیات", "wait": "لطفاً صبر کنید…", "showPassword": "نمایش رمز عبور", "hidePassword": "پنهان‌کردن رمز عبور", "actions": { "create": "ایجاد مدیر", "edit": "ویرایش حساب", "reset": "ارسال بازنشانی رمز", "password": "تعیین رمز تازه", "delete": "حذف مدیر" }
   },
   "createService": "ایجاد خدمت جدید",
+  "countryName": "نام کشور",
+  "countrySearch": "جستجوی کشورها...",
+  "countryEmpty": "کشوری پیدا نشد.",
+  "provinceName": "نام ولایت",
+  "provinceSearch": "جستجوی ولایت‌ها...",
+  "provinceEmpty": "ولایتی پیدا نشد.",
+  "operationNotifications": { "recordAdded": "مورد جدید افزوده شد.", "recordDeleted": "مورد حذف شد." },
   "overview": "نمای کلی",
   "expand": "باز کردن نوار کناری",
   "collapse": "بستن نوار کناری",

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { Trash2, X } from 'lucide-react'
 
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
+import { useCmsInterfaceLanguage } from '@cms/hooks/useCmsLanguage.js'
 
 function DeleteConfirmation({ children }) {
   const [request, setRequest] = useState(null)
@@ -23,7 +24,7 @@ function DeleteConfirmation({ children }) {
 }
 
 function DeleteDialog({ request, onClose }) {
-  const isEnglish = document.documentElement.lang === 'en'
+  const isEnglish = useCmsInterfaceLanguage() === 'en'
   const cancelRef = useRef(null)
   const [closing, setClosing] = useState(false)
   const close = useCallback((confirmed) => { if (closing) return; setClosing(true); window.setTimeout(() => onClose(confirmed), 200) }, [closing, onClose])

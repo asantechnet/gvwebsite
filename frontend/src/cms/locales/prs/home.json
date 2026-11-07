@@ -32,6 +32,8 @@
   "testimonialQuote": "دیدگاه مشتری",
   "testimonialAvatar": "تصویر مشتری",
   "countryName": "نام کشور",
+  "countrySearch": "جستجوی کشورها...",
+  "countryEmpty": "کشوری پیدا نشد.",
   "countryImage": "تصویر کشور",
   "chooseImage": "انتخاب تصویر",
   "dropImage": "تصویر را اینجا رها کنید یا برای انتخاب کلیک کنید",

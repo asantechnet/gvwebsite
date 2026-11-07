@@ -19,6 +19,7 @@ import { filterScholarships } from "@website/utils/catalog.js";
 import { SCHOLARSHIPS_PER_PAGE } from "@website/utils/cardCounts.js";
 import { useLocalizedHref } from "@website/hooks/useWebsiteLanguage.js";
 import useModalFocus from "@/shared/hooks/useModalFocus.js";
+import { getCountries, getCountryCode, normalizeCountrySearch } from "@/shared/utils/countries.js";
 
 const initialFilters = { country: "", degree: "", funding: "", deadline: "" };
 const pashtoDeadlineDates = {
@@ -51,19 +52,36 @@ function FilterSelect({
   icon: Icon,
   isOpen,
   onToggle,
+  searchable = false,
+  searchPlaceholder = "",
+  emptyLabel = "",
 }) {
   const wrapperRef = useRef(null);
-  const selectedLabel = value || allLabel;
+  const searchRef = useRef(null);
+  const optionsRef = useRef(null);
+  const [query, setQuery] = useState("");
+  const choices = useMemo(() => options.map((option) => typeof option === "string" ? { value: option, label: option } : option), [options]);
+  const selectedLabel = choices.find((option) => option.value === value)?.label || allLabel;
+  const normalizedQuery = normalizeCountrySearch(query);
+  const visibleChoices = choices.filter((option) => !normalizedQuery || normalizeCountrySearch(option.label).includes(normalizedQuery));
 
   useEffect(() => {
     if (!isOpen) return undefined;
     const closeOnOutsideClick = (event) => {
-      if (!wrapperRef.current?.contains(event.target)) onToggle(false);
+      if (!wrapperRef.current?.contains(event.target)) { onToggle(false); setQuery(""); }
     };
     document.addEventListener("pointerdown", closeOnOutsideClick);
     return () =>
       document.removeEventListener("pointerdown", closeOnOutsideClick);
   }, [isOpen, onToggle]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    window.requestAnimationFrame(() => {
+      if (searchable) searchRef.current?.focus({ preventScroll: true });
+      optionsRef.current?.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: "center" });
+    });
+  }, [isOpen, searchable]);
 
   return (
     <div ref={wrapperRef} className="relative min-w-0 flex-1 text-start">
@@ -95,15 +113,17 @@ function FilterSelect({
         inert={!isOpen}
         className={`absolute inset-x-0 top-full z-50 mt-1 overflow-hidden rounded-md border border-border bg-surface p-0 text-start shadow-[0_8px_18px_rgba(54,69,77,0.14)] transition-all duration-200 motion-reduce:transition-none dark:border-gray-600 dark:bg-gray-800 ${isOpen ? "visible translate-y-0 opacity-100" : "invisible pointer-events-none translate-y-2 opacity-0"}`}
       >
-        {[allLabel, ...options].map((option) => {
-          const optionValue = option === allLabel ? "" : option;
+        {searchable && <label className="m-1.5 flex min-h-9 items-center gap-2 rounded-lg border border-border bg-background px-2.5 text-foreground-muted focus-within:border-primary dark:border-gray-600 dark:bg-gray-700"><Search aria-hidden="true" size={14} /><input ref={searchRef} type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={searchPlaceholder} className="min-w-0 flex-1 bg-transparent text-xs text-foreground outline-none" /></label>}
+        <div ref={optionsRef} className="max-h-60 overflow-y-auto">
+        {[{ value: "", label: allLabel }, ...visibleChoices].map((option) => {
+          const optionValue = option.value;
           const selected = value === optionValue;
           return (
             <button
               type="button"
               role="option"
               aria-selected={selected}
-              key={option}
+              key={optionValue || "all"}
               onClick={() => {
                 onChange(optionValue);
                 onToggle(false);
@@ -116,10 +136,12 @@ function FilterSelect({
               }}
                 className={`block w-full rounded-md px-2.5 text-start transition-colors ${selected ? `bg-primary/10 ${language === "en" ? "font-semibold" : "font-extrabold"} text-accent-text` : `${language === "en" ? "font-medium" : "font-semibold"} text-foreground hover:bg-primary/10 hover:text-accent-text`}`}
             >
-              {option}
+              <span className="inline-flex items-center gap-2">{option.flag && <span aria-hidden="true" className="text-lg">{option.flag}</span>}<span>{option.label}</span></span>
             </button>
           );
         })}
+        {visibleChoices.length === 0 && <p className="px-3 py-5 text-center text-xs text-foreground-muted">{emptyLabel}</p>}
+        </div>
       </div>
     </div>
   );
@@ -181,6 +203,14 @@ function ScholarshipsSection({ content, language = "dr" }) {
   const [openFilter, setOpenFilter] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const countryOptions = useMemo(() => {
+    const countryLanguage = language === "dr" ? "prs" : language;
+    const locale = countryLanguage === "prs" ? "fa-AF" : countryLanguage === "ps" ? "ps-AF" : "en";
+    const existingNames = new Map(content.options.countries.map((name) => [getCountryCode(name), name]));
+    return getCountries(countryLanguage)
+      .map((country) => ({ value: existingNames.get(country.code) || country.name, label: country.name, flag: country.flag }))
+      .sort((first, second) => first.label.localeCompare(second.label, locale, { sensitivity: "base" }));
+  }, [content.options.countries, language]);
 
   const filteredScholarships = useMemo(
     () => filterScholarships(content.items, filters),
@@ -204,7 +234,7 @@ function ScholarshipsSection({ content, language = "dr" }) {
     setCurrentPage(1);
   };
   const filterControls = <>
-    <FilterSelect language={language} icon={MapPin} label={content.filters.country} value={filters.country} options={content.options.countries} allLabel={content.filters.all} onChange={(value) => updateFilter("country", value)} isOpen={openFilter === "country"} onToggle={(isOpen) => setOpenFilter(isOpen ? "country" : null)} />
+    <FilterSelect searchable searchPlaceholder={content.filters.countrySearch} emptyLabel={content.filters.countryEmpty} language={language} icon={MapPin} label={content.filters.country} value={filters.country} options={countryOptions} allLabel={content.filters.all} onChange={(value) => updateFilter("country", value)} isOpen={openFilter === "country"} onToggle={(isOpen) => setOpenFilter(isOpen ? "country" : null)} />
     <FilterSelect language={language} icon={GraduationCap} label={content.filters.degree} value={filters.degree} options={content.options.degrees} allLabel={content.filters.all} onChange={(value) => updateFilter("degree", value)} isOpen={openFilter === "degree"} onToggle={(isOpen) => setOpenFilter(isOpen ? "degree" : null)} />
     <FilterSelect language={language} icon={WalletCards} label={content.filters.funding} value={filters.funding} options={content.options.funding} allLabel={content.filters.all} onChange={(value) => updateFilter("funding", value)} isOpen={openFilter === "funding"} onToggle={(isOpen) => setOpenFilter(isOpen ? "funding" : null)} />
     <FilterSelect language={language} icon={CalendarDays} label={content.filters.deadline} value={filters.deadline} options={content.options.deadlines} allLabel={content.filters.all} onChange={(value) => updateFilter("deadline", value)} isOpen={openFilter === "deadline"} onToggle={(isOpen) => setOpenFilter(isOpen ? "deadline" : null)} />

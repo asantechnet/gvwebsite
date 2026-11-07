@@ -32,6 +32,8 @@
   "testimonialQuote": "Testimonial",
   "testimonialAvatar": "Customer image",
   "countryName": "Country name",
+  "countrySearch": "Search countries...",
+  "countryEmpty": "No countries found.",
   "countryImage": "The image of the country",
   "chooseImage": "Select image",
   "dropImage": "Drop image here or click to select",

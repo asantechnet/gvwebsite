@@ -6,6 +6,13 @@
     "eyebrow": "د حساب امنیت مرکز", "title": "برېښنالیک او پټنوم لاسرسی", "description": "د مدیر حسابونه جوړ او د ننوتلو معلومات بېرته ترلاسه کړئ. دا برخه د وېب‌سایټ منځپانګې ته لاسرسی نه لري.", "refresh": "تازه کول", "create": "مدیر جوړول", "owners": "امنیتي خاوندان", "administrators": "مدیران", "loading": "حسابونه پورته کېږي…", "you": "تاسو", "owner": "لوړ کارن", "administrator": "مدیر", "edit": "حساب سمول", "reset": "د بیا تنظیم لینک لېږل", "setPassword": "پټنوم ټاکل", "delete": "حساب ړنګول", "close": "تړل", "createDescription": "د وېب‌سایټ مدیر لپاره د ننوتلو معلومات جوړ کړئ.", "name": "د حساب نوم", "email": "برېښنالیک", "password": "پټنوم", "confirmPassword": "پټنوم تایید", "currentPassword": "ستاسو اوسنی لوړ کارن پټنوم", "deleteWarning": "دا مدیر تل لپاره ړنګوي او ټولې فعالې ناستې یې بندوي.", "cancel": "لغوه", "confirm": "عمل تایید کړئ", "wait": "لږ انتظار…", "showPassword": "پټنوم ښکاره کړئ", "hidePassword": "پټنوم پټ کړئ", "actions": { "create": "مدیر جوړول", "edit": "حساب سمول", "reset": "د پټنوم بیا تنظیم لېږل", "password": "نوی پټنوم ټاکل", "delete": "مدیر ړنګول" }
   },
   "createService": "نوی خدمت جوړول",
+  "countryName": "د هېواد نوم",
+  "countrySearch": "هېوادونه ولټوئ...",
+  "countryEmpty": "هېواد پیدا نه شو.",
+  "provinceName": "د ولایت نوم",
+  "provinceSearch": "ولایتونه ولټوئ...",
+  "provinceEmpty": "ولایت پیدا نه شو.",
+  "operationNotifications": { "recordAdded": "نوی مورد اضافه شو.", "recordDeleted": "مورد ړنګ شو." },
   "overview": "عمومي کتنه",
   "expand": "اړخیزه پټه پرانیستل",
   "collapse": "اړخیزه پټه بندول",

@@ -5,6 +5,7 @@ import DashboardSidebar from './DashboardSidebar.jsx'
 import DashboardTopbar from './DashboardTopbar.jsx'
 import DeleteConfirmation from '@cms/components/DeleteConfirmation.jsx'
 import UnsavedChangesBar from '@cms/components/UnsavedChangesBar.jsx'
+import ToastViewport from '@cms/components/ToastViewport.jsx'
 import dariContent from '@cms/locales/prs/dashboard.json'
 import pashtoContent from '@cms/locales/ps/dashboard.json'
 import dariMagazineContent from '@website/locales/prs/magazine.json'
@@ -69,6 +70,7 @@ import { getCmsRouteKey } from '@cms/routes.js'
 import useAuth from '@cms/auth/useAuth.js'
 import { canAccessCmsRoute, CMS_PERMISSIONS } from '@cms/auth/permissions.js'
 import useMessages from '@cms/hooks/useMessages.js'
+import { CmsLanguageProvider } from '@cms/hooks/useCmsLanguage.js'
 import AuthPage from '@cms/components/pages/AuthPage.jsx'
 import { CmsPageProgress, SuperUserSkeleton } from '@cms/components/CmsRouteProgress.jsx'
 import { lazyWithSkeletonPreview } from '@/shared/utils/loading.js'
@@ -139,6 +141,7 @@ function DashboardLayout() {
     document.documentElement.classList.toggle('dark', theme === 'dark')
     document.documentElement.classList.toggle('light', theme === 'light')
     document.documentElement.dataset.application = 'cms'
+    document.documentElement.dataset.theme = theme
     document.documentElement.lang = language
     document.documentElement.dir = language === 'en' ? 'ltr' : 'rtl'
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#0a1019' : '#edf1f6')
@@ -176,7 +179,7 @@ function DashboardLayout() {
   const routeKey = authPath && auth.status === 'authenticated' ? 'overview' : getCmsRouteKey(window.location.pathname)
   const routePages = {
     overview: <DashboardPage content={content} counts={counts} />,
-    home: <HomePage content={homeEditorContent} initialTranslations={{ prs: dariHomeContent, ps: pashtoHomeContent, en: englishHomeContent }} />,
+    home: <HomePage key={language} content={homeEditorContent} initialTranslations={{ prs: dariHomeContent, ps: pashtoHomeContent, en: englishHomeContent }} interfaceLanguage={language} />,
     about: <AboutPage key={language} content={aboutEditorContent} initialTranslations={{ prs: dariAboutContent, ps: pashtoAboutContent, en: englishAboutContent }} />,
     contact: <ContactPage key={language} content={contactEditorContent} initialTranslations={{ prs: dariContactContent, ps: pashtoContactContent, en: englishContactContent }} />,
     magazine: <MagazinePage key={language} content={magazineEditorContent} initialTranslations={{ prs: dariMagazineContent, ps: pashtoMagazineContent, en: englishMagazineContent }} />,
@@ -202,14 +205,15 @@ function DashboardLayout() {
           : routePages[routeKey] || <PlaceholderPage content={content} pageKey={window.location.pathname.split('/')[2]} />
   const canAccess = (key) => canAccessCmsRoute(auth.session, key)
 
-  return <DeleteConfirmation><div className="cms-root min-h-screen w-full max-w-full overflow-x-clip" data-theme={theme} dir={language === 'en' ? 'ltr' : 'rtl'}>
+  return <CmsLanguageProvider language={language}><DeleteConfirmation><div className="cms-root min-h-screen w-full max-w-full overflow-x-clip" data-theme={theme} dir={language === 'en' ? 'ltr' : 'rtl'}>
+    <ToastViewport theme={theme} language={language} />
     <a href="#dashboard-content" className="fixed start-3 top-3 z-[70] -translate-y-20 rounded-xl bg-admin-heading px-4 py-3 text-white transition-transform focus:translate-y-0">{content.overview}</a>
     <DashboardSidebar content={content} theme={theme} open={sidebarOpen} collapsed={sidebarCollapsed} canAccess={canAccess} onCollapseToggle={toggleSidebar} onClose={() => setSidebarOpen(false)} onLogout={auth.logout} />
     <div className={`admin-shell min-h-screen min-w-0 max-w-full transition-[padding] duration-250 rtl:lg:pr-(--sidebar-width) ltr:lg:pl-(--sidebar-width) ${sidebarCollapsed ? 'rtl:lg:pr-21 ltr:lg:pl-21' : ''}`}>
       <DashboardTopbar content={content.topbar} searchItems={content.groups.flatMap((group) => group.items)} language={language} theme={theme} unreadCount={messageState.unreadCount} canAccessMessages={canManageMessages} onMenuOpen={() => setSidebarOpen(true)} onThemeToggle={() => setTheme((current) => current === 'light' ? 'dark' : 'light')} onLanguageChange={setLanguage} />
       <main id="dashboard-content" className="min-h-[calc(100vh-5rem)] px-4 pt-6 pb-28 sm:px-8 sm:pt-8"><Suspense fallback={<CmsPageProgress routeKey={routeKey} />}>{activePage}</Suspense></main><UnsavedChangesBar language={language} sidebarCollapsed={sidebarCollapsed} />
     </div>
-  </div></DeleteConfirmation>
+  </div></DeleteConfirmation></CmsLanguageProvider>
 }
 
 function CmsAccessState({ title, action, onAction }) {

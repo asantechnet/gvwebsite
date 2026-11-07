@@ -7,6 +7,8 @@ import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import { createLocalUpload, revokeLocalUpload } from '@/shared/uploads/files.js'
 import { removeUpload, uploadFile } from '@/shared/services/api/uploads.js'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
+import { showRecordToast } from '@cms/utils/toast.js'
+import { closeCmsModal } from '@cms/utils/modalTransition.js'
 
 const seedMedia = [
   ['/assets/images/home/hero-globe.webp', 'hero-globe.webp', 'image'],
@@ -71,6 +73,7 @@ function MediaLibraryPage({ content }) {
         return { id: result.path, name: result.name, url: result.url, size: result.size, type, meta: `${formatBytes(result.size)} · ${content[type] || content.file}`, local: false }
       }))
       setItems((current) => [...uploaded, ...current])
+      if (uploaded.length) showRecordToast('recordAdded')
     } catch (error) { accepted.forEach(revokeLocalUpload); setUploadError(error.message) }
   }
   const toggleSelection = (id) => setSelectedIds((current) => { const next = new Set(current); if (next.has(id)) next.delete(id); else next.add(id); return next })
@@ -83,10 +86,11 @@ function MediaLibraryPage({ content }) {
     setItems((current) => { current.filter((item) => ids.includes(item.id) && item.local).forEach(revokeLocalUpload); return current.filter((item) => !ids.includes(item.id)) })
     setSelectedIds((current) => { const next = new Set(current); ids.forEach((id) => next.delete(id)); return next })
     if (preview && ids.includes(preview.id)) setPreview(null)
+    if (ids.length) showRecordToast('recordDeleted')
   }
 
   return <PageContainer className="max-w-[78rem]">
-    <PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.dashboard }, { label: content.title }]} action={<button type="button" onClick={() => inputRef.current?.click()} className="mb-2 inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-[.7rem] border border-admin-border bg-(--primary-action-bg) px-3 py-2 text-[.6875rem] font-semibold text-(--primary-action-text) shadow-[0_8px_20px_rgba(15,23,42,.07)] transition hover:-translate-y-0.5 hover:border-admin-brand hover:text-admin-brand-text hover:shadow-[0_12px_26px_rgba(15,23,42,.11)] sm:w-auto"><ImagePlus size={15} />{content.upload}</button>} />
+    <PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.dashboard }, { label: content.title }]} action={<button type="button" onClick={() => inputRef.current?.click()} className="mb-2 inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-xl border border-admin-border bg-(--primary-action-bg) px-3 py-2 text-[.6875rem] font-semibold text-(--primary-action-text) shadow-[0_8px_20px_rgba(15,23,42,.07)] transition hover:-translate-y-0.5 hover:border-admin-brand hover:text-admin-brand-text hover:shadow-[0_12px_26px_rgba(15,23,42,.11)] sm:w-auto"><ImagePlus size={15} />{content.upload}</button>} />
     <input ref={inputRef} type="file" multiple accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.mp4,.webm,.ogg,.mov,.mp3,.wav,.m4a,.flac" className="hidden" onChange={upload} />
     {uploadError && <p role="alert" className="-mt-4 rounded-xl border border-red-500/25 bg-red-500/10 px-3 py-2 text-xs text-red-600 dark:text-red-300">{uploadError}</p>}
     <section className="grid gap-2 rounded-2xl border border-admin-border bg-admin-card p-2 shadow-[0_12px_34px_rgb(15_23_42_/.055)] md:grid-cols-[minmax(15rem,.7fr)_minmax(18rem,1fr)]">
@@ -102,7 +106,7 @@ function MediaLibraryPage({ content }) {
         <span className="absolute inset-x-2 bottom-2 flex items-center gap-1.5 rounded-lg bg-slate-950/75 px-2 py-1.5 text-white backdrop-blur-md"><strong className="min-w-0 flex-1 truncate text-start text-[.7rem]">{item.name}</strong><button type="button" onClick={(event) => { event.stopPropagation(); remove([item.id]) }} className="grid size-7 shrink-0 place-items-center rounded-md border border-red-400/50 text-red-300 transition hover:bg-red-500/20 hover:text-red-100" aria-label={`${content.delete} ${item.name}`}><Trash2 size={14} /></button></span>
       </div>
     </article>)}</section> : <section className="grid min-h-56 place-items-center rounded-2xl border border-dashed border-admin-border bg-admin-card p-6 text-center"><div><UploadCloud className="mx-auto text-admin-brand-text" size={30} /><h2 className="mt-3 text-sm font-bold text-admin-heading">{content.emptyTitle}</h2><p className="mt-1 text-xs text-admin-muted">{content.emptyDescription}</p></div></section>}
-    {preview && <MediaPreviewModal item={preview} content={content} onClose={() => setPreview(null)} />}
+    {preview && <MediaPreviewModal item={preview} content={content} onClose={() => closeCmsModal(() => setPreview(null))} />}
   </PageContainer>
 }
 

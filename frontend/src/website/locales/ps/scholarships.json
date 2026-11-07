@@ -7,6 +7,8 @@
   "filters": {
     "title": "بورسونه فلټر کړئ",
     "country": "مقصد هېواد",
+    "countrySearch": "هېوادونه ولټوئ...",
+    "countryEmpty": "هېواد پیدا نه شو.",
     "degree": "تحصیلي کچه",
     "funding": "مالي ملاتړ",
     "deadline": "د غوښتنلیک وروستۍ نېټه",

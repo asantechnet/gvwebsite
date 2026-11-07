@@ -7,6 +7,8 @@
   "filters": {
     "title": "Scholarship filter",
     "country": "Destination country",
+    "countrySearch": "Search countries...",
+    "countryEmpty": "No countries found.",
     "degree": "Degree",
     "funding": "Type of financial support",
     "deadline": "Application deadline",
@@ -52,7 +54,7 @@
   "options": {
     "countries": [
       "Germany",
-      "Britain",
+      "United Kingdom",
       "Türkiye",
       "Hungary",
       "Italy",
@@ -114,7 +116,7 @@
       "slug": "chevening-scholarship",
       "title": "UK Chevening Scholarship",
       "provider": "Chevening",
-      "country": "Britain",
+      "country": "United Kingdom",
       "degree": "Masters",
       "funding": "Full financing",
       "deadline": "24 Nov 2026",

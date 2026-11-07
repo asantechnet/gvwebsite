@@ -6,6 +6,13 @@
     "eyebrow": "Account security center", "title": "Email and password access", "description": "Create administrator accounts and recover credentials. This workspace has no access to website content.", "refresh": "Refresh", "create": "Create administrator", "owners": "Security owners", "administrators": "Administrators", "loading": "Loading accounts…", "you": "You", "owner": "Super user", "administrator": "Administrator", "edit": "Edit account", "reset": "Send reset link", "setPassword": "Set password", "delete": "Delete account", "close": "Close", "createDescription": "Create credentials for a website administrator.", "name": "Account name", "email": "Email address", "password": "Password", "confirmPassword": "Confirm password", "currentPassword": "Your current super-user password", "deleteWarning": "This permanently removes the administrator and revokes all active sessions.", "cancel": "Cancel", "confirm": "Confirm action", "wait": "Please wait…", "showPassword": "Show password", "hidePassword": "Hide password", "actions": { "create": "Create administrator", "edit": "Edit account", "reset": "Send password reset", "password": "Set a new password", "delete": "Delete administrator" }
   },
   "createService": "Create new service",
+  "countryName": "Country name",
+  "countrySearch": "Search countries...",
+  "countryEmpty": "No countries found.",
+  "provinceName": "Province name",
+  "provinceSearch": "Search provinces...",
+  "provinceEmpty": "No provinces found.",
+  "operationNotifications": { "recordAdded": "New record added.", "recordDeleted": "Record deleted." },
   "overview": "Overview",
   "expand": "Open the sidebar",
   "collapse": "Close the sidebar",

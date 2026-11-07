@@ -97,7 +97,7 @@ function MediaSkeleton() {
 }
 
 function SettingsSkeleton() {
-  return <><PageHeadingSkeleton action={false} /><div className="grid gap-5 lg:grid-cols-2">{list(4).map((item) => <EditorPanel key={item} fields={2} media={item === 0} />)}</div><section className="mt-5 rounded-2xl border border-admin-border bg-admin-card"><header className="flex gap-3 border-b border-admin-border p-4"><Block className="size-10 bg-admin-brand/15" /><div className="flex-1 space-y-2"><Block className="h-5 w-36" /><Block className="h-3 w-56" /></div></header><div className="space-y-3 p-4">{list(6).map((item) => <div key={item} className="flex justify-between rounded-xl border border-admin-border p-4"><div className="space-y-2"><Block className="h-4 w-40" /><Block className="h-3 w-24" /></div><Block className="h-4 w-32" /></div>)}</div></section></>
+  return <><PageHeadingSkeleton action={false} /><div className="grid gap-5 lg:grid-cols-2">{list(4).map((item) => <EditorPanel key={item} fields={2} media={item === 0} />)}</div></>
 }
 
 function ProfileSkeleton() {

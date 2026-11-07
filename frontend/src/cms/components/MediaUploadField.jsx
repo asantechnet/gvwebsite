@@ -3,7 +3,7 @@ import { ImagePlus, Replace, Trash2, UploadCloud } from 'lucide-react'
 import { createLocalUpload, revokeLocalUpload } from '@/shared/uploads/files.js'
 import { uploadFile } from '@/shared/services/api/uploads.js'
 
-function MediaUploadField({ value, onChange, content, fill = false, iconOnly = false, previewShape = 'wide', imageFit = 'cover' }) {
+function MediaUploadField({ value, onChange, content, fill = false, fullWidth = true, iconOnly = false, previewShape = 'wide', imageFit = 'cover' }) {
   const inputRef = useRef(null)
   const [error, setError] = useState('')
   const choose = async (file) => {
@@ -19,7 +19,7 @@ function MediaUploadField({ value, onChange, content, fill = false, iconOnly = f
   }
   const previewClass = previewShape === 'icon' ? 'aspect-[16/7] w-full' : previewShape === 'square' ? 'mx-auto aspect-square w-full max-w-64' : 'aspect-[16/7] w-full'
   const imageClass = imageFit === 'contain' ? 'object-contain' : 'object-cover'
-  return <div className={`sm:col-span-2 ${fill ? 'flex h-full flex-col' : ''}`}>
+  return <div className={`${fullWidth ? 'sm:col-span-2' : ''} ${fill ? 'flex h-full flex-col' : ''}`}>
     <span className="text-xs font-semibold text-admin-heading">{content.countryImage}</span>
     {value ? <div className={`relative mt-2 overflow-visible rounded-xl border border-(--editor-field-border) bg-(--editor-input) ${fill ? 'min-h-48 flex-1' : previewClass}`}>
       <img src={value} alt="" className={`size-full rounded-xl ${imageClass}`} />

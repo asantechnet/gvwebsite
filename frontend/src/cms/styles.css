@@ -125,11 +125,17 @@ html.dark .cms-root .cms-logout-button:hover { background: rgb(239 68 68 / .2); 
 .cms-root .animate-cms-modal-backdrop-out { animation: cms-modal-backdrop-out .2s ease-in both; }
 .cms-root .animate-cms-modal-panel-in { animation: cms-modal-panel-in .22s cubic-bezier(.22, 1, .36, 1) both; }
 .cms-root .animate-cms-modal-panel-out { animation: cms-modal-panel-out .2s ease-in both; }
+.cms-root .cms-modal-backdrop:not(.animate-cms-modal-backdrop-in):not(.animate-cms-modal-backdrop-out) { animation: cms-modal-backdrop-in .22s cubic-bezier(.22, 1, .36, 1) both; }
+.cms-root .cms-modal-backdrop:not(.animate-cms-modal-backdrop-in):not(.animate-cms-modal-backdrop-out) > :is([role="dialog"], [role="alertdialog"]) { animation: cms-modal-panel-in .22s cubic-bezier(.22, 1, .36, 1) both; }
+.cms-root > main > .fixed:has(> [role="dialog"]):not(.animate-cms-modal-backdrop-out) { animation: cms-modal-backdrop-in .22s cubic-bezier(.22, 1, .36, 1) both; }
+.cms-root > main > .fixed:has(> [role="dialog"]):not(.animate-cms-modal-backdrop-out) > [role="dialog"] { animation: cms-modal-panel-in .22s cubic-bezier(.22, 1, .36, 1) both; }
 .cms-root .animate-cms-save-control-in { animation: cms-save-control-in .32s cubic-bezier(.22, 1, .36, 1) both; }
 .cms-root .animate-cms-save-control-out { animation: cms-save-control-out .26s cubic-bezier(.4, 0, 1, 1) both; }
 .cms-root .cms-collection-modal > header { min-height: 3.5rem; flex: 0 0 auto; border-bottom: 1px solid var(--admin-border); padding: .5rem 1.25rem; }
 .cms-root .cms-collection-modal > header + div { min-height: 0; flex: 1 1 auto; margin-top: 0; overflow-y: auto; padding: 1.25rem; }
 .cms-root .cms-collection-modal > footer { min-height: 2.75rem; flex: 0 0 auto; margin-top: 0; border-top: 1px solid var(--admin-border); padding: .25rem 1.25rem; }
+.cms-root .cms-overview-modal { display: grid; grid-template-rows: auto minmax(0, 1fr); height: calc(100dvh - 2rem); max-height: calc(100dvh - 2rem); }
+.cms-root .cms-overview-modal-content { min-width: 0; min-height: 0; overflow-x: hidden; overflow-y: scroll; overscroll-behavior: contain; touch-action: pan-y; -webkit-overflow-scrolling: touch; }
 @media (min-width: 640px) {
   .cms-root .cms-collection-modal > header,
   .cms-root .cms-collection-modal > footer { padding-inline: 1.5rem; }
@@ -146,15 +152,22 @@ html.dark .cms-root .cms-logout-button:hover { background: rgb(239 68 68 / .2); 
 .cms-root .sidebar-custom-scrollbar { position: absolute; top: 0; inset-inline-end: 2px; width: 4px; border-radius: 999px; background: var(--sidebar-border); cursor: grab; touch-action: none; }
 .cms-root .sidebar-custom-scrollbar:active { cursor: grabbing; }
 .cms-root .overflow-y-auto:not(.sidebar-scroll-nav),
+.cms-root .cms-overview-modal-content,
 .cms-root .cms-collection-modal > header + div { scrollbar-width: thin; scrollbar-color: var(--admin-brand) var(--admin-control-soft); }
 .cms-root .overflow-y-auto:not(.sidebar-scroll-nav)::-webkit-scrollbar,
+.cms-root .cms-overview-modal-content::-webkit-scrollbar,
 .cms-root .cms-collection-modal > header + div::-webkit-scrollbar { width: 9px; }
 .cms-root .overflow-y-auto:not(.sidebar-scroll-nav)::-webkit-scrollbar-track,
+.cms-root .cms-overview-modal-content::-webkit-scrollbar-track,
 .cms-root .cms-collection-modal > header + div::-webkit-scrollbar-track { margin-block: .35rem; border-radius: 999px; background: var(--admin-control-soft); }
 .cms-root .overflow-y-auto:not(.sidebar-scroll-nav)::-webkit-scrollbar-thumb,
+.cms-root .cms-overview-modal-content::-webkit-scrollbar-thumb,
 .cms-root .cms-collection-modal > header + div::-webkit-scrollbar-thumb { min-height: 3rem; border: 2px solid var(--admin-control-soft); border-radius: 999px; background: var(--admin-brand); }
 .cms-root .overflow-y-auto:not(.sidebar-scroll-nav)::-webkit-scrollbar-thumb:hover,
+.cms-root .cms-overview-modal-content::-webkit-scrollbar-thumb:hover,
 .cms-root .cms-collection-modal > header + div::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--admin-brand) 82%, var(--admin-heading)); }
+.cms-root .cms-collection-modal > .cms-scrollbar-hidden { scrollbar-width: none; }
+.cms-root .cms-collection-modal > .cms-scrollbar-hidden::-webkit-scrollbar { display: none; }
 .cms-clock-separator { width: .45em; animation: cms-clock-blink 2s steps(1, end) infinite; }
 .cms-root form > .profile-card:first-child label > input { min-height: 2.5rem; }
 @keyframes cms-clock-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: .18; } }

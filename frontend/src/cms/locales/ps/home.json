@@ -32,6 +32,8 @@
   "testimonialQuote": "د مراجع نظر",
   "testimonialAvatar": "د مراجع انځور",
   "countryName": "د هېواد نوم",
+  "countrySearch": "هېوادونه ولټوئ...",
+  "countryEmpty": "هېواد پیدا نه شو.",
   "countryImage": "د هېواد انځور",
   "chooseImage": "انځور وټاکئ",
   "dropImage": "انځور دلته وغورځوئ یا د ټاکلو لپاره کلیک وکړئ",

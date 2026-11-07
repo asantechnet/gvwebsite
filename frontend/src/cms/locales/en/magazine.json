@@ -7,12 +7,32 @@
   "editItem": "Edit the article",
   "itemModalDescription": "Edit this information.",
   "save": "Save",
-  "cancel": "Opt out",
+  "cancel": "Cancel",
   "close": "To close",
   "chooseImage": "Select image",
   "dropImage": "Drop image here or click to select",
   "replaceImage": "To replace",
   "removeImage": "Delete image",
+  "createNews": "Create new news",
+  "createPost": "Create new post",
+  "deletePost": "Delete post",
+  "deletePostDescription": "Are you sure you want to delete this post?",
+  "allPosts": "All posts",
+  "allCategories": "All categories",
+  "selectCategory": "Select category",
+  "published": "Published",
+  "draft": "Draft",
+  "status": "Status",
+  "featured": "Featured suggestion",
+  "search": "Search posts...",
+  "empty": "No posts found.",
+  "postContent": "Post content",
+  "createCategory": "Create new category",
+  "editCategory": "Edit category",
+  "deleteCategory": "Delete category",
+  "deleteCategoryDescription": "Are you sure you want to delete this category?",
+  "categoryName": "Category name",
+  "emptyCategories": "No categories have been added yet.",
   "sections": {
     "hero": {
       "label": "Magazine banner"
@@ -22,6 +42,9 @@
     },
     "articles": {
       "label": "Writings and articles"
+    },
+    "categories": {
+      "label": "Categories"
     }
   },
   "fields": {

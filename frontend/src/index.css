@@ -12,6 +12,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 html { scrollbar-gutter: stable; }
 html.cms-modal-open { background: rgb(8 12 20 / .62); }
+html.cms-scroll-locked,
+html.cms-scroll-locked body { overflow: hidden !important; overscroll-behavior: none; }
 @theme inline {
   --font-dari: "IRANYekan", Tahoma, Arial, sans-serif;
   --font-pashto: "Vazirmatn", Tahoma, Arial, sans-serif;

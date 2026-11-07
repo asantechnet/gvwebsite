@@ -75,6 +75,7 @@ Do not describe planned functionality as implemented.
 | Tailwind Vite plugin | Tailwind and Vite integration | `^4.3.3` |
 | Lucide React | All general website and CMS interface icons | `^1.48.0` |
 | React Icons | Social media brand icons only | `^5.7.0` |
+| Sonner | Shared CMS toast notifications | `^2.0.8` |
 | Tiptap | Shared CMS rich-text editing | `^3.32.0` |
 | DOMPurify | Allowlist-based rich-text sanitization before DOM rendering | `^3.4.17` |
 | tsParticles | Public decorative particle backgrounds | `^3.9.1` |
@@ -206,6 +207,7 @@ Use aliases across source areas and relative imports for nearby files within one
 - CMS editors must compose shared primitives from `EditorPrimitives.jsx` and `SectionTabBar.jsx` instead of copying their markup or Tailwind classes. Shared tab persistence and scroll-reset behavior must use `useEditorTabs`.
 - CMS records with multilingual content keep language-neutral settings such as status, featured state, media, dates, and ordering at the record level, while visible authored fields are isolated under `translations.prs`, `translations.ps`, and `translations.en`. Editor language switching must preserve every locale draft and save all translations together without copying values between languages.
 - Full-page CMS editors use one page-level content-language switcher to swap all authored fields together. Keep this content-language state separate from the CMS interface language, preserve drafts for every locale while switching, and use a compact dropdown on mobile rather than adding language controls beside individual fields.
+- CMS React components must consume the interface and initial content language through `useCmsInterfaceLanguage` and `useCmsContentLanguage`; never read `document.documentElement.lang` during render because the DOM attribute is synchronized after React state changes.
 - Supply changeable content, images, links, icons, states, colors, and behavior through props.
 - Prefer `children` where composition creates a clearer API.
 - Support `className` where consumers need controlled visual extension.

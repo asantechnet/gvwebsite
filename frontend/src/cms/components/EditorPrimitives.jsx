@@ -1,4 +1,5 @@
-import { ArrowUpLeft } from 'lucide-react'
+import { ArrowUpLeft, Pencil, Trash2 } from 'lucide-react'
+import { useCmsInterfaceLanguage } from '@cms/hooks/useCmsLanguage.js'
 
 function EditorPreviewLink({ href = '/', children }) {
   return <a href={href} target="_blank" rel="noreferrer" className="mb-2 inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-[.7rem] border border-admin-border bg-(--primary-action-bg) px-3 py-2 text-[.6875rem] font-semibold text-(--primary-action-text) shadow-[0_8px_20px_rgba(15,23,42,.07)] transition hover:-translate-y-0.5 hover:border-admin-brand hover:text-admin-brand-text hover:shadow-[0_12px_26px_rgba(15,23,42,.11)] sm:w-auto">{children}<ArrowUpLeft size={15} /></a>
@@ -9,7 +10,9 @@ function EditorSectionHeader({ icon: Icon, title, action }) {
 }
 
 function EditorVisibilityToggle({ label, checked, onChange, className = '' }) {
-  return <label className={`inline-flex h-9 min-h-9 max-h-9 w-full cursor-pointer items-center justify-between gap-3 overflow-hidden rounded-xl border border-admin-border bg-admin-control px-3 py-2 text-[.6875rem] font-semibold text-admin-muted sm:w-auto ${className}`}>{label}<input type="checkbox" className="peer sr-only" checked={checked} onChange={onChange} /><span aria-hidden="true" className="relative h-5 w-9 shrink-0 rounded-full border border-admin-border bg-[var(--admin-toggle-off)] transition-colors duration-200 peer-checked:border-admin-brand peer-checked:bg-admin-brand after:absolute after:top-1/2 after:start-1 after:size-3 after:-translate-y-1/2 after:rounded-full after:bg-white after:shadow-sm after:transition-transform after:duration-200 peer-checked:after:translate-x-4 rtl:peer-checked:after:-translate-x-4" /></label>
+  const interfaceLanguage = useCmsInterfaceLanguage()
+  const isEnglish = interfaceLanguage === 'en'
+  return <label className={`inline-flex h-9 min-h-9 max-h-9 w-full cursor-pointer items-center justify-between gap-3 overflow-hidden rounded-xl border border-admin-border bg-admin-control px-3 py-2 text-[.6875rem] font-semibold text-admin-muted sm:w-auto ${className}`}>{label}<input type="checkbox" className="peer sr-only" checked={checked} onChange={onChange} /><span aria-hidden="true" className="relative h-5 w-9 shrink-0 rounded-full border border-admin-border bg-[var(--admin-toggle-off)] transition-colors duration-200 peer-checked:border-admin-brand peer-checked:bg-admin-brand"><span className="absolute top-1 size-3 rounded-full bg-white shadow-sm transition-transform duration-200" style={{ left: isEnglish ? '4px' : undefined, right: isEnglish ? undefined : '4px', transform: checked ? `translate(${isEnglish ? '16px' : '-16px'}, 0)` : 'translate(0, 0)' }} /></span></label>
 }
 
 function EditorFieldGroup({ title, children, columns = true, className = '' }) {
@@ -23,4 +26,8 @@ function EditorField({ label, value, multiline = false, type = 'text', dir, full
   return <label className={`block min-w-0 text-[.75rem] font-semibold text-admin-heading ${full ? 'sm:col-span-2' : ''}`}>{!hideLabel && <span>{label}</span>}{multiline ? <textarea aria-label={label} rows={rows} dir={fieldDirection} className={`${shared} resize-y py-3 leading-6 ${fieldDirection === 'ltr' ? 'text-left' : ''}`} value={value} onChange={(event) => onChange(event.target.value)} /> : <input aria-label={label} dir={fieldDirection} type={type} className={`${shared} min-h-11 py-2.5 ${fieldDirection === 'ltr' ? 'text-left' : ''}`} value={value} onChange={(event) => onChange(event.target.value)} />}</label>
 }
 
-export { EditorField, EditorFieldGroup, EditorPreviewLink, EditorSectionHeader, EditorVisibilityToggle }
+function EditorNumberedCard({ index, title, language, editLabel, deleteLabel, onEdit, onDelete }) {
+  return <article className="flex min-w-0 items-center gap-3 rounded-xl border border-admin-border bg-(--editor-field) p-3"><span className="grid size-9 shrink-0 place-items-center rounded-lg border border-[color-mix(in_srgb,var(--admin-brand)_28%,var(--admin-border))] bg-[color-mix(in_srgb,var(--admin-brand)_15%,var(--admin-card))] text-[.6875rem] font-bold text-admin-brand-text shadow-[0_1px_3px_rgb(15_23_42_/.06)]">{String(index + 1).padStart(2, '0')}</span><span className="min-w-0 flex-1"><strong dir={language === 'en' ? 'ltr' : 'rtl'} className="block truncate text-[.75rem] text-admin-heading">{title}</strong></span><span className="flex shrink-0 items-center gap-1.5"><button type="button" onClick={onEdit} className="grid size-8 place-items-center rounded-lg border border-admin-border bg-admin-control text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" aria-label={editLabel}><Pencil size={14} /></button>{onDelete && <button type="button" onClick={onDelete} className="grid size-8 place-items-center rounded-lg border border-red-500/25 bg-admin-control text-red-500 transition hover:border-red-500 hover:bg-red-500/10" aria-label={deleteLabel}><Trash2 size={14} /></button>}</span></article>
+}
+
+export { EditorField, EditorFieldGroup, EditorNumberedCard, EditorPreviewLink, EditorSectionHeader, EditorVisibilityToggle }

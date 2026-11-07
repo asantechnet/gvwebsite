@@ -3,6 +3,7 @@ import { AlertTriangle, CircleX, RotateCcw, Save } from 'lucide-react'
 
 import { getCmsRouteKey } from '@cms/routes.js'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
+import { showToast } from '@cms/utils/toast.js'
 import {
   CMS_CHANGES_DISCARDED_EVENT,
   CMS_DRAFT_DIRTY_EVENT,
@@ -11,9 +12,9 @@ import {
 } from '@cms/utils/draftEvents.js'
 
 const copy = {
-  prs: { actions: 'اقدامات صفحه', saving: 'در حال ذخیره…', saveChanges: 'ذخیره تغییرات', leave: 'بدون ذخیره خارج شوید؟', leaveDescription: 'تغییرات شما هنوز ذخیره نشده است.', cancel: 'لغو', discard: 'صرف‌نظر', save: 'ذخیره' },
-  ps: { actions: 'د پاڼې کړنې', saving: 'خوندي کېږي…', saveChanges: 'بدلونونه خوندي کړئ', leave: 'له خوندي کولو پرته ووځئ؟', leaveDescription: 'ستاسو بدلونونه لا نه دي خوندي شوي.', cancel: 'لغوه', discard: 'پرېښودل', save: 'خوندي کول' },
-  en: { actions: 'Page actions', saving: 'Saving…', saveChanges: 'Save changes', leave: 'Leave without saving?', leaveDescription: 'Your changes have not been saved yet.', cancel: 'Cancel', discard: 'Discard', save: 'Save' },
+  prs: { actions: 'اقدامات صفحه', saving: 'در حال ذخیره…', saveChanges: 'ذخیره تغییرات', saved: 'تغییرات با موفقیت ذخیره شد.', saveError: 'ذخیره تغییرات انجام نشد.', leave: 'بدون ذخیره خارج شوید؟', leaveDescription: 'تغییرات شما هنوز ذخیره نشده است.', cancel: 'لغو', discard: 'صرف‌نظر', save: 'ذخیره' },
+  ps: { actions: 'د پاڼې کړنې', saving: 'خوندي کېږي…', saveChanges: 'بدلونونه خوندي کړئ', saved: 'بدلونونه په بریالیتوب خوندي شول.', saveError: 'بدلونونه خوندي نه شول.', leave: 'له خوندي کولو پرته ووځئ؟', leaveDescription: 'ستاسو بدلونونه لا نه دي خوندي شوي.', cancel: 'لغوه', discard: 'پرېښودل', save: 'خوندي کول' },
+  en: { actions: 'Page actions', saving: 'Saving…', saveChanges: 'Save changes', saved: 'Changes saved successfully.', saveError: 'Changes could not be saved.', leave: 'Leave without saving?', leaveDescription: 'Your changes have not been saved yet.', cancel: 'Cancel', discard: 'Discard', save: 'Save' },
 }
 
 function UnsavedChangesBar({ language = 'prs', sidebarCollapsed = false }) {
@@ -143,8 +144,10 @@ function UnsavedChangesBar({ language = 'prs', sidebarCollapsed = false }) {
     try {
       await requestCmsSave()
       setDirty(false)
+      showToast(labels.saved)
     } catch {
       setDirty(true)
+      showToast(labels.saveError, { variant: 'danger' })
     } finally {
       setSaving(false)
     }

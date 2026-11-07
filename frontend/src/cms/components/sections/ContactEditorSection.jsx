@@ -10,6 +10,8 @@ import { EditorField, EditorFieldGroup, EditorPreviewLink, EditorSectionHeader, 
 import useEditorTabs from '@cms/hooks/useEditorTabs.js'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
+import { showRecordToast } from '@cms/utils/toast.js'
+import { useCmsContentLanguage } from '@cms/hooks/useCmsLanguage.js'
 
 const tabIcons = { hero: FileText, details: ContactRound, form: MessageSquareText, connections: MapPinned, social: Globe2 }
 const detailIcons = { phone: Phone, email: AtSign, address: MapPinned, whatsapp: FaWhatsapp }
@@ -37,7 +39,7 @@ const prepareContactDraft = (initialContent) => ({
 
 function ContactEditorSection({ content, initialTranslations }) {
   const [selectedTab, setSelectedTab] = useEditorTabs({ defaultTab: 'hero', storageKey: 'globalvision-cms-contact-tab', tabs: Object.keys(tabIcons) })
-  const [contentLanguage, setContentLanguage] = useState(() => ['prs', 'ps', 'en'].includes(document.documentElement.lang) ? document.documentElement.lang : 'prs')
+  const [contentLanguage, setContentLanguage] = useCmsContentLanguage()
   const [drafts, setDrafts] = useCmsDraftState('contact', () => Object.fromEntries(Object.entries(initialTranslations).map(([language, initialContent]) => [language, prepareContactDraft(initialContent)])))
   const draft = drafts[contentLanguage]
   const setDraft = (update) => setDrafts((current) => ({ ...current, [contentLanguage]: typeof update === 'function' ? update(current[contentLanguage]) : update }))
@@ -51,8 +53,8 @@ function ContactEditorSection({ content, initialTranslations }) {
   const updateForm = (key, value) => setDraft((current) => ({ ...current, contact: { ...current.contact, form: { ...current.contact.form, [key]: value } } }))
   const updateDetail = (type, key, value) => setDraft((current) => { const exists = current.contact.details.some((detail) => detail.type === type); return { ...current, contact: { ...current.contact, details: exists ? current.contact.details.map((detail) => detail.type === type ? { ...detail, [key]: value } : detail) : [...current.contact.details, { ...fallbackWhatsApp, [key]: value }] } } })
   const updateSocial = (index, key, value) => setDraft((current) => ({ ...current, contact: { ...current.contact, socials: current.contact.socials.map((social, socialIndex) => socialIndex === index ? { ...social, [key]: value } : social) } }))
-  const addSocial = (social) => setDraft((current) => ({ ...current, contact: { ...current.contact, socials: [...current.contact.socials, social] } }))
-  const deleteSocial = (index) => setDraft((current) => ({ ...current, contact: { ...current.contact, socials: current.contact.socials.filter((_, socialIndex) => socialIndex !== index) } }))
+  const addSocial = (social) => { setDraft((current) => ({ ...current, contact: { ...current.contact, socials: [...current.contact.socials, social] } })); showRecordToast('recordAdded') }
+  const deleteSocial = (index) => { setDraft((current) => ({ ...current, contact: { ...current.contact, socials: current.contact.socials.filter((_, socialIndex) => socialIndex !== index) } })); showRecordToast('recordDeleted') }
   const CurrentIcon = tabIcons[selectedTab]
 
 
@@ -72,7 +74,7 @@ function ContactEditorSection({ content, initialTranslations }) {
         {selectedTab === 'form' && <div className="grid gap-5"><EditorFieldGroup title={content.formFields} className="sm:p-5">{['nameLabel', 'namePlaceholder', 'emailLabel', 'emailPlaceholder', 'subjectLabel', 'subjectPlaceholder', 'messageLabel', 'messagePlaceholder'].map((field) => <EditorField key={field} label={content.fields[field]} value={draft.contact.form[field] || ''} onChange={(value) => updateForm(field, value)} />)}</EditorFieldGroup><EditorFieldGroup title={content.formFeedback} columns={false} className="sm:p-5"><EditorField label={content.fields.successMessage} value={draft.contact.form.successMessage} multiline onChange={(value) => updateForm('successMessage', value)} /><EditorField label={content.fields.requiredMessage} value={draft.contact.form.requiredMessage} multiline onChange={(value) => updateForm('requiredMessage', value)} /></EditorFieldGroup></div>}
 
         {selectedTab === 'connections' && <div className="grid gap-6"><EditorFieldGroup title={content.mapSettings} columns={false} className="sm:p-5"><EditorField label={content.fields.mapTitle} value={draft.contact.mapTitle} onChange={(value) => updateContact('mapTitle', value)} /><EditorField label={content.fields.mapUrl} value={draft.contact.mapUrl} type="url" onChange={(value) => updateContact('mapUrl', value)} /></EditorFieldGroup></div>}
-        {selectedTab === 'social' && <div className="grid gap-6"><EditorFieldGroup title={content.socialSettings} columns={false} className="sm:p-5"><div className="flex justify-end"><button type="button" onClick={() => setAddingSocial(true)} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-admin-brand bg-admin-brand-soft px-4 text-xs font-semibold text-admin-brand-text transition hover:bg-admin-brand hover:text-white"><Plus size={15} />{content.addSocial}</button></div><div className="grid gap-3 sm:grid-cols-2">{draft.contact.socials.map((social, index) => <article key={`${social.type}-${index}`} className="grid grid-cols-[1fr_auto] items-start gap-3 rounded-xl border border-admin-border bg-(--editor-field) p-3"><div className="grid gap-1"><SocialPlatformSelect value={social.type} onChange={(option) => { updateSocial(index, 'type', option.type); updateSocial(index, 'label', option.label) }} /><EditorField label={content.fields.socialUrl} hideLabel value={social.href} type="url" onChange={(value) => updateSocial(index, 'href', value)} /></div><button type="button" onClick={() => deleteSocial(index)} aria-label={content.deleteSocial} className="grid size-8 place-items-center rounded-lg border border-red-500/25 text-red-500 transition hover:border-red-500 hover:bg-red-500/10"><Trash2 size={15} /></button></article>)}</div></EditorFieldGroup></div>}
+        {selectedTab === 'social' && <div className="grid gap-6"><EditorFieldGroup title={content.socialSettings} columns={false} className="sm:p-5"><div className="flex justify-end"><button type="button" onClick={() => setAddingSocial(true)} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-admin-brand bg-admin-brand px-4 text-xs font-semibold text-white transition hover:bg-orange-500"><Plus size={15} />{content.addSocial}</button></div><div className="grid gap-3 sm:grid-cols-2">{draft.contact.socials.map((social, index) => <article key={`${social.type}-${index}`} className="grid grid-cols-[1fr_auto] items-start gap-3 rounded-xl border border-admin-border bg-(--editor-field) p-3"><div className="grid gap-1"><SocialPlatformSelect value={social.type} onChange={(option) => { updateSocial(index, 'type', option.type); updateSocial(index, 'label', option.label) }} /><EditorField label={content.fields.socialUrl} hideLabel value={social.href} type="url" onChange={(value) => updateSocial(index, 'href', value)} /></div><button type="button" onClick={() => deleteSocial(index)} aria-label={content.deleteSocial} className="grid size-8 place-items-center rounded-lg border border-red-500/25 text-red-500 transition hover:border-red-500 hover:bg-red-500/10"><Trash2 size={15} /></button></article>)}</div></EditorFieldGroup></div>}
       </div>
     </section>
 

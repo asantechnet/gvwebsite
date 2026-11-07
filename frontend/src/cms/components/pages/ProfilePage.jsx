@@ -14,6 +14,7 @@ import PageHeading from "@cms/components/PageHeading.jsx";
 import PasswordInput from "@cms/components/PasswordInput.jsx";
 import useAuth from "@cms/auth/useAuth.js";
 import useCmsDraftState from "@cms/hooks/useCmsDraftState.js";
+import { useCmsContentLanguage, useCmsInterfaceLanguage } from "@cms/hooks/useCmsLanguage.js";
 import { announceCmsDraftChange } from "@cms/utils/draftEvents.js";
 import useModalFocus from "@/shared/hooks/useModalFocus.js";
 import { validatePasswordChange } from "@/shared/utils/validation.js";
@@ -38,11 +39,8 @@ function readCompanyNames() {
 
 function ProfilePage({ content, theme }) {
   const auth = useAuth();
-  const [contentLanguage, setContentLanguage] = useState(() =>
-    ["prs", "ps", "en"].includes(document.documentElement.lang)
-      ? document.documentElement.lang
-      : "prs",
-  );
+  const [contentLanguage, setContentLanguage] = useCmsContentLanguage();
+  const interfaceLanguage = useCmsInterfaceLanguage();
   const [companyNames, setCompanyNames] = useCmsDraftState(
     "profile",
     readCompanyNames,
@@ -101,9 +99,9 @@ function ProfilePage({ content, theme }) {
                   <ContentLanguageSwitcher
                     label={
                       content.language ||
-                      (document.documentElement.lang === "en"
+                      (interfaceLanguage === "en"
                         ? "Content language"
-                        : document.documentElement.lang === "ps"
+                        : interfaceLanguage === "ps"
                           ? "د منځپانګې ژبه"
                           : "زبان محتوا")
                     }
