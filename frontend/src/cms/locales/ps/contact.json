@@ -21,6 +21,12 @@
   "formFields": "د خانونو او تڼۍ سرلیکونه",
   "formFeedback": "",
   "mapSettings": "د نقشې تنظیمات",
+  "mapPicker": {
+    "searchLabel": "د ځای لټون",
+    "searchPlaceholder": "د ادارې نوم، پته، ښار یا مختصات",
+    "help": "ځای ولټوئ او پایله په مخکتنه کې تایید کړئ.",
+    "openGoogleMaps": "ګوګل مپ پرانیستل"
+  },
   "socialSettings": "ټولنیزې رسنۍ",
   "addSocial": "ټولنیزه رسنۍ زیاتول",
   "deleteSocial": "ټولنیزه رسنۍ ړنګول",

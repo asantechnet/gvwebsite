@@ -8,6 +8,8 @@ import Section from '@ui/Section.jsx'
 import { dataSource } from '@/shared/services/data/index.js'
 import { validateContactForm } from '@/shared/utils/validation.js'
 
+const defaultMapUrl = 'https://www.google.com/maps?q=34.529568145213474,69.17050772740252&z=15&output=embed'
+
 function ContactSection({ content }) {
   const [formStatus, setFormStatus] = useState('idle')
 
@@ -100,7 +102,7 @@ function ContactSection({ content }) {
         <div className="mx-auto mt-12 w-full max-w-5xl overflow-hidden rounded-3xl border border-border dark:border-gray-700">
           <iframe
             title={content.mapTitle}
-            src="https://www.google.com/maps?q=34.529568145213474,69.17050772740252&z=15&output=embed"
+            src={content.mapUrl || defaultMapUrl}
             className="h-72 w-full rounded-2xl border-0 sm:h-96"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"

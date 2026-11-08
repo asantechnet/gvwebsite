@@ -21,6 +21,12 @@
   "formFields": "Title fields and buttons",
   "formFeedback": "",
   "mapSettings": "Map settings",
+  "mapPicker": {
+    "searchLabel": "Search for a location",
+    "searchPlaceholder": "Business, address, city, or coordinates",
+    "help": "Search and select the location, then confirm it in the preview.",
+    "openGoogleMaps": "Open Google Maps"
+  },
   "socialSettings": "Social networks",
   "addSocial": "Add social network",
   "deleteSocial": "Delete the social network",

@@ -516,6 +516,8 @@ function DashboardLayout() {
         <div
           className="cms-root min-h-screen w-full max-w-full overflow-x-clip"
           data-theme={theme}
+          data-dashboard-shell="true"
+          data-sidebar-collapsed={sidebarCollapsed ? "true" : "false"}
           dir={language === "en" ? "ltr" : "rtl"}
         >
           <ToastViewport theme={theme} language={language} />

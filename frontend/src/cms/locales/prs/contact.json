@@ -21,6 +21,12 @@
   "formFields": "عنوان فیلدها و دکمه",
   "formFeedback": "",
   "mapSettings": "تنظیمات نقشه",
+  "mapPicker": {
+    "searchLabel": "جستجوی موقعیت",
+    "searchPlaceholder": "نام اداره، آدرس، شهر یا مختصات",
+    "help": "موقعیت را جستجو کنید و نتیجه را در پیش‌نمایش تأیید کنید.",
+    "openGoogleMaps": "باز کردن گوگل مپ"
+  },
   "socialSettings": "شبکه‌های اجتماعی",
   "addSocial": "افزودن شبکه اجتماعی",
   "deleteSocial": "حذف شبکه اجتماعی",

@@ -5,8 +5,8 @@ function EditorPreviewLink({ href = '/', children }) {
   return <a href={href} target="_blank" rel="noreferrer" className="mb-2 inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-[.7rem] border border-admin-border bg-(--primary-action-bg) px-3 py-2 text-[.6875rem] font-semibold text-(--primary-action-text) shadow-[0_8px_20px_rgba(15,23,42,.07)] transition hover:-translate-y-0.5 hover:border-admin-brand hover:text-admin-brand-text hover:shadow-[0_12px_26px_rgba(15,23,42,.11)] sm:w-auto">{children}<ArrowUpLeft size={15} /></a>
 }
 
-function EditorSectionHeader({ icon: Icon, title, action }) {
-  return <header className="flex flex-wrap items-center gap-4 border-b border-admin-border bg-[linear-gradient(110deg,var(--editor-field),var(--admin-card))] px-5 py-4 sm:px-6"><span className="grid size-11 shrink-0 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text"><Icon size={20} /></span><div className="min-w-0 flex-1"><h2 className="m-0 font-heading text-base text-admin-heading">{title}</h2></div><div className="w-full sm:ms-auto sm:w-auto [&>div]:grid [&>div]:w-full [&>div]:grid-cols-2 [&>div>label]:w-full [&>div>div]:w-full sm:[&>div]:flex sm:[&>div]:w-auto sm:[&>div>label]:w-auto sm:[&>div>div]:w-auto">{action}</div></header>
+function EditorSectionHeader({ icon: Icon, title, action, className = '' }) {
+  return <header className={`flex flex-wrap items-center gap-4 border-b border-admin-border bg-[linear-gradient(110deg,var(--editor-field),var(--admin-card))] px-5 py-4 sm:px-6 ${className}`}><span className="grid size-11 shrink-0 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text"><Icon size={20} /></span><div className="min-w-0 flex-1"><h2 className="m-0 font-heading text-base text-admin-heading">{title}</h2></div><div className="w-full sm:ms-auto sm:w-auto [&>div]:grid [&>div]:w-full [&>div]:grid-cols-2 [&>div>label]:w-full [&>div>div]:w-full sm:[&>div]:flex sm:[&>div]:w-auto sm:[&>div>label]:w-auto sm:[&>div>div]:w-auto">{action}</div></header>
 }
 
 function EditorVisibilityToggle({ label, checked, onChange, className = '' }) {

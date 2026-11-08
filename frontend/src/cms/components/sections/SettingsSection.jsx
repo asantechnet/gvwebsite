@@ -51,7 +51,7 @@ function SettingsSection({ content }) {
 
   return <div className="grid items-stretch gap-5">
     <div className="grid gap-5 lg:grid-cols-2"><BrandingLogo copy={copy} branding={branding} onLogo={handleLogo} /><BrandingColors copy={copy} branding={branding} onChange={(key, value) => setBranding((current) => ({ ...current, [key]: value }))} /></div>
-    <div className="grid items-stretch gap-5 lg:grid-cols-2">
+    <div className="grid items-stretch gap-5 md:grid-cols-2">
     <SettingsCard icon={Globe2} eyebrow={content.regional.eyebrow} title={content.regional.title} description={content.regional.description}>
       <div className="mt-auto"><LanguageSelect label={content.regional.defaultLanguage} value={settings.defaultLanguage} onChange={(value) => update('defaultLanguage', value)} options={[{ value: 'prs', label: content.languages.prs }, { value: 'ps', label: content.languages.ps }, { value: 'en', label: content.languages.en }]} /></div>
     </SettingsCard>

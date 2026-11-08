@@ -25,8 +25,13 @@ function CountryPicker({ value, onChange, label, language = 'prs', searchPlaceho
   useEffect(() => {
     if (!open) return
     window.requestAnimationFrame(() => {
-      searchRef.current?.focus({ preventScroll: true })
-      optionsRef.current?.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'center' })
+      const optionsElement = optionsRef.current
+      const selectedOption = optionsElement?.querySelector('[aria-selected="true"]')
+      if (optionsElement && selectedOption) {
+        const centeredOffset = selectedOption.offsetTop - ((optionsElement.clientHeight - selectedOption.offsetHeight) / 2)
+        optionsElement.scrollTop = Math.max(0, centeredOffset)
+      }
+      if (window.matchMedia('(min-width: 640px) and (pointer: fine)').matches) searchRef.current?.focus({ preventScroll: true })
     })
   }, [open])
 

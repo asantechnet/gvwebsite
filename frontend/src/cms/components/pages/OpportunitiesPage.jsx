@@ -30,7 +30,7 @@ function OpportunitiesPage({ content, opportunities, exams, services, tourism })
 }
 
 function ManagedCollectionPage({ content, opportunities, exams, services, tourism }) {
-  const isServices = Array.isArray(services)
+  const isServices = services !== undefined && services !== null
   const isTourism = Boolean(tourism)
   const pageKey = isServices ? 'services' : isTourism ? 'tourism' : 'opportunities'
   const label = content.groups.flatMap((group) => group.items || []).find((item) => item.key === pageKey)?.label
@@ -57,8 +57,8 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
       showRecordToast('recordDeleted')
     }
   }
-  return <PageContainer><PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.groups?.[0]?.label || content.overview }, { label }]} action={<EditorPreviewLink>{content.topbar.visitPage}</EditorPreviewLink>} />
-    <section className={isServices ? 'overflow-visible rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)]' : 'overflow-visible bg-transparent'}><div className={`relative z-30 grid gap-1 border-b border-admin-border bg-admin-control-soft p-1 md:grid-cols-[minmax(12rem,1fr)_minmax(12rem,.7fr)_minmax(14rem,.8fr)] ${isServices ? 'rounded-t-2xl' : 'mb-3 rounded-2xl border border-admin-border shadow-[0_12px_34px_rgb(15_23_42_/.055)]'}`}>
+  return <PageContainer className="max-[1023px]:gap-2 min-[701px]:max-[1023px]:gap-0"><PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.groups?.[0]?.label || content.overview }, { label }]} action={<EditorPreviewLink>{content.topbar.visitPage}</EditorPreviewLink>} />
+    <section className={isServices ? 'overflow-visible rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)]' : 'overflow-visible bg-transparent'}><div className={`relative z-30 grid gap-1 border-b border-admin-border bg-admin-control-soft p-1 md:grid-cols-[minmax(12rem,1fr)_minmax(12rem,.7fr)_minmax(14rem,.8fr)] ${isServices ? 'rounded-2xl lg:rounded-b-none' : 'mb-3 rounded-2xl border border-admin-border shadow-[0_12px_34px_rgb(15_23_42_/.055)]'}`}>
 <button type="button" onClick={() => setEditing({ id: `new-${Date.now()}`, title: '', description: '', action: '', href: '', image: '' })} className="box-border flex h-9 min-h-0 w-full items-center justify-center gap-1.5 rounded-xl border border-admin-brand bg-admin-brand px-3 text-xs font-semibold text-white transition hover:bg-orange-500 md:w-fit md:justify-self-start md:px-4">
 <Plus size={14} />{isServices ? content.createService : isTourism ? labels.createDestination : labels.createOpportunity}</button>
 <StatusSelect value={status} onChange={setStatus} labels={labels} compact />
@@ -67,13 +67,12 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 <input className="search-field min-w-0 flex-1 bg-transparent text-xs text-admin-heading outline-none" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={labels.search || 'جستجوی نوشته‌ها...'} />
 </label>
 </div>
-    {!isServices && <SectionTabBar sections={typeSections} icons={isTourism ? tourismTabIcons : opportunityTabIcons} selectedSection={activeType} onSelect={setActiveType} ariaLabel={typeLabels.typeLabel || label} />}
+    {!isServices && <SectionTabBar sections={typeSections} icons={isTourism ? tourismTabIcons : opportunityTabIcons} selectedSection={activeType} onSelect={setActiveType} ariaLabel={typeLabels.typeLabel || label} className="max-lg:rounded-[1.1rem]" />}
     <section className={`hidden lg:block ${isServices ? '' : 'overflow-hidden rounded-b-2xl border border-t-0 border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)]'}`}>
 <table className="w-full table-fixed border-collapse text-right">
 <thead className="border-b border-admin-border bg-admin-control-soft text-[.65rem] font-semibold text-admin-muted">
 <tr>
-<th className={`${isServices ? '' : 'w-[48%]'} px-4 py-2`}>{labels.postTitle || 'نوشته'}</th>
-{!isServices && <th className="px-4 py-2">{labels.postCategory || 'دسته‌بندی'}</th>}
+<th className="px-4 py-2">{labels.postTitle || 'نوشته'}</th>
 <th className="w-32 pe-5 py-2 ps-4 text-right"><span className="inline-block translate-x-6">{labels.pageStatus || 'وضعیت'}</span></th>
 <th className="w-36 ps-5 py-2 pe-4 text-right">{labels.actions || 'عملیات'}</th>
 </tr>
@@ -87,7 +86,6 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 </div>
 </div>
 </td>
-{!isServices && <td className="p-4 text-xs text-admin-muted">{card.category || label}</td>}
 <td className="w-32 pe-5 p-4 text-right" onClick={(event) => event.stopPropagation()}>
 <span className="inline-block translate-x-6"><ServiceStatusBadge card={card} labels={labels} onToggle={() => toggleStatus(card)} /></span>
 </td>
@@ -107,12 +105,12 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 </tr>)}</tbody>
 </table>
 </section></section>
-<section className="mt-3 grid w-full min-w-0 max-w-full gap-3 lg:hidden md:grid-cols-2 min-[701px]:mt-4">{filteredCards.map((card) => <article className="relative grid min-h-32 min-w-0 cursor-pointer grid-cols-[5rem_minmax(0,1fr)] items-center gap-3 rounded-2xl border border-admin-border bg-admin-card p-3 shadow-[0_8px_24px_rgb(15_23_42_/.05)] transition hover:bg-admin-control-soft" key={card.id} tabIndex="0" role="button" onClick={() => setViewing(card)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setViewing(card) } }}>
+<section className="grid w-full min-w-0 max-w-full gap-3 lg:hidden md:grid-cols-2 min-[701px]:max-[1023px]:-mt-4">{filteredCards.map((card) => <article className="relative grid min-h-32 min-w-0 cursor-pointer grid-cols-[5rem_minmax(0,1fr)] items-center gap-3 rounded-2xl border border-admin-border bg-admin-card p-3 shadow-[0_8px_24px_rgb(15_23_42_/.05)] transition hover:bg-admin-control-soft" key={card.id} tabIndex="0" role="button" onClick={() => setViewing(card)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setViewing(card) } }}>
 <img className="h-20 w-20 justify-self-center rounded-xl bg-(--editor-field) object-cover" src={card.image} alt="" />
-    <div className="min-w-0 pe-28 pb-10 text-start">
-<strong className="block truncate text-sm text-admin-heading">{card.title}</strong>
+    <div className="flex min-w-0 flex-col items-start justify-center pl-10 text-right">
+<strong className="line-clamp-2 max-w-full text-sm leading-5 text-admin-heading">{card.title}</strong>
 <ServiceStatusBadge card={card} labels={labels} onToggle={() => toggleStatus(card)} />
-    <div className="absolute end-3 bottom-3 flex flex-row gap-1" onClick={(event) => event.stopPropagation()}>
+    <div className="absolute bottom-3 left-3 flex flex-col gap-1" onClick={(event) => event.stopPropagation()}>
 <a className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-muted hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" href={card.href} target="_blank" rel="noreferrer" aria-label={labels.preview || 'پیش‌نمایش'}>
 <ExternalLink size={15} />
 </a>
@@ -127,7 +125,7 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 </article>)}</section>
     {!filteredCards.length && <div className="grid min-h-44 place-items-center rounded-2xl border border-admin-border bg-admin-card text-sm text-admin-muted">{labels.empty || 'نوشته‌ای پیدا نشد.'}</div>}
     {viewing && <OpportunityPostPreviewModal post={viewing} content={modalContent} onClose={() => setViewing(null)} onDelete={() => { removePost(viewing); setViewing(null); showRecordToast('recordDeleted') }} onEdit={() => { setViewing(null); setEditing(viewing) }} />}
-    {editing && <OpportunityPostModal post={editing} content={modalContent} isServices={isServices} isWorldTourism={isTourism && activeType === 'world'} isAfghanistanTourism={isTourism && activeType === 'afghanistan'} onClose={() => setEditing(null)} onSave={(savedPost) => { const isNew = String(editing.id).startsWith('new-'); savePost(savedPost, activeType); setEditing(null); if (isNew) showRecordToast('recordAdded') }} />}
+    {editing && <OpportunityPostModal post={editing} content={modalContent} isServices={isServices} isMigration={pageKey === 'opportunities' && activeType === 'migration'} isWorldTourism={isTourism && activeType === 'world'} isAfghanistanTourism={isTourism && activeType === 'afghanistan'} onClose={() => setEditing(null)} onSave={(savedPost) => { const isNew = String(editing.id).startsWith('new-'); savePost(savedPost, activeType); setEditing(null); if (isNew) showRecordToast('recordAdded') }} />}
   </PageContainer>
 }
 
@@ -186,26 +184,26 @@ function OpportunityPostPreviewModal({ post, content, onClose, onDelete, onEdit 
     const confirmed = await window.cmsConfirmDelete?.({ title: content.deletePost || 'حذف نوشته', description: content.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })
     if (confirmed) onDelete()
   }
-  const closeButton = <button type="button" onClick={close} className="grid size-9 shrink-0 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" aria-label={content.close || 'بستن'}><X size={17} /></button>
-  const actionButtons = <div className="flex shrink-0 items-center gap-2" dir={interfaceLanguage === 'en' ? 'rtl' : 'ltr'}><button type="button" onClick={onEdit} className="grid size-9 place-items-center rounded-lg border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft" aria-label={content.editPost || 'ویرایش'}><Pencil size={16} /></button><button type="button" onClick={requestDelete} className="grid size-9 place-items-center rounded-lg border border-red-500/25 dark:border-red-500/50 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" aria-label={content.deletePost || 'حذف'}><Trash2 size={16} /></button></div>
-  const languageSwitcher = <ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} />
-  return <div className={`cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-4 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onMouseDown={close}>
-    <section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="post-preview-title" className={`cms-overview-modal relative z-10 w-full max-w-5xl overflow-hidden rounded-2xl border border-admin-border bg-admin-page shadow-2xl ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`} onMouseDown={(event) => event.stopPropagation()}>
-      <header dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'} className="flex items-center gap-3 border-b border-admin-border bg-admin-card px-4 py-3 sm:px-6">
-        <div className="min-w-0 flex-1 text-start" dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'}><h2 id="post-preview-title" className="truncate font-heading text-lg text-admin-heading sm:text-xl">{translation.title || content.postTitle || 'نوشته'}</h2></div>
-        {languageSwitcher}{actionButtons}{closeButton}
+  const closeButton = <button type="button" onClick={close} className="grid size-9 shrink-0 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" aria-label={content.close || 'بستن'}><X size={17} /></button>
+  const actionButtons = <div className="flex shrink-0 items-center gap-1 sm:gap-2" dir={interfaceLanguage === 'en' ? 'rtl' : 'ltr'}><button type="button" onClick={onEdit} className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft" aria-label={content.editPost || 'ویرایش'}><Pencil size={16} /></button><button type="button" onClick={requestDelete} className="grid size-9 place-items-center rounded-xl border border-red-500/25 dark:border-red-500/50 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" aria-label={content.deletePost || 'حذف'}><Trash2 size={16} /></button></div>
+  const languageSwitcher = <ContentLanguageSwitcher className="!w-full !min-w-0 sm:!w-auto" label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} />
+  return <div className={`cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-3 sm:p-4 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onMouseDown={close}>
+    <section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="post-preview-title" className={`cms-overview-modal relative z-10 w-full max-w-5xl overflow-hidden rounded-xl border border-admin-border bg-admin-page shadow-2xl sm:max-w-2xl sm:rounded-2xl lg:max-w-5xl ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`} onMouseDown={(event) => event.stopPropagation()}>
+      <header dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'} className="grid min-w-0 grid-cols-1 gap-2 border-b border-admin-border bg-admin-card px-2 py-2.5 sm:flex sm:flex-nowrap sm:items-center sm:gap-3 sm:px-6 sm:py-3">
+        <div className="order-2 min-w-0 w-full overflow-hidden text-start sm:order-none sm:flex-1" dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'}><h2 id="post-preview-title" className="block w-full truncate font-heading text-base text-admin-heading sm:text-xl">{translation.title || content.postTitle || 'نوشته'}</h2></div>
+        <div className="order-1 grid min-w-0 w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-1 sm:ms-auto sm:flex sm:w-auto sm:shrink-0 sm:gap-2">{languageSwitcher}{actionButtons}{closeButton}</div>
       </header>
-      <div className="cms-overview-modal-content grid gap-5 p-4 sm:p-6 md:pr-16" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
-        <article className="mx-auto w-full max-w-6xl overflow-hidden rounded-[2rem] border border-border bg-surface text-foreground shadow-sm dark:border-gray-700 dark:bg-[#2b3442]">
-          {post.image && <div className="relative aspect-[16/8] overflow-hidden md:aspect-[16/5]"><img src={post.image} alt={translation.imageAlt || translation.title} className="absolute inset-0 size-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" aria-hidden="true" /><div className="absolute inset-x-5 bottom-5 text-start text-white md:inset-x-10 md:bottom-10"><h1 className="mt-4 w-full font-heading text-2xl font-extrabold leading-tight md:text-4xl">{translation.title}</h1></div></div>}
-          <div className="grid gap-6 p-4 sm:p-6 lg:p-8"><main className="min-w-0 text-start"><p className="text-lg font-medium leading-9 text-foreground-muted">{translation.excerpt}</p><SafeRichText className="gv-public-post-content mt-8 text-base leading-8 text-foreground-muted [&_a]:font-semibold [&_a]:text-accent-text [&_a]:underline [&_figure]:my-6 [&_figure]:overflow-hidden [&_figure]:rounded-2xl [&_figure]:border [&_figure]:border-border [&_figure]:bg-surface [&_figure]:p-2 [&_h2]:mb-3 [&_h2]:mt-8 [&_h2]:font-heading [&_h2]:text-xl [&_h2]:font-extrabold [&_h2]:text-foreground [&_h3]:mb-2 [&_h3]:mt-6 [&_h3]:font-heading [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-foreground [&_img]:max-h-[32rem] [&_img]:w-full [&_img]:rounded-xl [&_img]:object-contain [&_li]:mb-2 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:ps-6 [&_p]:mb-5 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:ps-6" html={translation.content || `<p>${translation.excerpt || ''}</p>`} /></main></div>
+      <div className="cms-overview-modal-content grid gap-3 p-2.5 sm:gap-5 sm:p-6" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
+        <article className="mx-auto w-full max-w-6xl overflow-hidden rounded-xl border border-border bg-surface text-foreground shadow-sm sm:rounded-[2rem] dark:border-gray-700 dark:bg-[#2b3442]">
+          {post.image && <div className="relative aspect-[16/9] overflow-hidden sm:aspect-[16/8] md:aspect-[16/5]"><img src={post.image} alt={translation.imageAlt || translation.title} className="absolute inset-0 size-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" aria-hidden="true" /><div className="absolute inset-x-4 bottom-4 text-start text-white sm:inset-x-6 sm:bottom-6 md:inset-x-10 md:bottom-10"><h1 className="w-full font-heading text-xl font-extrabold leading-tight sm:text-2xl md:text-4xl">{translation.title}</h1></div></div>}
+          <div className="grid gap-4 p-3 sm:gap-6 sm:p-6 lg:p-8"><main className="min-w-0 text-start"><p className="text-sm font-medium leading-7 text-foreground-muted sm:text-lg sm:leading-9">{translation.excerpt}</p><SafeRichText className="gv-public-post-content mt-5 text-sm leading-7 text-foreground-muted sm:mt-8 sm:text-base sm:leading-8 [&_a]:font-semibold [&_a]:text-accent-text [&_a]:underline [&_figure]:my-6 [&_figure]:overflow-hidden [&_figure]:rounded-2xl [&_figure]:border [&_figure]:border-border [&_figure]:bg-surface [&_figure]:p-2 [&_h2]:mb-3 [&_h2]:mt-8 [&_h2]:font-heading [&_h2]:text-xl [&_h2]:font-extrabold [&_h2]:text-foreground [&_h3]:mb-2 [&_h3]:mt-6 [&_h3]:font-heading [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-foreground [&_img]:max-h-[32rem] [&_img]:w-full [&_img]:rounded-xl [&_img]:object-contain [&_li]:mb-2 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:ps-6 [&_p]:mb-5 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:ps-6" html={translation.content || `<p>${translation.excerpt || ''}</p>`} /></main></div>
         </article>
       </div>
     </section>
   </div>
 }
 
-function OpportunityPostModal({ post, content, isServices = false, isWorldTourism = false, isAfghanistanTourism = false, onClose, onSave }) {
+function OpportunityPostModal({ post, content, isServices = false, isMigration = false, isWorldTourism = false, isAfghanistanTourism = false, onClose, onSave }) {
   const isNew = String(post.id ?? '').startsWith('new-')
   const interfaceLanguage = useCmsInterfaceLanguage()
   const [closing, setClosing] = useState(false)
@@ -253,18 +251,18 @@ function OpportunityPostModal({ post, content, isServices = false, isWorldTouris
     translations: Object.fromEntries(Object.entries(current.translations).map(([language, currentTranslation]) => [language, { ...currentTranslation, title: province.names?.[language] || province.name }])),
   }))
   const submit = (event) => { event.preventDefault(); const displayTranslation = form.translations[interfaceLanguage]; const slugTitle = form.translations.prs.title || form.translations.en.title || form.translations.ps.title; const slug = form.slug || slugTitle.toLocaleLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, ''); const savedPost = { ...post, ...form, ...displayTranslation, name: displayTranslation.title, slug, description: displayTranslation.excerpt, author: 'گلوبل ویژن' }; setClosing(true); window.setTimeout(() => onSave(savedPost), 200) }
-  return <div className={`cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-4 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onMouseDown={close}><form ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="opportunity-editor-title" onSubmit={submit} onMouseDown={(event) => event.stopPropagation()} className={`relative z-10 flex max-h-[calc(100svh-2rem)] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-admin-border bg-admin-page shadow-2xl ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`}>
-    <header dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'} className="flex items-center justify-between gap-4 border-b border-admin-border bg-admin-card px-5 py-2 sm:px-6"><h2 id="opportunity-editor-title" className="min-w-0 flex-1 text-start font-heading text-xl leading-tight text-admin-heading" dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'}>{isNew ? (content.createPost || 'ایجاد فرصت جدید') : translation.title}</h2><ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={selectContentLanguage} /><button type="button" className="grid size-9 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" onClick={close} aria-label={content.close || 'بستن'}><X size={17} /></button></header>
-    <div className="grid gap-5 overflow-y-auto p-4 sm:p-6 md:pr-16" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
+  return <div className={`cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-3 sm:p-4 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onMouseDown={close}><form ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="opportunity-editor-title" onSubmit={submit} onMouseDown={(event) => event.stopPropagation()} className={`relative z-10 flex max-h-[calc(100dvh-1.5rem)] w-full max-w-5xl flex-col overflow-hidden rounded-xl border border-admin-border bg-admin-page shadow-2xl sm:max-h-[calc(100dvh-2rem)] sm:max-w-2xl sm:rounded-2xl lg:max-w-5xl ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`}>
+    <header dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'} className="grid min-w-0 grid-cols-1 gap-2 border-b border-admin-border bg-admin-card px-3 py-2.5 sm:flex sm:flex-nowrap sm:items-center sm:gap-4 sm:px-6"><h2 id="opportunity-editor-title" className="order-2 block min-w-0 w-full truncate text-start font-heading text-base leading-tight text-admin-heading sm:order-none sm:flex-1 sm:text-xl" dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'}>{isNew ? (content.createPost || 'ایجاد فرصت جدید') : translation.title}</h2><div className="order-1 grid min-w-0 w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:ms-auto sm:flex sm:w-auto sm:shrink-0"><ContentLanguageSwitcher className="!w-full !min-w-0 sm:!w-auto" label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={selectContentLanguage} /><button type="button" className="grid size-9 shrink-0 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" onClick={close} aria-label={content.close || 'بستن'}><X size={17} /></button></div></header>
+    <div className="grid gap-3 overflow-y-auto p-3 sm:gap-5 sm:p-6" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
 <section className="grid gap-5 rounded-2xl border border-admin-border bg-admin-card p-4 sm:grid-cols-2 sm:p-5">
-{isWorldTourism
+{isWorldTourism || isMigration
   ? <label className="text-xs font-semibold text-admin-heading"><span className="mb-2 block">{content.countryName || content.postTitle || 'نام کشور'}</span><CountryPicker value={form.countryCode || translation.title || post.name} language={contentLanguage} label={content.countryName || content.postTitle || 'نام کشور'} searchPlaceholder={content.countrySearch || ''} emptyLabel={content.countryEmpty || ''} onChange={selectCountry} /></label>
   : isAfghanistanTourism
     ? <label className="text-xs font-semibold text-admin-heading"><span className="mb-2 block">{content.provinceName || content.postTitle || 'نام ولایت'}</span><CountryPicker value={form.provinceCode || translation.title || post.name} language={contentLanguage} label={content.provinceName || content.postTitle || 'نام ولایت'} searchPlaceholder={content.provinceSearch || ''} emptyLabel={content.provinceEmpty || ''} options={provinceOptions} fallbackIcon="📍" onChange={selectProvince} /></label>
   : <Field label={content.postTitle || 'عنوان نوشته'} value={translation.title} onChange={(value) => updateTranslation('title', value)} full={isServices} />}
-{!isServices && <ModalSelect label={content.postCategory || 'دسته‌بندی'} value={form.category} onChange={(value) => update('category', value)} options={[{ value: '', label: content.noCategory || 'بدون دسته‌بندی' }]} />}
+{(isWorldTourism || isAfghanistanTourism) && <ModalSelect label={content.postCategory || 'دسته‌بندی'} value={form.category} onChange={(value) => update('category', value)} options={[{ value: '', label: content.noCategory || 'بدون دسته‌بندی' }]} />}
 <ModalSelect label={content.postStatus || 'وضعیت'} value={form.status} onChange={(value) => update('status', value)} options={[{ value: 'draft', label: content.draft || 'پیش‌نویس' }, { value: 'published', label: content.published || 'منتشرشده' }]} />
-<FeaturedToggle label={content.featuredPost || 'نوشته ویژه'} checked={form.featured} onChange={(value) => update('featured', value)} full={false} />
+<FeaturedToggle label={content.featuredPost || 'نوشته ویژه'} checked={form.featured} onChange={(value) => update('featured', value)} full={!isServices && !isWorldTourism && !isAfghanistanTourism} />
 </section>
 <section className="grid gap-4 rounded-2xl border border-admin-border bg-admin-card p-4 sm:p-5">
 <h3 className="text-sm text-admin-heading">{content.tags || 'برچسب‌ها'}</h3>
@@ -290,7 +288,7 @@ function OpportunityPostModal({ post, content, isServices = false, isWorldTouris
 </section>
 </div>
 </div>
-    <footer className="flex justify-end gap-2 border-t border-admin-border bg-admin-card px-4 py-2 sm:px-6"><button type="button" onClick={close} className="min-h-8 rounded-xl border border-admin-border px-4 text-xs font-semibold text-admin-muted hover:border-admin-brand hover:text-admin-brand-text">{content.cancel || 'انصراف'}</button><button type="submit" className="min-h-8 rounded-xl bg-admin-brand px-5 text-xs font-semibold text-white hover:bg-orange-500">{content.save || 'ذخیره تغییرات'}</button></footer>
+    <footer className="flex shrink-0 justify-end gap-2 border-t border-admin-border bg-admin-card px-3 py-2 sm:px-6"><button type="button" onClick={close} className="min-h-9 rounded-xl border border-admin-border px-4 text-xs font-semibold text-admin-muted hover:border-admin-brand hover:text-admin-brand-text">{content.cancel || 'انصراف'}</button><button type="submit" className="min-h-9 rounded-xl bg-admin-brand px-5 text-xs font-semibold text-white hover:bg-orange-500">{content.save || 'ذخیره تغییرات'}</button></footer>
   </form></div>
 }
 

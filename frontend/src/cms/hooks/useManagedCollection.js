@@ -97,10 +97,11 @@ function useManagedCollection({ pageKey, label, services, tourism, opportunities
       if (isTourism) return current.some((item) => item.id === savedPost.id)
         ? current.map((item) => item.id === savedPost.id ? { ...item, ...savedPost, title: savedPost.title || item.title } : item)
         : [...current, { ...savedPost, id: `${activeType}:${savedPost.slug}`, type: activeType, title: savedPost.title, href: `/tourism/${activeType}/${savedPost.slug}` }]
+      const category = opportunities?.[activeType]?.post?.category || activeType
       const identity = savedPost.id || activeType
       return current.some((item) => item.id === identity)
-        ? current.map((item) => item.id === identity ? { ...item, ...savedPost, id: identity, type: activeType, href: `/opportunities/${activeType}` } : item)
-        : [...current, { ...savedPost, id: identity, type: activeType, href: `/opportunities/${activeType}/${savedPost.slug}` }]
+        ? current.map((item) => item.id === identity ? { ...item, ...savedPost, id: identity, type: activeType, category, href: `/opportunities/${activeType}` } : item)
+        : [...current, { ...savedPost, id: identity, type: activeType, category, href: `/opportunities/${activeType}/${savedPost.slug}` }]
     })
   }
 

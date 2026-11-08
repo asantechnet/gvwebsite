@@ -15,7 +15,7 @@
   "audio": "Audio",
   "size": "Size",
   "dimensions": "Dimensions",
-  "selectAll": "Select all visible",
+  "selectAll": "Select all",
   "selected": "{count} selected",
   "select": "Select",
   "deleteSelected": "Delete selected",

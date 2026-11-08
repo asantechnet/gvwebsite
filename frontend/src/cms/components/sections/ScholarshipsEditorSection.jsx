@@ -114,7 +114,7 @@ function ScholarshipList({ items, translations, initialLanguage, options, conten
 <div className="flex items-center gap-3">
 <img className="size-14 rounded-xl bg-(--editor-field) object-cover" src={item.image} alt="" />
 <div className="min-w-0">
-<strong className={`block truncate text-sm text-admin-heading ${isEnglish ? '!font-normal' : ''}`}>{item.title}</strong>
+<strong className={`line-clamp-2 text-sm leading-5 text-admin-heading ${isEnglish ? '!font-normal' : ''}`}>{item.title}</strong>
 </div>
 </div>
 </td>
@@ -174,17 +174,19 @@ function ScholarshipPreviewModal({ item, index, translations, initialLanguage, c
     return () => { document.body.style.overflow = previousBodyOverflow; document.removeEventListener('keydown', closeOnEscape) }
   }, [onClose])
   const facts = [[content.fields.provider, displayItem.provider], [content.fields.country, displayItem.country], [content.fields.degree, displayItem.degree], [content.fields.funding, displayItem.funding], [content.fields.deadline, displayItem.deadline]]
-  return <div className="cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-4" onMouseDown={onClose}>
-    <section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="scholarship-preview-title" className="cms-overview-modal relative z-10 w-full max-w-5xl overflow-hidden rounded-2xl border border-admin-border bg-admin-page shadow-2xl" onMouseDown={(event) => event.stopPropagation()}>
-      <header dir={interfaceDirection} className="flex items-center gap-3 border-b border-admin-border bg-admin-card px-4 py-3 sm:px-6">
-        <h2 id="scholarship-preview-title" dir={interfaceDirection} className="min-w-0 flex-1 text-start font-heading text-lg text-admin-heading sm:text-xl">{displayItem.title}</h2>
-        <ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} />
-        <div className="flex shrink-0 items-center gap-2" dir="ltr"><button type="button" onClick={onEdit} className="grid size-9 place-items-center rounded-lg border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft" aria-label={content.edit}><Pencil size={16} /></button><button type="button" onClick={onDelete} className="grid size-9 place-items-center rounded-lg border border-red-500/25 dark:border-red-500/50 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" aria-label={content.delete}><Trash2 size={16} /></button></div>
-        <button type="button" onClick={onClose} className="grid size-9 shrink-0 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" aria-label={content.close}><X size={17} /></button>
+  return <div className="cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-3 sm:p-4" onMouseDown={onClose}>
+    <section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="scholarship-preview-title" className="cms-overview-modal relative z-10 w-full max-w-5xl overflow-hidden rounded-xl border border-admin-border bg-admin-page shadow-2xl sm:max-w-2xl sm:rounded-2xl lg:max-w-5xl" onMouseDown={(event) => event.stopPropagation()}>
+      <header dir={interfaceDirection} className="grid min-w-0 grid-cols-1 gap-2 border-b border-admin-border bg-admin-card px-2 py-2.5 sm:flex sm:flex-nowrap sm:items-center sm:gap-3 sm:px-6 sm:py-3">
+        <h2 id="scholarship-preview-title" dir={interfaceDirection} className="order-2 block min-w-0 w-full truncate text-start font-heading text-base text-admin-heading sm:order-none sm:flex-1 sm:text-xl">{displayItem.title}</h2>
+        <div className="order-1 grid min-w-0 w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-1 sm:ms-auto sm:flex sm:w-auto sm:shrink-0 sm:gap-2">
+          <ContentLanguageSwitcher className="!w-full !min-w-0 sm:!w-auto" label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} />
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2" dir={interfaceLanguage === 'en' ? 'rtl' : 'ltr'}><button type="button" onClick={onEdit} className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft" aria-label={content.edit}><Pencil size={16} /></button><button type="button" onClick={onDelete} className="grid size-9 place-items-center rounded-xl border border-red-500/25 dark:border-red-500/50 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" aria-label={content.delete}><Trash2 size={16} /></button></div>
+          <button type="button" onClick={onClose} className="grid size-9 shrink-0 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" aria-label={content.close}><X size={17} /></button>
+        </div>
       </header>
-      <div className="cms-overview-modal-content grid gap-5 p-4 sm:p-6" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
-        <article className="mx-auto w-full max-w-6xl overflow-hidden rounded-[2rem] border border-admin-border bg-admin-card">
-          {displayItem.image && <div className="relative aspect-[16/8] overflow-hidden md:aspect-[16/5]"><img src={displayItem.image} alt={displayItem.imageAlt || displayItem.title || ''} className="absolute inset-0 size-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" aria-hidden="true" /><h3 className="absolute inset-x-5 bottom-5 text-start font-heading text-2xl font-extrabold leading-tight text-white md:inset-x-10 md:bottom-10 md:text-4xl">{displayItem.title}</h3></div>}
+      <div className="cms-overview-modal-content grid gap-3 p-2.5 sm:gap-5 sm:p-6" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
+        <article className="mx-auto w-full max-w-6xl overflow-hidden rounded-xl border border-admin-border bg-admin-card sm:rounded-[2rem]">
+          {displayItem.image && <div className="relative aspect-[16/9] overflow-hidden sm:aspect-[16/8] md:aspect-[16/5]"><img src={displayItem.image} alt={displayItem.imageAlt || displayItem.title || ''} className="absolute inset-0 size-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" aria-hidden="true" /><h3 className="absolute inset-x-4 bottom-4 text-start font-heading text-xl font-extrabold leading-tight text-white sm:inset-x-5 sm:bottom-5 sm:text-2xl md:inset-x-10 md:bottom-10 md:text-4xl">{displayItem.title}</h3></div>}
           <div className="grid gap-5 p-4 sm:p-6"><p className="text-sm leading-7 text-admin-muted">{displayItem.summary}</p><dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">{facts.map(([label, value]) => <div key={label} className="rounded-xl border border-admin-border bg-(--editor-field) p-3"><dt className="text-[.65rem] font-semibold text-admin-muted">{label}</dt><dd className="mt-1 text-xs font-bold text-admin-heading">{value}</dd></div>)}</dl>{displayItem.overview && <div><h4 className="mb-2 text-sm font-bold text-admin-heading">{content.fields.overview}</h4><SafeRichText className="gv-public-post-content text-sm leading-7 text-admin-muted" html={displayItem.overview} /></div>}</div>
         </article>
       </div>
@@ -223,17 +225,17 @@ function ScholarshipModal({ content, initialLanguage, initialTranslations, optio
   const updateCountry = (country) => setPopupDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, country: country.names?.[language] || country.name }])))
   const save = (event) => { event.preventDefault(); const fallbackTitle = popupDrafts.prs.title || popupDrafts.en.title || popupDrafts.ps.title; const slug = draft.slug || fallbackTitle.trim().toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, ''); onSave(Object.fromEntries(Object.entries(popupDrafts).map(([language, languageDraft]) => [language, { ...languageDraft, slug }]))) }
   const isEditing = Object.values(initialTranslations).some(Boolean)
-  return <div className="cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center overflow-hidden p-4" onMouseDown={onClose}>
-<form ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="scholarship-editor-title" onSubmit={save} onMouseDown={(event) => event.stopPropagation()} className="relative z-10 my-auto flex max-h-[calc(100svh-2rem)] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-admin-border bg-admin-page shadow-2xl">
-<header className="flex items-center justify-between gap-4 border-b border-admin-border bg-admin-card px-5 py-2 sm:px-6">
-<h2 id="scholarship-editor-title" className="min-w-0 flex-1 text-start font-heading text-xl leading-tight text-admin-heading">{isEditing ? content.editTitle : content.addTitle}</h2>
-<ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} />
-<button type="button" onClick={onClose} aria-label={content.close} className="grid size-9 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text">
-<X size={17} />
-</button>
+  return <div className="cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center overflow-hidden p-3 sm:p-4" onMouseDown={onClose}>
+<form ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="scholarship-editor-title" onSubmit={save} onMouseDown={(event) => event.stopPropagation()} className="relative z-10 my-auto flex max-h-[calc(100dvh-1.5rem)] w-full max-w-5xl flex-col overflow-hidden rounded-xl border border-admin-border bg-admin-page shadow-2xl sm:max-h-[calc(100dvh-2rem)] sm:max-w-2xl sm:rounded-2xl lg:max-w-5xl">
+<header dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'} className="grid min-w-0 grid-cols-1 gap-2 border-b border-admin-border bg-admin-card px-3 py-2.5 sm:flex sm:flex-nowrap sm:items-center sm:gap-4 sm:px-6">
+<h2 id="scholarship-editor-title" className="order-2 block min-w-0 w-full truncate text-start font-heading text-base leading-tight text-admin-heading sm:order-none sm:flex-1 sm:text-xl">{isEditing ? content.editTitle : content.addTitle}</h2>
+<div className="order-1 grid min-w-0 w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:ms-auto sm:flex sm:w-auto sm:shrink-0">
+<ContentLanguageSwitcher className="!w-full !min-w-0 sm:!w-auto" label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} />
+<button type="button" onClick={onClose} aria-label={content.close} className="grid size-9 shrink-0 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text"><X size={17} /></button>
+</div>
 </header>
-<div className="min-h-0 flex-1 overflow-y-auto p-4 sm:p-6" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
-<div className="grid gap-5">
+<div className="min-h-0 flex-1 overflow-y-auto p-3 sm:p-6" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
+<div className="grid gap-3 sm:gap-5">
 <section className="grid gap-4 rounded-2xl border border-admin-border bg-admin-card p-4 sm:grid-cols-2 sm:p-5">
 <EditorField label={content.fields.itemTitle} value={draft.title} dir={contentLanguage === 'en' ? 'ltr' : 'rtl'} full onChange={(value) => update('title', value)} />
 <label className="block min-w-0 text-xs font-semibold text-admin-heading"><span className="mb-2 block">{content.fields.country}</span><CountryPicker label={content.fields.country} language={contentLanguage} value={draft.country} searchPlaceholder={content.countrySearch} emptyLabel={content.countryEmpty} onChange={updateCountry} /></label>
