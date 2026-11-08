@@ -5,16 +5,18 @@ import {
   CheckCircle2,
   LockKeyhole,
   Mail,
-  UserRound,
+  Moon,
+  Sun,
 } from "lucide-react";
 
 import PasswordInput from "@cms/components/PasswordInput.jsx";
+import LanguageSwitcher from "@/shared/components/LanguageSwitcher.jsx";
 
 function navigate(path) {
   window.location.assign(path);
 }
 
-function AuthPage({ auth, content }) {
+function AuthPage({ auth, content, language, theme, themeLabel, companyName, brandIcon, onThemeToggle, onLanguageChange }) {
   const params = new URLSearchParams(window.location.search);
   const pathname = window.location.pathname;
   const mode = pathname.endsWith("/forgot-password")
@@ -38,7 +40,7 @@ function AuthPage({ auth, content }) {
         const response = await auth.forgotPassword({
           email: form.get("email"),
         });
-        setMessage(response.message || content.resetSent);
+        setMessage(content.resetSent || response.message);
       } else if (mode === "reset") {
         await auth.resetPassword({
           token: params.get("token"),
@@ -51,7 +53,6 @@ function AuthPage({ auth, content }) {
         const session = await auth.login({
           email: form.get("email"),
           password: form.get("password"),
-          remember: form.get("remember") === "on",
         });
         window.location.replace(
           session.user.role === "super_user"
@@ -84,7 +85,7 @@ function AuthPage({ auth, content }) {
         {message ? (
           <Status message={message} />
         ) : (
-          <form className="mt-7 grid gap-5" onSubmit={submit}>
+          <form className="mt-7 grid gap-5 text-start" onSubmit={submit}>
             <EmailField content={content} />
             {error && <ErrorMessage message={error} />}
             <SubmitButton
@@ -167,84 +168,69 @@ function AuthPage({ auth, content }) {
     );
 
   return (
-    <main className="relative isolate flex min-h-dvh items-center justify-center overflow-hidden bg-background p-3 text-admin-heading sm:p-6">
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute -inset-e-20 -top-24 -z-10 size-64 rounded-full bg-brand-orange/15 blur-3xl"
-      />
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-28 -inset-s-20 -z-10 size-64 rounded-full bg-brand-red/10 blur-3xl"
-      />
-      <section className="relative z-10 flex w-full max-w-xl overflow-hidden rounded-[1.75rem] border border-admin-border bg-admin-card/95 shadow-[0_26px_80px_rgba(36,32,27,.15)] backdrop-blur-xl">
-        <div className="relative flex w-full flex-col justify-center px-6 py-8 sm:px-10">
-          <a
-            href="/"
-            className="absolute inset-s-6 top-5 inline-flex items-center gap-2 text-xs text-admin-muted hover:text-admin-brand-text"
-          >
-            <ArrowLeft size={15} />
-            {content.backToWebsite || "Back to website"}
-          </a>
-          <div className="mt-10 text-center">
-            <span className="mx-auto grid size-16 place-items-center rounded-full border-4 border-admin-card bg-admin-brand-soft text-admin-brand-text shadow-xl">
-              <UserRound size={32} />
-            </span>
-            <h2 className="mt-4 font-heading text-lg">Global Vision</h2>
-            <p className="mt-2 text-sm text-admin-muted">
-              {content.unauthenticated}
-            </p>
-          </div>
-          <form className="mt-7 grid gap-4" onSubmit={submit}>
-            <EmailField content={content} />
-            <PasswordField
-              name="password"
-              label={content.password}
-              content={content}
-              current
-            />
-            <div className="flex items-center justify-between gap-4">
-              <label className="flex items-center gap-2 text-xs text-admin-muted">
-                <input
-                  className="size-4 accent-admin-brand"
-                  type="checkbox"
-                  name="remember"
-                />
-                {content.remember || "Keep me signed in"}
-              </label>
-              <button
-                type="button"
-                className="text-xs font-semibold text-admin-brand-text"
-                onClick={() => navigate("/dashboard/forgot-password")}
-              >
-                {content.forgotPassword}
+    <main className="relative isolate flex min-h-dvh items-center justify-center overflow-hidden bg-slate-200 bg-cover bg-center bg-no-repeat p-3 text-admin-heading dark:bg-background sm:p-6" style={{ backgroundImage: "url('/assets/images/herobg.png')" }}>
+      <span aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 bg-transparent dark:bg-slate-950/80" />
+      <section className="relative z-10 flex w-full max-w-md overflow-hidden rounded-[1.75rem] border border-admin-border bg-admin-card/95 shadow-[0_26px_80px_rgba(36,32,27,.15)] backdrop-blur-xl">
+        <div className="relative flex w-full flex-col justify-center p-4">
+          <header dir={language === "en" ? "ltr" : "rtl"} className="flex items-center justify-between gap-3">
+            <a href="/" className="inline-flex min-w-0 items-center gap-2 text-xs text-admin-muted hover:text-admin-brand-text">
+              <ArrowRight size={15} />
+              <span className="truncate">{content.backToWebsite || "Back to website"}</span>
+            </a>
+            <div className="flex shrink-0 items-center gap-2">
+              <LanguageSwitcher language={language} onChange={onLanguageChange} />
+              <button type="button" aria-label={themeLabel || "Change theme"} aria-pressed={theme === "dark"} onClick={onThemeToggle} className="grid size-10 shrink-0 place-items-center rounded-xl border border-(--header-control-border) bg-(--header-control) text-admin-muted outline-none transition hover:border-admin-brand hover:bg-(--header-control-hover) hover:text-admin-heading focus:outline-none focus-visible:border-admin-brand focus-visible:shadow-[0_0_0_3px_color-mix(in_srgb,var(--admin-brand)_28%,transparent)]">
+                {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
               </button>
             </div>
-            {error && <ErrorMessage message={error} />}
-            <SubmitButton
+          </header>
+          <div className="mt-4 rounded-3xl bg-admin-card/70 px-2 py-4 sm:px-8">
+            <div className="text-center">
+              <img src={brandIcon} alt={companyName} className="mx-auto size-20 rounded-full border-4 border-admin-card bg-admin-brand-soft object-contain p-2 shadow-xl" />
+              <h2 className="mt-2 font-heading text-lg" dir={language === "en" ? "ltr" : "rtl"}>{companyName}</h2>
+            </div>
+            <form className="mt-7 grid gap-2" onSubmit={submit}>
+              <EmailField content={content} />
+              <PasswordField
+                name="password"
+                label={content.password}
+                content={content}
+                current
+              />
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  className="!text-[12px] font-semibold leading-none text-admin-brand-text transition-colors hover:text-admin-heading hover:underline"
+                  onClick={() => navigate("/dashboard/forgot-password")}
+                >
+                  {content.forgotPassword}
+                </button>
+              </div>
+              {error && <ErrorMessage message={error} />}
+              <SubmitButton
               busy={submitting}
               label={content.signIn}
               busyLabel={content.signingIn}
               arrow
-            />
-          </form>
+              className="mt-2"
+              />
+            </form>
+          </div>
         </div>
       </section>
     </main>
   );
 }
 
-function RecoveryShell({ icon: Icon, eyebrow, title, description, children }) {
+function RecoveryShell({ icon: Icon, title, children }) {
   return (
-    <main className="grid min-h-dvh place-items-center bg-admin-page px-5 py-12 text-admin-heading">
-      <section className="w-full max-w-md rounded-3xl border border-admin-border bg-admin-card p-7 shadow-[0_28px_80px_rgba(15,23,42,.14)] sm:p-9">
-        <span className="grid size-12 place-items-center rounded-2xl bg-admin-brand-soft text-admin-brand-text">
+    <main className="relative isolate grid min-h-dvh place-items-center overflow-hidden bg-slate-200 bg-cover bg-center bg-no-repeat px-5 py-12 text-admin-heading dark:bg-background" style={{ backgroundImage: "url('/assets/images/herobg.png')" }}>
+      <span aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 bg-transparent dark:bg-slate-950/80" />
+      <section className="relative z-10 w-full max-w-md rounded-3xl border border-admin-border bg-admin-card p-7 text-center shadow-[0_28px_80px_rgba(15,23,42,.14)] sm:p-9">
+        <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-admin-brand-soft text-admin-brand-text">
           <Icon size={22} />
         </span>
-        <p className="mt-6 text-xs font-semibold tracking-widest text-admin-brand-text uppercase">
-          {eyebrow}
-        </p>
         <h1 className="mt-2 font-heading text-3xl">{title}</h1>
-        <p className="mt-2 text-sm leading-6 text-admin-muted">{description}</p>
         {children}
       </section>
     </main>
@@ -254,13 +240,13 @@ function EmailField({ content }) {
   return (
     <label className="grid gap-2 text-xs font-semibold">
       <span>{content.email}</span>
-      <span className="relative block overflow-hidden rounded-xl border border-admin-border bg-admin-control">
+      <span className="relative block overflow-hidden rounded-xl border border-admin-border bg-slate-100 dark:bg-admin-control">
         <Mail
-          className="absolute start-s-4 top-1/2 -translate-y-1/2 text-admin-muted"
+          className="absolute start-4 top-1/2 -translate-y-1/2 text-admin-muted"
           size={16}
         />
         <input
-          className="min-h-12 w-full bg-transparent ps-11 pe-4 text-sm outline-none"
+          className="min-h-10 w-full bg-transparent ps-11 pe-4 text-sm outline-none"
           type="email"
           name="email"
           autoComplete="email"
@@ -276,8 +262,9 @@ function PasswordField({ name, label, content, autoFocus, current = false }) {
     <label className="grid gap-2 text-xs font-semibold">
       <span>{label}</span>
       <PasswordInput
-        className="min-h-12 rounded-xl border border-admin-border bg-admin-control"
+        className="min-h-10 rounded-xl border border-admin-border bg-slate-100 dark:bg-admin-control"
         name={name}
+        startIcon={LockKeyhole}
         autoComplete={current ? "current-password" : "new-password"}
         minLength={current ? undefined : 12}
         required
@@ -301,7 +288,7 @@ function ErrorMessage({ message }) {
 function Status({ message }) {
   return (
     <p
-      className="mt-7 flex gap-2 rounded-xl border border-emerald-500/25 bg-emerald-500/10 p-4 text-sm text-emerald-700"
+      className="mt-7 flex gap-2 rounded-xl border border-emerald-500/25 bg-emerald-500/10 p-4 text-sm text-emerald-700 dark:border-emerald-400/40 dark:bg-emerald-400/10 dark:text-emerald-300"
       role="status"
     >
       <CheckCircle2 size={18} />
@@ -309,10 +296,10 @@ function Status({ message }) {
     </p>
   );
 }
-function SubmitButton({ busy, label, busyLabel, arrow }) {
+function SubmitButton({ busy, label, busyLabel, arrow, className = "" }) {
   return (
     <button
-      className="group min-h-11 rounded-xl bg-admin-brand px-4 text-sm font-semibold text-white shadow-[0_12px_28px_color-mix(in_srgb,var(--admin-brand)_28%,transparent)] disabled:opacity-60"
+      className={`group min-h-11 rounded-xl bg-admin-brand px-4 text-sm font-semibold text-white shadow-[0_12px_28px_color-mix(in_srgb,var(--admin-brand)_28%,transparent)] disabled:opacity-60 ${className}`}
       disabled={busy}
     >
       {busy ? (
@@ -320,7 +307,7 @@ function SubmitButton({ busy, label, busyLabel, arrow }) {
       ) : (
         <span className="inline-flex items-center gap-2">
           {label}
-          {arrow && <ArrowRight size={17} />}
+          {arrow && <ArrowLeft size={17} />}
         </span>
       )}
     </button>
@@ -330,10 +317,10 @@ function BackButton({ content }) {
   return (
     <button
       type="button"
-      className="mt-6 inline-flex items-center gap-2 text-xs font-semibold text-admin-muted hover:text-admin-brand-text"
+      className="mx-auto mt-6 inline-flex items-center justify-center gap-2 text-xs font-semibold text-admin-muted hover:text-admin-brand-text"
       onClick={() => navigate("/dashboard/login")}
     >
-      <ArrowLeft size={15} />
+      <ArrowRight size={15} />
       {content.backToLogin}
     </button>
   );

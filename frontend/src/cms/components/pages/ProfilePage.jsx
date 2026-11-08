@@ -18,24 +18,7 @@ import { useCmsContentLanguage, useCmsInterfaceLanguage } from "@cms/hooks/useCm
 import { announceCmsDraftChange } from "@cms/utils/draftEvents.js";
 import useModalFocus from "@/shared/hooks/useModalFocus.js";
 import { validatePasswordChange } from "@/shared/utils/validation.js";
-
-const defaultCompanyNames = {
-  prs: "گلوبل ویژن",
-  ps: "ګلوبل ویژن",
-  en: "Global Vision",
-};
-function readCompanyNames() {
-  try {
-    return {
-      ...defaultCompanyNames,
-      ...JSON.parse(
-        window.localStorage.getItem("globalvision-company-names") || "{}",
-      ),
-    };
-  } catch {
-    return defaultCompanyNames;
-  }
-}
+import { readBrandIcon, readCompanyNames } from "@cms/utils/branding.js";
 
 function ProfilePage({ content, theme }) {
   const auth = useAuth();
@@ -63,10 +46,7 @@ function ProfilePage({ content, theme }) {
     return () => window.removeEventListener("cms:changes-saved", save);
   }, [companyNames, profileImage]);
   const companyName = companyNames[contentLanguage];
-  const defaultProfileImage =
-    theme === "dark"
-      ? "/assets/branding/icon%20white.webp"
-      : "/assets/branding/icon.webp";
+  const defaultProfileImage = readBrandIcon(theme);
   const card =
     "profile-card overflow-hidden rounded-2xl border border-admin-border bg-admin-card shadow-[0_1px_2px_rgb(15_23_42_/.04),0_12px_34px_rgb(15_23_42_/.055)]";
   const heading =

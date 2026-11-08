@@ -76,6 +76,7 @@ import {
   CmsPageProgress,
   SuperUserSkeleton,
 } from "@cms/components/CmsRouteProgress.jsx";
+import { readBrandIcon, readCompanyNames } from "@cms/utils/branding.js";
 import { dataSource } from "@/shared/services/data/index.js";
 import { lazyWithSkeletonPreview } from "@/shared/utils/loading.js";
 
@@ -203,6 +204,8 @@ function DashboardLayout() {
     pashtoSettingsContent,
     englishSettingsContent,
   );
+  const companyName = readCompanyNames()[language];
+  const brandIcon = readBrandIcon(theme);
   const canManageMessages =
     auth.status === "authenticated" &&
     auth.can(CMS_PERMISSIONS.MANAGE_MESSAGES);
@@ -455,7 +458,17 @@ function DashboardLayout() {
         data-theme={theme}
         dir={language === "en" ? "ltr" : "rtl"}
       >
-        <AuthPage auth={auth} content={accessLabels} />
+        <AuthPage
+          auth={auth}
+          content={accessLabels}
+          language={language}
+          theme={theme}
+          companyName={companyName}
+          brandIcon={brandIcon}
+          themeLabel={content.topbar?.theme}
+          onThemeToggle={() => setTheme((current) => current === "light" ? "dark" : "light")}
+          onLanguageChange={setLanguage}
+        />
       </div>
     );
   if (
