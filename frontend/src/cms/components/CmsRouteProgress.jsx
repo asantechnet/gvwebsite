@@ -265,7 +265,7 @@ function DashboardTopbarSkeleton() {
 
 function DashboardShellSkeleton() {
   const collapsed = window.localStorage.getItem('globalvision-cms-sidebar-collapsed') === 'true'
-  return <div className="cms-root min-h-screen w-full max-w-full overflow-x-clip bg-admin-page"><DashboardSidebarSkeleton collapsed={collapsed} /><div className={`admin-shell min-h-screen min-w-0 max-w-full rtl:lg:pr-(--sidebar-width) ltr:lg:pl-(--sidebar-width) ${collapsed ? 'rtl:lg:pr-21 ltr:lg:pl-21' : ''}`}><DashboardTopbarSkeleton /><main className="min-h-[calc(100vh-5rem)] px-4 pt-6 pb-28 sm:px-8 sm:pt-8"><CmsPageProgress /></main></div></div>
+  return <div className="cms-root min-h-screen w-full max-w-full overflow-x-clip bg-admin-page"><DashboardSidebarSkeleton collapsed={collapsed} /><div className={`admin-shell min-h-screen min-w-0 max-w-full rtl:lg:pr-(--sidebar-width) ltr:lg:pl-(--sidebar-width) ${collapsed ? 'rtl:lg:pr-21 ltr:lg:pl-21' : ''}`}><DashboardTopbarSkeleton /><main className="min-h-[calc(100vh-5rem)] px-4 pt-3 pb-28 sm:px-8 sm:pt-4"><CmsPageProgress /></main></div></div>
 }
 
 function RouteSkeleton({ routeKey }) {

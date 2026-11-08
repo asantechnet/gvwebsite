@@ -21,6 +21,8 @@ import { validatePasswordChange } from "@/shared/utils/validation.js";
 import { readBrandIcon, readCompanyNames } from "@cms/utils/branding.js";
 
 function ProfilePage({ content, theme }) {
+  const resetAction = content.resetAction || (content.resetPassword?.startsWith('Password') ? 'Reset' : content.resetPassword?.startsWith('پټنوم') ? 'بیا تنظیم' : 'بازنشانی')
+  const resetLabel = content.resetPassword?.startsWith('Password') ? 'Reset password' : content.resetPassword?.startsWith('پټنوم') ? 'د پټنوم بیا تنظیم' : 'بازنشانی رمز عبور'
   const auth = useAuth();
   const [contentLanguage, setContentLanguage] = useCmsContentLanguage();
   const interfaceLanguage = useCmsInterfaceLanguage();
@@ -152,8 +154,8 @@ function ProfilePage({ content, theme }) {
               />
               <SecurityRow
                 icon={KeyRound}
-                title={content.resetPassword}
-                action={content.change}
+                title={resetLabel}
+                action={resetAction}
                 onClick={() => setModal("reset")}
               />
             </div>
@@ -285,6 +287,7 @@ function ProfileModal({
   onResetPassword,
   onClose,
 }) {
+  const resetLabel = content.resetPassword?.startsWith('Password') ? 'Reset password' : content.resetPassword?.startsWith('پټنوم') ? 'د پټنوم بیا تنظیم' : 'بازنشانی رمز عبور';
   const [closing, setClosing] = useState(false);
   const [values, setValues] = useState({
     currentPassword: "",
@@ -339,7 +342,7 @@ function ProfileModal({
               className="m-0 font-heading text-base text-admin-heading"
             >
               {mode === "reset"
-                ? content.resetPassword
+                ? resetLabel
                 : content.changePassword}
             </h2>
           </div>
@@ -356,7 +359,7 @@ function ProfileModal({
           <div className="grid justify-items-center gap-3 p-7 text-center">
             <ShieldCheck className="text-emerald-600" size={32} />
             <h3 className="font-heading text-base text-admin-heading">
-              {content.resetSentTitle || content.resetPassword}
+              {content.resetSentTitle || resetLabel}
             </h3>
             <p className="text-xs leading-5 text-admin-muted">
               {content.resetSentDescription || content.resetPasswordDescription}
@@ -489,7 +492,7 @@ function ProfileModal({
                 className="inline-flex min-h-9 items-center justify-center gap-2 rounded-[.55rem] border border-admin-brand bg-admin-brand px-[.7rem] text-[.6875rem] font-semibold text-white disabled:cursor-wait disabled:opacity-70"
               >
                 <Save size={14} />
-                {mode === "reset" ? content.resetPassword : content.save}
+                {mode === "reset" ? resetLabel : content.save}
               </button>
             </footer>
           </form>

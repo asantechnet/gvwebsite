@@ -553,7 +553,7 @@ function DashboardLayout() {
             />
             <main
               id="dashboard-content"
-              className="min-h-[calc(100vh-5rem)] px-4 pt-6 pb-28 sm:px-8 sm:pt-8"
+              className="min-h-[calc(100vh-5rem)] px-4 pt-3 pb-28 sm:px-8 sm:pt-4"
             >
               <Suspense fallback={<CmsPageProgress routeKey={routeKey} />}>
                 {activePage}

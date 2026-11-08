@@ -7,7 +7,7 @@ const languages = [
   { id: 'en', publicId: 'en', label: 'English', flag: '🇺🇸' },
 ]
 
-function LanguageSwitcher({ language, onChange, languageIds = {} }) {
+function LanguageSwitcher({ language, onChange, languageIds = {}, className = '' }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   const selectedId = languages.find((item) => (languageIds[item.id] || item.id) === language)?.id || 'prs'
@@ -27,7 +27,7 @@ function LanguageSwitcher({ language, onChange, languageIds = {} }) {
   }, [open])
 
   return <div ref={ref} className="language-switcher relative z-[210]">
-    <button type="button" aria-haspopup="listbox" aria-expanded={open} onClick={() => setOpen((value) => !value)} className="flex h-10 items-center gap-2 rounded-xl border border-[var(--language-switcher-border)] bg-[var(--language-switcher-control)] px-3 text-xs font-semibold text-[var(--language-switcher-heading)] outline-none transition hover:border-[var(--language-switcher-brand)] focus:outline-none focus-visible:border-[var(--language-switcher-brand)] focus-visible:shadow-[0_0_0_3px_color-mix(in_srgb,var(--language-switcher-brand)_28%,transparent)]">
+    <button type="button" aria-haspopup="listbox" aria-expanded={open} onClick={() => setOpen((value) => !value)} className={`flex h-10 items-center gap-2 rounded-xl border border-[var(--language-switcher-border)] bg-[var(--language-switcher-control)] px-3 text-xs font-semibold text-[var(--language-switcher-heading)] outline-none transition hover:border-[var(--language-switcher-brand)] focus:outline-none focus-visible:border-[var(--language-switcher-brand)] focus-visible:shadow-[0_0_0_3px_color-mix(in_srgb,var(--language-switcher-brand)_28%,transparent)] ${className}`}>
       <span className={`text-lg ${selected.id === 'ps' ? 'translate-y-0.5' : ''}`}>{selected.flag}</span>
       <span className={`max-[520px]:hidden ${selected.id === 'prs' ? '-translate-y-0.5' : selected.id === 'ps' ? '-translate-y-px' : ''}`}>{selected.label}</span>
       <ChevronDown size={15} className={`transition-transform duration-200 ease-out motion-reduce:transition-none ${open ? 'rotate-180' : ''}`} />

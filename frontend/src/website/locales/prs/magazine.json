@@ -24,9 +24,6 @@
       { "slug": "applicant-frequently-asked-questions", "category": "خبر", "date": "2026-07-11T08:00:00+04:30", "title": "پاسخ به پرسش‌های متداول متقاضیان", "description": "پاسخ‌های کوتاه به پرسش‌های رایج کاربران آماده شده است.", "image": "/assets/images/destinations/italy.webp", "href": "/magazine" }
     ]
   },
-  "popular": {
-    "title": "محبوب ترین ها"
-  },
   "postDetail": {
     "magazineLabel": "مجله",
     "dateLabel": "11 اکتوبر 2026",

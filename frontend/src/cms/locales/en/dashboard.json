@@ -124,7 +124,7 @@
     "inboxTitle": "Message status",
     "inboxDescription": "Quick view of requests received from the website.",
     "messageUnit": "Message",
-    "inboxEmpty": "New website messages are displayed here.",
+    "inboxEmpty": "There are no messages yet.",
     "read": "Read",
     "unread": "Unread"
   },
