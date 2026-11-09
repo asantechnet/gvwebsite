@@ -88,7 +88,7 @@ function Carousel({ count }) {
 
 function MagazineSkeleton({ count }) {
   const articleCount = getVisibleCardCount(count, getMagazinePostsPerPage())
-  return <><PageHero /><Carousel count={count} /><section className="bg-surface-muted px-4 py-16 md:px-6 lg:py-24"><div className="mx-auto max-w-7xl"><SkeletonBlock className="mx-auto mb-8 h-8 w-48" /><div className="grid gap-3 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">{list(articleCount).map((item) => <Card key={item} compact />)}</div></div></section><Carousel count={count} /></>
+  return <><PageHero /><Carousel count={count} /><section className="bg-surface-muted px-4 py-16 md:px-6 lg:py-24"><div className="mx-auto max-w-7xl"><SkeletonBlock className="mx-auto mb-8 h-8 w-48" /><div className="grid gap-3 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">{list(articleCount).map((item) => <Card key={item} compact />)}</div></div></section></>
 }
 
 function SearchSkeleton({ hasQuery, resultCount }) {

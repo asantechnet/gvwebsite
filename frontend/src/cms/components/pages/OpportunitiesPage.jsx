@@ -57,7 +57,7 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
       showRecordToast('recordDeleted')
     }
   }
-  return <PageContainer className="max-[1023px]:gap-2 min-[701px]:max-[1023px]:gap-0"><PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.groups?.[0]?.label || content.overview }, { label }]} action={<EditorPreviewLink>{content.topbar.visitPage}</EditorPreviewLink>} />
+  return <PageContainer className="max-[1023px]:gap-2 min-[701px]:max-[1023px]:!gap-1.5"><PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.groups?.[0]?.label || content.overview }, { label }]} action={<EditorPreviewLink>{content.topbar.visitPage}</EditorPreviewLink>} />
     <section className={isServices ? 'overflow-visible rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)]' : 'overflow-visible bg-transparent'}><div className={`relative z-30 grid gap-1 border-b border-admin-border bg-admin-control-soft p-1 md:grid-cols-[minmax(12rem,1fr)_minmax(12rem,.7fr)_minmax(14rem,.8fr)] ${isServices ? 'rounded-2xl lg:rounded-b-none' : 'mb-3 rounded-2xl border border-admin-border shadow-[0_12px_34px_rgb(15_23_42_/.055)]'}`}>
 <button type="button" onClick={() => setEditing({ id: `new-${Date.now()}`, title: '', description: '', action: '', href: '', image: '' })} className="box-border flex h-9 min-h-0 w-full items-center justify-center gap-1.5 rounded-xl border border-admin-brand bg-admin-brand px-3 text-xs font-semibold text-white transition hover:bg-orange-500 md:w-fit md:justify-self-start md:px-4">
 <Plus size={14} />{isServices ? content.createService : isTourism ? labels.createDestination : labels.createOpportunity}</button>
@@ -105,7 +105,7 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 </tr>)}</tbody>
 </table>
 </section></section>
-<section className="grid w-full min-w-0 max-w-full gap-3 lg:hidden md:grid-cols-2 min-[701px]:max-[1023px]:-mt-4">{filteredCards.map((card) => <article className="relative grid min-h-32 min-w-0 cursor-pointer grid-cols-[5rem_minmax(0,1fr)] items-center gap-3 rounded-2xl border border-admin-border bg-admin-card p-3 shadow-[0_8px_24px_rgb(15_23_42_/.05)] transition hover:bg-admin-control-soft" key={card.id} tabIndex="0" role="button" onClick={() => setViewing(card)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setViewing(card) } }}>
+<section className="grid w-full min-w-0 max-w-full gap-3 lg:hidden md:grid-cols-2">{filteredCards.map((card) => <article className="relative grid min-h-32 min-w-0 cursor-pointer grid-cols-[5rem_minmax(0,1fr)] items-center gap-3 rounded-2xl border border-admin-border bg-admin-card p-3 shadow-[0_8px_24px_rgb(15_23_42_/.05)] transition hover:bg-admin-control-soft" key={card.id} tabIndex="0" role="button" onClick={() => setViewing(card)} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setViewing(card) } }}>
 <img className="h-20 w-20 justify-self-center rounded-xl bg-(--editor-field) object-cover" src={card.image} alt="" />
     <div className="flex min-w-0 flex-col items-start justify-center pl-10 text-right">
 <strong className="line-clamp-2 max-w-full text-sm leading-5 text-admin-heading">{card.title}</strong>
