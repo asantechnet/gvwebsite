@@ -72,7 +72,7 @@ import { canAccessCmsRoute, CMS_PERMISSIONS } from "@cms/auth/permissions.js";
 import useMessages from "@cms/hooks/useMessages.js";
 import { CmsLanguageProvider } from "@cms/hooks/useCmsLanguage.js";
 import AuthPage from "@cms/components/pages/AuthPage.jsx";
-import {
+import CmsRouteProgress, {
   CmsPageProgress,
   SuperUserSkeleton,
 } from "@cms/components/CmsRouteProgress.jsx";
@@ -353,6 +353,19 @@ function DashboardLayout() {
     authPath && auth.status === "authenticated"
       ? "overview"
       : getCmsRouteKey(window.location.pathname);
+
+  if (auth.status === "loading" && authPath) {
+    return (
+      <div
+        className="cms-root"
+        data-theme={theme}
+        dir={language === "en" ? "ltr" : "rtl"}
+      >
+        <CmsRouteProgress />
+      </div>
+    );
+  }
+
   const routePages = {
     overview: <DashboardPage content={content} counts={counts} />,
     home: (

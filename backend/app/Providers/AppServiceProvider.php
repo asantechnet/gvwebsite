@@ -25,7 +25,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('manage-media', fn (User $user): bool => $user->hasPermission('media.manage'));
-        Gate::define('view-audit-log', fn (User $user): bool => $user->hasPermission('settings.manage'));
 
         RateLimiter::for('login', fn (Request $request): Limit => Limit::perMinute(5)->by(
             mb_strtolower((string) $request->input('email')).'|'.$request->ip(),

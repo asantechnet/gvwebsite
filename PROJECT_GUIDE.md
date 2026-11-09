@@ -6,7 +6,7 @@ This guide is the single source of truth for the Global Vision architecture, gen
 
 The public navigation includes dedicated opportunity, tourism, scholarship, magazine, services, and supporting-information entries. The opportunities group includes a localized investment directory and country-specific investment routes. Tourism includes localized Afghanistan and world directories with destination cards and detail routes. The independent `/services` directory presents all service posts as cards. The `/scholarships` directory provides localized country, degree, and funding filters, responsive scholarship cards, and slug-based scholarship detail routes rendered through the shared single-post design. Static localized records provide the deployment fallback, while published CMS snapshots override supported page and collection content in API mode.
 
-The project now includes the React frontend and a Laravel 13 application. The frontend provides the localized public website and CMS described below. The backend provides MariaDB-compatible migrations, first-party Sanctum cookie authentication, administrator and super-user role enforcement, password recovery, contact-message persistence and queued notifications, a paginated message inbox, multilingual content CRUD, published editor snapshots, server-side rich-text sanitization, scanned uploads, and an administrator audit log. The dedicated super-user workspace manages administrator identities, email access, passwords, reset delivery, and account removal without exposing website content. In API mode, the CMS editors hydrate and save through versioned snapshots; public content consumes published snapshots with static localized content as its availability fallback. Mock mode remains the frontend default for standalone development.
+The project now includes the React frontend and a Laravel 13 application. The frontend provides the localized public website and CMS described below. The backend provides MariaDB migrations, first-party Sanctum cookie authentication, administrator and super-user role enforcement, password recovery, contact-message persistence and queued notifications, a paginated message inbox, published editor snapshots, server-side rich-text sanitization, scanned uploads, and an administrator audit log. The dedicated super-user workspace manages administrator identities, email access, passwords, reset delivery, and account removal without exposing website content. The configured frontend default is API mode: CMS editors hydrate and save through versioned MariaDB snapshots, while public content consumes published snapshots with static localized content only as an availability fallback. Mock mode remains available for isolated frontend testing when explicitly selected.
 
 The frontend includes dependency-free Node tests for localized catalog search, scholarship filtering, CMS route resolution, and locale namespace parity, plus static validators for localized internal links, external URL syntax, public asset references, SEO output, and the initial JavaScript budget. Laravel feature tests cover authentication, recovery, authorization, messages, snapshots, uploads, audit history, public snapshots, contact intake, and SPA response status behavior.
 
@@ -92,6 +92,8 @@ Do not describe planned functionality as implemented.
 | Laravel Pint | PHP code formatting | `1.32.1` |
 
 The frontend uses native ES modules through `"type": "module"`.
+
+For local development, run `pnpm dev` from `frontend/`. The development orchestrator verifies the MariaDB connection, applies pending Laravel migrations, and starts both the Laravel API on port 8000 and Vite on port 5173. MariaDB remains an operating-system service and must be enabled to start with the machine.
 
 ## Required and Planned Additions
 
@@ -236,7 +238,7 @@ Use aliases across source areas and relative imports for nearby files within one
 - Convert API responses into stable frontend models in service adapters. Backend response changes should normally require edits in the API layer rather than throughout components and sections.
 - Keep display components prop driven so static data, translated content, loading data, and API data use the same component contracts.
 - Provide consistent loading, empty, error, and success states without coupling their presentation to Laravel response shapes.
-- Select the frontend source with `VITE_DATA_SOURCE=mock|api`; mock remains the default for standalone frontend development. Configure the Laravel API origin with `VITE_API_BASE_URL` and request timeout with `VITE_API_TIMEOUT_MS`.
+- Select the frontend source with `VITE_DATA_SOURCE=api|mock`; API mode is the configured default and mock mode is an explicit isolated-development fallback. Configure the Laravel API origin with `VITE_API_BASE_URL` and request timeout with `VITE_API_TIMEOUT_MS`.
 - Use cookie-based sessions with `credentials: include` and the Laravel `XSRF-TOKEN` cookie. Never store access tokens or passwords in local storage.
 - Normalize unauthenticated, forbidden, validation, timeout, offline, cancellation, and transport failures before they reach UI components.
 - Treat frontend permission checks as presentation controls only. Laravel must independently authenticate and authorize every protected operation.

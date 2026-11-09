@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
     {
         $this->seedAccount('super_user');
         $this->seedAccount('admin');
+        $this->call([
+            CmsSnapshotSeeder::class,
+            MessageSeeder::class,
+        ]);
     }
 
     private function seedAccount(string $configuration): void
@@ -25,8 +29,10 @@ class DatabaseSeeder extends Seeder
         $email = config("globalvision.{$configuration}.email");
         $password = config("globalvision.{$configuration}.password");
 
-        if (! $email || ! $password || mb_strlen($password) < 12) {
-            $this->command?->warn("{$configuration} not seeded: configure an email and a password of at least 12 characters.");
+        $passwordIsAllowed = app()->environment('local') || mb_strlen((string) $password) >= 12;
+
+        if (! $email || ! $password || ! $passwordIsAllowed) {
+            $this->command?->warn("{$configuration} not seeded: configure an email and a password of at least 12 characters outside local development.");
 
             return;
         }

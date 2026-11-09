@@ -22,10 +22,9 @@
   "formFeedback": "",
   "mapSettings": "تنظیمات نقشه",
   "mapPicker": {
-    "searchLabel": "جستجوی موقعیت",
-    "searchPlaceholder": "نام اداره، آدرس، شهر یا مختصات",
-    "help": "موقعیت را جستجو کنید و نتیجه را در پیش‌نمایش تأیید کنید.",
-    "openGoogleMaps": "باز کردن گوگل مپ"
+    "locationLabel": "موقعیت",
+    "locationPlaceholder": "مکان را وارد یا لینک گوگل مپ را پیست کنید",
+    "linkError": "این لینک گوگل مپ قابل خواندن نیست."
   },
   "socialSettings": "شبکه‌های اجتماعی",
   "addSocial": "افزودن شبکه اجتماعی",

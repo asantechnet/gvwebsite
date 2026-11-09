@@ -1,9 +1,10 @@
-import { Mail, MailOpen, Search, Trash2 } from 'lucide-react'
+import { Mail, MailOpen, Search, Send, Trash2, X } from 'lucide-react'
 import { useMemo, useState } from 'react'
 
 import PageHeading from '@cms/components/PageHeading.jsx'
 import { EditorPreviewLink } from '@cms/components/EditorPrimitives.jsx'
 import SkeletonBlock from '@/shared/components/SkeletonBlock.jsx'
+import { showToast } from '@cms/utils/toast.js'
 
 const dateLocales = { prs: 'fa-AF-u-nu-latn', ps: 'ps-AF-u-nu-latn', en: 'en-GB' }
 const messageActionClass = 'grid size-8 flex-none place-items-center rounded-lg border border-transparent bg-transparent text-admin-muted transition-colors hover:border-admin-border hover:bg-admin-control-soft hover:text-admin-heading disabled:cursor-wait disabled:opacity-45'
@@ -19,8 +20,9 @@ function MessagesSection({ content, language = 'prs', messageState }) {
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
   const [selectedId, setSelectedId] = useState(null)
+  const [replying, setReplying] = useState(false)
   const normalizedQuery = query.trim().toLocaleLowerCase(dateLocales[language])
-  const { records: messages, status, error, unreadCount, isPending, refresh, setUnread, remove } = messageState
+  const { records: messages, status, error, unreadCount, isPending, refresh, setUnread, remove, reply } = messageState
   const selected = messages.find((message) => message.id === selectedId) || null
   const visible = useMemo(() => messages.filter((message) => {
     const matchesFilter = filter === 'all' || (filter === 'unread' ? message.unread : !message.unread)
@@ -74,10 +76,17 @@ function MessagesSection({ content, language = 'prs', messageState }) {
         <header className="flex flex-wrap items-center gap-[.8rem] py-[1.4rem]"><span className="grid size-[2.2rem] place-items-center rounded-[.7rem] bg-admin-brand-soft text-[.75rem] font-semibold text-admin-brand-text">{selected.title.slice(0, 1)}</span><div className="min-w-0 flex-1"><h2 className="m-0 truncate font-heading text-[1.08rem] text-admin-heading">{selected.title}</h2><a className="break-all text-[.8125rem] text-admin-muted hover:text-admin-brand-text" href={`mailto:${selected.email}`}>{selected.email}</a></div><time dateTime={selected.createdAt} className="text-[.6875rem] text-admin-muted">{formatMessageDate(selected.createdAt, language)}</time></header>
         <div className="grid grid-cols-1 gap-[.6rem] sm:grid-cols-2"><span className="grid gap-[.3rem] rounded-[.7rem] border border-admin-border bg-(--editor-field) p-3 text-[.625rem] text-admin-muted">{content.service}<strong className="text-[.6875rem] text-admin-heading">{selected.service || content.notSpecified}</strong></span><span className="grid gap-[.3rem] rounded-[.7rem] border border-admin-border bg-(--editor-field) p-3 text-[.625rem] text-admin-muted">{content.timeline}<strong className="text-[.6875rem] text-admin-heading">{selected.timeline || content.notSpecified}</strong></span></div>
         <p className="my-[1.2rem] whitespace-pre-wrap text-[.8125rem] leading-[1.75] text-admin-heading">{selected.body}</p>
-        <a href={`mailto:${selected.email}?subject=${encodeURIComponent(selected.service || content.messageCategory)}`} className="inline-flex min-h-9 items-center justify-center gap-[.35rem] rounded-[.55rem] border border-admin-brand bg-admin-brand px-[.7rem] py-[.42rem] text-[.6875rem] font-semibold text-white transition hover:bg-brand-orange/90"><Mail size={15} />{content.reply}</a>
+        <button type="button" aria-expanded={replying} onClick={() => setReplying((current) => !current)} className="inline-flex min-h-9 items-center justify-center gap-[.35rem] rounded-[.55rem] border border-admin-brand bg-admin-brand px-[.7rem] py-[.42rem] text-[.6875rem] font-semibold text-white transition hover:bg-brand-orange/90"><Mail size={15} />{content.reply}</button>
+        {replying && <ReplyComposer key={selected.id} message={selected} content={content} pending={isPending(selected.id)} onCancel={() => setReplying(false)} onSend={async (values) => { const sent = await reply(selected.id, values); if (sent) { setReplying(false); showToast(content.replySent) } else showToast(content.replyError, { variant: 'danger' }) }} />}
       </article> : <div className="message-detail flex min-h-80 flex-col items-center justify-center px-6 py-16 text-center sm:min-h-96" role="status"><span className="mb-5 grid size-16 place-items-center rounded-2xl border border-[color-mix(in_srgb,var(--admin-brand)_18%,var(--admin-border))] bg-admin-brand-soft text-admin-brand-text shadow-[0_8px_24px_color-mix(in_srgb,var(--admin-brand)_8%,transparent)]"><Mail className="text-admin-heading" size={28} strokeWidth={1.75} aria-hidden="true" /></span><h3 className="m-0 font-heading text-base tracking-tight text-admin-heading">{messages.length ? content.select : content.noMessages}</h3><p className="mt-2 mb-0 max-w-64 text-[.8125rem] leading-relaxed text-admin-muted">{messages.length ? content.selectDescription : content.noMessagesDescription}</p></div>}
     </section>
   </div>
+}
+
+function ReplyComposer({ message, content, pending, onCancel, onSend }) {
+  const [subject, setSubject] = useState(`Re: ${message.service || content.messageCategory}`)
+  const [body, setBody] = useState('')
+  return <form className="mt-4 grid gap-4 rounded-xl border border-admin-brand/25 bg-(--editor-field) p-4 shadow-sm" onSubmit={(event) => { event.preventDefault(); onSend({ subject: subject.trim(), message: body.trim() }) }}><div className="flex items-start justify-between gap-3"><div><h3 className="m-0 text-sm text-admin-heading">{content.replyTo} {message.title}</h3><p className="mt-1 text-[.6875rem] text-admin-muted">{message.email}</p></div><button type="button" onClick={onCancel} aria-label={content.closeReply} className="grid size-8 place-items-center rounded-lg text-admin-muted hover:bg-admin-control-soft"><X size={16} /></button></div><label className="grid gap-2 text-xs font-semibold text-admin-heading">{content.replySubject}<input required maxLength={255} value={subject} onChange={(event) => setSubject(event.target.value)} className="min-h-11 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3.5 text-sm font-normal outline-none focus:border-admin-brand" /></label><label className="grid gap-2 text-xs font-semibold text-admin-heading">{content.replyMessage}<textarea required maxLength={10000} value={body} onChange={(event) => setBody(event.target.value)} autoFocus className="min-h-36 resize-y rounded-xl border border-(--editor-field-border) bg-(--editor-input) p-3.5 text-sm font-normal outline-none focus:border-admin-brand" /></label><div className="flex justify-end gap-2"><button type="button" disabled={pending} onClick={onCancel} className="min-h-9 rounded-xl border border-admin-border px-4 text-xs font-semibold text-admin-muted">{content.cancel}</button><button type="submit" disabled={pending || !subject.trim() || !body.trim()} className="inline-flex min-h-9 items-center gap-2 rounded-xl bg-admin-brand px-4 text-xs font-semibold text-white disabled:opacity-50"><Send size={15} />{pending ? content.sendingReply : content.sendReply}</button></div></form>
 }
 
 function MessageListSkeleton() {

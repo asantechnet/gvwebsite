@@ -34,7 +34,7 @@ export function AuthProvider({ children }) {
     can: (permission) => hasPermission(state.session, permission),
     retry: loadSession,
     async login(credentials) {
-      setState({ session: null, status: 'loading', error: null })
+      setState((current) => ({ ...current, error: null }))
       try {
         const session = await dataSource.auth.login(credentials)
         setState({ session, status: 'authenticated', error: null })

@@ -71,7 +71,7 @@
       "messagePlaceholder": "Write your message",
       "submitLabel": "Send",
       "sendingLabel": "Sending...",
-      "successMessage": "Your message is ready to be recorded. The final connection to the server is enabled after the API is initialized.",
+      "successMessage": "Your message was sent successfully. Our team will contact you as soon as possible.",
       "requiredMessage": "Please complete all sections."
     }
   }

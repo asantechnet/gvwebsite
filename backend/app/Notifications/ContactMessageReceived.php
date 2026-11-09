@@ -4,11 +4,10 @@ namespace App\Notifications;
 
 use App\Models\Message;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ContactMessageReceived extends Notification implements ShouldQueue
+class ContactMessageReceived extends Notification
 {
     use Queueable;
 
@@ -34,6 +33,7 @@ class ContactMessageReceived extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject('New website enquiry: '.$this->message->subject)
+            ->replyTo($this->message->email, $this->message->name)
             ->greeting('New Global Vision enquiry')
             ->line('Name: '.$this->message->name)
             ->line('Email: '.$this->message->email)

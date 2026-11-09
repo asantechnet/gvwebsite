@@ -27,5 +27,14 @@
   "delete": "حذف پیام",
   "deleteTitle": "این پیام حذف شود؟",
   "deleteDescription": "این پیام برای همیشه حذف خواهد شد.",
-  "reply": "پاسخ از طریق ایمیل"
+  "reply": "پاسخ از طریق ایمیل",
+  "replyTo": "پاسخ به",
+  "replySubject": "موضوع",
+  "replyMessage": "پیام",
+  "sendReply": "ارسال ایمیل",
+  "sendingReply": "در حال ارسال...",
+  "cancel": "انصراف",
+  "closeReply": "بستن پاسخ",
+  "replySent": "ایمیل با موفقیت ارسال شد.",
+  "replyError": "ایمیل ارسال نشد. تنظیمات ایمیل را بررسی کنید."
 }

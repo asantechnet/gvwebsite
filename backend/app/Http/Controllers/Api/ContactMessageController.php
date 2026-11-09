@@ -27,7 +27,7 @@ class ContactMessageController extends Controller
 
         if (config('globalvision.contact_notification_email')) {
             Notification::route('mail', config('globalvision.contact_notification_email'))
-                ->notify((new ContactMessageReceived($message))->afterCommit());
+                ->notifyNow(new ContactMessageReceived($message));
         }
 
         return response()->json(['data' => [

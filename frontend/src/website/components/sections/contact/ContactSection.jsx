@@ -1,4 +1,4 @@
-import { Mail, MapPin, Music2, Phone, Send } from 'lucide-react'
+import { ExternalLink, Mail, MapPin, Music2, Phone, Send } from 'lucide-react'
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaTelegram, FaWhatsapp, FaXTwitter, FaYoutube } from 'react-icons/fa6'
 import { useState } from 'react'
 
@@ -9,9 +9,22 @@ import { dataSource } from '@/shared/services/data/index.js'
 import { validateContactForm } from '@/shared/utils/validation.js'
 
 const defaultMapUrl = 'https://www.google.com/maps?q=34.529568145213474,69.17050772740252&z=15&output=embed'
+const openMapLabels = { dr: 'باز کردن در نقشه', ps: 'په نقشه کې پرانیستل', en: 'Open on map' }
 
-function ContactSection({ content }) {
+function createOpenMapUrl(value) {
+  try {
+    const url = new URL(value || defaultMapUrl)
+    url.hostname = 'www.google.com'
+    url.searchParams.delete('output')
+    return url.toString()
+  } catch {
+    return 'https://www.google.com/maps'
+  }
+}
+
+function ContactSection({ content, language }) {
   const [formStatus, setFormStatus] = useState('idle')
+  const mapUrl = content.mapUrl || defaultMapUrl
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -78,19 +91,19 @@ function ContactSection({ content }) {
             <div className="grid gap-5">
               <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.nameLabel}
-                <input required minLength={2} maxLength={120} name="name" autoComplete="name" placeholder={content.form.namePlaceholder} className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-start text-sm font-light text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" type="text" />
+                <input required minLength={2} maxLength={120} name="name" autoComplete="name" placeholder={content.form.namePlaceholder} className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-start text-sm font-light text-foreground outline-none transition-colors focus:border-primary focus-visible:shadow-none! dark:border-gray-600 dark:bg-[#2b3442]" type="text" />
               </label>
               <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.emailLabel}
-                <input required maxLength={254} name="email" autoComplete="email" placeholder={content.form.emailPlaceholder} dir="ltr" className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-start text-sm font-light text-foreground outline-none transition-colors placeholder:text-left rtl:placeholder:text-right focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" type="email" />
+                <input required maxLength={254} name="email" autoComplete="email" placeholder={content.form.emailPlaceholder} dir="ltr" className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-start text-sm font-light text-foreground outline-none transition-colors placeholder:text-left rtl:placeholder:text-right focus:border-primary focus-visible:shadow-none! dark:border-gray-600 dark:bg-[#2b3442]" type="email" />
               </label>
               <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.subjectLabel}
-                <input required minLength={2} maxLength={180} name="subject" placeholder={content.form.subjectPlaceholder} className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-start text-sm font-light text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" type="text" />
+                <input required minLength={2} maxLength={180} name="subject" placeholder={content.form.subjectPlaceholder} className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-start text-sm font-light text-foreground outline-none transition-colors focus:border-primary focus-visible:shadow-none! dark:border-gray-600 dark:bg-[#2b3442]" type="text" />
               </label>
               <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.messageLabel}
-                <textarea required minLength={10} maxLength={5000} name="message" placeholder={content.form.messagePlaceholder} className="min-h-32 resize-y rounded-xl border border-border bg-surface-muted px-3 py-2 text-start text-sm font-light leading-7 text-foreground outline-none transition-colors focus:border-primary dark:border-gray-600 dark:bg-[#2b3442]" />
+                <textarea required minLength={10} maxLength={5000} name="message" placeholder={content.form.messagePlaceholder} className="min-h-32 resize-y rounded-xl border border-border bg-surface-muted px-3 py-2 text-start text-sm font-light leading-7 text-foreground outline-none transition-colors focus:border-primary focus-visible:shadow-none! dark:border-gray-600 dark:bg-[#2b3442]" />
               </label>
             </div>
             <Button type="submit" icon={Send} disabled={formStatus === 'sending'} aria-busy={formStatus === 'sending'} className="mt-6 min-h-10 w-full border-brand-orange bg-brand-orange px-4 text-center text-sm shadow-md shadow-brand-orange/20 hover:border-primary-hover hover:bg-primary-hover hover:shadow-lg hover:shadow-brand-orange/30 disabled:cursor-wait disabled:opacity-70 sm:w-32">
@@ -99,14 +112,18 @@ function ContactSection({ content }) {
             <p aria-live="polite" className={`mt-4 text-sm ${formStatus === 'error' ? 'text-brand-red' : 'text-accent-text'}`}>{formStatus === 'success' ? content.form.successMessage : formStatus === 'error' ? content.form.requiredMessage : ''}</p>
           </form>
         </div>
-        <div className="mx-auto mt-12 w-full max-w-5xl overflow-hidden rounded-3xl border border-border dark:border-gray-700">
+        <div className="relative mx-auto mt-12 w-full max-w-5xl overflow-hidden rounded-3xl border border-border dark:border-gray-700">
           <iframe
             title={content.mapTitle}
-            src={content.mapUrl || defaultMapUrl}
+            src={mapUrl}
             className="h-72 w-full rounded-2xl border-0 sm:h-96"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
           />
+          <a href={createOpenMapUrl(mapUrl)} target="_blank" rel="noreferrer" className="absolute end-3 top-3 z-10 inline-flex min-h-10 items-center gap-2 rounded-xl border border-white/70 bg-white/95 px-3.5 text-xs font-bold text-gray-900 shadow-lg backdrop-blur-sm transition hover:-translate-y-0.5 hover:border-primary hover:text-accent-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:end-4 sm:top-4">
+            <ExternalLink aria-hidden="true" size={16} />
+            {openMapLabels[language] || openMapLabels.dr}
+          </a>
         </div>
       </Container>
     </Section>

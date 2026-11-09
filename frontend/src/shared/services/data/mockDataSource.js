@@ -49,6 +49,11 @@ export const mockDataSource = Object.freeze({
       mockMessages = mockMessages.filter((message) => message.id !== String(id))
       return null
     },
+    async reply(id) {
+      await pause()
+      mockMessages = mockMessages.map((message) => message.id === String(id) ? { ...message, unread: false, repliedAt: new Date().toISOString() } : message)
+      return { ...mockMessages.find((message) => message.id === String(id)) }
+    },
   },
   auditLogs: {
     async list() { await pause(); return [] },

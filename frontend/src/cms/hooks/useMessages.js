@@ -63,6 +63,12 @@ function useMessages(enabled = true) {
     return true
   }), [runMutation])
 
+  const reply = useCallback((id, values) => runMutation(id, async (messageId) => {
+    const updated = normalizeMessage(await dataSource.messages.reply(messageId, values))
+    setRecords((current) => current.map((message) => message.id === messageId ? updated : message))
+    return updated
+  }), [runMutation])
+
   return useMemo(() => ({
     records,
     status,
@@ -72,7 +78,8 @@ function useMessages(enabled = true) {
     refresh: () => load(),
     setUnread,
     remove,
-  }), [error, load, pendingIds, records, remove, setUnread, status])
+    reply,
+  }), [error, load, pendingIds, records, remove, reply, setUnread, status])
 }
 
 export default useMessages

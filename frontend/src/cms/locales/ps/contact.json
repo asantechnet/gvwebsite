@@ -22,10 +22,9 @@
   "formFeedback": "",
   "mapSettings": "د نقشې تنظیمات",
   "mapPicker": {
-    "searchLabel": "د ځای لټون",
-    "searchPlaceholder": "د ادارې نوم، پته، ښار یا مختصات",
-    "help": "ځای ولټوئ او پایله په مخکتنه کې تایید کړئ.",
-    "openGoogleMaps": "ګوګل مپ پرانیستل"
+    "locationLabel": "موقعیت",
+    "locationPlaceholder": "ځای ولیکئ یا د ګوګل مپ لینک ونښلوئ",
+    "linkError": "دا د ګوګل مپ لینک نه شي لوستل کېدلی."
   },
   "socialSettings": "ټولنیزې رسنۍ",
   "addSocial": "ټولنیزه رسنۍ زیاتول",

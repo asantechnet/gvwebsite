@@ -12,4 +12,7 @@ export const messagesApi = Object.freeze({
     return normalizeMessage(await apiClient.patch(messagePath(id), serializeMessageState(unread), options))
   },
   remove: (id, options) => apiClient.delete(messagePath(id), options),
+  async reply(id, values, options) {
+    return normalizeMessage(await apiClient.post(`${messagePath(id)}/reply`, values, options))
+  },
 })

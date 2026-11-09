@@ -12,7 +12,7 @@ import useEditorTabs from '@cms/hooks/useEditorTabs.js'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import { showRecordToast } from '@cms/utils/toast.js'
-import { useCmsContentLanguage } from '@cms/hooks/useCmsLanguage.js'
+import { useCmsContentLanguage, useCmsInterfaceLanguage } from '@cms/hooks/useCmsLanguage.js'
 
 const tabIcons = { hero: FileText, details: ContactRound, form: MessageSquareText, connections: MapPinned, social: Globe2 }
 const detailIcons = { phone: Phone, email: AtSign, address: MapPinned, whatsapp: FaWhatsapp }
@@ -39,6 +39,7 @@ const prepareContactDraft = (initialContent) => ({
 })
 
 function ContactEditorSection({ content, initialTranslations }) {
+  const interfaceLanguage = useCmsInterfaceLanguage()
   const [selectedTab, setSelectedTab] = useEditorTabs({ defaultTab: 'hero', storageKey: 'globalvision-cms-contact-tab', tabs: Object.keys(tabIcons) })
   const [contentLanguage, setContentLanguage] = useCmsContentLanguage()
   const [drafts, setDrafts] = useCmsDraftState('contact', () => Object.fromEntries(Object.entries(initialTranslations).map(([language, initialContent]) => [language, prepareContactDraft(initialContent)])))
@@ -51,6 +52,7 @@ function ContactEditorSection({ content, initialTranslations }) {
 
   const updateHero = (key, value) => setDraft((current) => ({ ...current, hero: { ...current.hero, [key]: value } }))
   const updateContact = (key, value) => setDraft((current) => ({ ...current, contact: { ...current.contact, [key]: value } }))
+  const updateMapUrl = (value) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, translation]) => [language, { ...translation, contact: { ...translation.contact, mapUrl: value } }])))
   const updateForm = (key, value) => setDraft((current) => ({ ...current, contact: { ...current.contact, form: { ...current.contact.form, [key]: value } } }))
   const updateDetail = (type, key, value) => setDraft((current) => { const exists = current.contact.details.some((detail) => detail.type === type); return { ...current, contact: { ...current.contact, details: exists ? current.contact.details.map((detail) => detail.type === type ? { ...detail, [key]: value } : detail) : [...current.contact.details, { ...fallbackWhatsApp, [key]: value }] } } })
   const updateSocial = (index, key, value) => setDraft((current) => ({ ...current, contact: { ...current.contact, socials: current.contact.socials.map((social, socialIndex) => socialIndex === index ? { ...social, [key]: value } : social) } }))
@@ -74,7 +76,7 @@ function ContactEditorSection({ content, initialTranslations }) {
 
         {selectedTab === 'form' && <div className="grid gap-5"><EditorFieldGroup title={content.formFields} className="sm:p-5">{['nameLabel', 'namePlaceholder', 'emailLabel', 'emailPlaceholder', 'subjectLabel', 'subjectPlaceholder', 'messageLabel', 'messagePlaceholder'].map((field) => <EditorField key={field} label={content.fields[field]} value={draft.contact.form[field] || ''} onChange={(value) => updateForm(field, value)} />)}</EditorFieldGroup><EditorFieldGroup title={content.formFeedback} columns={false} className="sm:p-5"><EditorField label={content.fields.successMessage} value={draft.contact.form.successMessage} multiline onChange={(value) => updateForm('successMessage', value)} /><EditorField label={content.fields.requiredMessage} value={draft.contact.form.requiredMessage} multiline onChange={(value) => updateForm('requiredMessage', value)} /></EditorFieldGroup></div>}
 
-        {selectedTab === 'connections' && <div className="grid gap-6"><EditorFieldGroup title={content.mapSettings} columns={false} className="sm:p-5"><EditorField label={content.fields.mapTitle} value={draft.contact.mapTitle} onChange={(value) => updateContact('mapTitle', value)} /><MapPicker key={contentLanguage} value={draft.contact.mapUrl} onChange={(value) => updateContact('mapUrl', value)} content={content.mapPicker} /></EditorFieldGroup></div>}
+        {selectedTab === 'connections' && <div className="grid gap-6"><EditorFieldGroup title={content.mapSettings} columns={false} className="sm:p-5"><EditorField label={content.fields.mapTitle} value={draft.contact.mapTitle} onChange={(value) => updateContact('mapTitle', value)} /><MapPicker key={contentLanguage} value={draft.contact.mapUrl} direction={interfaceLanguage === 'en' ? 'ltr' : 'rtl'} onChange={updateMapUrl} content={content.mapPicker} /></EditorFieldGroup></div>}
         {selectedTab === 'social' && <div className="grid gap-6"><EditorFieldGroup title={content.socialSettings} columns={false} className="sm:p-5"><div className="flex justify-end"><button type="button" onClick={() => setAddingSocial(true)} className="inline-flex h-8 min-h-8 max-h-8 items-center justify-center gap-1 rounded-xl border border-admin-brand bg-admin-brand px-2 text-[.625rem] font-semibold leading-none text-white transition hover:bg-orange-500"><Plus size={13} />{content.addSocial}</button></div><div className="grid gap-3 sm:grid-cols-2">{draft.contact.socials.map((social, index) => <article key={`${social.type}-${index}`} className="grid grid-cols-[1fr_auto] items-start gap-3 rounded-xl border border-admin-border bg-(--editor-field) p-3"><div className="grid gap-1"><SocialPlatformSelect value={social.type} onChange={(option) => { updateSocial(index, 'type', option.type); updateSocial(index, 'label', option.label) }} /><EditorField label={content.fields.socialUrl} hideLabel value={social.href} type="url" onChange={(value) => updateSocial(index, 'href', value)} /></div><button type="button" onClick={() => deleteSocial(index)} aria-label={content.deleteSocial} className="grid size-8 place-items-center rounded-lg border border-red-500/25 dark:border-red-500/50 text-red-500 transition hover:border-red-500 hover:bg-red-500/10"><Trash2 size={15} /></button></article>)}</div></EditorFieldGroup></div>}
       </div>
     </section>

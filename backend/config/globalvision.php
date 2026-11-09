@@ -12,18 +12,6 @@ return [
     ],
     'audit_retention_days' => (int) env('AUDIT_RETENTION_DAYS', 365),
 
-    'content_collections' => [
-        'home',
-        'about',
-        'contact',
-        'opportunities',
-        'tourism',
-        'scholarships',
-        'services',
-        'magazine',
-        'settings',
-    ],
-
     'snapshot_keys' => [
         'home', 'about', 'contact', 'magazine', 'scholarships', 'settings', 'profile', 'media',
         'collection:opportunities', 'collection:tourism', 'collection:services',

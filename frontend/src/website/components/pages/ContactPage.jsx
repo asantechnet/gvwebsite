@@ -8,7 +8,7 @@ function ContactPage({ content, language }) {
   return (
     <>
       <PageHero {...content.hero} />
-      <ContactSection content={content.contact} />
+      <ContactSection content={content.contact} language={language} />
       <FloatingWhatsApp phone={whatsappNumber} label={content.contact.whatsappLabel} language={language} />
     </>
   )

@@ -23,6 +23,9 @@ class MessageResource extends JsonResource
             'body' => $this->body,
             'createdAt' => $this->created_at?->toISOString(),
             'unread' => $this->read_at === null,
+            'replySubject' => $this->reply_subject,
+            'replyBody' => $this->reply_body,
+            'repliedAt' => $this->replied_at?->toISOString(),
         ];
     }
 }

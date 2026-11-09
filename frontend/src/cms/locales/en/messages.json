@@ -31,5 +31,14 @@
   "delete": "Delete message",
   "deleteTitle": "Delete this message?",
   "deleteDescription": "This message will be permanently removed.",
-  "reply": "Reply by email"
+  "reply": "Reply by email",
+  "replyTo": "Reply to",
+  "replySubject": "Subject",
+  "replyMessage": "Message",
+  "sendReply": "Send email",
+  "sendingReply": "Sending...",
+  "cancel": "Cancel",
+  "closeReply": "Close reply",
+  "replySent": "Email sent successfully.",
+  "replyError": "Email could not be sent. Check the mail settings."
 }

@@ -1,8 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\Cms\AuditLogController;
-use App\Http\Controllers\Api\Cms\ContentRecordController;
+use App\Http\Controllers\Api\Cms\MapLinkController;
 use App\Http\Controllers\Api\Cms\MessageController;
 use App\Http\Controllers\Api\Cms\SiteSnapshotController;
 use App\Http\Controllers\Api\Cms\UploadController;
@@ -25,19 +24,14 @@ Route::middleware('auth:sanctum')->group(function (): void {
 
     Route::get('/cms/messages', [MessageController::class, 'index']);
     Route::patch('/cms/messages/{message}', [MessageController::class, 'update']);
+    Route::post('/cms/messages/{message}/reply', [MessageController::class, 'reply']);
     Route::delete('/cms/messages/{message}', [MessageController::class, 'destroy']);
-
-    Route::get('/cms/content/{collection}', [ContentRecordController::class, 'index']);
-    Route::post('/cms/content/{collection}', [ContentRecordController::class, 'store']);
-    Route::get('/cms/content/{collection}/{contentRecord}', [ContentRecordController::class, 'show']);
-    Route::put('/cms/content/{collection}/{contentRecord}', [ContentRecordController::class, 'update']);
-    Route::delete('/cms/content/{collection}/{contentRecord}', [ContentRecordController::class, 'destroy']);
+    Route::post('/cms/map-link', MapLinkController::class);
 
     Route::post('/cms/uploads', UploadController::class);
     Route::delete('/cms/uploads', [UploadController::class, 'destroy']);
     Route::get('/cms/snapshots/{key}', [SiteSnapshotController::class, 'show']);
     Route::put('/cms/snapshots/{key}', [SiteSnapshotController::class, 'update']);
-    Route::get('/cms/audit-logs', [AuditLogController::class, 'index']);
     Route::middleware('throttle:privileged')->group(function (): void {
         Route::get('/cms/users', [UserController::class, 'index']);
         Route::post('/cms/users', [UserController::class, 'store']);
