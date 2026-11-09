@@ -1,18 +1,21 @@
-import { useRef, useState } from 'react'
-import { BriefcaseBusiness, Flag, GalleryVerticalEnd, Handshake, ImagePlus, LayoutTemplate, MapPinned, MessageSquareQuote, Pencil, Plus, Replace, Trash2, UploadCloud } from 'lucide-react'
+import { useState } from 'react'
+import { BriefcaseBusiness, Flag, GalleryVerticalEnd, Handshake, ImagePlus, LayoutTemplate, MapPinned, MessageSquareQuote, Pencil, Plus, Replace, Trash2 } from 'lucide-react'
 
 import PageContainer from '@cms/components/PageContainer.jsx'
 import PageHeading from '@cms/components/PageHeading.jsx'
 import CollectionItemModal from '@cms/components/CollectionItemModal.jsx'
 import SectionTabBar from '@cms/components/SectionTabBar.jsx'
 import ContentLanguageSwitcher from '@cms/components/ContentLanguageSwitcher.jsx'
+import MediaPickerModal from '@cms/components/MediaPickerModal.jsx'
 import { EditorField, EditorFieldGroup, EditorPreviewLink, EditorSectionHeader, EditorVisibilityToggle } from '@cms/components/EditorPrimitives.jsx'
 import useEditorTabs from '@cms/hooks/useEditorTabs.js'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
-import { createLocalUpload, revokeLocalUpload } from '@/shared/uploads/files.js'
-import { uploadFile } from '@/shared/services/api/uploads.js'
+import { revokeLocalUpload } from '@/shared/uploads/files.js'
 import { showRecordToast } from '@cms/utils/toast.js'
 import { useCmsContentLanguage } from '@cms/hooks/useCmsLanguage.js'
+import englishMedia from '@cms/locales/en/media.json'
+import dariMedia from '@cms/locales/prs/media.json'
+import pashtoMedia from '@cms/locales/ps/media.json'
 
 const sectionIcons = { hero: LayoutTemplate, opportunities: GalleryVerticalEnd, destinations: MapPinned, process: Flag, services: BriefcaseBusiness, testimonials: MessageSquareQuote, consultation: Handshake }
 const fieldMap = {
@@ -83,18 +86,11 @@ function CollectionCards({ section, items, content, language, onAdd, onEdit, onD
 }
 
 function MediaField({ content, value, onChange }) {
-  const inputRef = useRef(null)
-  const chooseFile = async (file) => {
-    const upload = createLocalUpload(file, ['image', 'video'])
-    if (!upload.valid) return
-    try {
-      const stored = await uploadFile(file, { metadata: { kind: upload.kind } })
-      revokeLocalUpload(upload)
-      revokeLocalUpload(value)
-      onChange({ name: stored.name, type: stored.kind, url: stored.url })
-    } catch { revokeLocalUpload(upload) }
-  }
-  return <div className="mt-6"><div className="flex items-center justify-between gap-3"><div><h3 className="m-0 font-heading text-sm text-admin-heading">{content.title}</h3><p className="mt-1 mb-0 text-[.6875rem] text-admin-muted">{content.description}</p></div></div>{value ? <div className="relative mt-3 aspect-[16/7] overflow-hidden rounded-xl border border-(--editor-field-border) bg-(--editor-input)">{value.type === 'video' ? <video src={value.url} controls className="size-full object-contain" /> : <img src={value.url} alt={value.name} className="size-full object-cover" />}<div className="absolute inset-x-0 bottom-0 flex justify-center gap-2 bg-gradient-to-t from-black/75 via-black/45 to-transparent px-3 pb-3 pt-10"><button type="button" onClick={() => inputRef.current?.click()} className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-white/25 bg-white/15 px-3 text-[.65rem] font-semibold text-white backdrop-blur-sm transition hover:border-white/50 hover:bg-white/25"><Replace size={13} />{content.replace}</button><button type="button" onClick={() => onChange(null)} className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-red-300/50 bg-red-600/75 px-3 text-[.65rem] font-semibold text-white backdrop-blur-sm transition hover:bg-red-600"><Trash2 size={13} />{content.remove}</button></div></div> : <button type="button" onClick={() => inputRef.current?.click()} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); chooseFile(event.dataTransfer.files?.[0]) }} className="mt-2 grid min-h-28 w-full place-items-center content-center gap-1.5 rounded-xl border-2 border-dashed border-(--editor-field-border) bg-(--editor-input) p-4 text-center text-admin-brand-text hover:border-admin-brand hover:bg-admin-brand-soft"><ImagePlus size={24} /><strong className="text-xs text-admin-heading">{content.choose}</strong><span className="inline-flex items-center gap-1.5 text-[.65rem] text-admin-muted"><UploadCloud size={13} />{content.drop}</span></button>}<input ref={inputRef} type="file" accept="image/*,video/*" className="sr-only" onChange={(event) => chooseFile(event.target.files?.[0])} /></div>
+  const [pickingMedia, setPickingMedia] = useState(false)
+  const language = document.documentElement.lang
+  const mediaContent = language === 'en' ? englishMedia : language === 'ps' ? pashtoMedia : dariMedia
+  const selectMedia = (media) => { revokeLocalUpload(value?.url); onChange({ name: media.name, type: media.type, url: media.url }); setPickingMedia(false) }
+  return <div className="mt-6"><div className="flex items-center justify-between gap-3"><div><h3 className="m-0 font-heading text-sm text-admin-heading">{content.title}</h3><p className="mt-1 mb-0 text-[.6875rem] text-admin-muted">{content.description}</p></div></div>{value ? <div className="relative mt-3 aspect-[16/7] overflow-hidden rounded-xl border border-(--editor-field-border) bg-(--editor-input)">{value.type === 'video' ? <video src={value.url} controls className="size-full object-contain" /> : <img src={value.url} alt={value.name} className="size-full object-cover" />}<div className="absolute inset-x-0 bottom-0 flex justify-center gap-2 bg-gradient-to-t from-black/75 via-black/45 to-transparent px-3 pb-3 pt-10"><button type="button" onClick={() => setPickingMedia(true)} className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-white/25 bg-white/15 px-3 text-[.65rem] font-semibold text-white backdrop-blur-sm transition hover:border-white/50 hover:bg-white/25"><Replace size={13} />{content.replace}</button><button type="button" onClick={() => onChange(null)} className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-red-300/50 bg-red-600/75 px-3 text-[.65rem] font-semibold text-white backdrop-blur-sm transition hover:bg-red-600"><Trash2 size={13} />{content.remove}</button></div></div> : <button type="button" onClick={() => setPickingMedia(true)} className="mt-2 grid min-h-28 w-full place-items-center content-center gap-1.5 rounded-xl border-2 border-dashed border-(--editor-field-border) bg-(--editor-input) p-4 text-center text-admin-brand-text hover:border-admin-brand hover:bg-admin-brand-soft"><ImagePlus size={24} /><strong className="text-xs text-admin-heading">{mediaContent.picker.fieldChoose}</strong><span className="text-[.65rem] text-admin-muted">{mediaContent.picker.fieldHelp}</span></button>}{pickingMedia && <MediaPickerModal content={mediaContent} acceptedKinds={['image', 'video']} onClose={() => setPickingMedia(false)} onSelect={selectMedia} />}</div>
 }
 
 export default HomeEditorSection

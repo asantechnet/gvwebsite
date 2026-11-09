@@ -5,9 +5,9 @@ import MagazineNewsSection from '@sections/magazine/MagazineNewsSection.jsx'
 function MagazinePage({ content, language }) {
   return (
     <>
-      <PageHero {...content.hero} />
-      <MagazineNewsSection content={content.news} language={language} />
-      <MagazineArticlesSection content={{ ...content.articles, items: content.news.items }} />
+      {content.hero.visible !== false && <PageHero {...content.hero} />}
+      {content.news.visible !== false && <MagazineNewsSection content={content.news} language={language} />}
+      {content.articles.visible !== false && <MagazineArticlesSection content={{ ...content.articles, items: content.news.items }} />}
     </>
   )
 }

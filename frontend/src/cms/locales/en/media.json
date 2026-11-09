@@ -27,5 +27,25 @@
   "close": "Close preview",
   "openFile": "Open file",
   "emptyTitle": "No media found",
-  "emptyDescription": "Try another search term or filter."
+  "emptyDescription": "Try another search term or filter.",
+  "picker": {
+    "eyebrow": "Media library",
+    "title": "Choose media",
+    "description": "Select an existing image or upload a new file.",
+    "close": "Close media library",
+    "drop": "Drop a file here",
+    "uploading": "Optimizing and uploading…",
+    "formats": "Images up to 2MB · JPG, PNG, WebP, GIF",
+    "formatsMedia": "Images up to 2MB · Audio up to 10MB · Video up to 500MB · JPG, PNG, WebP, GIF, MP3, M4A, OGG, WAV, FLAC, MP4, WebM, MOV",
+    "browse": "Browse files",
+    "uploadingButton": "Uploading…",
+    "errorTitle": "Media could not be uploaded",
+    "errorType": "This file type is not supported for this field.",
+    "errorSize": "This file is larger than the allowed limit",
+    "errorClose": "Close",
+    "uploaded": "Uploaded media",
+    "empty": "No uploaded media yet. Upload a file above to get started.",
+    "fieldChoose": "Choose from media library",
+    "fieldHelp": "Choose an uploaded image or upload a new one"
+  }
 }

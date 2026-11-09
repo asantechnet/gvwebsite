@@ -125,7 +125,7 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 </article>)}</section>
     {!filteredCards.length && <div className="grid min-h-44 place-items-center rounded-2xl border border-admin-border bg-admin-card text-sm text-admin-muted">{labels.empty || 'نوشته‌ای پیدا نشد.'}</div>}
     {viewing && <OpportunityPostPreviewModal post={viewing} content={modalContent} onClose={() => setViewing(null)} onDelete={() => { removePost(viewing); setViewing(null); showRecordToast('recordDeleted') }} onEdit={() => { setViewing(null); setEditing(viewing) }} />}
-    {editing && <OpportunityPostModal post={editing} content={modalContent} isServices={isServices} isMigration={pageKey === 'opportunities' && activeType === 'migration'} isWorldTourism={isTourism && activeType === 'world'} isAfghanistanTourism={isTourism && activeType === 'afghanistan'} onClose={() => setEditing(null)} onSave={(savedPost) => { const isNew = String(editing.id).startsWith('new-'); savePost(savedPost, activeType); setEditing(null); if (isNew) showRecordToast('recordAdded') }} />}
+    {editing && <OpportunityPostModal post={editing} content={modalContent} isServices={isServices} isOpportunities={pageKey === 'opportunities'} isWorldTourism={isTourism && activeType === 'world'} isAfghanistanTourism={isTourism && activeType === 'afghanistan'} onClose={() => setEditing(null)} onSave={(savedPost) => { const isNew = String(editing.id).startsWith('new-'); savePost(savedPost, activeType); setEditing(null); if (isNew) showRecordToast('recordAdded') }} />}
   </PageContainer>
 }
 
@@ -203,7 +203,7 @@ function OpportunityPostPreviewModal({ post, content, onClose, onDelete, onEdit 
   </div>
 }
 
-function OpportunityPostModal({ post, content, isServices = false, isMigration = false, isWorldTourism = false, isAfghanistanTourism = false, onClose, onSave }) {
+function OpportunityPostModal({ post, content, isServices = false, isOpportunities = false, isWorldTourism = false, isAfghanistanTourism = false, onClose, onSave }) {
   const isNew = String(post.id ?? '').startsWith('new-')
   const interfaceLanguage = useCmsInterfaceLanguage()
   const [closing, setClosing] = useState(false)
@@ -255,7 +255,7 @@ function OpportunityPostModal({ post, content, isServices = false, isMigration =
     <header dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'} className="grid min-w-0 grid-cols-1 gap-2 border-b border-admin-border bg-admin-card px-3 py-2.5 sm:flex sm:flex-nowrap sm:items-center sm:gap-4 sm:px-6"><h2 id="opportunity-editor-title" className="order-2 block min-w-0 w-full truncate text-start font-heading text-base leading-tight text-admin-heading sm:order-none sm:flex-1 sm:text-xl" dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'}>{isNew ? (content.createPost || 'ایجاد فرصت جدید') : translation.title}</h2><div className="order-1 grid min-w-0 w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:ms-auto sm:flex sm:w-auto sm:shrink-0"><ContentLanguageSwitcher className="!w-full !min-w-0 sm:!w-auto" label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={selectContentLanguage} /><button type="button" className="grid size-9 shrink-0 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" onClick={close} aria-label={content.close || 'بستن'}><X size={17} /></button></div></header>
     <div className="grid gap-3 overflow-y-auto p-3 sm:gap-5 sm:p-6" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
 <section className="grid gap-5 rounded-2xl border border-admin-border bg-admin-card p-4 sm:grid-cols-2 sm:p-5">
-{isWorldTourism || isMigration
+{isWorldTourism || isOpportunities
   ? <label className="text-xs font-semibold text-admin-heading"><span className="mb-2 block">{content.countryName || content.postTitle || 'نام کشور'}</span><CountryPicker value={form.countryCode || translation.title || post.name} language={contentLanguage} label={content.countryName || content.postTitle || 'نام کشور'} searchPlaceholder={content.countrySearch || ''} emptyLabel={content.countryEmpty || ''} onChange={selectCountry} /></label>
   : isAfghanistanTourism
     ? <label className="text-xs font-semibold text-admin-heading"><span className="mb-2 block">{content.provinceName || content.postTitle || 'نام ولایت'}</span><CountryPicker value={form.provinceCode || translation.title || post.name} language={contentLanguage} label={content.provinceName || content.postTitle || 'نام ولایت'} searchPlaceholder={content.provinceSearch || ''} emptyLabel={content.provinceEmpty || ''} options={provinceOptions} fallbackIcon="📍" onChange={selectProvince} /></label>

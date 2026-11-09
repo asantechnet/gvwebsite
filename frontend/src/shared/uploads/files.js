@@ -1,7 +1,7 @@
 const mediaPolicies = Object.freeze({
-  image: { accept: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'], maxBytes: 5 * 1024 * 1024 },
-  video: { accept: ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'], maxBytes: 50 * 1024 * 1024 },
-  audio: { accept: ['audio/mpeg', 'audio/mp4', 'audio/ogg', 'audio/wav', 'audio/x-wav', 'audio/flac'], maxBytes: 20 * 1024 * 1024 },
+  image: { accept: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'], maxBytes: 2 * 1024 * 1024 },
+  video: { accept: ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'], maxBytes: 500 * 1024 * 1024 },
+  audio: { accept: ['audio/mpeg', 'audio/mp4', 'audio/ogg', 'audio/wav', 'audio/x-wav', 'audio/flac'], maxBytes: 10 * 1024 * 1024 },
   document: { accept: ['application/pdf'], maxBytes: 10 * 1024 * 1024 },
 })
 

@@ -538,7 +538,7 @@ function DashboardLayout() {
             onLogout={auth.logout}
           />
           <div
-            className={`admin-shell min-h-screen min-w-0 max-w-full transition-[padding] duration-250 rtl:lg:pr-(--sidebar-width) ltr:lg:pl-(--sidebar-width) ${sidebarCollapsed ? "rtl:lg:pr-21 ltr:lg:pl-21" : ""}`}
+          className={`admin-shell min-h-screen min-w-0 max-w-full transition-[padding] duration-300 ease-in-out rtl:lg:pr-(--sidebar-width) ltr:lg:pl-(--sidebar-width) ${sidebarCollapsed ? "rtl:lg:pr-16 ltr:lg:pl-16" : ""}`}
           >
             <DashboardTopbar
               content={content.topbar}

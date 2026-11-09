@@ -9,20 +9,7 @@ import { removeUpload, uploadFile } from '@/shared/services/api/uploads.js'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 import { showRecordToast } from '@cms/utils/toast.js'
 import { closeCmsModal } from '@cms/utils/modalTransition.js'
-
-const seedMedia = [
-  ['/assets/images/home/hero-globe.webp', 'hero-globe.webp', 'image'],
-  ['/assets/images/destinations/germany.webp', 'germany.webp', 'image'],
-  ['/assets/images/destinations/turkiye.webp', 'turkiye.webp', 'image'],
-  ['/assets/images/destinations/italy.webp', 'italy.webp', 'image'],
-  ['/assets/images/destinations/france.webp', 'france.webp', 'image'],
-  ['/assets/images/destinations/netherlands.webp', 'netherlands.webp', 'image'],
-  ['/assets/images/team/murtaza.webp', 'murtaza.webp', 'image'],
-  ['/assets/branding/new logo.webp', 'global-vision-logo.webp', 'image'],
-].map(([url, name, type], index) => ({ id: `seed-${index}`, url, name, type, meta: type === 'image' ? 'Image' : 'File', local: false }))
-
-const formatBytes = (size = 0) => size < 1024 * 1024 ? `${Math.max(0.1, size / 1024).toFixed(1)} KB` : `${(size / 1024 / 1024).toFixed(1)} MB`
-const getMediaType = (name = '') => /\.(mp4|webm|ogg|mov)$/i.test(name) ? 'video' : /\.(mp3|wav|m4a|aac|flac)$/i.test(name) ? 'audio' : /\.pdf$/i.test(name) ? 'file' : 'image'
+import { formatMediaBytes as formatBytes, getMediaType, seedMedia } from '@cms/data/mediaLibrary.js'
 
 function MediaPreviewModal({ item, content, onClose }) {
   const dialogRef = useModalFocus({ onClose })

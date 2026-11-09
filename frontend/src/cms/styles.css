@@ -120,7 +120,7 @@ html.dark .cms-root .cms-logout-button:hover { background: rgb(239 68 68 / .2); 
     inset-inline-start: var(--sidebar-width);
     transition: inset-inline-start .25s ease;
   }
-  .cms-root[data-dashboard-shell="true"][data-sidebar-collapsed="true"] .cms-modal-backdrop { inset-inline-start: 5.25rem; }
+  .cms-root[data-dashboard-shell="true"][data-sidebar-collapsed="true"] .cms-modal-backdrop { inset-inline-start: 4rem; }
 }
 @keyframes cms-modal-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes cms-modal-backdrop-out { from { opacity: 1; } to { opacity: 0; } }

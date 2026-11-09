@@ -33,7 +33,7 @@ class StoreUploadRequest extends FormRequest
                     'mp4', 'webm', 'mov',
                     'mp3', 'wav', 'ogg', 'm4a',
                     'pdf',
-                ])->max(50 * 1024),
+                ])->max(500 * 1024),
             ],
         ];
     }
@@ -61,9 +61,9 @@ class StoreUploadRequest extends FormRequest
             }
 
             $limits = [
-                'image' => 5 * 1024 * 1024,
-                'video' => 50 * 1024 * 1024,
-                'audio' => 20 * 1024 * 1024,
+                'image' => 2 * 1024 * 1024,
+                'video' => 500 * 1024 * 1024,
+                'audio' => 10 * 1024 * 1024,
                 'document' => 10 * 1024 * 1024,
             ];
 

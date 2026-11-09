@@ -14,15 +14,28 @@ import PageHeading from "@cms/components/PageHeading.jsx";
 import PasswordInput from "@cms/components/PasswordInput.jsx";
 import useAuth from "@cms/auth/useAuth.js";
 import useCmsDraftState from "@cms/hooks/useCmsDraftState.js";
-import { useCmsContentLanguage, useCmsInterfaceLanguage } from "@cms/hooks/useCmsLanguage.js";
+import {
+  useCmsContentLanguage,
+  useCmsInterfaceLanguage,
+} from "@cms/hooks/useCmsLanguage.js";
 import { announceCmsDraftChange } from "@cms/utils/draftEvents.js";
 import useModalFocus from "@/shared/hooks/useModalFocus.js";
 import { validatePasswordChange } from "@/shared/utils/validation.js";
 import { readBrandIcon, readCompanyNames } from "@cms/utils/branding.js";
 
 function ProfilePage({ content, theme }) {
-  const resetAction = content.resetAction || (content.resetPassword?.startsWith('Password') ? 'Reset' : content.resetPassword?.startsWith('پټنوم') ? 'بیا تنظیم' : 'بازنشانی')
-  const resetLabel = content.resetPassword?.startsWith('Password') ? 'Reset password' : content.resetPassword?.startsWith('پټنوم') ? 'د پټنوم بیا تنظیم' : 'بازنشانی رمز عبور'
+  const resetAction =
+    content.resetAction ||
+    (content.resetPassword?.startsWith("Password")
+      ? "Reset"
+      : content.resetPassword?.startsWith("پټنوم")
+        ? "بیا تنظیم"
+        : "بازنشانی");
+  const resetLabel = content.resetPassword?.startsWith("Password")
+    ? "Reset password"
+    : content.resetPassword?.startsWith("پټنوم")
+      ? "د پټنوم بیا تنظیم"
+      : "بازنشانی رمز عبور";
   const auth = useAuth();
   const [contentLanguage, setContentLanguage] = useCmsContentLanguage();
   const interfaceLanguage = useCmsInterfaceLanguage();
@@ -287,7 +300,11 @@ function ProfileModal({
   onResetPassword,
   onClose,
 }) {
-  const resetLabel = content.resetPassword?.startsWith('Password') ? 'Reset password' : content.resetPassword?.startsWith('پټنوم') ? 'د پټنوم بیا تنظیم' : 'بازنشانی رمز عبور';
+  const resetLabel = content.resetPassword?.startsWith("Password")
+    ? "Reset password"
+    : content.resetPassword?.startsWith("پټنوم")
+      ? "د پټنوم بیا تنظیم"
+      : "بازنشانی رمز عبور";
   const [closing, setClosing] = useState(false);
   const [values, setValues] = useState({
     currentPassword: "",
@@ -341,9 +358,7 @@ function ProfileModal({
               id="profile-dialog-title"
               className="m-0 font-heading text-base text-admin-heading"
             >
-              {mode === "reset"
-                ? resetLabel
-                : content.changePassword}
+              {mode === "reset" ? resetLabel : content.changePassword}
             </h2>
           </div>
           <button

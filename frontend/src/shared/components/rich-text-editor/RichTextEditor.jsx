@@ -6,13 +6,17 @@ import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import TextAlign from '@tiptap/extension-text-align'
-import { AlignCenter, AlignLeft, AlignRight, AudioLines, Bold, Check, ChevronDown, Columns3, FileVideo, Heading2, Heading3, Highlighter, ImagePlus, Italic, LayoutGrid, Link2, List, ListOrdered, MousePointerClick, Paperclip, Pencil, Plus, Redo2, Replace, Shapes, Trash2, Underline as UnderlineIcon, Undo2, UploadCloud, X } from 'lucide-react'
+import { AlignCenter, AlignLeft, AlignRight, AudioLines, Bold, Check, ChevronDown, Columns3, FileVideo, Heading2, Heading3, Highlighter, ImagePlus, Italic, LayoutGrid, Link2, List, ListOrdered, MousePointerClick, Paperclip, Pencil, Plus, Redo2, Replace, Shapes, Trash2, Underline as UnderlineIcon, Undo2, X } from 'lucide-react'
 import AudioMedia from './media/AudioMedia.jsx'
 import ImageMedia from './media/ImageMedia.jsx'
 import VideoMedia from './media/VideoMedia.jsx'
 import { editorTranslations as translations } from './translations.js'
 import { sanitizeRichText } from '@/shared/security/sanitizeRichText.js'
-import { createLocalUpload, revokeLocalUpload } from '@/shared/uploads/files.js'
+import { revokeLocalUpload } from '@/shared/uploads/files.js'
+import MediaPickerModal from '@cms/components/MediaPickerModal.jsx'
+import englishMedia from '@cms/locales/en/media.json'
+import dariMedia from '@cms/locales/prs/media.json'
+import pashtoMedia from '@cms/locales/ps/media.json'
 import './styles.css'
 
 const headingIconCategories = [
@@ -222,16 +226,18 @@ function EditorDialog({ title, children, confirm, cancel, onConfirm, onClose, mo
   return createPortal(<div className="gv-rich-text-editor cms-modal-backdrop fixed inset-0 z-[100] grid place-items-center overflow-y-auto p-4" onMouseDown={onClose}>{modalDialog}</div>, document.querySelector('.cms-root') || document.body)
 }
 
-function MediaPickerField({ label, kind, value, fileName, accept, choose, drop, replace, remove, onFile, onRemove, full = false }) {
-  const inputRef = useRef(null)
+function MediaPickerField({ label, kind, value, fileName, replace, remove, onFile, onRemove, full = false }) {
+  const [pickingMedia, setPickingMedia] = useState(false)
+  const language = getLanguage()
+  const mediaContent = language === 'en' ? englishMedia : language === 'ps' ? pashtoMedia : dariMedia
   const Icon = kind === 'audio' ? AudioLines : kind === 'video' ? FileVideo : ImagePlus
-  const selectFile = (file) => { if (file) onFile(file) }
-  return <div className={`grid gap-1.5 text-xs text-admin-muted ${full ? 'sm:col-span-2' : ''}`}><span>{label}</span>{value ? <div onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); selectFile(event.dataTransfer.files?.[0]) }} className="relative min-h-28 overflow-hidden rounded-xl border border-(--editor-field-border) bg-(--editor-input)">
+  const selectMedia = (media) => { onFile(media); setPickingMedia(false) }
+  return <div className={`grid gap-1.5 text-xs text-admin-muted ${full ? 'sm:col-span-2' : ''}`}><span>{label}</span>{value ? <div className="relative min-h-28 overflow-hidden rounded-xl border border-(--editor-field-border) bg-(--editor-input)">
     {kind === 'image' && <img src={value} alt="" className="absolute inset-0 size-full object-cover" />}
     {kind === 'video' && <video src={value} muted preload="metadata" className="absolute inset-0 size-full object-cover" />}
     {kind === 'audio' && <div className="absolute inset-0 grid place-items-center content-center gap-2 bg-admin-control-soft text-admin-brand"><AudioLines size={30} /><strong className="max-w-[85%] truncate text-xs text-admin-heading">{fileName}</strong></div>}
-    <div className="absolute inset-x-0 bottom-0 flex justify-center gap-2 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-3 pt-10 pb-3"><button type="button" onClick={() => inputRef.current?.click()} className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-white/25 bg-white/15 px-3 text-[.65rem] font-semibold text-white backdrop-blur-sm transition hover:border-white/50 hover:bg-white/25"><Replace size={13} />{replace}</button><button type="button" onClick={onRemove} className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-red-300/50 bg-red-600/75 px-3 text-[.65rem] font-semibold text-white backdrop-blur-sm transition hover:bg-red-600"><Trash2 size={13} />{remove}</button></div>
-  </div> : <button type="button" onClick={() => inputRef.current?.click()} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); selectFile(event.dataTransfer.files?.[0]) }} className="grid min-h-28 w-full place-items-center content-center gap-1.5 rounded-xl border-2 border-dashed border-(--editor-field-border) bg-(--editor-input) p-4 text-center transition hover:border-admin-brand hover:bg-admin-brand-soft"><Icon size={26} className="text-admin-brand" /><strong className="max-w-full truncate text-xs text-admin-heading">{choose}</strong><span className="text-[.65rem] text-admin-muted"><UploadCloud size={13} className="me-1 inline" />{drop}</span></button>}<input ref={inputRef} type="file" accept={accept} className="sr-only" onChange={(event) => { selectFile(event.target.files?.[0]); event.target.value = '' }} /></div>
+    <div className="absolute inset-x-0 bottom-0 flex justify-center gap-2 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-3 pt-10 pb-3"><button type="button" onClick={() => setPickingMedia(true)} className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-white/25 bg-white/15 px-3 text-[.65rem] font-semibold text-white backdrop-blur-sm transition hover:border-white/50 hover:bg-white/25"><Replace size={13} />{replace}</button><button type="button" onClick={onRemove} className="inline-flex min-h-8 items-center gap-1.5 rounded-lg border border-red-300/50 bg-red-600/75 px-3 text-[.65rem] font-semibold text-white backdrop-blur-sm transition hover:bg-red-600"><Trash2 size={13} />{remove}</button></div>
+  </div> : <button type="button" onClick={() => setPickingMedia(true)} className="grid min-h-28 w-full place-items-center content-center gap-1.5 rounded-xl border-2 border-dashed border-(--editor-field-border) bg-(--editor-input) p-4 text-center transition hover:border-admin-brand hover:bg-admin-brand-soft"><Icon size={26} className="text-admin-brand" /><strong className="max-w-full truncate text-xs text-admin-heading">{mediaContent.picker.fieldChoose}</strong><span className="text-[.65rem] text-admin-muted">{mediaContent.picker.fieldHelp}</span></button>}{pickingMedia && <MediaPickerModal content={mediaContent} acceptedKinds={[kind]} onClose={() => setPickingMedia(false)} onSelect={selectMedia} />}</div>
 }
 
 function MediaTypePicker({ label, value, copy, onChange }) {
@@ -275,8 +281,8 @@ function OpportunityRichTextEditor({ value, onChange, language: requestedLanguag
   const openLink = () => { const { from, to } = editor.state.selection; setPendingSelection({ from, to }); setLinkValue(editor.getAttributes('link').href || ''); setPanel('link') }
   const saveLink = () => { const href = linkValue.trim(); const chain = editor.chain().focus(); if (pendingSelection) chain.setTextSelection(pendingSelection); if (href) chain.setLink({ href }).run(); else chain.unsetLink().run(); setPendingSelection(null); setPanel(null) }
   const saveButton = () => { const label = buttonValue.label.trim(); const href = buttonValue.href.trim(); if (label && href) editor.chain().focus().insertContent({ type: 'actionButton', attrs: { label, href } }).run(); setPanel(null); setButtonValue({ label: '', href: '' }) }
-  const chooseAttachmentFile = (file) => { const upload = createLocalUpload(file, ['image', 'video', 'audio']); if (!upload.valid) return; setAttachment((current) => { revokeLocalUpload(current.src); return { ...current, mediaType: upload.kind, src: upload.previewUrl, name: upload.name, title: current.title || upload.name.replace(/\.[^.]+$/, ''), mimeType: file.type } }) }
-  const chooseAttachmentImage = (key, file) => { const upload = createLocalUpload(file, ['image']); if (!upload.valid) return; setAttachment((current) => { revokeLocalUpload(current[key]); return { ...current, [key]: upload.previewUrl } }) }
+  const chooseAttachmentFile = (media) => { setAttachment((current) => { revokeLocalUpload(current.src); return { ...current, mediaType: media.type, src: media.url, name: media.name, title: current.title || media.name.replace(/\.[^.]+$/, ''), mimeType: '' } }) }
+  const chooseAttachmentImage = (key, media) => { setAttachment((current) => { revokeLocalUpload(current[key]); return { ...current, [key]: media.url } }) }
   const insertAttachment = () => { if (!attachment.src) return; const attrs = attachment.mediaType === 'image' ? { ...attachment, alt: attachment.title, caption: attachment.title } : attachment; if (editingGridSlot) editor.chain().focus().command(({ tr, state }) => { const gridNode = state.doc.nodeAt(editingGridSlot.position); if (!gridNode) return false; const items = [...gridNode.attrs.items]; items[editingGridSlot.index] = attrs; tr.setNodeMarkup(editingGridSlot.position, undefined, { ...gridNode.attrs, items }); return true }).run(); else if (editingMediaPos !== null) editor.chain().focus().command(({ tr }) => { tr.setNodeMarkup(editingMediaPos, undefined, attrs); return true }).run(); else editor.chain().focus().insertContent({ type: 'mediaBlock', attrs }).run(); setAttachment(emptyAttachment); setEditingMediaPos(null); setEditingGridSlot(null); setPanel(null) }
   const insertMediaGrid = (layout, slots) => { editor.chain().focus().insertContent({ type: 'mediaGrid', attrs: { layout, items: Array.from({ length: slots }, () => null) } }).run(); setPanel(null) }
   const setColumns = (columns) => { const listType = editor.isActive('orderedList') ? 'orderedList' : editor.isActive('bulletList') ? 'bulletList' : null; const chain = editor.chain().focus(); if (listType) chain.updateAttributes(listType, { columns }).run(); else chain.toggleBulletList().updateAttributes('bulletList', { columns }).run(); setPanel(null) }
