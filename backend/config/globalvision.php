@@ -4,6 +4,12 @@ return [
     'frontend_url' => env('FRONTEND_URL', 'http://localhost:5173'),
     'frontend_dist' => env('FRONTEND_DIST_PATH', base_path('../frontend/dist')),
     'contact_notification_email' => env('CONTACT_NOTIFICATION_EMAIL'),
+    'sent_mail_archive' => [
+        'enabled' => env('MAIL_ARCHIVE_SENT', false),
+        'host' => env('MAIL_IMAP_HOST', 'imap.hostinger.com'),
+        'port' => (int) env('MAIL_IMAP_PORT', 993),
+        'folder' => env('MAIL_IMAP_SENT_FOLDER'),
+    ],
 
     'upload_scanning' => [
         'enabled' => env('UPLOAD_SCAN_ENABLED', false),

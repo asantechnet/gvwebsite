@@ -253,7 +253,7 @@ function Header({
 
           <div className="flex shrink-0 items-center gap-1.5 2xl:gap-2">
             <div className="flex shrink-0 items-center gap-1.5 2xl:gap-2">
-              <LanguageSwitcher language={language} languageIds={{ prs: 'dr' }} onChange={onLanguageChange} />
+              <LanguageSwitcher language={language} languageIds={{ prs: 'dr' }} optimizeEnglishTypography onChange={onLanguageChange} />
               <button
                 type="button"
                 aria-label={content.themeToggleLabel}

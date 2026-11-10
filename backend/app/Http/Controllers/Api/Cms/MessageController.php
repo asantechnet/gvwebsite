@@ -8,6 +8,7 @@ use App\Http\Requests\Cms\UpdateMessageRequest;
 use App\Http\Resources\MessageResource;
 use App\Models\AuditLog;
 use App\Models\Message;
+use App\Support\SentMailArchive;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -46,13 +47,14 @@ class MessageController extends Controller
         return new MessageResource($message);
     }
 
-    public function reply(ReplyToMessageRequest $request, Message $message): MessageResource
+    public function reply(ReplyToMessageRequest $request, Message $message, SentMailArchive $sentMailArchive): MessageResource
     {
         $validated = $request->validated();
         Mail::raw($validated['message'], fn ($mail) => $mail
             ->to($message->email)
             ->replyTo(config('mail.from.address'))
             ->subject($validated['subject']));
+        $sentMailArchive->append($message->email, $validated['subject'], $validated['message']);
         $message->update([
             'reply_subject' => $validated['subject'],
             'reply_body' => $validated['message'],

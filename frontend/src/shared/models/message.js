@@ -10,6 +10,8 @@ export function normalizeMessage(record = {}) {
     body: String(record.body || record.message || record.quote || ''),
     createdAt: Number.isNaN(Date.parse(createdAt)) ? new Date().toISOString() : createdAt,
     unread: record.unread === undefined ? !record.readAt && !record.read_at : Boolean(record.unread),
+    replySubject: String(record.replySubject || record.reply_subject || ''),
+    replyBody: String(record.replyBody || record.reply_body || ''),
     repliedAt: record.repliedAt || record.replied_at || null,
   }
 }

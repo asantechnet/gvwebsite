@@ -34,11 +34,9 @@ class ContactMessageReceived extends Notification
         return (new MailMessage)
             ->subject('New website enquiry: '.$this->message->subject)
             ->replyTo($this->message->email, $this->message->name)
-            ->greeting('New Global Vision enquiry')
-            ->line('Name: '.$this->message->name)
-            ->line('Email: '.$this->message->email)
-            ->line('Subject: '.$this->message->subject)
-            ->line($this->message->body)
-            ->action('Open message inbox', rtrim(config('globalvision.frontend_url'), '/').'/dashboard/messages');
+            ->view('emails.contact-message-received', [
+                'messageRecord' => $this->message,
+                'inboxUrl' => rtrim(config('globalvision.frontend_url'), '/').'/dashboard/messages',
+            ]);
     }
 }
