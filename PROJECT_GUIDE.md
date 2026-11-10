@@ -10,6 +10,8 @@ The project now includes the React frontend and a Laravel 13 application. The fr
 
 The frontend includes dependency-free Node tests for localized catalog search, scholarship filtering, CMS route resolution, and locale namespace parity, plus static validators for localized internal links, external URL syntax, public asset references, SEO output, and the initial JavaScript budget. Laravel feature tests cover authentication, recovery, authorization, messages, snapshots, uploads, audit history, public snapshots, contact intake, and SPA response status behavior.
 
+Published CMS snapshots are the canonical public-content source in API mode. Collection payloads are normalized defensively at the integration boundary, draft records are excluded from public rendering, saved internal links are localized for the active language, and successful CMS saves notify open public tabs to reload published content.
+
 The CMS and public website are separate lazy application entries. Public translation content is grouped into Dari, Pashto, and English payloads and loaded only for the active route language; adding a public locale namespace requires registering it in the matching localized-content module. Production builds enforce a 300 kB raw initial-JavaScript budget before route, page, and locale payloads are loaded.
 
 Shared modal keyboard behavior lives in `src/shared/hooks/useModalFocus.js`. Public and CMS dialogs use it to move focus into the dialog, contain Tab navigation, close with Escape, and restore focus to the invoking control. The website and CMS use a visible border-and-shadow keyboard focus treatment without browser outlines or Tailwind rings. Brand fills retain the canonical orange, while the semantic `accent-text` and `admin-brand-text` tokens use a contrast-safe darker orange in light mode and the existing bright orange in dark mode. Public and CMS loading states use the shared `src/shared/components/SkeletonBlock.jsx` shimmer primitive and route-specific skeleton compositions that mirror each destination. A temporary one-second skeleton preview delay is centralized in `src/shared/utils/loading.js` for visual review and must be removed before production launch.
@@ -69,7 +71,7 @@ Do not describe planned functionality as implemented.
 | --- | --- | --- |
 | React | Component based user interface | `^19.2.8` |
 | React DOM | Browser rendering | `^19.2.8` |
-| Nivo Bar, Core, and Pie | CMS overview charts and metric visualizations | `^0.99.0` |
+| Nivo Bar and Pie | CMS overview charts and metric visualizations | `^0.99.0` |
 | Vite | Development server and production bundler | `^8.3.0` |
 | Tailwind CSS | Utility based responsive styling | `^4.3.3` |
 | Tailwind Vite plugin | Tailwind and Vite integration | `^4.3.3` |
@@ -78,7 +80,6 @@ Do not describe planned functionality as implemented.
 | Sonner | Shared CMS toast notifications | `^2.0.8` |
 | Tiptap | Shared CMS rich-text editing | `^3.32.0` |
 | DOMPurify | Allowlist-based rich-text sanitization before DOM rendering | `^3.4.17` |
-| tsParticles | Public decorative particle backgrounds | `^3.9.1` |
 | ESLint | Static analysis | `^10.11.0` |
 
 ## Installed Backend Packages

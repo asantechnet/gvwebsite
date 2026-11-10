@@ -7,7 +7,7 @@ function MagazinePage({ content, language }) {
     <>
       {content.hero.visible !== false && <PageHero {...content.hero} />}
       {content.news.visible !== false && <MagazineNewsSection content={content.news} language={language} />}
-      {content.articles.visible !== false && <MagazineArticlesSection content={{ ...content.articles, items: content.news.items }} />}
+      {content.articles.visible !== false && <MagazineArticlesSection content={content.articles} />}
     </>
   )
 }

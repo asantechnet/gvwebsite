@@ -46,11 +46,14 @@ function ContactEditorSection({ content, initialTranslations }) {
   const draft = drafts[contentLanguage]
   const setDraft = (update) => setDrafts((current) => ({ ...current, [contentLanguage]: typeof update === 'function' ? update(current[contentLanguage]) : update }))
   const [addingSocial, setAddingSocial] = useState(false)
-  const [visibility, setVisibility] = useState(() => Object.fromEntries(Object.keys(tabIcons).map((key) => [key, true])))
   const fallbackWhatsApp = initialTranslations[contentLanguage].contact.details.find((detail) => detail.type === 'whatsapp')
   const contactDetails = draft.contact.details.some((detail) => detail.type === 'whatsapp') ? draft.contact.details : [...draft.contact.details, fallbackWhatsApp]
 
   const updateHero = (key, value) => setDraft((current) => ({ ...current, hero: { ...current.hero, [key]: value } }))
+  const selectedVisible = selectedTab === 'hero' ? draft.hero.visible !== false : draft.contact.visibility?.[selectedTab] !== false
+  const toggleVisibility = () => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, translation]) => [language, selectedTab === 'hero'
+    ? { ...translation, hero: { ...translation.hero, visible: !selectedVisible } }
+    : { ...translation, contact: { ...translation.contact, visibility: { ...translation.contact.visibility, [selectedTab]: !selectedVisible } } }])))
   const updateContact = (key, value) => setDraft((current) => ({ ...current, contact: { ...current.contact, [key]: value } }))
   const updateMapUrl = (value) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, translation]) => [language, { ...translation, contact: { ...translation.contact, mapUrl: value } }])))
   const updateForm = (key, value) => setDraft((current) => ({ ...current, contact: { ...current.contact, form: { ...current.contact.form, [key]: value } } }))
@@ -67,7 +70,7 @@ function ContactEditorSection({ content, initialTranslations }) {
     <section className="min-w-0 w-full overflow-visible rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_38px_rgb(15_23_42_/.055)]">
       <SectionTabBar sections={content.sections} icons={tabIcons} selectedSection={selectedTab} onSelect={setSelectedTab} ariaLabel={content.sectionsTitle} />
 
-      <EditorSectionHeader icon={CurrentIcon} title={content.sections[selectedTab]} action={<div className="flex flex-nowrap items-center gap-2"><EditorVisibilityToggle label={content.visible || 'نمایش داده شود'} checked={visibility[selectedTab]} onChange={() => setVisibility((current) => ({ ...current, [selectedTab]: !current[selectedTab] }))} /><ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} /></div>} />
+      <EditorSectionHeader icon={CurrentIcon} title={content.sections[selectedTab]} action={<div className="flex flex-nowrap items-center gap-2"><EditorVisibilityToggle label={content.visible || 'نمایش داده شود'} checked={selectedVisible} onChange={toggleVisibility} /><ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} /></div>} />
 
       <div className="p-5 sm:p-6">
         {selectedTab === 'hero' && <EditorFieldGroup columns={false} className="sm:p-5"><EditorField label={content.fields.heroTitle} value={draft.hero.title} onChange={(value) => updateHero('title', value)} /></EditorFieldGroup>}

@@ -22,8 +22,8 @@ function PageHero() {
   return <section className="bg-background py-[50px]"><div className="mx-auto w-full max-w-7xl px-4 sm:px-6 xl:px-8"><div className="relative isolate flex min-h-32 flex-col items-center justify-center overflow-hidden rounded-4xl border border-border bg-surface px-6 py-3 md:min-h-36 md:px-10 md:py-4 lg:px-16"><span className="pointer-events-none absolute -right-16 -top-16 size-40 rounded-full bg-brand-orange/20 md:-right-16 md:-top-24 md:size-64" /><span className="pointer-events-none absolute -bottom-24 -left-16 size-48 rounded-full bg-brand-red/15 md:-bottom-32 md:-left-16 md:size-72" /><div className="relative z-10 flex w-full max-w-2xl flex-col items-center"><SkeletonBlock className="h-10 w-72 bg-foreground/10 md:h-11 md:w-80 lg:h-12 lg:w-96" /><SkeletonBlock className="mt-3 h-px w-full rounded-none bg-border" /><div className="mt-2 flex items-center gap-3"><SkeletonBlock className="h-4 w-12 bg-foreground/10" /><span className="size-2 rounded-full bg-brand-orange/60" /><SkeletonBlock className="h-4 w-24 bg-foreground/10" /></div></div></div></div></section>
 }
 
-function Card({ media = true, compact = false }) {
-  return <div className="overflow-hidden rounded-3xl border border-border bg-surface">{media && <SkeletonBlock className={`${compact ? 'aspect-[1.45]' : 'h-52'} w-full rounded-none`} />}<div className={compact ? 'flex h-36 flex-col space-y-3 px-4 py-3 md:h-40' : 'space-y-4 p-5'}><SkeletonBlock className="h-6 w-2/3 bg-primary/15" /><Lines />{!compact && <SkeletonBlock className="h-10 w-28" />}</div></div>
+function Card({ media = true }) {
+  return <div className="overflow-hidden rounded-3xl border border-border bg-surface">{media && <SkeletonBlock className="h-52 w-full rounded-none" />}<div className="space-y-4 p-5"><SkeletonBlock className="h-6 w-2/3 bg-primary/15" /><Lines /><SkeletonBlock className="h-10 w-28" /></div></div>
 }
 
 function DestinationSkeleton({ wide }) {
@@ -81,14 +81,23 @@ function ContactSkeleton() {
   return <><PageHero /><section className="bg-background px-4 pb-12 pt-0 md:px-6"><div className="mx-auto max-w-5xl"><div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-24"><div><SkeletonBlock className="h-9 w-52" /><div className="mt-10 grid gap-6 sm:grid-cols-3 lg:grid-cols-1">{list(3).map((item) => <div key={item} className="flex gap-4"><SkeletonBlock className="size-12 shrink-0 rounded-full bg-primary/15" /><div className="flex-1 space-y-2"><SkeletonBlock className="h-3 w-20" /><SkeletonBlock className="h-5 w-full max-w-44" /></div></div>)}</div><div className="mt-10 flex gap-3">{list(4).map((item) => <SkeletonBlock key={item} className="size-10 rounded-full" />)}</div></div><div className="space-y-5">{list(3).map((item) => <div key={item} className="space-y-2"><SkeletonBlock className="h-4 w-24" /><SkeletonBlock className="h-12" /></div>)}<div className="space-y-2"><SkeletonBlock className="h-4 w-24" /><SkeletonBlock className="h-32" /></div><SkeletonBlock className="h-10 w-full sm:w-32" /></div></div><SkeletonBlock className="mt-12 h-72 w-full rounded-3xl sm:h-96" /></div></section></>
 }
 
-function Carousel({ count }) {
-  const visibleCount = getVisibleCardCount(count, getCarouselVisibleCount())
-  return <section className="bg-background px-4 pb-16 md:px-6 lg:pb-24"><div className="mx-auto max-w-7xl"><SkeletonBlock className="mx-auto mb-8 h-8 w-48" /><div className="relative px-12"><SkeletonBlock className="absolute start-0 top-1/2 size-10 -translate-y-1/2 rounded-full" /><div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">{list(visibleCount).map((item) => <Card key={item} compact />)}</div><SkeletonBlock className="absolute end-0 top-1/2 size-10 -translate-y-1/2 rounded-full" /></div><div className="mt-5 flex justify-center gap-2">{list(count).map((item) => <SkeletonBlock key={item} className="size-2 rounded-full" />)}</div></div></section>
+function MagazineCardSkeleton() {
+  return <div className="flex flex-col overflow-hidden rounded-3xl border border-border bg-surface dark:border-gray-600 dark:bg-[#2b3442]"><div className="relative aspect-[1.45] w-full overflow-hidden"><SkeletonBlock className="h-full w-full rounded-none" /><SkeletonBlock className="absolute left-0 top-6 h-7 w-16 rounded-r-lg bg-surface shadow-sm" /></div><div className="flex h-36 flex-col px-3 py-2.5 md:h-40 md:px-4 md:py-3"><SkeletonBlock className="mt-1 h-7 w-11/12" /><SkeletonBlock className="mt-0.5 h-7 w-3/5" /><SkeletonBlock className="mt-2 h-6 w-full" /><SkeletonBlock className="mt-0.5 h-6 w-2/3" /></div></div>
+}
+
+function MagazineNewsSkeleton({ count }) {
+  const dotCount = count <= 10 ? count : Math.ceil(collectionSkeletonCount(count) / getCarouselVisibleCount())
+  return <section className="-mt-4 bg-background pb-12.5 pt-0"><div className="mx-auto w-full max-w-7xl px-4 sm:px-6 xl:px-8"><SkeletonBlock className="mx-auto mb-8 h-7 w-52 md:h-9 md:w-60" /><div className="relative px-12"><SkeletonBlock className="absolute start-0 top-1/2 size-10 -translate-y-1/2 rounded-full border border-border bg-surface shadow-md" /><div className="overflow-hidden px-2"><div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">{list(getVisibleCardCount(count, getCarouselVisibleCount())).map((item) => <MagazineCardSkeleton key={item} />)}</div></div><SkeletonBlock className="absolute end-0 top-1/2 size-10 -translate-y-1/2 rounded-full border border-border bg-surface shadow-md" /></div><div className="mt-5 flex items-center justify-center gap-2">{list(dotCount).map((dot) => <SkeletonBlock key={dot} className={dot === 0 ? 'h-2 w-7 rounded-full bg-primary/40' : 'h-2 w-2 rounded-full'} />)}</div></div></section>
+}
+
+function MagazinePageSkeleton({ active = false }) {
+  return <SkeletonBlock className={`size-8 rounded-lg${active ? ' bg-primary/30' : ''}`} />
 }
 
 function MagazineSkeleton({ count }) {
   const articleCount = getVisibleCardCount(count, getMagazinePostsPerPage())
-  return <><PageHero /><Carousel count={count} /><section className="bg-surface-muted px-4 py-16 md:px-6 lg:py-24"><div className="mx-auto max-w-7xl"><SkeletonBlock className="mx-auto mb-8 h-8 w-48" /><div className="grid gap-3 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">{list(articleCount).map((item) => <Card key={item} compact />)}</div></div></section></>
+  const magazineTotalPages = Math.ceil(collectionSkeletonCount(count) / getMagazinePostsPerPage())
+  return <><PageHero /><MagazineNewsSkeleton count={count} /><section className="bg-surface-muted pb-12.5 pt-8 dark:bg-[#182230]"><div className="mx-auto w-full max-w-7xl px-4 sm:px-6 xl:px-8"><SkeletonBlock className="mx-auto mb-8 h-7 w-48 md:h-9 md:w-56" /><div className="grid grid-cols-2 items-start gap-3 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">{list(articleCount).map((item) => <MagazineCardSkeleton key={item} />)}</div>{magazineTotalPages > 1 && <nav className="mt-8 flex max-w-full flex-wrap items-center justify-center gap-1 sm:gap-2"><MagazinePageSkeleton /><MagazinePageSkeleton /><MagazinePageSkeleton active /><MagazinePageSkeleton /><SkeletonBlock className="h-2 w-4 rounded-full" /><MagazinePageSkeleton /><MagazinePageSkeleton /><MagazinePageSkeleton /><MagazinePageSkeleton /></nav>}</div></section></>
 }
 
 function SearchSkeleton({ hasQuery, resultCount }) {

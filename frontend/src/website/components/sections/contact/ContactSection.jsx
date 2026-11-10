@@ -25,6 +25,7 @@ function createOpenMapUrl(value) {
 function ContactSection({ content, language }) {
   const [formStatus, setFormStatus] = useState('idle')
   const mapUrl = content.mapUrl || defaultMapUrl
+  const visibility = content.visibility || {}
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -46,10 +47,11 @@ function ContactSection({ content, language }) {
   }
 
   return (
-    <Section padded={false} aria-labelledby="contact-section-title" className="bg-background pb-12.5 pt-0 text-foreground">
+    <Section padded={false} aria-labelledby={visibility.details !== false ? 'contact-section-title' : undefined} className="bg-background pb-12.5 pt-0 text-foreground">
       <Container>
         <div className="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-2 lg:gap-24">
-          <div className="mx-auto w-full max-w-sm text-start lg:order-1">
+          {(visibility.details !== false || visibility.social !== false) && <div className="mx-auto w-full max-w-sm text-start lg:order-1">
+            {visibility.details !== false && <>
             <h2 id="contact-section-title" className="font-heading text-xl font-extrabold leading-tight md:text-2xl lg:text-3xl">
               {content.title}
             </h2>
@@ -71,7 +73,8 @@ function ContactSection({ content, language }) {
                 )
               })}
             </div>
-            <div className="mt-10 flex items-center justify-start gap-3" aria-label={content.socialLabel}>
+            </>}
+            {visibility.social !== false && <div className="mt-10 flex items-center justify-start gap-3" aria-label={content.socialLabel}>
               {content.socials.map((social) => {
                 const icons = { facebook: FaFacebookF, instagram: FaInstagram, linkedin: FaLinkedinIn, telegram: FaTelegram, youtube: FaYoutube, whatsapp: FaWhatsapp, twitter: FaXTwitter, tiktok: Music2 }
                 const Icon = icons[social.type] || Music2
@@ -82,10 +85,10 @@ function ContactSection({ content, language }) {
                   </span>
                 )
               })}
-            </div>
-          </div>
+            </div>}
+          </div>}
 
-          <form className="mx-auto w-full max-w-md text-start lg:order-2" onSubmit={handleSubmit} noValidate>
+          {visibility.form !== false && <form className="mx-auto w-full max-w-md text-start lg:order-2" onSubmit={handleSubmit} noValidate>
             <h3 className="sr-only">{content.form.title}</h3>
             <p className="sr-only">{content.form.description}</p>
             <div className="grid gap-5">
@@ -110,9 +113,9 @@ function ContactSection({ content, language }) {
               {formStatus === 'sending' ? content.form.sendingLabel : content.form.submitLabel}
             </Button>
             <p aria-live="polite" className={`mt-4 text-sm ${formStatus === 'error' ? 'text-brand-red' : 'text-accent-text'}`}>{formStatus === 'success' ? content.form.successMessage : formStatus === 'error' ? content.form.requiredMessage : ''}</p>
-          </form>
+          </form>}
         </div>
-        <div className="relative mx-auto mt-12 w-full max-w-5xl overflow-hidden rounded-3xl border border-border dark:border-gray-700">
+        {visibility.connections !== false && <div className="relative mx-auto mt-12 w-full max-w-5xl overflow-hidden rounded-3xl border border-border dark:border-gray-700">
           <iframe
             title={content.mapTitle}
             src={mapUrl}
@@ -124,7 +127,7 @@ function ContactSection({ content, language }) {
             <ExternalLink aria-hidden="true" size={16} />
             {openMapLabels[language] || openMapLabels.dr}
           </a>
-        </div>
+        </div>}
       </Container>
     </Section>
   )

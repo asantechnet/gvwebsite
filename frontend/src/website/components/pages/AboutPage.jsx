@@ -9,13 +9,13 @@ import TeamSection from '@sections/about/TeamSection.jsx'
 function AboutPage({ content }) {
   return (
     <>
-      <PageHero {...content.hero} />
-      <IntroductionSection content={content.introduction} />
-      <MissionVisionSection content={content.missionVision} />
-      <OurStorySection content={content.story} />
-      <TeamSection content={content.team} />
-      <FaqSection content={content.faq} />
-      <AboutCtaSection content={content.cta} />
+      {content.hero.visible !== false && <PageHero {...content.hero} />}
+      {content.introduction.visible !== false && <IntroductionSection content={content.introduction} />}
+      {content.missionVision.visible !== false && <MissionVisionSection content={content.missionVision} />}
+      {content.story.visible !== false && <OurStorySection content={content.story} />}
+      {content.team.visible !== false && <TeamSection content={content.team} />}
+      {content.faq.visible !== false && <FaqSection content={content.faq} />}
+      {content.cta.visible !== false && <AboutCtaSection content={content.cta} />}
     </>
   )
 }

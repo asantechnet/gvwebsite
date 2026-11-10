@@ -9,13 +9,13 @@ import ConsultationSection from "@sections/home/ConsultationSection.jsx";
 function HomePage({ content }) {
   return (
     <>
-      <HeroSection content={content.hero} />
-      <OpportunitySection content={content.opportunities} />
-      <DestinationsSection content={content.destinations} />
-      <ProcessSection content={content.process} />
-      <ServicesSection content={content.services} />
-      <TestimonialsSection content={content.testimonials} />
-      <ConsultationSection content={content.consultation} />
+      {content.hero.visible !== false && <HeroSection content={content.hero} />}
+      {content.opportunities.visible !== false && <OpportunitySection content={content.opportunities} />}
+      {content.destinations.visible !== false && <DestinationsSection content={content.destinations} />}
+      {content.process.visible !== false && <ProcessSection content={content.process} />}
+      {content.services.visible !== false && <ServicesSection content={content.services} />}
+      {content.testimonials.visible !== false && <TestimonialsSection content={content.testimonials} />}
+      {content.consultation.visible !== false && <ConsultationSection content={content.consultation} />}
     </>
   );
 }

@@ -23,13 +23,13 @@ function AboutEditorSection({ content, initialTranslations }) {
   const [drafts, setDrafts] = useCmsDraftState('about', () => structuredClone(initialTranslations))
   const draft = drafts[contentLanguage]
   const setDraft = (update) => setDrafts((current) => ({ ...current, [contentLanguage]: typeof update === 'function' ? update(current[contentLanguage]) : update }))
-  const [visibility, setVisibility] = useState(() => Object.fromEntries(Object.keys(sectionIcons).map((key) => [key, true])))
   const [editingItem, setEditingItem] = useState(null)
   const [addingItem, setAddingItem] = useState(false)
   const collectionKey = collectionKeys[selectedSection]
   const collection = collectionKey ? draft[selectedSection][collectionKey] : []
 
   const updateSection = (field, value) => setDraft((current) => ({ ...current, [selectedSection]: { ...current[selectedSection], [field]: value } }))
+  const toggleVisibility = () => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, [selectedSection]: { ...languageDraft[selectedSection], visible: draft[selectedSection].visible === false } }])))
   const updateNested = (group, field, value) => setDraft((current) => ({ ...current, [selectedSection]: { ...current[selectedSection], [group]: { ...current[selectedSection][group], [field]: value } } }))
   const saveCollectionTranslations = (localizedItems) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => {
     const items = languageDraft[selectedSection][collectionKey]
@@ -49,7 +49,7 @@ function AboutEditorSection({ content, initialTranslations }) {
 
     <section className="min-w-0 w-full overflow-visible rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_38px_rgb(15_23_42_/.055)]">
       <SectionTabBar sections={content.sections} icons={sectionIcons} selectedSection={selectedSection} onSelect={setSelectedSection} ariaLabel={content.sectionsTitle} />
-      <EditorSectionHeader icon={sectionIcons[selectedSection]} title={content.sections[selectedSection].label} action={<div className="flex flex-nowrap items-center gap-2"><EditorVisibilityToggle label={content.visible} checked={visibility[selectedSection]} onChange={() => setVisibility((current) => ({ ...current, [selectedSection]: !current[selectedSection] }))} /><ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} /></div>} />
+      <EditorSectionHeader icon={sectionIcons[selectedSection]} title={content.sections[selectedSection].label} action={<div className="flex flex-nowrap items-center gap-2"><EditorVisibilityToggle label={content.visible} checked={draft[selectedSection].visible !== false} onChange={toggleVisibility} /><ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} /></div>} />
 
       <div className="grid gap-6 p-5 sm:p-6">
         <div>

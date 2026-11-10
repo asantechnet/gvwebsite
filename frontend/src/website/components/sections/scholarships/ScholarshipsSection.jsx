@@ -203,6 +203,7 @@ function ScholarshipsSection({ content, language = "dr" }) {
   const [openFilter, setOpenFilter] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterModalOpen, setFilterModalOpen] = useState(false);
+  const visibility = content.visibility || {};
   const countryOptions = useMemo(() => {
     const countryLanguage = language === "dr" ? "prs" : language;
     const locale = countryLanguage === "prs" ? "fa-AF" : countryLanguage === "ps" ? "ps-AF" : "en";
@@ -247,7 +248,7 @@ function ScholarshipsSection({ content, language = "dr" }) {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_8%,rgba(244,126,38,0.2),transparent_30%),radial-gradient(circle_at_85%_38%,rgba(128,2,127,0.08),transparent_28%)] dark:bg-[radial-gradient(circle_at_15%_8%,rgba(244,126,38,0.22),transparent_30%),radial-gradient(circle_at_85%_38%,rgba(128,2,127,0.14),transparent_28%)]"
         aria-hidden="true"
       />
-      <Section
+      {visibility.hero !== false && <Section
         padded={false}
         className="relative bg-transparent pb-6 pt-12 md:py-8 lg:py-10"
       >
@@ -267,9 +268,9 @@ function ScholarshipsSection({ content, language = "dr" }) {
             </div>
           </div>
         </Container>
-      </Section>
+      </Section>}
 
-      <Section
+      {visibility.scholarships !== false && <Section
         padded={false}
         className="relative bg-transparent pb-3 pt-0 md:pb-5 lg:pb-7"
       >
@@ -329,7 +330,7 @@ function ScholarshipsSection({ content, language = "dr" }) {
             </p>
           </div>
         </Container>
-      </Section>
+      </Section>}
     </div>
   );
 }

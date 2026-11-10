@@ -40,9 +40,13 @@ function createInitialDraft({ isServices, isTourism, services, tourism, opportun
   return records
 }
 
+function normalizeCollectionDraft(value) {
+  return (Array.isArray(value) ? value : []).flat(Infinity).filter((record) => record && typeof record === 'object' && !Array.isArray(record))
+}
+
 function commitDraft(draft) {
   return Array.isArray(draft)
-    ? draft.map(removeSavedStatus)
+    ? normalizeCollectionDraft(draft).map(removeSavedStatus)
     : Object.fromEntries(Object.entries(draft).map(([key, value]) => [key, { status: value.status }]))
 }
 
@@ -56,8 +60,9 @@ function useManagedCollection({ pageKey, label, services, tourism, opportunities
   )
 
   const cards = useMemo(() => {
+    const records = normalizeCollectionDraft(draft)
     if (isServices) {
-      return draft.map((service) => normalizeContentRecord({
+      return records.map((service) => normalizeContentRecord({
         ...service,
         id: service.slug,
         href: `/services/${service.slug}`,
@@ -65,9 +70,9 @@ function useManagedCollection({ pageKey, label, services, tourism, opportunities
         category: label,
       }))
     }
-    if (isTourism) return draft.map(normalizeContentRecord)
+    if (isTourism) return records.map(normalizeContentRecord)
 
-    return draft.map(normalizeContentRecord)
+    return records.map(normalizeContentRecord)
   }, [draft, isServices, isTourism, label])
 
   const toggleStatus = (card) => {

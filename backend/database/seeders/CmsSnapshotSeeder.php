@@ -93,7 +93,7 @@ class CmsSnapshotSeeder extends Seeder
                     ]];
                 })->all();
 
-                return [[
+                return [
                     ...$card,
                     'id' => $type.':'.$card['slug'],
                     'type' => $type,
@@ -102,7 +102,7 @@ class CmsSnapshotSeeder extends Seeder
                     'href' => '/tourism/'.$type.'/'.$card['slug'],
                     'status' => 'published',
                     'translations' => $translations,
-                ]];
+                ];
             })->all();
         })->values()->all();
     }

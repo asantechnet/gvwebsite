@@ -71,10 +71,6 @@ function ContactFieldsSkeleton({ tab }) {
   return <div className="rounded-xl border border-(--admin-editor-group-border) bg-(--admin-editor-group-bg) p-4 sm:p-5"><div className="flex justify-end"><Block className="h-10 w-28 rounded-xl bg-admin-brand/15" /></div><div className="mt-4 grid gap-3 sm:grid-cols-2">{list(4).map((item) => <div key={item} className="grid grid-cols-[1fr_auto] gap-3 rounded-xl border border-admin-border bg-(--editor-field) p-3"><div className="grid gap-2"><Block className="h-11 w-full rounded-xl" /><Block className="h-11 w-full rounded-xl" /></div><Block className="size-8 rounded-lg" /></div>)}</div></div>
 }
 
-function TabbedCollectionSkeleton({ scholarship = false }) {
-  return <><PageHeadingSkeleton /><section className="overflow-hidden rounded-2xl border border-admin-border bg-admin-card"><div className="flex gap-2 overflow-hidden border-b-2 border-(--admin-tab-bar-border) bg-admin-page p-1.5 sm:px-2">{list(scholarship ? 2 : 4).map((item) => <Block key={item} className={`h-10 shrink-0 rounded-lg ${item === 0 ? 'w-28 bg-admin-brand/15' : 'w-24'}`} />)}</div><header className="flex flex-wrap items-center gap-4 border-b border-admin-border bg-(--editor-field) px-5 py-4 sm:px-6"><Block className="size-11 rounded-xl bg-admin-brand/15" /><Block className="h-5 w-36 flex-1 max-w-48" /><div className="ms-auto flex gap-2"><Block className="h-9 w-24 rounded-xl" /><Block className="h-9 w-40 rounded-xl" /></div></header><div className="grid gap-5 p-5 sm:p-6"><EditorPanel fields={scholarship ? 1 : 2} /><section className="overflow-hidden rounded-2xl border border-admin-border bg-admin-card"><div className="grid gap-2 border-b border-admin-border bg-admin-control-soft p-2 sm:grid-cols-4"><Block className="h-9" /><Block className="h-9" /><Block className="h-9" /><Block className="h-9" /></div>{list(6).map((item) => <div key={item} className="flex min-h-16 items-center gap-3 border-b border-admin-border p-3 last:border-0"><Block className="size-14 shrink-0 rounded-xl" /><div className="min-w-0 flex-1 space-y-2"><Block className="h-4 w-2/3" /><Block className="h-3 w-1/3" /></div><Block className="h-7 w-20 rounded-full" /><div className="flex gap-2"><Block className="size-9 rounded-xl" /><Block className="size-9 rounded-xl" /></div></div>)}</section></div></section></>
-}
-
 const homeSections = ['hero', 'opportunities', 'destinations', 'process', 'services', 'testimonials', 'consultation']
 const homeSkeletonGroups = {
   hero: [3, 1, 4],
@@ -107,10 +103,6 @@ function HomeSkeleton() {
       </div>
     </section>
   </div>
-}
-
-function CollectionSkeleton({ kind = 'cards' }) {
-  return <><PageHeadingSkeleton /><div className="mb-3 flex gap-2 overflow-hidden rounded-2xl border border-admin-border bg-admin-card p-1.5"><Block className="h-10 w-28 rounded-lg bg-admin-brand/15" />{list(3).map((item) => <Block key={item} className="h-10 w-24 shrink-0 rounded-lg" />)}</div><section className="rounded-2xl border border-admin-border bg-admin-card p-2"><div className="grid gap-2 md:grid-cols-[minmax(0,1fr)_10rem_10rem]"><Block className="h-9" /><Block className="h-9" /><Block className="h-9" /></div></section>{kind === 'table' ? <TableSkeleton /> : <div className="mt-3 grid gap-3 lg:grid-cols-2">{list(6).map((item) => <article key={item} className="overflow-hidden rounded-2xl border border-admin-border bg-admin-card"><div className="flex gap-3 p-3"><Block className="size-20 shrink-0 rounded-xl" /><div className="flex-1 space-y-3"><Block className="h-5 w-3/4" /><Block className="h-7 w-24 rounded-full" /></div><div className="flex flex-col gap-1"><Block className="size-8 rounded-lg" /><Block className="size-8 rounded-lg" /><Block className="size-8 rounded-lg" /></div></div></article>)}</div>}</>
 }
 
 function OpportunitiesSkeleton() {
@@ -155,10 +147,6 @@ function MagazineCategoriesSkeleton() {
 function MagazineRecordsSkeleton({ section }) {
   const isArticles = section === 'articles'
   return <><section className="border-x border-b border-admin-border bg-admin-card p-5 sm:p-6 lg:border-x-0"><div className="mb-3 grid gap-2 sm:flex sm:justify-end"><Block className="h-9 w-full rounded-xl sm:w-28" /><Block className="h-9 w-full rounded-xl sm:w-52" /></div><div className="rounded-xl border border-(--admin-editor-group-border) bg-(--admin-editor-group-bg) p-4"><Block className="mb-2 h-3 w-28" /><Block className="h-11 w-full rounded-xl" /></div></section><section className="overflow-visible"><div className={`grid gap-1 rounded-b-2xl border-x border-b border-admin-border bg-admin-control-soft p-1 lg:rounded-b-none lg:border-x-0 ${isArticles ? 'md:grid-cols-[repeat(4,minmax(0,1fr))]' : 'md:grid-cols-[minmax(12rem,1fr)_minmax(12rem,.7fr)_minmax(14rem,.8fr)]'}`}><Block className="h-9 w-full rounded-xl bg-admin-brand/15 md:w-36" />{isArticles ? <><div className="grid grid-cols-2 gap-1"><Block className="h-9 w-full rounded-xl" /><Block className="h-9 w-full rounded-xl" /></div><Block className="h-9 w-full rounded-xl" /></> : <Block className="h-9 w-full rounded-xl" />}<Block className="h-9 w-full rounded-xl" /></div><section className="hidden bg-admin-card lg:block"><div className="grid grid-cols-[minmax(0,1.5fr)_8rem_9rem] gap-4 border-b border-admin-border bg-admin-control-soft px-4 py-2"><Block className="h-3 w-24" /><Block className="h-3 w-16" /><Block className="h-3 w-16" /></div>{list(6).map((item) => <div key={item} className="grid min-h-[5.25rem] grid-cols-[minmax(0,1.5fr)_8rem_9rem] items-center gap-4 border-b border-admin-border p-4"><div className="flex items-center gap-3"><Block className="size-14 shrink-0 rounded-xl" /><Block className="h-4 w-2/3" /></div><Block className="h-7 w-20 rounded-full" /><div className="flex justify-end gap-1"><Block className="size-9 rounded-xl" /><Block className="size-9 rounded-xl" /><Block className="size-9 rounded-xl" /></div></div>)}</section></section><section className="grid w-full min-w-0 max-w-full gap-3 pt-3 md:grid-cols-2 min-[701px]:pt-4 lg:hidden">{list(6).map((item) => <article key={item} className="relative grid min-h-32 min-w-0 grid-cols-[5rem_minmax(0,1fr)] items-center gap-3 rounded-2xl border border-admin-border bg-admin-card p-3"><Block className="size-20 justify-self-center rounded-xl" /><div className="min-w-0 space-y-3"><Block className="h-4 w-3/4" /><Block className="h-7 w-24 rounded-full" /><div className="absolute bottom-3 left-3 flex flex-col gap-1"><Block className="size-8 rounded-xl" /><Block className="size-8 rounded-xl" /><Block className="size-8 rounded-xl" /></div></div></article>)}</section></>
-}
-
-function TableSkeleton({ rows = 7 }) {
-  return <section className="mt-5 overflow-hidden rounded-2xl border border-admin-border bg-admin-card"><div className="grid grid-cols-[2fr_1.2fr_1fr_7rem] gap-4 border-b border-admin-border bg-admin-control-soft p-4">{list(4).map((item) => <Block key={item} className="h-3 w-2/3" />)}</div>{list(rows).map((row) => <div key={row} className="grid min-h-16 grid-cols-[2fr_1.2fr_1fr_7rem] items-center gap-4 border-b border-admin-border px-4 last:border-0"><div className="space-y-2"><Block className="h-4 w-3/4" /><Block className="h-3 w-1/2" /></div><Block className="h-4 w-3/4" /><Block className="h-7 w-20 rounded-full" /><div className="flex gap-2"><Block className="size-8" /><Block className="size-8" /></div></div>)}</section>
 }
 
 function MessagesSkeleton() {
@@ -269,13 +257,8 @@ function SuperUserSkeleton() {
 }
 
 function DashboardSidebarSkeleton({ collapsed }) {
-  void LegacyDashboardSidebarSkeleton
   const itemClass = collapsed ? 'w-16 justify-center px-2.5' : 'w-(--sidebar-width) px-3'
   return <aside className={`fixed inset-y-0 z-50 hidden flex-col overflow-hidden border-(--sidebar-border) bg-(--admin-sidebar) text-(--sidebar-text) lg:flex rtl:right-0 rtl:border-l ltr:left-0 ltr:border-r ${collapsed ? 'w-16' : 'w-(--sidebar-width)'}`}><div className="flex min-h-16 shrink-0 items-center justify-center border-b border-(--sidebar-border) px-2.5"><Block className="size-[2.55rem] shrink-0 rounded-[.9rem] bg-admin-brand/15" /></div><nav className={`min-h-0 flex-1 overflow-y-auto overflow-x-hidden pt-[.7rem] pb-4 ${itemClass}`}>{list(10).map((item) => <div key={item} className={`my-[.18rem] flex min-h-10 items-center gap-3 rounded-xl ${collapsed ? 'justify-center' : 'px-3'}`}><Block className="size-[1.125rem] shrink-0 rounded-md bg-admin-brand/15" />{!collapsed && <Block className={`h-3 ${item % 3 === 0 ? 'w-24' : item % 2 === 0 ? 'w-32' : 'w-28'}`} />}</div>)}</nav><div className={`shrink-0 border-t border-(--sidebar-border) px-2.5 py-[.45rem] ${collapsed ? 'w-16' : 'w-(--sidebar-width)'}`}><div className="flex min-h-10 items-center justify-center rounded-xl"><Block className="size-[1.125rem] rounded-md" />{!collapsed && <Block className="ms-3 h-3 w-20" />}</div></div></aside>
-}
-
-function LegacyDashboardSidebarSkeleton({ collapsed }) {
-  return <aside className={`fixed inset-y-0 z-50 hidden w-(--sidebar-width) flex-col overflow-hidden border-(--sidebar-border) bg-(--admin-sidebar) text-(--sidebar-text) lg:flex rtl:right-0 rtl:border-l ltr:left-0 ltr:border-r ${collapsed ? 'lg:w-16' : ''}`}><div className={`flex min-h-16 shrink-0 items-center gap-3 border-b border-(--sidebar-border) px-[1.15rem] ${collapsed ? 'justify-center px-2.5' : ''}`}><Block className={`size-[2.55rem] shrink-0 rounded-[.9rem] bg-admin-brand/15 ${collapsed ? 'hidden' : ''}`} />{!collapsed && <><div className="min-w-0 flex-1"><Block className="h-4 w-28" /></div><Block className="size-9 rounded-[.65rem]" /></>}</div><nav className={`min-h-0 w-(--sidebar-width) flex-1 overflow-y-auto overflow-x-hidden px-3 pt-[.7rem] pb-4 ${collapsed ? 'px-2.5' : ''}`}>{list(10).map((item) => <div key={item} className={`my-[.18rem] flex min-h-10 items-center gap-3 rounded-xl px-3 ${collapsed ? 'justify-center px-2.5' : ''}`}><Block className="size-[1.125rem] shrink-0 rounded-md bg-admin-brand/15" />{!collapsed && <Block className={`h-3 ${item % 3 === 0 ? 'w-24' : item % 2 === 0 ? 'w-32' : 'w-28'}`} />}</div>)}</nav><div className={`w-(--sidebar-width) shrink-0 border-t border-(--sidebar-border) px-3 py-[.45rem] ${collapsed ? 'px-2.5' : ''}`}><div className={`flex min-h-10 items-center gap-3 rounded-xl px-3 ${collapsed ? 'justify-center px-2.5' : ''}`}><Block className="size-[1.125rem] shrink-0 rounded-md" />{!collapsed && <Block className="h-3 w-20" />}</div></div></aside>
 }
 
 function DashboardTopbarSkeleton() {
@@ -288,8 +271,6 @@ function DashboardShellSkeleton() {
 }
 
 function RouteSkeleton({ routeKey }) {
-  if (routeKey === 'legacy-collection') return <CollectionSkeleton />
-  if (routeKey === 'legacy-tabbed-collection') return <TabbedCollectionSkeleton />
   if (routeKey === 'overview') return <OverviewSkeleton />
   if (routeKey === 'home') return <HomeSkeleton />
   if (routeKey === 'about') return <AboutSkeleton />
