@@ -4,6 +4,7 @@ import { AlertTriangle, CircleX, RotateCcw, Save } from 'lucide-react'
 import { getCmsRouteKey } from '@cms/routes.js'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import { showToast } from '@cms/utils/toast.js'
+import { navigateCms } from '@cms/navigation.js'
 import {
   CMS_CHANGES_DISCARDED_EVENT,
   CMS_DRAFT_DIRTY_EVENT,
@@ -135,7 +136,7 @@ function UnsavedChangesBar({ language = 'prs', sidebarCollapsed = false }) {
       if (!saveChanges) {
         window.dispatchEvent(new Event(CMS_CHANGES_DISCARDED_EVENT))
       }
-      if (href) window.location.assign(href)
+      if (href) navigateCms(href)
     }, 200)
   }
 
@@ -182,7 +183,7 @@ function UnsavedChangesBar({ language = 'prs', sidebarCollapsed = false }) {
       </button>
     </aside>
 
-    {leavePrompt && <div className={`cms-modal-backdrop fixed inset-0 z-[125] isolate grid place-items-center p-4 ${promptClosing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onClick={closePrompt}>
+    {leavePrompt && <div className={`cms-modal-backdrop fixed inset-0 z-[140] isolate grid place-items-center p-4 ${promptClosing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onClick={closePrompt}>
       <section ref={promptRef} tabIndex={-1} role="alertdialog" aria-modal="true" aria-labelledby="unsaved-dialog-title" aria-describedby="unsaved-dialog-description" className={`relative z-10 grid w-[min(100%,27rem)] justify-items-center rounded-[1.1rem] border border-admin-border bg-admin-card px-6 py-6 text-center shadow-2xl ${promptClosing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`} onClick={(event) => event.stopPropagation()}>
         <span className="grid size-[3.2rem] place-items-center rounded-[.95rem] bg-[rgb(217_119_6/.12)] text-[#d97706]"><AlertTriangle size={22} /></span>
         <h2 id="unsaved-dialog-title" className="mt-4 mb-2 font-heading text-[1.15rem] text-admin-heading">{labels.leave}</h2>

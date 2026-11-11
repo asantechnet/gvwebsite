@@ -21,7 +21,7 @@ import {
 import { announceCmsDraftChange } from "@cms/utils/draftEvents.js";
 import useModalFocus from "@/shared/hooks/useModalFocus.js";
 import { validatePasswordChange } from "@/shared/utils/validation.js";
-import { readBrandIcon, readCompanyNames } from "@cms/utils/branding.js";
+import { BRANDING_UPDATED_EVENT, readBrandIcon, readCompanyNames } from "@cms/utils/branding.js";
 
 function ProfilePage({ content, theme }) {
   const resetAction =
@@ -37,6 +37,20 @@ function ProfilePage({ content, theme }) {
       ? "د پټنوم بیا تنظیم"
       : "بازنشانی رمز عبور";
   const auth = useAuth();
+  const { refreshSession } = auth;
+  useEffect(() => {
+    const refreshAccount = () => refreshSession().catch(() => {});
+    const refreshVisibleAccount = () => {
+      if (document.visibilityState === "visible") refreshAccount();
+    };
+    refreshAccount();
+    window.addEventListener("focus", refreshAccount);
+    document.addEventListener("visibilitychange", refreshVisibleAccount);
+    return () => {
+      window.removeEventListener("focus", refreshAccount);
+      document.removeEventListener("visibilitychange", refreshVisibleAccount);
+    };
+  }, [refreshSession]);
   const [contentLanguage, setContentLanguage] = useCmsContentLanguage();
   const interfaceLanguage = useCmsInterfaceLanguage();
   const [companyNames, setCompanyNames] = useCmsDraftState(
@@ -53,6 +67,7 @@ function ProfilePage({ content, theme }) {
         "globalvision-company-names",
         JSON.stringify(companyNames),
       );
+      window.dispatchEvent(new CustomEvent(BRANDING_UPDATED_EVENT, { detail: companyNames }));
       if (profileImage)
         window.localStorage.setItem("globalvision-profile-image", profileImage);
       else window.localStorage.removeItem("globalvision-profile-image");
@@ -128,7 +143,7 @@ function ProfilePage({ content, theme }) {
                 <span>{content.email}</span>
                 <input
                   className={`${input} min-w-0 cursor-not-allowed opacity-75`}
-                  value="info@globalvision.af"
+                  value={auth.session.user.email}
                   readOnly
                   disabled
                 />
@@ -336,7 +351,7 @@ function ProfileModal({
 
   return (
     <div
-      className={`cms-modal-backdrop fixed inset-0 z-120 isolate grid place-items-center p-4 ${closing ? "animate-cms-modal-backdrop-out" : "animate-cms-modal-backdrop-in"}`}
+      className={`cms-modal-backdrop fixed inset-0 z-[140] isolate grid place-items-center p-4 ${closing ? "animate-cms-modal-backdrop-out" : "animate-cms-modal-backdrop-in"}`}
       onClick={close}
     >
       <section

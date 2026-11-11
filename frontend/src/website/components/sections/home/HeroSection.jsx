@@ -45,12 +45,12 @@ function HeroSection({ content }) {
 
           <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
             <ActionLink
-              href="/contact"
+              href={content.primaryActionHref || "/contact"}
             >
               {content.primaryAction}
             </ActionLink>
             <ActionLink
-              href="/opportunities/study"
+              href={content.secondaryActionHref || "/opportunities/study"}
               variant="outline"
               icon={null}
             >

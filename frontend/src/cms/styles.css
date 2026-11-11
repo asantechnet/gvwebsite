@@ -116,13 +116,18 @@ html.dark .cms-root .cms-logout-button:hover { background: rgb(239 68 68 / .2); 
 .cms-root .cms-tabs-scroll::-webkit-scrollbar { display: none !important; }
 .cms-root .cms-tabs-indicator { position: relative; height: 3px; margin: 0 .5rem .35rem; overflow: hidden; border-radius: 999px; background: var(--admin-control-soft); direction: inherit; }
 .cms-root .cms-tabs-indicator > span { position: absolute; top: 0; height: 100%; border-radius: 999px; background: var(--admin-brand); }
-.cms-modal-backdrop { background: rgb(8 12 20 / .62); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); }
-@media (min-width: 1024px) {
-  .cms-root[data-dashboard-shell="true"] .cms-modal-backdrop {
-    inset-inline-start: var(--sidebar-width);
-    transition: inset-inline-start .25s ease;
-  }
-  .cms-root[data-dashboard-shell="true"][data-sidebar-collapsed="true"] .cms-modal-backdrop { inset-inline-start: 4rem; }
+.cms-modal-backdrop {
+  z-index: 140 !important;
+  background: rgb(8 12 20 / .62);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+.cms-modal-backdrop:has(> [role="alertdialog"]) { z-index: 150 !important; }
+.cms-modal-backdrop:has(#media-picker-title) { z-index: 155 !important; }
+html:has(.cms-root .cms-modal-backdrop),
+html:has(.cms-root .cms-modal-backdrop) body {
+  overflow: hidden !important;
+  overscroll-behavior: none;
 }
 @keyframes cms-modal-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes cms-modal-backdrop-out { from { opacity: 1; } to { opacity: 0; } }

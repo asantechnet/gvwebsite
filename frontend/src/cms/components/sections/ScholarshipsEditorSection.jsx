@@ -245,7 +245,7 @@ function ScholarshipModal({ content, initialLanguage, initialTranslations, optio
 <ScholarshipSelect label={content.fields.funding} value={draft.funding} onChange={(value) => update('funding', value)} options={options.funding} />
 <EditorField label={content.fields.deadline} value={draft.deadline} type="date" onChange={(value) => updateShared('deadline', value)} />
 <label className="block min-w-0 text-xs font-semibold text-admin-heading">
-<span>{content.fields.status}</span>
+<span className="mb-2 block">{content.fields.status}</span>
 <ScholarshipSelect label="" value={draft.status} onChange={(value) => updateShared('status', value)} options={[{ value: 'published', label: content.published }, { value: 'draft', label: content.draft }]} />
 </label>
 <div className="flex h-11 min-h-11 self-end items-center justify-between gap-3 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-4 text-xs font-semibold text-admin-heading">

@@ -54,8 +54,8 @@ async function getRoutes(language) {
     { route: '/', title: header.navigation.home, description: home.hero.description },
     { route: '/about', title: header.navigation.about, description: about.introduction.description },
     { route: '/contact', title: header.navigation.contact, description: contact.contact.form.description },
-    { route: '/services', title: services.ui.indexTitle, description: services.ui.indexDescription },
-    { route: '/scholarships', title: scholarships.hero.title, description: scholarships.hero.description },
+    { route: '/services', title: header.navigation.services, description: services.ui.indexDescription },
+    { route: '/scholarships', title: header.navigation.scholarships, description: scholarships.hero.description },
     { route: '/magazine', title: header.navigation.magazine, description: magazine.hero.description || search.description },
   ]
 
@@ -86,7 +86,8 @@ async function getRoutes(language) {
 function metadataMarkup({ language, brandName, homeName, record }) {
   const details = languageDetails[language]
   const canonical = localizedUrl(language, record.route)
-  const title = record.title.includes(brandName) ? record.title : `${record.title} | ${brandName}`
+  const titleSuffix = ` | ${brandName}`
+  const title = record.title === brandName || record.title.endsWith(titleSuffix) ? record.title : `${record.title}${titleSuffix}`
   const image = absolute(record.image)
   const alternates = Object.entries(languageDetails).map(([id, item]) => `<link rel="alternate" hreflang="${item.hreflang}" href="${localizedUrl(id, record.route)}" />`).join('\n    ')
   const schema = {

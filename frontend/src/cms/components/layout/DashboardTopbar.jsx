@@ -3,6 +3,7 @@ import { ExternalLink, Menu, MessagesSquare, Moon, Search, Sun } from 'lucide-re
 
 import LanguageSwitcher from '@/shared/components/LanguageSwitcher.jsx'
 import { getCmsHref } from '@cms/routes.js'
+import { navigateCms } from '@cms/navigation.js'
 
 function DashboardTopbar({ content, searchItems = [], language, theme, unreadCount = 0, canAccessMessages = false, onMenuOpen, onThemeToggle, onLanguageChange }) {
   const [query, setQuery] = useState('')
@@ -14,7 +15,7 @@ function DashboardTopbar({ content, searchItems = [], language, theme, unreadCou
     event.preventDefault()
     if (!normalizedQuery) return
     const [match] = searchResults
-    if (match) window.location.assign(getCmsHref(match.key))
+    if (match) navigateCms(getCmsHref(match.key))
   }
   const iconButton = 'grid size-10 shrink-0 place-items-center rounded-xl border border-(--header-control-border) bg-(--header-control) text-admin-muted outline-none transition hover:-translate-y-px hover:border-admin-brand hover:bg-(--header-control-hover) hover:text-admin-heading focus:outline-none focus-visible:border-admin-brand focus-visible:shadow-[0_0_0_3px_color-mix(in_srgb,var(--admin-brand)_28%,transparent)] active:scale-[.97]'
   return <header className="admin-topbar [&_a]:outline-none [&_button]:outline-none sticky top-0 z-[70] flex min-h-15 items-center gap-[.45rem] border-b border-admin-border bg-(--admin-topbar) px-4 backdrop-blur-lg min-[701px]:min-h-16 min-[701px]:gap-2 max-[700px]:gap-2 max-[700px]:px-2 max-[420px]:gap-1 max-[420px]:px-1.5 sm:px-4 md:px-5 lg:px-8">

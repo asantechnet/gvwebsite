@@ -1,17 +1,22 @@
-import { useLayoutEffect } from 'react'
-
 import SkeletonBlock from '@/shared/components/SkeletonBlock.jsx'
-import { isReloadNavigation, restoreScrollPosition } from '@website/utils/scrollRestoration.js'
-import { headerNavigation } from '@website/data/navigation.js'
 import { SCHOLARSHIPS_PER_PAGE, getCarouselVisibleCount, getMagazinePostsPerPage, getVisibleCardCount } from '@website/utils/cardCounts.js'
 
 const list = (count) => Array.from({ length: count }, (_, index) => index)
+const headerItems = [
+  'w-16',
+  'w-28',
+  'w-18',
+  'w-22',
+  'w-20',
+  'w-18',
+  'w-20',
+]
 const collectionSkeletonCount = (count) => Math.max(0, Number(count) || 0)
 const Lines = () => <div className="space-y-3"><SkeletonBlock className="h-3.5 w-full" /><SkeletonBlock className="h-3.5 w-[90%]" /><SkeletonBlock className="h-3.5 w-[68%]" /></div>
 const Heading = ({ start = false }) => <div className={`flex max-w-2xl flex-col gap-4 ${start ? 'items-start' : 'mx-auto items-center'}`}><SkeletonBlock className="h-3 w-28 bg-primary/20" /><SkeletonBlock className="h-9 w-3/4" /><SkeletonBlock className="h-4 w-2/3" /></div>
 
 function HeaderSkeleton() {
-  return <header className="h-15 border-b border-border bg-surface xl:h-18"><div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 xl:px-8"><SkeletonBlock className="h-11 w-16 shrink-0 rounded-2xl bg-primary/20 xl:h-15 xl:w-22" /><div className="hidden items-center gap-2 xl:flex">{list(headerNavigation.length).map((item) => <SkeletonBlock key={item} className="h-10 w-20 rounded-xl" />)}</div><div className="flex shrink-0 items-center gap-2 xl:gap-3"><SkeletonBlock className="h-10 w-14 rounded-xl" /><SkeletonBlock className="size-10 rounded-xl" /><SkeletonBlock className="size-10 rounded-xl" /><SkeletonBlock className="hidden h-10 w-28 rounded-xl bg-primary/20 xl:block" /><SkeletonBlock className="size-10 rounded-xl xl:hidden" /></div></div></header>
+  return <header className="border-b border-border/70 bg-surface shadow-[0_8px_30px_rgba(41,23,18,0.04)] dark:border-gray-600 dark:bg-gray-700"><div className="mx-auto flex min-h-15 max-w-7xl items-center justify-between gap-3 px-4 py-1.5 sm:px-6 xl:min-h-18 xl:px-8 ltr:xl:px-0 ltr:2xl:px-2 2xl:max-w-[96rem] 2xl:gap-5 ltr:2xl:max-w-none"><SkeletonBlock className="h-10 w-[3.7rem] shrink-0 rounded-xl bg-primary/15 md:max-xl:h-11 md:max-xl:w-16 xl:h-12 xl:w-[4.4rem] 2xl:h-15 2xl:w-22" /><div className="hidden min-w-0 items-center gap-2 xl:flex 2xl:gap-3">{headerItems.map((width, item) => <SkeletonBlock key={item} className={`h-10 rounded-xl ${width}`} />)}</div><div className="flex shrink-0 items-center gap-1.5 2xl:gap-2"><SkeletonBlock className="h-10 w-18 rounded-xl sm:w-24" /><SkeletonBlock className="size-10 rounded-xl" /><SkeletonBlock className="size-10 rounded-xl" /><SkeletonBlock className="hidden h-10 w-24 rounded-xl bg-primary/20 2xl:w-32 xl:block" /><SkeletonBlock className="size-10 rounded-xl xl:hidden" /></div></div></header>
 }
 
 function FooterSkeleton() {
@@ -112,10 +117,6 @@ function NotFoundSkeleton() {
   return <section className="bg-background px-4 py-16 md:px-6 lg:py-24"><div className="mx-auto flex max-w-2xl flex-col items-center rounded-4xl border border-border bg-surface p-10"><SkeletonBlock className="h-20 w-36 bg-primary/15" /><SkeletonBlock className="mt-5 h-10 w-3/4" /><SkeletonBlock className="mt-4 h-4 w-full" /><SkeletonBlock className="mt-2 h-4 w-2/3" /><SkeletonBlock className="mt-7 h-12 w-36" /></div></section>
 }
 
-function MaintenanceSkeleton() {
-  return <main className="grid min-h-screen place-items-center bg-background px-5 py-10"><section className="relative flex w-full max-w-2xl items-center justify-center rounded-[2rem] border border-border bg-surface px-6 pt-28 pb-8 shadow-2xl shadow-brand-orange/10 sm:px-12 sm:pt-28 sm:pb-10 lg:py-10"><div className="absolute left-4 top-4 flex gap-2"><SkeletonBlock className="h-10 w-32 rounded-xl" /><SkeletonBlock className="size-10 rounded-xl" /></div><div className="mx-auto flex w-full max-w-xl flex-col items-center"><SkeletonBlock className="h-12 w-48 rounded-xl bg-primary/15" /><SkeletonBlock className="mt-7 h-3 w-24 bg-primary/20" /><SkeletonBlock className="mt-4 h-10 w-[min(100%,30rem)]" /><SkeletonBlock className="mt-6 h-4 w-[min(100%,27rem)]" /><SkeletonBlock className="mt-3 h-4 w-[min(82%,22rem)]" /><SkeletonBlock className="mt-7 h-4 w-52 bg-primary/15" /></div></section></main>
-}
-
 function Content({ path, hasSearchQuery, searchResultCount, directoryItemCount, scholarshipItemCount, magazineItemCount }) {
   if (path === '/') return <HomeSkeleton />
   if (path === '/about') return <AboutSkeleton />
@@ -131,10 +132,6 @@ function Content({ path, hasSearchQuery, searchResultCount, directoryItemCount, 
   return <NotFoundSkeleton />
 }
 
-export default function RouteProgress({ path, hasSearchQuery = false, searchResultCount = 0, directoryItemCount = 0, scholarshipItemCount = 0, magazineItemCount = 0, maintenanceMode = false }) {
-  useLayoutEffect(() => {
-    if (isReloadNavigation()) restoreScrollPosition('proportional')
-  }, [])
-
-  return <div className="overflow-hidden bg-background" role="status" aria-live="polite" aria-busy="true" aria-label="در حال بارگذاری محتوای وب‌سایت"><span className="sr-only">در حال بارگذاری محتوای وب‌سایت</span>{maintenanceMode ? <MaintenanceSkeleton /> : <><HeaderSkeleton /><Content path={path} hasSearchQuery={hasSearchQuery} searchResultCount={searchResultCount} directoryItemCount={directoryItemCount} scholarshipItemCount={scholarshipItemCount} magazineItemCount={magazineItemCount} /><FooterSkeleton /></>}</div>
+export default function RouteProgress({ path, hasSearchQuery = false, searchResultCount = 0, directoryItemCount = 0, scholarshipItemCount = 0, magazineItemCount = 0 }) {
+  return <div className="overflow-hidden bg-background" role="status" aria-live="polite" aria-busy="true" aria-label="در حال بارگذاری محتوای وب‌سایت"><span className="sr-only">در حال بارگذاری محتوای وب‌سایت</span><HeaderSkeleton /><Content path={path} hasSearchQuery={hasSearchQuery} searchResultCount={searchResultCount} directoryItemCount={directoryItemCount} scholarshipItemCount={scholarshipItemCount} magazineItemCount={magazineItemCount} /><FooterSkeleton /></div>
 }

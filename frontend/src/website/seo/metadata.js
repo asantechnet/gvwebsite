@@ -153,7 +153,8 @@ export function applySeoMetadata({
     ? toAbsoluteUrl(canonicalUrlOverride, origin)
     : toAbsoluteUrl(localizeHref(canonicalPath, language), origin)
   const imageUrl = toAbsoluteUrl(image, origin)
-  const fullTitle = title.includes(brandName) ? title : `${title} | ${brandName}`
+  const titleSuffix = ` | ${brandName}`
+  const fullTitle = title === brandName || title.endsWith(titleSuffix) ? title : `${title}${titleSuffix}`
   const robots = indexable ? 'index, follow, max-image-preview:large' : 'noindex, follow'
 
   document.title = fullTitle

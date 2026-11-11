@@ -32,10 +32,10 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::delete('/cms/uploads', [UploadController::class, 'destroy']);
     Route::get('/cms/snapshots/{key}', [SiteSnapshotController::class, 'show']);
     Route::put('/cms/snapshots/{key}', [SiteSnapshotController::class, 'update']);
+    Route::get('/cms/users', [UserController::class, 'index']);
+    Route::get('/cms/users/{user}', [UserController::class, 'show']);
     Route::middleware('throttle:privileged')->group(function (): void {
-        Route::get('/cms/users', [UserController::class, 'index']);
         Route::post('/cms/users', [UserController::class, 'store']);
-        Route::get('/cms/users/{user}', [UserController::class, 'show']);
         Route::put('/cms/users/{user}', [UserController::class, 'update']);
         Route::post('/cms/users/{user}/password-reset', [UserController::class, 'sendPasswordReset']);
         Route::delete('/cms/users/{user}', [UserController::class, 'destroy']);

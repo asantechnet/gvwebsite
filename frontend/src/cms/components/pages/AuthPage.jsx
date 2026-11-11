@@ -11,9 +11,10 @@ import {
 
 import PasswordInput from "@cms/components/PasswordInput.jsx";
 import LanguageSwitcher from "@/shared/components/LanguageSwitcher.jsx";
+import { navigateCms } from "@cms/navigation.js";
 
 function navigate(path) {
-  window.location.assign(path);
+  navigateCms(path);
 }
 
 function getLoginDestination(value) {
@@ -65,7 +66,7 @@ function AuthPage({ auth, content, language, theme, themeLabel, companyName, bra
         const destination = session.user.role === "super_user"
           ? "/dashboard/super"
           : getLoginDestination(params.get("redirect"));
-        window.history.replaceState(window.history.state, "", destination);
+        navigateCms(destination, { replace: true });
       }
     } catch (requestError) {
       const validationMessage = Object.values(requestError.details || {})[0]?.[0];

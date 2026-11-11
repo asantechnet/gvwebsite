@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import WebsiteLayout from '@layout/WebsiteLayout.jsx'
+import MaintenanceProgress from '@/shared/components/MaintenanceProgress.jsx'
 import RouteProgress from '@website/components/shared/RouteProgress.jsx'
 import { loadWebsiteContent } from '@website/data/loadWebsiteContent.js'
 import { parseLocalizedPathname } from '@website/utils/language.js'
@@ -32,7 +33,12 @@ function WebsiteApp({ language }) {
     }
   }, [language])
 
-  if (!content) return <RouteProgress path={parseLocalizedPathname(window.location.pathname).pagePath} />
+  if (!content) {
+    const maintenanceModeHint = window.localStorage.getItem('globalvision-maintenance-mode') === 'true'
+    return maintenanceModeHint
+      ? <MaintenanceProgress />
+      : <RouteProgress path={parseLocalizedPathname(window.location.pathname).pagePath} />
+  }
 
   return <WebsiteLayout content={content} />
 }

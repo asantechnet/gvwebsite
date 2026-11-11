@@ -30,14 +30,14 @@ function ConsultationSection({ content }) {
 
             <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
               <ActionLink
-                href="/contact"
+                href={content.primaryActionHref || "/contact"}
                 variant="secondary"
                 className="min-h-12 rounded-xl px-6"
               >
                 {content.primaryAction}
               </ActionLink>
               <ActionLink
-                href="/opportunities/study"
+                href={content.secondaryActionHref || "/opportunities/study"}
                 variant="outline"
                 icon={null}
                 className="min-h-12 rounded-xl px-6"

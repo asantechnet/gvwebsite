@@ -36,7 +36,7 @@ function ServicesSection({ content }) {
               <p className="mt-4 text-sm leading-8 text-foreground-muted dark:text-gray-300 sm:text-base">
                 {content.description}
               </p>
-              <ActionLink href="/services/consultation" className="mt-7 min-h-12">
+              <ActionLink href={content.viewAllHref || "/services/consultation"} className="mt-7 min-h-12">
                 {content.viewAll}
               </ActionLink>
             </div>

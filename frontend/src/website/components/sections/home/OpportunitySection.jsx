@@ -33,7 +33,7 @@ function OpportunitySection({ content }) {
         </div>
 
         <div className="mt-8 flex justify-center">
-          <ActionLink href="/opportunities/study">
+          <ActionLink href={content.viewAllHref || "/opportunities/study"}>
             {content.viewAll}
           </ActionLink>
         </div>

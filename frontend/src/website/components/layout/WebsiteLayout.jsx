@@ -12,6 +12,7 @@ import { applySeoMetadata, buildStructuredData, getSiteOrigin, toAbsoluteUrl } f
 import { lazyWithSkeletonPreview, SKELETON_PREVIEW_DELAY_MS } from '@/shared/utils/loading.js'
 import { isReloadNavigation, restoreScrollPosition, saveScrollPosition } from '@website/utils/scrollRestoration.js'
 import { STUDY_DIRECTORY_CARD_LIMIT, getVisibleCardCount } from '@website/utils/cardCounts.js'
+import { BRANDING_UPDATED_EVENT, readCompanyNames } from '@/shared/utils/branding.js'
 
 const delayed = (importer) => lazy(() => lazyWithSkeletonPreview(importer))
 const HomePage = delayed(() => import('@pages/HomePage.jsx'))
@@ -41,6 +42,7 @@ function formatPageTitle(pattern, values) {
 
 function WebsiteLayout({ children = null, content }) {
   const siteSettings = content.siteSettings
+  const [companyNames, setCompanyNames] = useState(readCompanyNames)
   const [localMaintenanceMode, setLocalMaintenanceMode] = useState(() => window.localStorage.getItem('globalvision-maintenance-mode') === 'true')
   const maintenanceMode = siteSettings?.settings?.maintenanceMode ?? localMaintenanceMode
   const [theme, setTheme] = useState(() => {
@@ -55,9 +57,23 @@ function WebsiteLayout({ children = null, content }) {
     return hasExplicitLanguage ? parsedRoute.language : ['dr', 'ps', 'en'].includes(savedLanguage) ? savedLanguage : parsedRoute.language
   })
   const language = maintenanceMode ? maintenanceLanguage : parsedRoute.language
+  const companyName = companyNames[language === 'dr' ? 'prs' : language]
   const page = parsedRoute.pagePath
   const activeLogo = theme === 'dark' ? siteSettings?.branding?.darkLogo : siteSettings?.branding?.lightLogo
   const activeIcon = theme === 'dark' ? siteSettings?.branding?.darkIcon : siteSettings?.branding?.lightIcon
+
+  useEffect(() => {
+    const syncCompanyNames = () => setCompanyNames(readCompanyNames())
+    const syncStoredCompanyNames = (event) => {
+      if (event.key === 'globalvision-company-names') syncCompanyNames()
+    }
+    window.addEventListener(BRANDING_UPDATED_EVENT, syncCompanyNames)
+    window.addEventListener('storage', syncStoredCompanyNames)
+    return () => {
+      window.removeEventListener(BRANDING_UPDATED_EVENT, syncCompanyNames)
+      window.removeEventListener('storage', syncStoredCompanyNames)
+    }
+  }, [])
 
   useEffect(() => {
     if (!siteSettings) return
@@ -283,7 +299,7 @@ function WebsiteLayout({ children = null, content }) {
     return () => window.removeEventListener('storage', syncMaintenanceMode)
   }, [])
 
-  if (maintenanceMode) return <MaintenancePage language={language} theme={theme} contactEmail={contactContent.contact.details.find((detail) => detail.type === 'email')?.value || 'info@globalvision.af'} onLanguageChange={(nextLanguage) => window.location.assign(localizeHref(`${page}${window.location.search}${window.location.hash}`, nextLanguage))} onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))} />
+  if (maintenanceMode) return <MaintenancePage language={language} theme={theme} companyName={companyName} contactEmail={contactContent.contact.details.find((detail) => detail.type === 'email')?.value || 'info@globalvision.af'} onLanguageChange={(nextLanguage) => window.location.assign(localizeHref(`${page}${window.location.search}${window.location.hash}`, nextLanguage))} onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))} />
 
   const directoryItemCount = page === '/services'
     ? servicesContent.services.length
@@ -296,7 +312,7 @@ function WebsiteLayout({ children = null, content }) {
           : 0
 
   return (
-    <Suspense fallback={<RouteProgress path={page} hasSearchQuery={Boolean(searchQuery)} searchResultCount={searchResults.length} directoryItemCount={directoryItemCount} scholarshipItemCount={scholarshipsContent.items.length} magazineItemCount={magazinePosts.length} maintenanceMode={maintenanceMode} />}><WebsiteLanguageContext.Provider value={language}>
+    <Suspense fallback={<RouteProgress path={page} hasSearchQuery={Boolean(searchQuery)} searchResultCount={searchResults.length} directoryItemCount={directoryItemCount} scholarshipItemCount={scholarshipsContent.items.length} magazineItemCount={magazinePosts.length} />}><WebsiteLanguageContext.Provider value={language}>
       <div className="website-root flex min-h-screen flex-col bg-background text-foreground">
         <ScrollProgress />
         <Header

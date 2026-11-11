@@ -76,8 +76,10 @@ import CmsRouteProgress, {
   CmsPageProgress,
   SuperUserSkeleton,
 } from "@cms/components/CmsRouteProgress.jsx";
-import { readBrandIcon, readCompanyNames } from "@cms/utils/branding.js";
+import { BRANDING_UPDATED_EVENT, readBrandIcon, readCompanyNames } from "@cms/utils/branding.js";
 import { dataSource } from "@/shared/services/data/index.js";
+import { hasCmsSessionHint } from "@cms/auth/sessionHint.js";
+import { navigateCms } from "@cms/navigation.js";
 import { lazyWithSkeletonPreview } from "@/shared/utils/loading.js";
 
 const delayed = (importer) => lazy(() => lazyWithSkeletonPreview(importer));
@@ -116,6 +118,7 @@ const SuperUserPage = delayed(
 
 function DashboardLayout() {
   const auth = useAuth();
+  const [companyNames, setCompanyNames] = useState(readCompanyNames);
   const isMockDataSource = dataSource.mode === "mock";
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(
@@ -132,6 +135,18 @@ function DashboardLayout() {
     );
     return ["prs", "ps", "en"].includes(savedLanguage) ? savedLanguage : "prs";
   });
+  useEffect(() => {
+    const syncCompanyNames = (event) => setCompanyNames(event.detail || readCompanyNames());
+    const syncStoredCompanyNames = (event) => {
+      if (event.key === "globalvision-company-names") setCompanyNames(readCompanyNames());
+    };
+    window.addEventListener(BRANDING_UPDATED_EVENT, syncCompanyNames);
+    window.addEventListener("storage", syncStoredCompanyNames);
+    return () => {
+      window.removeEventListener(BRANDING_UPDATED_EVENT, syncCompanyNames);
+      window.removeEventListener("storage", syncStoredCompanyNames);
+    };
+  }, []);
   const select = (dari, pashto, english) =>
     language === "en" ? english : language === "ps" ? pashto : dari;
   const content = select(dariContent, pashtoContent, englishContent);
@@ -204,7 +219,7 @@ function DashboardLayout() {
     pashtoSettingsContent,
     englishSettingsContent,
   );
-  const companyName = readCompanyNames()[language];
+  const companyName = companyNames[language];
   const brandIcon = readBrandIcon(theme);
   const canManageMessages =
     auth.status === "authenticated" &&
@@ -335,9 +350,9 @@ function DashboardLayout() {
       auth.session.user.role === "super_user" &&
       window.location.pathname !== "/dashboard/super"
     )
-      window.history.replaceState(window.history.state, "", "/dashboard/super");
+      navigateCms("/dashboard/super", { replace: true });
     else if (auth.session.user.role !== "super_user" && isAuthenticationPath)
-      window.history.replaceState(window.history.state, "", "/dashboard");
+      navigateCms("/dashboard", { replace: true });
   }, [auth.session, auth.status, isMockDataSource]);
 
   useEffect(() => {
@@ -351,7 +366,7 @@ function DashboardLayout() {
     if (auth.status !== "unauthenticated" || isAuthenticationPath || !isCmsPath(pathname)) return;
 
     const destination = `${pathname}${window.location.search}${window.location.hash}`;
-    window.location.replace(`/dashboard/login?redirect=${encodeURIComponent(destination)}`);
+    navigateCms(`/dashboard/login?redirect=${encodeURIComponent(destination)}`, { replace: true });
   }, [auth.status]);
 
   const toggleSidebar = () =>
@@ -372,6 +387,10 @@ function DashboardLayout() {
       ? "overview"
       : getCmsRouteKey(window.location.pathname);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [routeKey]);
+
   if (auth.status === "loading") {
     return (
       <div
@@ -379,7 +398,7 @@ function DashboardLayout() {
         data-theme={theme}
         dir={language === "en" ? "ltr" : "rtl"}
       >
-        <CmsRouteProgress authenticationPending={!authPath} />
+        <CmsRouteProgress authenticationPending={!authPath && !hasCmsSessionHint()} standalone={!authPath && hasCmsSessionHint()} />
       </div>
     );
   }
@@ -499,6 +518,7 @@ function DashboardLayout() {
         dir={language === "en" ? "ltr" : "rtl"}
       >
         <AuthPage
+          key={window.location.pathname}
           auth={auth}
           content={accessLabels}
           language={language}
@@ -523,7 +543,7 @@ function DashboardLayout() {
           </div>
         }
       >
-        <SuperUserPage auth={auth} content={content} />
+        <SuperUserPage auth={auth} content={content} language={language} theme={theme} onThemeToggle={() => setTheme((current) => current === "light" ? "dark" : "light")} onLanguageChange={setLanguage} />
       </Suspense>
     );
 
@@ -567,6 +587,7 @@ function DashboardLayout() {
           </a>
           <DashboardSidebar
             content={content}
+            companyName={companyName}
             theme={theme}
             open={sidebarOpen}
             collapsed={sidebarCollapsed}
@@ -595,11 +616,12 @@ function DashboardLayout() {
               id="dashboard-content"
               className="min-h-[calc(100vh-5rem)] px-4 pt-3 pb-28 sm:px-8 sm:pt-4"
             >
-              <Suspense fallback={<CmsPageProgress routeKey={routeKey} />}>
+              <Suspense key={routeKey} fallback={<CmsPageProgress routeKey={routeKey} />}>
                 {activePage}
               </Suspense>
             </main>
             <UnsavedChangesBar
+              key={routeKey}
               language={language}
               sidebarCollapsed={sidebarCollapsed}
             />
