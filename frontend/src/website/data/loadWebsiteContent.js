@@ -26,15 +26,36 @@ function localizedCollection(records, locale) {
   })
 }
 
-function publishedPage(payload, key) {
+// CMS snapshots are allowed to evolve independently from the bundled fallback.
+// Merge object payloads instead of replacing the whole page so a partial/older
+// snapshot cannot erase sections that the public renderer still expects.
+function mergeSnapshot(base, override) {
+  // Null values and shape changes from an editor must not replace a renderable
+  // fallback object/array. Scalar authored values are still allowed to change.
+  if (override === null || override === undefined) return base
+  if (Array.isArray(base)) return Array.isArray(override) ? override : base
+  if (Array.isArray(override)) return base && typeof base === 'object' ? base : override
+  if (typeof override !== 'object') return override
+  if (!base || typeof base !== 'object' || Array.isArray(base)) return structuredClone(override)
+
+  return Object.fromEntries(
+    Object.keys({ ...base, ...override }).map((key) => [
+      key,
+      key in override ? mergeSnapshot(base[key], override[key]) : base[key],
+    ]),
+  )
+}
+
+function publishedPage(fallback, payload, key) {
   if (!payload || typeof payload !== 'object') return payload
+  const merged = mergeSnapshot(fallback, payload)
   if (key === 'magazine') return {
-    ...payload,
-    news: { ...payload.news, items: (payload.news?.items || []).filter((item) => item.status !== 'draft') },
-    articles: { ...payload.articles, items: (payload.articles?.items || []).filter((item) => item.status !== 'draft') },
+    ...merged,
+    news: { ...merged.news, items: (merged.news?.items || []).filter((item) => item.status !== 'draft') },
+    articles: { ...merged.articles, items: (merged.articles?.items || []).filter((item) => item.status !== 'draft') },
   }
-  if (key === 'scholarships') return { ...payload, items: (payload.items || []).filter((item) => item.status !== 'draft') }
-  return payload
+  if (key === 'scholarships') return { ...merged, items: (merged.items || []).filter((item) => item.status !== 'draft') }
+  return merged
 }
 
 export function applySnapshots(staticContent, snapshots, language) {
@@ -43,7 +64,7 @@ export function applySnapshots(staticContent, snapshots, language) {
   const byKey = new Map((snapshots || []).map((snapshot) => [snapshot.key, snapshot.payload]))
 
   directSnapshotKeys.forEach((key) => {
-    if (byKey.get(key)?.[locale]) content[key] = publishedPage(byKey.get(key)[locale], key)
+    if (byKey.get(key)?.[locale]) content[key] = publishedPage(content[key], byKey.get(key)[locale], key)
   })
 
   const fallbackWhatsApp = staticContent.contact.contact.details.find((detail) => detail.type === 'whatsapp')
@@ -77,8 +98,10 @@ export function applySnapshots(staticContent, snapshots, language) {
     }
   }
 
-  content.siteSettings = byKey.get('settings') || null
-  content.profile = byKey.get('profile') || null
+  // Settings/profile snapshots may also be partial. Keep bundled branding and
+  // layout defaults available when an editor has not populated every field.
+  content.siteSettings = mergeSnapshot(content.siteSettings, byKey.get('settings'))
+  content.profile = mergeSnapshot(content.profile, byKey.get('profile'))
   if (content.profile?.[locale]) content.header.brandName = content.profile[locale]
   return localizeContentHrefs(content, language)
 }

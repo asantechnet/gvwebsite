@@ -14,6 +14,7 @@ import pashtoMedia from '../src/cms/locales/ps/media.json' with { type: 'json' }
 import pashtoMessages from '../src/cms/locales/ps/messages.json' with { type: 'json' }
 import pashtoProfile from '../src/cms/locales/ps/profile.json' with { type: 'json' }
 import { ALL_CMS_PERMISSIONS, CMS_PERMISSIONS, can, canAccessCmsRoute, normalizeSession } from '../src/cms/auth/permissions.js'
+import { applyTourismCategories, getTourismCategories } from '../src/cms/utils/tourismCategories.js'
 import { normalizeContentRecord, serializeContentRecord } from '../src/shared/models/content.js'
 import { normalizeMessage, serializeMessageState } from '../src/shared/models/message.js'
 import { isSafeContentUrl } from '../src/shared/security/sanitizeRichText.js'
@@ -88,4 +89,23 @@ test('Phase 4 interface labels retain locale parity', () => {
 test('message workflow labels retain locale parity', () => {
   const keys = Object.keys(dariMessages).sort()
   for (const locale of [pashtoMessages, englishMessages]) assert.deepEqual(Object.keys(locale).sort(), keys)
+})
+
+test('tourism posts receive fixed localized categories', () => {
+  const translations = {
+    prs: { title: 'بامیان' },
+    ps: { title: 'بامیان' },
+    en: { title: 'Bamyan' },
+  }
+  const afghanistan = getTourismCategories({ isAfghanistanTourism: true })
+  const categorized = applyTourismCategories(translations, afghanistan)
+
+  assert.equal(categorized.prs.category, 'سیاحت در افغانستان')
+  assert.equal(categorized.ps.category, 'د افغانستان سیاحت')
+  assert.equal(categorized.en.category, 'Tourism in Afghanistan')
+  assert.equal(translations.prs.category, undefined)
+
+  const world = getTourismCategories({ isWorldTourism: true })
+  assert.deepEqual(world, { prs: 'سیاحت در جهان', ps: 'نړیوال سیاحت', en: 'World Tourism' })
+  assert.equal(getTourismCategories(), null)
 })

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { BriefcaseBusiness, ChartNoAxesCombined, Check, ChevronDown, ExternalLink, Globe2, GraduationCap, MapPinned, Pencil, PlaneTakeoff, Plus, Search, Trash2, X } from 'lucide-react'
+import { BookOpenCheck, BriefcaseBusiness, ChartNoAxesCombined, Check, ChevronDown, ExternalLink, FileCheck2, Globe2, GraduationCap, MapPinned, Pencil, PlaneTakeoff, Plus, Search, Trash2, WalletCards, X } from 'lucide-react'
 
 import PageContainer from '@cms/components/PageContainer.jsx'
 import PageHeading from '@cms/components/PageHeading.jsx'
@@ -18,6 +18,7 @@ import CountryPicker from '@cms/components/CountryPicker.jsx'
 import { getCountryCode } from '@/shared/utils/countries.js'
 import { getAfghanistanProvinceCode, getAfghanistanProvinces } from '@/shared/utils/afghanistanProvinces.js'
 import { useCmsContentLanguage, useCmsInterfaceLanguage } from '@cms/hooks/useCmsLanguage.js'
+import { applyTourismCategories, getTourismCategories } from '@cms/utils/tourismCategories.js'
 
 const contentLanguages = [{ id: 'prs', short: 'دری', label: 'زبان دری' }, { id: 'ps', short: 'پښتو', label: 'پښتو ژبه' }, { id: 'en', short: 'English', label: 'English language' }]
 const emptyPostTranslation = () => ({ title: '', excerpt: '', content: '', tags: [], seoTitle: '', metaDescription: '', imageAlt: '' })
@@ -25,11 +26,12 @@ const opportunityTypes = ['study', 'work', 'migration', 'investment']
 const opportunityTabIcons = { study: GraduationCap, work: BriefcaseBusiness, migration: PlaneTakeoff, investment: ChartNoAxesCombined }
 const tourismTypes = ['afghanistan', 'world']
 const tourismTabIcons = { afghanistan: MapPinned, world: Globe2 }
-function OpportunitiesPage({ content, opportunities, exams, services, tourism }) {
-  return <ManagedCollectionPage content={content} opportunities={opportunities} exams={exams} services={services} tourism={tourism} />
+const serviceSectionIcons = [BookOpenCheck, WalletCards, FileCheck2, PlaneTakeoff]
+function OpportunitiesPage({ content, opportunities, exams, services, tourism, serviceUi }) {
+  return <ManagedCollectionPage content={content} opportunities={opportunities} exams={exams} services={services} tourism={tourism} serviceUi={serviceUi} />
 }
 
-function ManagedCollectionPage({ content, opportunities, exams, services, tourism }) {
+function ManagedCollectionPage({ content, opportunities, exams, services, tourism, serviceUi }) {
   const isServices = services !== undefined && services !== null
   const isTourism = Boolean(tourism)
   const pageKey = isServices ? 'services' : isTourism ? 'tourism' : 'opportunities'
@@ -46,10 +48,9 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
     ? { afghanistan: labels.tourismAfghanistan, world: labels.tourismWorld, typeLabel: label }
     : labels.manager || {}
   const typeSections = Object.fromEntries(sectionTypes.map((type) => [type, typeLabels[type] || type]))
-  const categoryOptions = [...new Set(cards.map((card) => card.category).filter(Boolean))]
   const visibleCards = isServices ? cards : isTourism ? cards.filter((card) => card.type === activeType) : cards.filter((card) => card.id === activeType)
   const filteredCards = useMemo(() => visibleCards.filter((card) => { const filterStatus = card.savedStatus ?? card.status; return (status === 'all' || filterStatus === status) && `${card.title} ${card.description} ${card.category || ''}`.toLocaleLowerCase().includes(query.toLocaleLowerCase()) }), [visibleCards, query, status])
-  const modalContent = { ...content, editItem: labels.editPost || 'ویرایش نوشته', editItemTitle: labels.editPostTitle || 'ویرایش نوشته فرصت', close: labels.close || 'بستن', itemTitle: labels.postTitle || 'عنوان نوشته', itemAction: labels.postAction || 'متن دکمه', itemLink: labels.postLink || 'پیوند نوشته', cancel: labels.cancel || 'انصراف', save: labels.save || 'ذخیره', categoryOptions }
+  const modalContent = { ...content, editItem: labels.editPost || 'ویرایش نوشته', editItemTitle: labels.editPostTitle || 'ویرایش نوشته فرصت', close: labels.close || 'بستن', itemTitle: labels.postTitle || 'عنوان نوشته', itemAction: labels.postAction || 'متن دکمه', itemLink: labels.postLink || 'پیوند نوشته', cancel: labels.cancel || 'انصراف', save: labels.save || 'ذخیره' }
   const requestRemove = async (card) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: labels.deletePost || 'حذف نوشته', description: labels.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })
     if (confirmed) {
@@ -124,7 +125,7 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 </div>
 </article>)}</section>
     {!filteredCards.length && <div className="grid min-h-44 place-items-center rounded-2xl border border-admin-border bg-admin-card text-sm text-admin-muted">{labels.empty || 'نوشته‌ای پیدا نشد.'}</div>}
-    {viewing && <OpportunityPostPreviewModal post={viewing} content={modalContent} onClose={() => setViewing(null)} onDelete={() => { removePost(viewing); setViewing(null); showRecordToast('recordDeleted') }} onEdit={() => { setViewing(null); setEditing(viewing) }} />}
+    {viewing && <OpportunityPostPreviewModal post={viewing} content={modalContent} isServices={isServices} serviceUi={serviceUi} onClose={() => setViewing(null)} onDelete={() => { removePost(viewing); setViewing(null); showRecordToast('recordDeleted') }} onEdit={() => { setViewing(null); setEditing(viewing) }} />}
     {editing && <OpportunityPostModal post={editing} content={modalContent} isServices={isServices} isOpportunities={pageKey === 'opportunities'} isWorldTourism={isTourism && activeType === 'world'} isAfghanistanTourism={isTourism && activeType === 'afghanistan'} onClose={() => setEditing(null)} onSave={(savedPost) => { const isNew = String(editing.id).startsWith('new-'); savePost(savedPost, activeType); setEditing(null); if (isNew) showRecordToast('recordAdded') }} />}
   </PageContainer>
 }
@@ -150,10 +151,10 @@ function ServiceStatusBadge({ card, labels, onToggle }) {
 function FeaturedToggle({ label, checked, onChange, full = true }) {
   const interfaceLanguage = useCmsInterfaceLanguage()
   const isEnglish = interfaceLanguage === 'en'
-  return <div className={`flex items-center justify-between gap-3 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-4 text-xs font-semibold text-admin-heading ${full ? 'min-h-12 sm:col-span-2' : 'h-11 min-h-11 self-end'}`}><span>{label}</span><button type="button" role="switch" aria-checked={checked} aria-label={label} onClick={() => onChange(!checked)} className={`relative h-5 w-9 shrink-0 rounded-full border transition-colors duration-200 ease-out ${checked ? 'border-admin-brand bg-admin-brand' : 'border-admin-border bg-[var(--admin-toggle-off)]'}`}><span aria-hidden="true" className="absolute top-1 size-3 rounded-full bg-white shadow-sm transition-transform duration-200" style={{ left: isEnglish ? '4px' : undefined, right: isEnglish ? undefined : '4px', transform: checked ? `translate(${isEnglish ? '16px' : '-16px'}, 0)` : 'translate(0, 0)' }} /></button></div>
+  return <div className={`flex h-11 min-h-11 items-center justify-between gap-3 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-4 text-xs font-semibold text-admin-heading ${full ? 'sm:col-span-2' : 'self-end'}`}><span>{label}</span><button type="button" role="switch" aria-checked={checked} aria-label={label} onClick={() => onChange(!checked)} className={`relative h-5 w-9 shrink-0 rounded-full border transition-colors duration-200 ease-out ${checked ? 'border-admin-brand bg-admin-brand' : 'border-admin-border bg-[var(--admin-toggle-off)]'}`}><span aria-hidden="true" className="absolute top-1 size-3 rounded-full bg-white shadow-sm transition-transform duration-200" style={{ left: isEnglish ? '4px' : undefined, right: isEnglish ? undefined : '4px', transform: checked ? `translate(${isEnglish ? '16px' : '-16px'}, 0)` : 'translate(0, 0)' }} /></button></div>
 }
 
-function OpportunityPostPreviewModal({ post, content, onClose, onDelete, onEdit }) {
+function OpportunityPostPreviewModal({ post, content, isServices = false, serviceUi, onClose, onDelete, onEdit }) {
   const interfaceLanguage = useCmsInterfaceLanguage()
   const [closing, setClosing] = useState(false)
   const [contentLanguage, setContentLanguage] = useCmsContentLanguage()
@@ -168,6 +169,14 @@ function OpportunityPostPreviewModal({ post, content, onClose, onDelete, onEdit 
     metaDescription: post.metaDescription || post.description || '',
     imageAlt: post.imageAlt || '',
   }
+  const fullContent = translation.content || post.content || translation.overview || post.overview || translation.excerpt || post.description || post.excerpt || ''
+  const serviceLabels = serviceUi?.[contentLanguage] || {}
+  const serviceSections = isServices ? [
+    { title: serviceLabels.whoFor, body: translation.audience || post.audience },
+    { title: serviceLabels.included, body: translation.excerpt || post.description || post.excerpt, items: translation.included || post.included },
+    { title: serviceLabels.process, body: serviceLabels.processIntro, items: translation.process || post.process },
+    { title: serviceLabels.prepare, body: serviceLabels.prepareIntro, items: translation.prepare || post.prepare },
+  ].filter((section) => section.body || section.items?.length) : []
   useEffect(() => {
     const previousBodyOverflow = document.body.style.overflow
     const previousDocumentOverflow = document.documentElement.style.overflow
@@ -196,7 +205,7 @@ function OpportunityPostPreviewModal({ post, content, onClose, onDelete, onEdit 
       <div className="cms-overview-modal-content grid gap-3 p-2.5 sm:gap-5 sm:p-6" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
         <article className="mx-auto w-full max-w-6xl overflow-hidden rounded-xl border border-border bg-surface text-foreground shadow-sm sm:rounded-[2rem] dark:border-gray-700 dark:bg-[#2b3442]">
           {post.image && <div className="relative aspect-[16/9] overflow-hidden sm:aspect-[16/8] md:aspect-[16/5]"><img src={post.image} alt={translation.imageAlt || translation.title} className="absolute inset-0 size-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" aria-hidden="true" /><div className="absolute inset-x-4 bottom-4 text-start text-white sm:inset-x-6 sm:bottom-6 md:inset-x-10 md:bottom-10"><h1 className="w-full font-heading text-xl font-extrabold leading-tight sm:text-2xl md:text-4xl">{translation.title}</h1></div></div>}
-          <div className="grid gap-4 p-3 sm:gap-6 sm:p-6 lg:p-8"><main className="min-w-0 text-start"><p className="text-sm font-medium leading-7 text-foreground-muted sm:text-lg sm:leading-9">{translation.excerpt}</p><SafeRichText className="gv-public-post-content mt-5 text-sm leading-7 text-foreground-muted sm:mt-8 sm:text-base sm:leading-8 [&_a]:font-semibold [&_a]:text-accent-text [&_a]:underline [&_figure]:my-6 [&_figure]:overflow-hidden [&_figure]:rounded-2xl [&_figure]:border [&_figure]:border-border [&_figure]:bg-surface [&_figure]:p-2 [&_h2]:mb-3 [&_h2]:mt-8 [&_h2]:font-heading [&_h2]:text-xl [&_h2]:font-extrabold [&_h2]:text-foreground [&_h3]:mb-2 [&_h3]:mt-6 [&_h3]:font-heading [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-foreground [&_img]:max-h-[32rem] [&_img]:w-full [&_img]:rounded-xl [&_img]:object-contain [&_li]:mb-2 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:ps-6 [&_p]:mb-5 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:ps-6" html={translation.content || `<p>${translation.excerpt || ''}</p>`} /></main></div>
+          <div className="grid gap-4 p-3 sm:gap-6 sm:p-6 lg:p-8"><main className="min-w-0 text-start">{isServices ? <div>{(translation.excerpt || post.description || post.excerpt) && <p className="text-sm font-medium leading-7 text-foreground-muted sm:text-lg sm:leading-9">{translation.excerpt || post.description || post.excerpt}</p>}{serviceLabels.important && <div className="my-6 rounded-2xl border-r-4 border-primary bg-primary/10 px-5 py-4 text-sm font-semibold leading-7 text-foreground sm:my-8 sm:text-base sm:leading-8">{serviceLabels.important}</div>}<div className="space-y-7 sm:space-y-8">{serviceSections.map((section, index) => { const Icon = serviceSectionIcons[index % serviceSectionIcons.length]; return <section key={section.title} className="border-b border-border pb-7 dark:border-gray-600 sm:pb-8"><div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:text-start"><span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-accent-text"><Icon aria-hidden="true" size={23} /></span><h2 className="font-heading text-xl font-extrabold text-foreground sm:text-2xl">{section.title}</h2></div>{section.body && <p className="mt-4 text-sm leading-7 text-foreground-muted sm:text-base sm:leading-8">{section.body}</p>}{section.items?.length > 0 && <ul className="mt-4 grid gap-3 sm:grid-cols-2">{section.items.map((item) => <li key={item} className="flex items-start gap-2 rounded-xl bg-background/70 px-3 py-3 text-sm leading-7 text-foreground-muted dark:bg-gray-800"><span className="mt-2 size-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />{item}</li>)}</ul>}</section> })}</div></div> : <>{(translation.excerpt || post.description || post.excerpt) && <p className="text-sm font-medium leading-7 text-foreground-muted sm:text-lg sm:leading-9">{translation.excerpt || post.description || post.excerpt}</p>}<SafeRichText className="gv-public-post-content mt-5 text-sm leading-7 text-foreground-muted sm:mt-8 sm:text-base sm:leading-8 [&_a]:font-semibold [&_a]:text-accent-text [&_a]:underline [&_figure]:my-6 [&_figure]:overflow-hidden [&_figure]:rounded-2xl [&_figure]:border [&_figure]:border-border [&_figure]:bg-surface [&_figure]:p-2 [&_h2]:mb-3 [&_h2]:mt-8 [&_h2]:font-heading [&_h2]:text-xl [&_h2]:font-extrabold [&_h2]:text-foreground [&_h3]:mb-2 [&_h3]:mt-6 [&_h3]:font-heading [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-foreground [&_img]:max-h-[32rem] [&_img]:w-full [&_img]:rounded-xl [&_img]:object-contain [&_li]:mb-2 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:ps-6 [&_p]:mb-5 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:ps-6" html={fullContent} /></>}</main></div>
         </article>
       </div>
     </section>
@@ -223,13 +232,14 @@ function OpportunityPostModal({ post, content, isServices = false, isOpportuniti
     }
   }, [])
   const [form, setForm] = useState(() => {
+    const fixedCategories = getTourismCategories({ isAfghanistanTourism, isWorldTourism })
     const fallbackTranslation = { title: post.title || '', excerpt: post.description || post.excerpt || '', content: post.content || '', tags: Array.isArray(post.tags) ? post.tags : [], seoTitle: post.seoTitle || post.title || '', metaDescription: post.metaDescription || post.description || '', imageAlt: post.imageAlt || '' }
     const translations = Object.fromEntries(contentLanguages.map(({ id }) => {
       const stored = post.translations?.[id]
       const source = stored || (id === interfaceLanguage ? fallbackTranslation : emptyPostTranslation())
-      return [id, { ...emptyPostTranslation(), ...source, tags: Array.isArray(source.tags) ? source.tags : [] }]
+      return [id, { ...emptyPostTranslation(), ...source, ...(fixedCategories ? { category: fixedCategories[id] } : {}), tags: Array.isArray(source.tags) ? source.tags : [] }]
     }))
-    return { slug: post.slug || '', countryCode: post.countryCode || getCountryCode(post.name || post.title), provinceCode: post.provinceCode || getAfghanistanProvinceCode(post.name || post.title), category: post.category || '', href: post.href || '', image: post.image || '', status: post.status || 'draft', featured: post.featured || false, publishDate: post.publishDate || new Date().toISOString().slice(0, 10), author: 'گلوبل ویژن', translations }
+    return { slug: post.slug || '', countryCode: post.countryCode || getCountryCode(post.name || post.title), provinceCode: post.provinceCode || getAfghanistanProvinceCode(post.name || post.title), category: fixedCategories?.prs || post.category || '', href: post.href || '', image: post.image || '', status: post.status || 'draft', featured: post.featured || false, publishDate: post.publishDate || new Date().toISOString().slice(0, 10), author: 'گلوبل ویژن', translations }
   })
   const translation = form.translations[contentLanguage]
   const provinceOptions = useMemo(() => getAfghanistanProvinces(contentLanguage), [contentLanguage])
@@ -250,7 +260,7 @@ function OpportunityPostModal({ post, content, isServices = false, isOpportuniti
     slug: isNew ? province.code.replaceAll('_', '-') : current.slug,
     translations: Object.fromEntries(Object.entries(current.translations).map(([language, currentTranslation]) => [language, { ...currentTranslation, title: province.names?.[language] || province.name }])),
   }))
-  const submit = (event) => { event.preventDefault(); const displayTranslation = form.translations[interfaceLanguage]; const slugTitle = form.translations.prs.title || form.translations.en.title || form.translations.ps.title; const slug = form.slug || slugTitle.toLocaleLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, ''); const savedPost = { ...post, ...form, ...displayTranslation, name: displayTranslation.title, slug, description: displayTranslation.excerpt, author: 'گلوبل ویژن' }; setClosing(true); window.setTimeout(() => onSave(savedPost), 200) }
+  const submit = (event) => { event.preventDefault(); const fixedCategories = getTourismCategories({ isAfghanistanTourism, isWorldTourism }); const translations = applyTourismCategories(form.translations, fixedCategories); const displayTranslation = translations[interfaceLanguage]; const slugTitle = translations.prs.title || translations.en.title || translations.ps.title; const slug = form.slug || slugTitle.toLocaleLowerCase().trim().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, ''); const savedPost = { ...post, ...form, ...(fixedCategories ? { category: fixedCategories.prs } : {}), translations, ...displayTranslation, name: displayTranslation.title, slug, description: displayTranslation.excerpt, author: 'گلوبل ویژن' }; setClosing(true); window.setTimeout(() => onSave(savedPost), 200) }
   return <div className={`cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-3 sm:p-4 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onMouseDown={close}><form ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="opportunity-editor-title" onSubmit={submit} onMouseDown={(event) => event.stopPropagation()} className={`relative z-10 flex max-h-[calc(100dvh-1.5rem)] w-full max-w-5xl flex-col overflow-hidden rounded-xl border border-admin-border bg-admin-page shadow-2xl sm:max-h-[calc(100dvh-2rem)] sm:max-w-2xl sm:rounded-2xl lg:max-w-5xl ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`}>
     <header dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'} className="grid min-w-0 grid-cols-1 gap-2 border-b border-admin-border bg-admin-card px-3 py-2.5 sm:flex sm:flex-nowrap sm:items-center sm:gap-4 sm:px-6"><h2 id="opportunity-editor-title" className="order-2 block min-w-0 w-full truncate text-start font-heading text-base leading-tight text-admin-heading sm:order-none sm:flex-1 sm:text-xl" dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'}>{isNew ? (content.createPost || 'ایجاد فرصت جدید') : translation.title}</h2><div className="order-1 grid min-w-0 w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:ms-auto sm:flex sm:w-auto sm:shrink-0"><ContentLanguageSwitcher className="!w-full !min-w-0 sm:!w-auto" label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={selectContentLanguage} /><button type="button" className="grid size-9 shrink-0 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" onClick={close} aria-label={content.close || 'بستن'}><X size={17} /></button></div></header>
     <div className="grid gap-3 overflow-y-auto p-3 sm:gap-5 sm:p-6" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
@@ -260,9 +270,8 @@ function OpportunityPostModal({ post, content, isServices = false, isOpportuniti
   : isAfghanistanTourism
     ? <label className="text-xs font-semibold text-admin-heading"><span className="mb-2 block">{content.provinceName || content.postTitle || 'نام ولایت'}</span><CountryPicker value={form.provinceCode || translation.title || post.name} language={contentLanguage} label={content.provinceName || content.postTitle || 'نام ولایت'} searchPlaceholder={content.provinceSearch || ''} emptyLabel={content.provinceEmpty || ''} options={provinceOptions} fallbackIcon="📍" onChange={selectProvince} /></label>
   : <Field label={content.postTitle || 'عنوان نوشته'} value={translation.title} onChange={(value) => updateTranslation('title', value)} full={isServices} />}
-{(isWorldTourism || isAfghanistanTourism) && <ModalSelect label={content.postCategory || 'دسته‌بندی'} value={form.category} onChange={(value) => update('category', value)} options={[{ value: '', label: content.noCategory || 'بدون دسته‌بندی' }]} />}
 <ModalSelect label={content.postStatus || 'وضعیت'} value={form.status} onChange={(value) => update('status', value)} options={[{ value: 'draft', label: content.draft || 'پیش‌نویس' }, { value: 'published', label: content.published || 'منتشرشده' }]} />
-<FeaturedToggle label={content.featuredPost || 'نوشته ویژه'} checked={form.featured} onChange={(value) => update('featured', value)} full={!isServices && !isWorldTourism && !isAfghanistanTourism} />
+<FeaturedToggle label={content.featuredPost || 'نوشته ویژه'} checked={form.featured} onChange={(value) => update('featured', value)} full={!isServices} />
 </section>
 <section className="grid gap-4 rounded-2xl border border-admin-border bg-admin-card p-4 sm:p-5">
 <h3 className="text-sm text-admin-heading">{content.tags || 'برچسب‌ها'}</h3>

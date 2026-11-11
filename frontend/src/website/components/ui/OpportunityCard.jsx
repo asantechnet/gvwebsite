@@ -11,7 +11,7 @@ function OpportunityCard({ icon: Icon, number, title, description, action, href 
       <div className="flex min-h-72 flex-col p-4 sm:p-5">
         <div className="relative flex items-start justify-between gap-4">
           <span className="grid size-14 place-items-center rounded-2xl bg-primary/10 text-accent-text transition-colors duration-300 group-hover:bg-primary group-hover:text-brand-white">
-            <Icon aria-hidden="true" className="size-7" />
+            {Icon && <Icon aria-hidden="true" className="size-7" />}
           </span>
           <span className="rounded-full border border-border bg-surface-muted px-3 py-1 font-heading text-xs font-bold text-foreground-muted dark:border-gray-500 dark:bg-gray-800 dark:text-gray-300">
             {number}

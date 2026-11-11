@@ -45,8 +45,8 @@ function ServicesSection({ content }) {
               {content.cards.map((item) => (
                 <ServiceCard
                   key={item.id}
-                  icon={serviceIcons[item.id]}
                   {...item}
+                  icon={serviceIcons[item.id]}
                 />
               ))}
             </div>

@@ -66,7 +66,7 @@ import englishMediaContent from "@cms/locales/en/media.json";
 import dariSettingsContent from "@cms/locales/prs/settings.json";
 import pashtoSettingsContent from "@cms/locales/ps/settings.json";
 import englishSettingsContent from "@cms/locales/en/settings.json";
-import { getCmsRouteKey } from "@cms/routes.js";
+import { getCmsRouteKey, isCmsPath } from "@cms/routes.js";
 import useAuth from "@cms/auth/useAuth.js";
 import { canAccessCmsRoute, CMS_PERMISSIONS } from "@cms/auth/permissions.js";
 import useMessages from "@cms/hooks/useMessages.js";
@@ -265,6 +265,10 @@ function DashboardLayout() {
             title: localized.title || "",
             excerpt: localized.description || "",
             content: localized.content || "",
+            audience: localized.audience || "",
+            included: localized.included || [],
+            process: localized.process || [],
+            prepare: localized.prepare || [],
             tags: localized.tags || [],
             seoTitle: localized.seoTitle || localized.title || "",
             metaDescription:
@@ -336,6 +340,20 @@ function DashboardLayout() {
       window.history.replaceState(window.history.state, "", "/dashboard");
   }, [auth.session, auth.status, isMockDataSource]);
 
+  useEffect(() => {
+    const pathname = window.location.pathname;
+    const isAuthenticationPath = [
+      "/dashboard/login",
+      "/dashboard/forgot-password",
+      "/dashboard/reset-password",
+    ].includes(pathname);
+
+    if (auth.status !== "unauthenticated" || isAuthenticationPath || !isCmsPath(pathname)) return;
+
+    const destination = `${pathname}${window.location.search}${window.location.hash}`;
+    window.location.replace(`/dashboard/login?redirect=${encodeURIComponent(destination)}`);
+  }, [auth.status]);
+
   const toggleSidebar = () =>
     setSidebarCollapsed((current) => {
       window.localStorage.setItem(
@@ -354,16 +372,20 @@ function DashboardLayout() {
       ? "overview"
       : getCmsRouteKey(window.location.pathname);
 
-  if (auth.status === "loading" && authPath) {
+  if (auth.status === "loading") {
     return (
       <div
         className="cms-root"
         data-theme={theme}
         dir={language === "en" ? "ltr" : "rtl"}
       >
-        <CmsRouteProgress />
+        <CmsRouteProgress authenticationPending={!authPath} />
       </div>
     );
+  }
+
+  if (auth.status === "unauthenticated" && !authPath) {
+    return <div className="cms-root" data-theme={theme}><CmsRouteProgress authenticationPending /></div>;
   }
 
   const routePages = {
@@ -444,6 +466,11 @@ function DashboardLayout() {
         key={language}
         content={content}
         services={localizedServices}
+        serviceUi={{
+          prs: dariServicesContent.ui,
+          ps: pashtoServicesContent.ui,
+          en: englishServicesContent.ui,
+        }}
       />
     ),
     messages: (
@@ -501,9 +528,7 @@ function DashboardLayout() {
     );
 
   const activePage =
-    auth.status === "loading" ? (
-      <CmsPageProgress routeKey={routeKey} />
-    ) : auth.status === "error" ? (
+    auth.status === "error" ? (
       <CmsAccessState
         title={accessLabels.error || "The account could not be loaded."}
         action={accessLabels.retry || "Retry"}

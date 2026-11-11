@@ -36,5 +36,5 @@
   "dropImage": "انځور دلته راکش کړئ یا د ټاکلو لپاره کلیک وکړئ",
   "replaceImage": "بدلول",
   "removeImage": "انځور حذفول",
-  "fields": { "heroEyebrow": "د بنر د نښې متن", "heroTitle": "د پاڼې اصلي سرلیک", "heroDescription": "د پاڼې تشریح", "itemTitle": "د بورس سرلیک", "provider": "وړاندې کوونکی", "country": "هېواد", "degree": "د زده‌کړې کچه", "funding": "د مالي ملاتړ ډول", "deadline": "د غوښتنلیک وروستۍ نېټه", "status": "د خپرېدو حالت", "officialHref": "د رسمي سرچینې لینک", "summary": "د بورس لنډیز", "overview": "د بورس بشپړ معلومات", "image": "د بورس انځور" }
+  "fields": { "heroEyebrow": "د بنر د نښې متن", "heroTitle": "د پاڼې اصلي سرلیک", "heroDescription": "د پاڼې تشریح", "itemTitle": "د بورس سرلیک", "provider": "وړاندې کوونکی", "country": "هېواد", "degree": "د زده‌کړې کچه", "funding": "د مالي ملاتړ ډول", "deadline": "د غوښتنلیک وروستۍ نېټه", "status": "د خپرېدو حالت", "officialHref": "د رسمي سرچینې لینک", "officialSource": "رسمي سرچینه وګورئ", "summary": "د بورس لنډیز", "overview": "د بورس بشپړ معلومات", "eligibility": "د وړتیا شرایط", "benefits": "ګټې", "documents": "اړین اسناد", "image": "د بورس انځور" }
 }

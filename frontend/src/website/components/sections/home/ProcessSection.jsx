@@ -38,7 +38,7 @@ function ProcessSection({ content }) {
           />
           <ol className="grid gap-5 sm:grid-cols-2 md:grid-cols-4">
             {content.steps.map((item) => (
-              <ProcessStep key={item.id} icon={processIcons[item.id]} {...item} />
+              <ProcessStep key={item.id} {...item} icon={processIcons[item.id]} />
             ))}
           </ol>
         </div>

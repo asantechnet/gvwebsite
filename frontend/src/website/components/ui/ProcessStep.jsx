@@ -2,7 +2,7 @@ function ProcessStep({ icon: Icon, number, title, description }) {
   return (
     <li className="relative z-10 flex h-full flex-col items-center text-center">
       <div className="relative grid size-16 place-items-center rounded-full border-4 border-surface-muted bg-surface text-accent-text shadow-md dark:border-gray-800 dark:bg-gray-700">
-        <Icon aria-hidden="true" className="size-7" />
+        {Icon && <Icon aria-hidden="true" className="size-7" />}
       </div>
       <div className="group relative mt-5 flex min-h-52 h-full w-full flex-col overflow-hidden rounded-3xl border border-border bg-surface px-5 py-6 shadow-[0_12px_30px_rgba(41,23,18,0.06)] transition-colors duration-300 ease-out hover:border-primary/30 hover:bg-primary/1.5 dark:border-gray-600 dark:bg-gray-700 dark:hover:border-primary/40 dark:hover:bg-gray-700/60 sm:px-6">
         <span aria-hidden="true" className="absolute -inset-e-10 -top-12 size-32 rounded-full bg-primary/10 blur-2xl transition-colors duration-300 ease-out group-hover:bg-primary/15" />

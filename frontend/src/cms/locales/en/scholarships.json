@@ -60,8 +60,12 @@
     "deadline": "Application deadline",
     "status": "Publication status",
     "officialHref": "Official source link",
+    "officialSource": "View official source",
     "summary": "Summary of the scholarship",
     "overview": "Complete scholarship information",
+    "eligibility": "Eligibility requirements",
+    "benefits": "Benefits",
+    "documents": "Required documents",
     "image": "Scholarship image"
   }
 }

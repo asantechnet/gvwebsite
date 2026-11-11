@@ -236,9 +236,9 @@ function ProfileSkeleton() {
   </>
 }
 
-function AuthSkeleton() {
+function AuthSkeleton({ forceLogin = false }) {
   const path = window.location.pathname
-  const login = path.endsWith('/login')
+  const login = forceLogin || path.endsWith('/login')
   const reset = path.endsWith('/reset-password')
   if (!login) return <main className="relative isolate grid min-h-dvh place-items-center overflow-hidden bg-slate-200 bg-cover bg-center bg-no-repeat px-5 py-12 dark:bg-background"><span aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 bg-transparent dark:bg-slate-950/80" /><section className="relative z-10 w-full max-w-md rounded-3xl border border-admin-border bg-admin-card p-7 text-center shadow-[0_28px_80px_rgba(15,23,42,.14)] sm:p-9"><RecoverySkeleton reset={reset} /></section></main>
   return <main className="relative isolate flex min-h-dvh items-center justify-center overflow-hidden bg-slate-200 bg-cover bg-center bg-no-repeat p-3 dark:bg-background sm:p-6"><span aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 bg-transparent dark:bg-slate-950/80" /><section className="relative z-10 flex w-full max-w-md overflow-hidden rounded-[1.75rem] border border-admin-border bg-admin-card/95 shadow-[0_26px_80px_rgba(36,32,27,.15)]"><div className="relative flex w-full flex-col justify-center p-4"><LoginSkeleton /></div></section></main>
@@ -254,20 +254,6 @@ function RecoverySkeleton({ reset = false }) {
 
 function SuperUserSkeleton() {
   return <main className="min-h-dvh bg-admin-page px-4 py-6 sm:px-6"><div className="mx-auto max-w-6xl"><header className="mb-5 flex items-center justify-between gap-4"><div className="flex items-center gap-3"><Block className="size-11 rounded-xl bg-admin-brand/15" /><Block className="h-5 w-28" /></div><Block className="h-10 w-28 rounded-xl" /></header><section className="relative overflow-hidden rounded-3xl border border-admin-border bg-admin-card px-5 py-6 sm:px-8"><Block className="h-3 w-28 bg-admin-brand/15" /><Block className="mt-2 h-9 w-72 max-w-full" /><Block className="mt-2 h-4 w-full max-w-2xl" /><Block className="mt-2 h-4 w-4/5 max-w-xl" /><div className="mt-5 flex flex-wrap gap-2"><Block className="h-11 w-28 rounded-xl" /><Block className="h-11 w-36 rounded-xl bg-admin-brand/15" /></div></section><div className="my-4 grid max-w-md grid-cols-2 gap-3">{list(2).map((item) => <div key={item} className="rounded-xl border border-admin-border bg-admin-card p-4"><Block className="h-3 w-20" /><Block className="mt-2 h-6 w-8" /></div>)}</div><section className="grid gap-4 lg:grid-cols-2">{list(4).map((item) => <article key={item} className="overflow-hidden rounded-2xl border border-admin-border bg-admin-card"><div className="flex items-start gap-4 p-5"><Block className="size-12 shrink-0 rounded-xl bg-admin-brand/15" /><div className="min-w-0 flex-1"><Block className="h-5 w-2/5" /><Block className="mt-3 h-3 w-3/5" /><Block className="mt-3 h-7 w-24 rounded-full" /></div></div><footer className="flex justify-end gap-2 border-t border-admin-border bg-admin-control-soft p-3">{list(item ? 4 : 3).map((action) => <Block key={action} className="size-10 rounded-xl" />)}</footer></article>)}</section></div></main>
-}
-
-function DashboardSidebarSkeleton({ collapsed }) {
-  const itemClass = collapsed ? 'w-16 justify-center px-2.5' : 'w-(--sidebar-width) px-3'
-  return <aside className={`fixed inset-y-0 z-50 hidden flex-col overflow-hidden border-(--sidebar-border) bg-(--admin-sidebar) text-(--sidebar-text) lg:flex rtl:right-0 rtl:border-l ltr:left-0 ltr:border-r ${collapsed ? 'w-16' : 'w-(--sidebar-width)'}`}><div className="flex min-h-16 shrink-0 items-center justify-center border-b border-(--sidebar-border) px-2.5"><Block className="size-[2.55rem] shrink-0 rounded-[.9rem] bg-admin-brand/15" /></div><nav className={`min-h-0 flex-1 overflow-y-auto overflow-x-hidden pt-[.7rem] pb-4 ${itemClass}`}>{list(10).map((item) => <div key={item} className={`my-[.18rem] flex min-h-10 items-center gap-3 rounded-xl ${collapsed ? 'justify-center' : 'px-3'}`}><Block className="size-[1.125rem] shrink-0 rounded-md bg-admin-brand/15" />{!collapsed && <Block className={`h-3 ${item % 3 === 0 ? 'w-24' : item % 2 === 0 ? 'w-32' : 'w-28'}`} />}</div>)}</nav><div className={`shrink-0 border-t border-(--sidebar-border) px-2.5 py-[.45rem] ${collapsed ? 'w-16' : 'w-(--sidebar-width)'}`}><div className="flex min-h-10 items-center justify-center rounded-xl"><Block className="size-[1.125rem] rounded-md" />{!collapsed && <Block className="ms-3 h-3 w-20" />}</div></div></aside>
-}
-
-function DashboardTopbarSkeleton() {
-  return <header className="sticky top-0 z-30 flex min-h-15 items-center gap-[.45rem] border-b border-admin-border bg-(--admin-topbar) px-4 backdrop-blur-lg min-[701px]:min-h-16 min-[701px]:gap-4 sm:px-4 md:px-5 lg:px-8"><Block className="size-10 rounded-xl lg:hidden" /><Block className="hidden h-10 w-full max-w-64 rounded-xl sm:block" /><Block className="h-10 w-11 rounded-xl min-[1280px]:w-28" /><div className="ms-auto flex items-center gap-2.5"><Block className="h-10 w-16 rounded-xl" /><Block className="size-10 rounded-xl" /><Block className="size-10 rounded-xl" /><Block className="size-10 rounded-xl" /></div></header>
-}
-
-function DashboardShellSkeleton() {
-  const collapsed = window.localStorage.getItem('globalvision-cms-sidebar-collapsed') === 'true'
-  return <div className="cms-root min-h-screen w-full max-w-full overflow-x-clip bg-admin-page"><DashboardSidebarSkeleton collapsed={collapsed} /><div className={`admin-shell min-h-screen min-w-0 max-w-full rtl:lg:pr-(--sidebar-width) ltr:lg:pl-(--sidebar-width) ${collapsed ? 'rtl:lg:pr-16 ltr:lg:pl-16' : ''}`}><DashboardTopbarSkeleton /><main className="min-h-[calc(100vh-5rem)] px-4 pt-3 pb-28 sm:px-8 sm:pt-4"><CmsPageProgress /></main></div></div>
 }
 
 function RouteSkeleton({ routeKey }) {
@@ -291,12 +277,12 @@ export function CmsPageProgress({ routeKey = getCmsRouteKey(window.location.path
   return <div role="status" aria-live="polite" aria-busy="true" aria-label="Loading page" className="w-full"><span className="sr-only">Loading page</span><RouteSkeleton routeKey={routeKey} /></div>
 }
 
-export default function CmsRouteProgress({ standalone = false }) {
+export default function CmsRouteProgress({ authenticationPending = false, standalone = false }) {
   const path = window.location.pathname
   const authPath = ['/dashboard/login', '/dashboard/forgot-password', '/dashboard/reset-password'].includes(path)
   if (authPath) return <div className="cms-root"><AuthSkeleton /></div>
+  if (authenticationPending || standalone) return <div className="cms-root"><AuthSkeleton forceLogin /></div>
   if (path === '/dashboard/super') return <div className="cms-root"><SuperUserSkeleton /></div>
-  if (standalone) return <DashboardShellSkeleton />
   return <CmsPageProgress />
 }
 

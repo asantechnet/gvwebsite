@@ -28,7 +28,7 @@ function OpportunitySection({ content }) {
 
         <div className="mx-auto mt-10 grid w-full max-w-6xl justify-items-center gap-5 md:grid-cols-3">
           {content.cards.map((item) => (
-            <OpportunityCard key={item.id} icon={opportunityIcons[item.id]} {...item} />
+            <OpportunityCard key={item.id} {...item} icon={opportunityIcons[item.id]} />
           ))}
         </div>
 

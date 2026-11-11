@@ -16,6 +16,11 @@ function navigate(path) {
   window.location.assign(path);
 }
 
+function getLoginDestination(value) {
+  if (!value || !value.startsWith("/dashboard") || value.startsWith("//")) return "/dashboard";
+  return value;
+}
+
 function AuthPage({ auth, content, language, theme, themeLabel, companyName, brandIcon, onThemeToggle, onLanguageChange }) {
   const params = new URLSearchParams(window.location.search);
   const pathname = window.location.pathname;
@@ -28,12 +33,15 @@ function AuthPage({ auth, content, language, theme, themeLabel, companyName, bra
   const [submitting, setSubmitting] = useState(false);
   const [complete, setComplete] = useState(false);
   const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
+  const errorMessage = error?.type === "invalidCredentials"
+    ? content.invalid
+    : error?.message;
 
   const submit = async (event) => {
     event.preventDefault();
     setSubmitting(true);
-    setError("");
+    setError(null);
     const form = new FormData(event.currentTarget);
     try {
       if (mode === "forgot") {
@@ -54,17 +62,22 @@ function AuthPage({ auth, content, language, theme, themeLabel, companyName, bra
           email: form.get("email"),
           password: form.get("password"),
         });
-        window.location.replace(
-          session.user.role === "super_user"
-            ? "/dashboard/super"
-            : "/dashboard",
-        );
+        const destination = session.user.role === "super_user"
+          ? "/dashboard/super"
+          : getLoginDestination(params.get("redirect"));
+        window.history.replaceState(window.history.state, "", destination);
       }
     } catch (requestError) {
+      const validationMessage = Object.values(requestError.details || {})[0]?.[0];
+      const isCredentialFailure =
+        mode === "login" &&
+        requestError.code === "validation" &&
+        validationMessage === "The provided credentials are incorrect.";
+
       setError(
-        Object.values(requestError.details || {})[0]?.[0] ||
-          requestError.message ||
-          content.invalid,
+        isCredentialFailure
+          ? { type: "invalidCredentials" }
+          : { message: validationMessage || requestError.message || content.invalid },
       );
     } finally {
       setSubmitting(false);
@@ -87,7 +100,7 @@ function AuthPage({ auth, content, language, theme, themeLabel, companyName, bra
         ) : (
           <form className="mt-7 grid gap-5 text-start" onSubmit={submit}>
             <EmailField content={content} />
-            {error && <ErrorMessage message={error} />}
+            {errorMessage && <ErrorMessage message={errorMessage} />}
             <SubmitButton
               busy={submitting}
               label={content.sendReset}
@@ -156,7 +169,7 @@ function AuthPage({ auth, content, language, theme, themeLabel, companyName, bra
               label={content.confirmPassword}
               content={content}
             />
-            {error && <ErrorMessage message={error} />}
+            {errorMessage && <ErrorMessage message={errorMessage} />}
             <SubmitButton
               busy={submitting}
               label={content.resetPassword}
@@ -206,7 +219,7 @@ function AuthPage({ auth, content, language, theme, themeLabel, companyName, bra
                   {content.forgotPassword}
                 </button>
               </div>
-              {error && <ErrorMessage message={error} />}
+              {errorMessage && <ErrorMessage message={errorMessage} />}
               <SubmitButton
               busy={submitting}
               label={content.signIn}

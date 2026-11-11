@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { readFile } from 'node:fs/promises'
 import test from 'node:test'
 
 import englishDashboard from '../src/cms/locales/en/dashboard.json' with { type: 'json' }
@@ -32,5 +33,18 @@ test('new CMS collection and branding labels have locale parity', () => {
   }
   for (const locale of [pashtoSettings, englishSettings]) {
     assert.deepEqual(Object.keys(locale.branding).sort(), settingsKeys)
+  }
+})
+
+test('CMS card data cannot override public home icon components', async () => {
+  const sections = [
+    '../src/website/components/sections/home/OpportunitySection.jsx',
+    '../src/website/components/sections/home/ProcessSection.jsx',
+    '../src/website/components/sections/home/ServicesSection.jsx',
+  ]
+
+  for (const section of sections) {
+    const source = await readFile(new URL(section, import.meta.url), 'utf8')
+    assert.ok(source.indexOf('{...item}') < source.indexOf('icon={'), `${section} must apply its trusted icon after CMS item props`)
   }
 })

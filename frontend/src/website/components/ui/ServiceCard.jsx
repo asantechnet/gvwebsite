@@ -11,7 +11,7 @@ function ServiceCard({ icon: Icon, number, title, description, action, href }) {
       <span aria-hidden="true" className="absolute -end-8 -top-10 size-24 rounded-full bg-primary/10 blur-2xl transition-colors duration-300 group-hover:bg-primary/20" />
       <div className="relative flex items-start justify-between gap-4">
         <span className="grid size-12 place-items-center rounded-2xl bg-primary/10 text-accent-text transition-colors duration-300 group-hover:bg-primary group-hover:text-brand-white">
-          <Icon aria-hidden="true" className="size-6" />
+          {Icon && <Icon aria-hidden="true" className="size-6" />}
         </span>
         <span className="font-heading rounded-full bg-primary/10 px-2.5 py-1 text-xs font-extrabold text-accent-text">
           {number}
