@@ -11,6 +11,17 @@ export function getCsrfToken() {
   return readCookie('XSRF-TOKEN')
 }
 
+export async function initializeCsrfCookie() {
+  const url = new URL(apiConfig.baseUrl, window.location.origin)
+  url.pathname = url.pathname.replace(/\/api\/?$/, '/sanctum/csrf-cookie')
+  url.search = ''
+  const response = await fetch(url, {
+    credentials: apiConfig.credentials,
+    headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+  })
+  if (!response.ok) throw new ApiError('The secure session could not be initialized.', { code: 'http', status: response.status })
+}
+
 function createUrl(path, query) {
   const url = /^https?:\/\//i.test(path) ? new URL(path) : new URL(`${apiConfig.baseUrl}/${String(path).replace(/^\//, '')}`, window.location.origin)
   Object.entries(query || {}).forEach(([key, value]) => {

@@ -16,6 +16,12 @@ return [
         'command' => env('UPLOAD_SCAN_COMMAND', 'clamdscan'),
         'timeout' => (int) env('UPLOAD_SCAN_TIMEOUT', 30),
     ],
+    'upload_limits' => [
+        'image' => 2 * 1024 * 1024,
+        'video' => 500 * 1024 * 1024,
+        'audio' => 10 * 1024 * 1024,
+        'document' => 10 * 1024 * 1024,
+    ],
     'audit_retention_days' => (int) env('AUDIT_RETENTION_DAYS', 365),
 
     'snapshot_keys' => [

@@ -35,7 +35,7 @@ const fieldGroupMap = { heading: ['titleBefore', 'titleHighlight', 'titleAfter',
 function HomeEditorSection({ content, initialTranslations, interfaceLanguage }) {
   const [selectedSection, setSelectedSection] = useEditorTabs({ defaultTab: 'hero', storageKey: 'globalvision-cms-home-tab', tabs: Object.keys(sectionIcons) })
   const [contentLanguage, setContentLanguage] = useCmsContentLanguage(interfaceLanguage)
-  const [drafts, setDrafts] = useCmsDraftState('home', () => structuredClone(initialTranslations))
+  const [drafts, setDrafts, { saveImmediate }] = useCmsDraftState('home', () => structuredClone(initialTranslations))
   const [editingItem, setEditingItem] = useState(null)
   const [addingItem, setAddingItem] = useState(false)
   const draft = drafts[contentLanguage]
@@ -45,14 +45,18 @@ function HomeEditorSection({ content, initialTranslations, interfaceLanguage }) 
   const collection = collectionKey ? selectedContent[collectionKey] : []
 
   const updateField = (field, value) => setDrafts((current) => ({ ...current, [contentLanguage]: { ...current[contentLanguage], [selectedSection]: { ...current[contentLanguage][selectedSection], [field]: value } } }))
+  const updateHeroMedia = (media) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, {
+    ...languageDraft,
+    hero: { ...languageDraft.hero, media },
+  }])))
   const toggleVisibility = (key) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, [key]: { ...languageDraft[key], visible: selectedContent.visible === false } }])))
-  const saveCollectionTranslations = (localizedItems, index = null) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => {
+  const saveCollectionTranslations = (localizedItems, index = null) => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => {
     const items = languageDraft[selectedSection][collectionKey]
     const item = localizedItems[language]
     return [language, { ...languageDraft, [selectedSection]: { ...languageDraft[selectedSection], [collectionKey]: index === null ? [...items, item] : items.map((entry, itemIndex) => itemIndex === index ? { ...entry, ...item } : entry) } }]
   })))
-  const deleteCollectionItem = (index) => {
-    setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, [selectedSection]: { ...languageDraft[selectedSection], [collectionKey]: languageDraft[selectedSection][collectionKey].filter((_, itemIndex) => itemIndex !== index) } }])))
+  const deleteCollectionItem = async (index) => {
+    await saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, [selectedSection]: { ...languageDraft[selectedSection], [collectionKey]: languageDraft[selectedSection][collectionKey].filter((_, itemIndex) => itemIndex !== index) } }])))
     showRecordToast('recordDeleted')
   }
 
@@ -65,13 +69,13 @@ function HomeEditorSection({ content, initialTranslations, interfaceLanguage }) 
         <EditorSectionHeader icon={sectionIcons[selectedSection]} title={content.sections[selectedSection].label} action={<div className="flex flex-nowrap items-center gap-2"><EditorVisibilityToggle label={content.visible} checked={selectedContent.visible !== false} onChange={() => toggleVisibility(selectedSection)} /><ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} /></div>} />
 
         <div className="grid gap-6 p-5 sm:p-6">
-          <div><div className="grid gap-3">{Object.entries(fieldGroupMap).map(([group, fields]) => { const visibleFields = fields.filter((field) => fieldMap[selectedSection].includes(field)); if (!visibleFields.length) return null; return <div key={group}><EditorFieldGroup title={content.fieldGroups[group]}>{visibleFields.map((field) => <EditorField key={field} label={content.fields[field]} value={selectedContent[field] ?? defaultActionLinks[selectedSection]?.[field] ?? ''} multiline={textareaFields.has(field)} type={linkFields.has(field) ? 'url' : 'text'} dir={linkFields.has(field) || contentLanguage === 'en' ? 'ltr' : 'rtl'} full={textareaFields.has(field) || field === 'title'} onChange={(value) => updateField(field, value)} />)}</EditorFieldGroup>{selectedSection === 'hero' && group === 'actions' && <MediaField content={content.media} value={heroMedia} onChange={(media) => updateField('media', media)} />}</div> })}</div></div>
+          <div><div className="grid gap-3">{Object.entries(fieldGroupMap).map(([group, fields]) => { const visibleFields = fields.filter((field) => fieldMap[selectedSection].includes(field)); if (!visibleFields.length) return null; return <div key={group}><EditorFieldGroup title={content.fieldGroups[group]}>{visibleFields.map((field) => <EditorField key={field} label={content.fields[field]} value={selectedContent[field] ?? defaultActionLinks[selectedSection]?.[field] ?? ''} multiline={textareaFields.has(field)} type={linkFields.has(field) ? 'url' : 'text'} dir={linkFields.has(field) || contentLanguage === 'en' ? 'ltr' : 'rtl'} full={textareaFields.has(field) || field === 'title'} onChange={(value) => updateField(field, value)} />)}</EditorFieldGroup>{selectedSection === 'hero' && group === 'actions' && <MediaField content={content.media} value={heroMedia} onChange={updateHeroMedia} />}</div> })}</div></div>
 
           {collectionKey && <CollectionCards section={selectedSection} items={collection} content={content} language={contentLanguage} onAdd={() => setAddingItem(true)} onEdit={(index, item) => setEditingItem({ index, item })} onDelete={deleteCollectionItem} />}
         </div>
     </section>
-    {editingItem && <CollectionItemModal content={content} initialLanguage={contentLanguage} initialTranslations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, languageDraft[selectedSection][collectionKey]?.[editingItem.index] || {}]))} isCountry={collectionKey === 'countries'} isProcess={collectionKey === 'steps'} isTestimonial={selectedSection === 'testimonials'} onClose={() => setEditingItem(null)} onSave={(localizedItems) => { saveCollectionTranslations(localizedItems, editingItem.index); setEditingItem(null) }} />}
-    {addingItem && <CollectionItemModal mode="add" content={content} initialLanguage={contentLanguage} item={collection[0]} isCountry={collectionKey === 'countries'} isProcess={collectionKey === 'steps'} isTestimonial={selectedSection === 'testimonials'} onClose={() => setAddingItem(false)} onSave={(localizedItems) => { saveCollectionTranslations(localizedItems); setAddingItem(false); showRecordToast('recordAdded') }} />}
+    {editingItem && <CollectionItemModal content={content} initialLanguage={contentLanguage} initialTranslations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, languageDraft[selectedSection][collectionKey]?.[editingItem.index] || {}]))} isCountry={collectionKey === 'countries'} isProcess={collectionKey === 'steps'} isTestimonial={selectedSection === 'testimonials'} onClose={() => setEditingItem(null)} onSave={async (localizedItems) => { await saveCollectionTranslations(localizedItems, editingItem.index); setEditingItem(null) }} />}
+    {addingItem && <CollectionItemModal mode="add" content={content} initialLanguage={contentLanguage} item={collection[0]} isCountry={collectionKey === 'countries'} isProcess={collectionKey === 'steps'} isTestimonial={selectedSection === 'testimonials'} onClose={() => setAddingItem(false)} onSave={async (localizedItems) => { await saveCollectionTranslations(localizedItems); setAddingItem(false); showRecordToast('recordAdded') }} />}
   </PageContainer>
 }
 

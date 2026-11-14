@@ -1,12 +1,27 @@
-const mediaPolicies = Object.freeze({
+export const mediaPolicies = Object.freeze({
   image: { accept: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'], maxBytes: 2 * 1024 * 1024 },
   video: { accept: ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime'], maxBytes: 500 * 1024 * 1024 },
   audio: { accept: ['audio/mpeg', 'audio/mp4', 'audio/ogg', 'audio/wav', 'audio/x-wav', 'audio/flac'], maxBytes: 10 * 1024 * 1024 },
   document: { accept: ['application/pdf'], maxBytes: 10 * 1024 * 1024 },
 })
 
+const mediaKindByExtension = Object.freeze({
+  jpg: 'image', jpeg: 'image', png: 'image', webp: 'image', gif: 'image',
+  mp4: 'video', webm: 'video', ogv: 'video', mov: 'video',
+  mp3: 'audio', m4a: 'audio', ogg: 'audio', wav: 'audio', flac: 'audio',
+  pdf: 'document',
+})
+
+export function getMediaPolicy(kind) {
+  return mediaPolicies[kind] || null
+}
+
 export function getUploadKind(file) {
-  return Object.entries(mediaPolicies).find(([, policy]) => policy.accept.includes(file?.type))?.[0] || null
+  const fromMime = Object.entries(mediaPolicies).find(([, policy]) => policy.accept.includes(file?.type))?.[0]
+  if (fromMime) return fromMime
+  if (file?.type) return null
+  const extension = String(file?.name || '').split('.').pop()?.toLocaleLowerCase()
+  return mediaKindByExtension[extension] || null
 }
 
 export function validateUploadFile(file, allowedKinds = Object.keys(mediaPolicies)) {

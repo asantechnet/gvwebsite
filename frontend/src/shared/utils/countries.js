@@ -22,6 +22,10 @@ const afghanistanCountryNames = {
 
 const flagFromCode = (code) => code.replace(/[A-Z]/g, (letter) => String.fromCodePoint(127397 + letter.charCodeAt(0)))
 
+export function getCountryFlag(code = '') {
+  return /^[A-Z]{2}$/.test(code) ? flagFromCode(code) : ''
+}
+
 export function getCountries(language = 'prs') {
   const locale = localeByLanguage[language] || localeByLanguage.prs
   const names = new Intl.DisplayNames([locale, 'en'], { type: 'region' })

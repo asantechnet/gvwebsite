@@ -36,7 +36,7 @@ class SiteSnapshotSanitizer
             }
 
             $normalizedKey = mb_strtolower((string) $key);
-            if ($normalizedKey === 'content') {
+            if (in_array($normalizedKey, ['content', 'overview'], true)) {
                 $value = $this->richTextSanitizer->sanitize($value);
             } elseif (in_array($normalizedKey, self::URL_KEYS, true) && ! $this->richTextSanitizer->isSafeUrl($value)) {
                 $value = '';

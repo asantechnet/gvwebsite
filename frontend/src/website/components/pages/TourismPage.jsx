@@ -1,7 +1,9 @@
 import BlogPostPage from '@pages/BlogPostPage.jsx'
 
 function TourismPage({ content, card }) {
-  const post = { ...content.post, ...card, title: card.name, imageAlt: card.imageAlt || card.name }
+  const post = card.cmsManaged
+    ? { ...card, title: card.title || card.name, imageAlt: card.imageAlt || card.title || card.name }
+    : { ...content.post, ...card, title: card.name, imageAlt: card.imageAlt || card.name }
   const postContent = {
     ...content.postDetail,
     parentHref: `/tourism/${content.id}`,

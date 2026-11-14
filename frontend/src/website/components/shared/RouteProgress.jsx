@@ -133,5 +133,5 @@ function Content({ path, hasSearchQuery, searchResultCount, directoryItemCount, 
 }
 
 export default function RouteProgress({ path, hasSearchQuery = false, searchResultCount = 0, directoryItemCount = 0, scholarshipItemCount = 0, magazineItemCount = 0 }) {
-  return <div className="overflow-hidden bg-background" role="status" aria-live="polite" aria-busy="true" aria-label="در حال بارگذاری محتوای وب‌سایت"><span className="sr-only">در حال بارگذاری محتوای وب‌سایت</span><HeaderSkeleton /><Content path={path} hasSearchQuery={hasSearchQuery} searchResultCount={searchResultCount} directoryItemCount={directoryItemCount} scholarshipItemCount={scholarshipItemCount} magazineItemCount={magazineItemCount} /><FooterSkeleton /></div>
+  return <div className="overflow-hidden bg-background" role="status" aria-live="polite" aria-busy="true" aria-label="در حال بارگذاری محتوای وب‌سایت"><span className="sr-only">در حال بارگذاری محتوای وب‌سایت</span><HeaderSkeleton /><div data-route-skeleton><Content path={path} hasSearchQuery={hasSearchQuery} searchResultCount={searchResultCount} directoryItemCount={directoryItemCount} scholarshipItemCount={scholarshipItemCount} magazineItemCount={magazineItemCount} /></div><FooterSkeleton /></div>
 }

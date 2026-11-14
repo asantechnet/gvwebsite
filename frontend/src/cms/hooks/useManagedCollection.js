@@ -53,14 +53,14 @@ function commitDraft(draft) {
 function useManagedCollection({ pageKey, label, services, tourism, opportunities, exams }) {
   const isServices = Array.isArray(services)
   const isTourism = Boolean(tourism)
-  const [draft, setDraft] = useCmsDraftState(
+  const [draft, , { saveImmediate }] = useCmsDraftState(
     `collection:${pageKey}`,
     () => createInitialDraft({ isServices, isTourism, services, tourism, opportunities, exams }),
     { commit: commitDraft },
   )
 
   const cards = useMemo(() => {
-    const records = normalizeCollectionDraft(draft)
+    const records = normalizeCollectionDraft(draft).filter((record) => record.status !== 'deleted')
     if (isServices) {
       return records.map((service) => normalizeContentRecord({
         ...service,
@@ -76,7 +76,7 @@ function useManagedCollection({ pageKey, label, services, tourism, opportunities
   }, [draft, isServices, isTourism, label])
 
   const toggleStatus = (card) => {
-    setDraft((current) => {
+    return saveImmediate((current) => {
       if (Array.isArray(current)) {
         return current.map((item) => {
           if (item.id !== card.id && item.slug !== card.slug) return item
@@ -84,7 +84,6 @@ function useManagedCollection({ pageKey, label, services, tourism, opportunities
           return {
             ...item,
             status: currentStatus === 'draft' ? 'published' : 'draft',
-            savedStatus: item.savedStatus ?? currentStatus,
           }
         })
       }
@@ -93,7 +92,7 @@ function useManagedCollection({ pageKey, label, services, tourism, opportunities
   }
 
   const savePost = (savedPost, activeType) => {
-    setDraft((current) => {
+    return saveImmediate((current) => {
       if (isServices) {
         return current.some((service) => service.slug === savedPost.slug)
           ? current.map((service) => service.slug === savedPost.slug ? { ...service, ...savedPost } : service)
@@ -103,14 +102,21 @@ function useManagedCollection({ pageKey, label, services, tourism, opportunities
         ? current.map((item) => item.id === savedPost.id ? { ...item, ...savedPost, title: savedPost.title || item.title } : item)
         : [...current, { ...savedPost, id: `${activeType}:${savedPost.slug}`, type: activeType, title: savedPost.title, href: `/tourism/${activeType}/${savedPost.slug}` }]
       const category = opportunities?.[activeType]?.post?.category || activeType
-      const identity = savedPost.id || activeType
-      return current.some((item) => item.id === identity)
-        ? current.map((item) => item.id === identity ? { ...item, ...savedPost, id: identity, type: activeType, category, href: `/opportunities/${activeType}` } : item)
-        : [...current, { ...savedPost, id: identity, type: activeType, category, href: `/opportunities/${activeType}/${savedPost.slug}` }]
+      const identity = String(savedPost.id || `${activeType}:${savedPost.slug}`)
+      const nextRecord = { ...savedPost, id: identity, type: activeType, category, href: `/opportunities/${activeType}/${savedPost.slug}` }
+      const matches = (item) => item.id === identity || (item.type === activeType && item.slug === savedPost.slug)
+      return current.some(matches)
+        ? current.map((item) => matches(item) ? { ...item, ...nextRecord } : item)
+        : [...current, nextRecord]
     })
   }
 
-  const removePost = (card) => setDraft((current) => current.filter((item) => item.id !== card.id && item.slug !== card.slug))
+  const removePost = (card) => saveImmediate((current) => {
+    if (isServices || isTourism) return current.filter((item) => item.id !== card.id && item.slug !== card.slug)
+    return current.map((item) => (item.id === card.id || (item.type === card.type && item.slug === card.slug))
+      ? { id: item.id, type: item.type, slug: item.slug, status: 'deleted', translations: {} }
+      : item)
+  })
 
   return { cards, isServices, isTourism, removePost, savePost, toggleStatus }
 }

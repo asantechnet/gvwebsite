@@ -25,18 +25,18 @@ function ScholarshipsEditorSection({ content, initialTranslations }) {
   const [selectedSection, setSelectedSection] = useEditorTabs({ defaultTab: 'hero', storageKey: 'globalvision-cms-scholarships-tab', tabs: Object.keys(sectionIcons) })
   const [contentLanguage, setContentLanguage] = useCmsContentLanguage()
   const commitDrafts = useCallback((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, items: languageDraft.items.map((item) => { const next = { ...item }; delete next.savedStatus; return next }) }])), [])
-  const [drafts, setDrafts] = useCmsDraftState('scholarships', () => structuredClone(initialTranslations), { commit: commitDrafts })
+  const [drafts, setDrafts, { saveImmediate }] = useCmsDraftState('scholarships', () => structuredClone(initialTranslations), { commit: commitDrafts })
   const draft = drafts[contentLanguage]
   const setDraft = (update) => setDrafts((current) => ({ ...current, [contentLanguage]: typeof update === 'function' ? update(current[contentLanguage]) : update }))
   const [editing, setEditing] = useState(null)
   const selectedVisible = draft.visibility?.[selectedSection] !== false
   const toggleVisibility = () => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, visibility: { ...languageDraft.visibility, [selectedSection]: !selectedVisible } }])))
   const updateHero = (key, value) => setDraft((current) => ({ ...current, hero: { ...current.hero, [key]: value } }))
-  const saveItemTranslations = (localizedItems) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, items: editing.index === null ? [...languageDraft.items, localizedItems[language]] : languageDraft.items.map((entry, index) => index === editing.index ? localizedItems[language] : entry) }])))
+  const saveItemTranslations = (localizedItems) => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, items: editing.index === null ? [...languageDraft.items, localizedItems[language]] : languageDraft.items.map((entry, index) => index === editing.index ? localizedItems[language] : entry) }])))
   const deleteItem = async (index) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: content.deleteTitle, description: content.deleteDescription })
     if (confirmed) {
-      setDraft((current) => ({ ...current, items: current.items.filter((_, itemIndex) => itemIndex !== index) }))
+      await saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, items: languageDraft.items.filter((_, itemIndex) => itemIndex !== index) }])))
       showRecordToast('recordDeleted')
     }
     return Boolean(confirmed)
@@ -49,10 +49,10 @@ function ScholarshipsEditorSection({ content, initialTranslations }) {
       <EditorSectionHeader icon={sectionIcons[selectedSection]} title={content.sections[selectedSection].label} action={<div className="grid w-full grid-cols-2 items-center justify-items-stretch gap-2 sm:flex sm:w-auto sm:flex-nowrap sm:justify-start">{selectedSection === 'scholarships' && <button type="button" onClick={() => setEditing({ index: null, item: null })} className="order-3 col-span-2 box-border inline-flex h-[35px] min-h-[35px] max-h-[35px] w-full shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border border-admin-brand bg-admin-brand px-3 py-0 text-[.6875rem] leading-none font-semibold text-white transition hover:bg-orange-500 sm:order-none sm:col-span-1 sm:w-auto sm:min-w-32"><Plus size={14} />{content.add}</button>}<EditorVisibilityToggle label={content.visible || 'نمایش داده شود'} checked={selectedVisible} onChange={toggleVisibility} /><ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} /></div>} />
       <div className={`grid gap-6 ${selectedSection === 'scholarships' ? 'bg-transparent p-0 lg:p-6' : 'p-5 sm:p-6'}`}>
         {selectedSection === 'hero' && <EditorField label={content.fields.heroEyebrow} value={draft.hero.eyebrow} onChange={(value) => updateHero('eyebrow', value)} />}
-        {selectedSection === 'scholarships' && <ScholarshipList items={draft.items} translations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, languageDraft.items]))} initialLanguage={contentLanguage} options={draft.options} content={content} onEdit={(index) => setEditing({ index, item: draft.items[index] })} onDelete={deleteItem} onToggleStatus={(index) => setDraft((current) => ({ ...current, items: current.items.map((entry, itemIndex) => itemIndex === index ? { ...entry, status: entry.status === 'draft' ? 'published' : 'draft', savedStatus: entry.savedStatus ?? entry.status } : entry) }))} />}
+        {selectedSection === 'scholarships' && <ScholarshipList items={draft.items} translations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, languageDraft.items]))} initialLanguage={contentLanguage} options={draft.options} content={content} onEdit={(index) => setEditing({ index, item: draft.items[index] })} onDelete={deleteItem} onToggleStatus={(index) => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, items: languageDraft.items.map((entry, itemIndex) => itemIndex === index ? { ...entry, status: entry.status === 'draft' ? 'published' : 'draft' } : entry) }])))} />}
       </div>
     </section>
-    {editing && <ScholarshipModal content={content} initialLanguage={contentLanguage} initialTranslations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, editing.index === null ? null : languageDraft.items[editing.index] || null]))} optionsByLanguage={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, languageDraft.options]))} onClose={() => closeCmsModal(() => setEditing(null))} onSave={(localizedItems) => closeCmsModal(() => { const isNew = editing.index === null; saveItemTranslations(localizedItems); setEditing(null); if (isNew) showRecordToast('recordAdded') })} />}
+    {editing && <ScholarshipModal content={content} initialLanguage={contentLanguage} initialTranslations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, editing.index === null ? null : languageDraft.items[editing.index] || null]))} optionsByLanguage={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, languageDraft.options]))} onClose={() => closeCmsModal(() => setEditing(null))} onSave={async (localizedItems) => { const isNew = editing.index === null; await saveItemTranslations(localizedItems); closeCmsModal(() => { setEditing(null); if (isNew) showRecordToast('recordAdded') }) }} />}
   </PageContainer>
 }
 
@@ -122,7 +122,7 @@ function ScholarshipList({ items, translations, initialLanguage, options, conten
 <td className="p-4 text-xs text-admin-muted">{item.country}</td>
 <td className="p-4 text-xs text-admin-muted">{item.degree}</td>
 <td className="p-4" onClick={(event) => event.stopPropagation()}>
-<button type="button" onClick={(event) => { onToggleStatus(index); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition ${statusTone}`}>{statusLabel}</button>
+<button type="button" onClick={() => onToggleStatus(index)} className={`rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition ${statusTone}`}>{statusLabel}</button>
 </td>
 <td className="p-4" onClick={(event) => event.stopPropagation()}>
 <div className="flex gap-1">
@@ -145,7 +145,7 @@ function ScholarshipList({ items, translations, initialLanguage, options, conten
 <div className="min-w-0">
 <strong className={`block truncate text-sm text-admin-heading ${isEnglish ? '!font-normal' : ''}`}>{item.title}</strong>
 <span className="mt-1 block truncate text-xs text-admin-muted">{item.country} · {item.degree}</span>
-<button type="button" onClick={(event) => { event.stopPropagation(); onToggleStatus(index); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`mt-2 inline-block rounded-full px-2 py-1 text-[.65rem] font-semibold transition ${statusTone}`}>{statusLabel}</button>
+<button type="button" onClick={(event) => { event.stopPropagation(); onToggleStatus(index) }} className={`mt-2 inline-block rounded-full px-2 py-1 text-[.65rem] font-semibold transition ${statusTone}`}>{statusLabel}</button>
 <div className="mt-2 flex justify-end gap-1" onClick={(event) => event.stopPropagation()}>
 <a className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-muted hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" href={item.officialHref} target="_blank" rel="noreferrer" aria-label={content.preview}>
 <ExternalLink size={15} />

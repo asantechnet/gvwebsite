@@ -7,6 +7,7 @@ import Container from '@ui/Container.jsx'
 import ContentSidebar from '@ui/ContentSidebar.jsx'
 import Section from '@ui/Section.jsx'
 import MediaShowcase from '@shared/media/MediaShowcase.jsx'
+import PublicRichText from '@/shared/components/PublicRichText.jsx'
 import dariPostContent from '@website/locales/prs/post.json'
 import pashtoPostContent from '@website/locales/ps/post.json'
 import englishPostContent from '@website/locales/en/post.json'
@@ -126,6 +127,7 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
   const shareUrl = typeof window === 'undefined' ? '' : window.location.href
   const encodedShareUrl = encodeURIComponent(shareUrl)
   const encodedShareTitle = encodeURIComponent(post.title)
+  const usesCmsRecordContent = post.cmsManaged && Object.hasOwn(post, 'content')
 
   const copyPostLink = async () => {
     let copied = false
@@ -191,15 +193,12 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
 
           <div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-6 lg:p-8">
             <div className="order-1 min-w-0 text-start lg:order-1">
-              {content.countries?.length > 0 ? <CountryCards content={content} /> : <>
-              <p className="text-lg font-medium leading-9 text-foreground-muted">{post.description}</p>
+              {!usesCmsRecordContent && content.countries?.length > 0 ? <CountryCards content={content} /> : <>
+              {post.description && <p className="text-lg font-medium leading-9 text-foreground-muted">{post.description}</p>}
               {post.facts?.length > 0 && <dl className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">{post.facts.map((fact) => <div key={fact.label} className="rounded-2xl border border-border bg-background/70 p-4 dark:border-gray-600 dark:bg-gray-800"><dt className="text-xs font-bold text-accent-text">{fact.label}</dt><dd className="mt-2 text-sm font-extrabold text-foreground">{fact.value}</dd></div>)}</dl>}
-              <div className="my-8 rounded-2xl border-r-4 border-primary bg-primary/10 px-5 py-4 text-base font-semibold leading-8 text-foreground">
-                {content.highlight}
-              </div>
-              <RichPostContent content={content} />
-              {guideLinks.length > 0 && <section className="mt-8 rounded-2xl border border-primary/30 bg-primary/10 p-5 md:p-6" aria-labelledby="guide-links-heading"><h2 id="guide-links-heading" className="font-heading text-xl font-extrabold text-foreground">{content.guideLinksTitle}</h2><div className="mt-4 flex flex-wrap gap-3">{guideLinks.map((guide) => <a key={guide.href} href={localizedHref(guide.href)} className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold !text-[#fff8f3] transition-colors hover:bg-primary-hover"><ArrowLeft aria-hidden="true" size={17} />{guide.label}</a>)}</div></section>}
-              {content.media && <MediaShowcase post={post} media={content.media} />}
+              {usesCmsRecordContent
+                ? <PublicRichText className="mt-8" html={post.content || ''} />
+                : <><div className="my-8 rounded-2xl border-r-4 border-primary bg-primary/10 px-5 py-4 text-base font-semibold leading-8 text-foreground">{content.highlight}</div><RichPostContent content={content} />{guideLinks.length > 0 && <section className="mt-8 rounded-2xl border border-primary/30 bg-primary/10 p-5 md:p-6" aria-labelledby="guide-links-heading"><h2 id="guide-links-heading" className="font-heading text-xl font-extrabold text-foreground">{content.guideLinksTitle}</h2><div className="mt-4 flex flex-wrap gap-3">{guideLinks.map((guide) => <a key={guide.href} href={localizedHref(guide.href)} className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold !text-[#fff8f3] transition-colors hover:bg-primary-hover"><ArrowLeft aria-hidden="true" size={17} />{guide.label}</a>)}</div></section>}{content.media && <MediaShowcase post={post} media={content.media} />}</>}
               <div className="mt-8 flex flex-wrap items-center justify-center gap-3 border-t border-border pt-5 dark:border-gray-600 lg:justify-end">
                 <span className="text-sm text-foreground-muted">{content.shareLabel}</span>
                 <button type="button" onClick={copyPostLink} className="group relative flex size-9 items-center justify-center rounded-xl border border-border bg-surface text-foreground-muted transition-colors hover:border-primary hover:text-accent-text focus:outline-none dark:border-gray-600 dark:bg-transparent" aria-label={isLinkCopied ? copySuccessLabel : content.copyLabel}><LinkIcon size={16} /><span className="pointer-events-none absolute bottom-full right-0 mb-2 whitespace-nowrap rounded-lg bg-foreground px-2.5 py-1.5 text-xs font-medium text-background opacity-0 shadow-lg transition-opacity group-hover:opacity-100">{isLinkCopied ? copySuccessLabel : content.copyLabel}</span></button>

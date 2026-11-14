@@ -1,9 +1,4 @@
-import {
-  BadgeCheck,
-  FileCheck2,
-  GraduationCap,
-  MessagesSquare,
-} from "lucide-react";
+import { resolveContentIcon } from "@/shared/icons/contentIcons.js";
 import ActionLink from "@ui/ActionLink.jsx";
 import Container from "@ui/Container.jsx";
 import Section from "@ui/Section.jsx";
@@ -11,10 +6,10 @@ import SectionHeading from "@ui/SectionHeading.jsx";
 import ServiceCard from "@ui/ServiceCard.jsx";
 
 const serviceIcons = {
-  consultation: MessagesSquare,
-  scholarshipRegistration: GraduationCap,
-  documentPreparation: FileCheck2,
-  studyVisa: BadgeCheck,
+  consultation: "MessagesSquare",
+  scholarshipRegistration: "GraduationCap",
+  documentPreparation: "FileCheck2",
+  studyVisa: "BadgeCheck",
 };
 
 function ServicesSection({ content }) {
@@ -46,7 +41,7 @@ function ServicesSection({ content }) {
                 <ServiceCard
                   key={item.id}
                   {...item}
-                  icon={serviceIcons[item.id]}
+                  icon={resolveContentIcon(item.icon, serviceIcons[item.id])}
                 />
               ))}
             </div>

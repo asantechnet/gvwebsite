@@ -19,8 +19,22 @@ if (prepare.status !== 0) {
   process.exit(prepare.status || 1)
 }
 
+const storageLink = spawnSync('php', ['artisan', 'storage:link'], {
+  cwd: backendDirectory,
+  encoding: 'utf8',
+  stdio: 'pipe',
+})
+
+if (storageLink.stdout) process.stdout.write(storageLink.stdout)
+if (storageLink.stderr) process.stderr.write(storageLink.stderr)
+
+if (storageLink.status !== 0) {
+  process.stderr.write('\nDevelopment startup stopped because the public upload storage link could not be prepared.\n')
+  process.exit(storageLink.status || 1)
+}
+
 const processes = [
-  spawn('php', ['artisan', 'serve', '--host=127.0.0.1', '--port=8000'], {
+  spawn('php', ['-d', 'upload_max_filesize=500M', '-d', 'post_max_size=501M', 'artisan', 'serve', '--host=127.0.0.1', '--port=8000'], {
     cwd: backendDirectory,
     stdio: 'inherit',
   }),

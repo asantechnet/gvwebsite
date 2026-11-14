@@ -1,4 +1,4 @@
-export const SKELETON_PREVIEW_DELAY_MS = 0
+export const SKELETON_PREVIEW_DELAY_MS = 1000
 
 export function waitForSkeletonPreview() {
   return SKELETON_PREVIEW_DELAY_MS > 0

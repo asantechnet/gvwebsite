@@ -6,7 +6,7 @@ This guide is the single source of truth for the Global Vision architecture, gen
 
 The public navigation includes dedicated opportunity, tourism, scholarship, magazine, services, and supporting-information entries. The opportunities group includes a localized investment directory and country-specific investment routes. Tourism includes localized Afghanistan and world directories with destination cards and detail routes. The independent `/services` directory presents all service posts as cards. The `/scholarships` directory provides localized country, degree, and funding filters, responsive scholarship cards, and slug-based scholarship detail routes rendered through the shared single-post design. Static localized records provide the deployment fallback, while published CMS snapshots override supported page and collection content in API mode.
 
-The project now includes the React frontend and a Laravel 13 application. The frontend provides the localized public website and CMS described below. The backend provides MariaDB migrations, first-party Sanctum cookie authentication, administrator and super-user role enforcement, password recovery, contact-message persistence and queued notifications, a paginated message inbox, published editor snapshots, server-side rich-text sanitization, scanned uploads, and an administrator audit log. The dedicated super-user workspace manages administrator identities, email access, passwords, reset delivery, and account removal without exposing website content. The configured frontend default is API mode: CMS editors hydrate and save through versioned MariaDB snapshots, while public content consumes published snapshots with static localized content only as an availability fallback. Mock mode remains available for isolated frontend testing when explicitly selected.
+The project now includes the React frontend and a Laravel 13 application. The frontend provides the localized public website and CMS described below. The backend provides MariaDB migrations, first-party Sanctum cookie authentication, administrator and super-user role enforcement, password recovery, contact-message persistence and queued notifications, a paginated message inbox, published editor snapshots, a durable uploaded-media index, server-side rich-text sanitization, scanned uploads, and an administrator audit log. The dedicated super-user workspace manages administrator identities, email access, passwords, reset delivery, and account removal without exposing website content. The configured frontend default is API mode: CMS editors hydrate and save through versioned MariaDB snapshots, while public content consumes published snapshots with static localized content only as an availability fallback. Mock mode remains available for isolated frontend testing when explicitly selected.
 
 The frontend includes dependency-free Node tests for localized catalog search, scholarship filtering, CMS route resolution, and locale namespace parity, plus static validators for localized internal links, external URL syntax, public asset references, SEO output, and the initial JavaScript budget. Laravel feature tests cover authentication, recovery, authorization, messages, snapshots, uploads, audit history, public snapshots, contact intake, and SPA response status behavior.
 
@@ -14,7 +14,7 @@ Published CMS snapshots are the canonical public-content source in API mode. Col
 
 The CMS and public website are separate lazy application entries. Public translation content is grouped into Dari, Pashto, and English payloads and loaded only for the active route language; adding a public locale namespace requires registering it in the matching localized-content module. Production builds enforce a 300 kB raw initial-JavaScript budget before route, page, and locale payloads are loaded.
 
-Shared modal keyboard behavior lives in `src/shared/hooks/useModalFocus.js`. Public and CMS dialogs use it to move focus into the dialog, contain Tab navigation, close with Escape, and restore focus to the invoking control. The website and CMS use a visible border-and-shadow keyboard focus treatment without browser outlines or Tailwind rings. Brand fills retain the canonical orange, while the semantic `accent-text` and `admin-brand-text` tokens use a contrast-safe darker orange in light mode and the existing bright orange in dark mode. Public and CMS loading states use the shared `src/shared/components/SkeletonBlock.jsx` shimmer primitive and route-specific skeleton compositions that mirror each destination. Public bootstrap renders the destination skeleton from the first application fallback while localized content resolves; maintenance mode uses its dedicated shared skeleton from the first fallback. CMS-internal links use history navigation so authentication and the dashboard shell remain mounted between routes. Skeletons are never delayed artificially.
+Shared modal keyboard behavior lives in `src/shared/hooks/useModalFocus.js`. Public and CMS dialogs use it to move focus into the dialog, contain Tab navigation, close with Escape, and restore focus to the invoking control. The website and CMS use a visible border-and-shadow keyboard focus treatment without browser outlines or Tailwind rings. Brand fills retain the canonical orange, while the semantic `accent-text` and `admin-brand-text` tokens use a contrast-safe darker orange in light mode and the existing bright orange in dark mode. Public and CMS loading states use the shared `src/shared/components/SkeletonBlock.jsx` shimmer primitive and route-specific skeleton compositions that mirror each destination. Public bootstrap renders the destination skeleton from the first application fallback while localized content resolves; maintenance mode uses its dedicated shared skeleton from the first fallback. CMS-internal links use history navigation so authentication and the dashboard shell remain mounted between routes. The public lazy-route skeleton preview is temporarily configured with a 1-second minimum duration in `src/shared/utils/loading.js`.
 
 Localized company names saved from the CMS profile are read through `src/shared/utils/branding.js`. The CMS sidebar and public maintenance page consume that shared source and synchronize saved changes within the active tab and across open tabs.
 
@@ -41,11 +41,12 @@ Do not describe planned functionality as implemented.
 10. The website and CMS support Dari, Pashto, and English. Dari and Pashto are right to left; English is left to right.
 11. Use locally hosted IRANYekan for Dari body text, Vazirmatn for Pashto, Poppins for English, and the shared `font-heading` token for display headings.
 12. Route loading states must mirror the order, responsive layout, and recognizable shapes of destination sections.
-13. Every visible skeleton must use the shared `SkeletonBlock` component for consistent shimmer and reduced motion behavior.
-14. Use Lucide React for all general interface icons. Use React Icons only for social media brand icons.
-15. Keep frontend rendering independent of backend implementation through a dedicated `src/shared/services/api/` layer. Components, sections, and pages must never call Laravel endpoints directly.
-16. Keep public website code under `src/website/`, CMS code under `src/cms/`, and code genuinely reused by both applications under `src/shared/`.
-17. Store each application's interface translations in its locale-specific JSON directories. Components consume translation keys and must not embed duplicated Dari, Pashto, and English UI copy.
+13. Public reloads save both the exact pixel position and the active top-level section position. Restore the route-matched skeleton to the equivalent point inside that section before paint, then replace it with the real lazy route at the exact saved pixel. Keep restoration manual, reserve sufficient pre-paint height, suppress browser scroll anchoring during restoration, and do not introduce page-wide proportional or visibly staged scroll corrections.
+14. Every visible skeleton must use the shared `SkeletonBlock` component for consistent shimmer and reduced motion behavior.
+15. Use Lucide React for all general interface icons. Use React Icons only for social media brand icons.
+16. Keep frontend rendering independent of backend implementation through a dedicated `src/shared/services/api/` layer. Components, sections, and pages must never call Laravel endpoints directly.
+17. Keep public website code under `src/website/`, CMS code under `src/cms/`, and code genuinely reused by both applications under `src/shared/`.
+18. Store each application's interface translations in its locale-specific JSON directories. Components consume translation keys and must not embed duplicated Dari, Pashto, and English UI copy.
 
 ## Goals
 
@@ -135,7 +136,7 @@ globalvision-website/
 │   │   │   └── locales/         # CMS Dari, Pashto, and English translations
 │   │   │   ├── utils/           # CMS-only events and nonvisual helpers
 │   │   │   └── routes.js        # Canonical CMS paths and route matching
-│   │   ├── shared/              # Cross-application components, models, security, services, uploads, hooks, and utilities
+│   │   ├── shared/              # Cross-application components, icons, models, security, services, uploads, hooks, and utilities
 │   │   │   ├── models/          # Stable frontend records independent of API response shapes
 │   │   │   ├── security/        # Rich-text sanitization and frontend content-safety policy
 │   │   │   ├── services/        # Mock/API data sources and centralized API clients
@@ -211,9 +212,12 @@ Use aliases across source areas and relative imports for nearby files within one
 - The portable rich-text editor and its canonical image, video, and audio templates live under `src/shared/components/rich-text-editor/`; application-specific editor and legacy media paths may only re-export those shared implementations for compatibility. Keep its scoped styles, locales, documentation, and public API together so the complete folder remains portable.
 - CMS editors must compose shared primitives from `EditorPrimitives.jsx` and `SectionTabBar.jsx` instead of copying their markup or Tailwind classes. Shared tab persistence and scroll-reset behavior must use `useEditorTabs`.
 - CMS records with multilingual content keep language-neutral settings such as status, featured state, media, dates, and ordering at the record level, while visible authored fields are isolated under `translations.prs`, `translations.ps`, and `translations.en`. Editor language switching must preserve every locale draft and save all translations together without copying values between languages.
+- The home hero media is language-neutral: changing it in any content language updates the shared media value for Dari, Pashto, and English, while its localized alternative text remains under each locale.
 - Full-page CMS editors use one page-level content-language switcher to swap all authored fields together. Keep this content-language state separate from the CMS interface language, preserve drafts for every locale while switching, and use a compact dropdown on mobile rather than adding language controls beside individual fields.
 - CMS React components must consume the interface and initial content language through `useCmsInterfaceLanguage` and `useCmsContentLanguage`; never read `document.documentElement.lang` during render because the DOM attribute is synchronized after React state changes.
 - Supply changeable content, images, links, icons, states, colors, and behavior through props.
+- CMS-selectable general icons use the canonical allowlist and resolver in `src/shared/icons/contentIcons.js`; store stable icon names in content and never duplicate picker and public-renderer icon maps.
+- Collection item editors preserve complete records when changing authored or shared fields. Language-neutral card media, links, icons, country identity, dates, status, and layout metadata must remain synchronized across locales, and public snapshot adapters normalize legacy `name`/`title` card shapes at the integration boundary.
 - Prefer `children` where composition creates a clearer API.
 - Support `className` where consumers need controlled visual extension.
 - Do not create a component merely to hide one line of markup.
@@ -251,9 +255,13 @@ Use aliases across source areas and relative imports for nearby files within one
 ### Frontend security and untrusted content
 
 - Render CMS-authored HTML only through `SafeRichText`, which applies the shared DOMPurify allowlist and safe URL policy. Never add a direct `dangerouslySetInnerHTML` consumer.
+- Public record bodies render through `PublicRichText`, which provides the canonical display styling for editor headings, alignment, lists and columns, highlights, links, buttons, and media. Public image, video, audio, and media-grid nodes must mount the same shared media templates used by the rich-text editor so their presentation and behavior remain synchronized. `SafeRichText` remains the sanitizing base.
 - Sanitize rich text when loading it into the editor as defense in depth. The backend must still sanitize and validate the canonical stored value.
 - Reject executable URL schemes, inline event handlers, scripts, embedded documents, SVG markup, forms, and unsupported rich-text elements.
 - Validate uploads by MIME type and per-kind size policy before previewing or sending them. Browser validation improves feedback but never replaces backend file inspection, safe renaming, storage isolation, malware checks, and authorization.
+- CMS upload requests must refresh the Sanctum CSRF cookie before sending files so uploads also work after a remembered session is restored. Local development must expose Laravel public storage and start PHP with request limits matching the per-kind upload policy; production web-server and PHP limits must be at least as large as the maximum permitted upload.
+- Media upload limits are 2 MB for images, 10 MB for audio and documents, and 500 MB for video. The frontend policy, Laravel validation, PHP `upload_max_filesize`/`post_max_size`, and the web-server request limit must remain synchronized; error dialogs show only the selected media type's localized formats and limit.
+- Successfully uploaded files must be recorded in the backend media index. The Media Library and every CMS media picker load this index from the API; browser draft storage is not the canonical upload catalog. Import legacy filesystem uploads through a one-time data migration or maintenance command, never by scanning storage during normal list requests.
 - Keep local file previews as temporary `blob:` URLs and revoke them when replaced or removed.
 - Keep authentication state in memory and model explicit loading, authenticated, unauthenticated, forbidden, and failed-session states.
 
@@ -368,6 +376,7 @@ Use `bg-primary` / `bg-admin-brand` and matching border tokens for canonical ora
 - Compress large photography before production.
 - Prefer approved SVG sources for logos and simple scalable graphics.
 - Do not add duplicate assets or temporary logo/icon placeholders.
+- Public testimonial cards use `/assets/images/avatar.png` only when the CMS avatar is empty or fails to load.
 
 ## Icon Rules
 
@@ -445,6 +454,10 @@ When backend or content management work begins:
 - Treat the contact email managed on the CMS contact page as the single source of truth. The public contact page and maintenance page must use the same backend value.
 - Persist the primary and secondary branding colors in CMS settings and expose them as shared dynamic theme tokens for both the public website and CMS, including the maintenance page.
 - Provide consistent loading, empty, success, and error states.
+- Keep CMS persistence boundaries explicit: page-level inline fields participate in the global recoverable Save Changes draft, while popup-owned records persist immediately from the popup save action without marking the page draft dirty. Media-library uploads and deletions are immediate server operations and never participate in the page Save Changes flow.
+- Once a CMS collection snapshot exists, its published records are authoritative for the matching public directory and detail routes: create, update, draft, and delete operations must never be filled back in from bundled seed records. Bundled localized records are startup fallback data only before that content family has a snapshot. Public snapshot reads bypass browser caches and newer refreshes must not be overwritten by slower stale requests.
+- Opportunity collection records are grouped by their `type` (`study`, `work`, `migration`, `investment`, or `exams`) and rendered as the exact public directory cards for that type. Never collapse a type to one record or substitute the generic bundled country catalog after that type exists in the CMS snapshot.
+- Snapshot-derived blog/detail records render only their own saved record fields. Shared post components may provide layout, navigation, and localized interface labels, but must not inject bundled article bodies, highlights, media, images, sections, or other record data when a CMS record is active.
 - Update this guide before describing backend, CMS, routes, pages, or dependencies as implemented.
 
 ## Documentation Maintenance

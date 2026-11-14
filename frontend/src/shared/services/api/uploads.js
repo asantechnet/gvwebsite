@@ -1,9 +1,9 @@
 import { apiConfig } from './config.js'
-import { getCsrfToken } from './client.js'
+import { apiClient, getCsrfToken, initializeCsrfCookie } from './client.js'
 import { ApiError, normalizeApiError } from './errors.js'
-import { apiClient } from './client.js'
 
-export function uploadFile(file, { metadata = {}, onProgress, signal } = {}) {
+export async function uploadFile(file, { metadata = {}, onProgress, signal } = {}) {
+  await initializeCsrfCookie()
   return new Promise((resolve, reject) => {
     const request = new XMLHttpRequest()
     const formData = new FormData()
@@ -29,6 +29,10 @@ export function uploadFile(file, { metadata = {}, onProgress, signal } = {}) {
     signal?.addEventListener('abort', () => request.abort(), { once: true })
     request.send(formData)
   })
+}
+
+export function listUploads(options) {
+  return apiClient.get('/cms/uploads', options)
 }
 
 export function removeUpload(path, options) {

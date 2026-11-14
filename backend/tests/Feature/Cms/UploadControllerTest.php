@@ -29,10 +29,29 @@ class UploadControllerTest extends TestCase
             ->assertJsonPath('data.name', 'header.png');
 
         Storage::disk('public')->assertExists($response->json('data.path'));
+        $this->assertDatabaseHas('media_uploads', [
+            'path' => $response->json('data.path'),
+            'original_name' => 'header.png',
+        ]);
         $this->assertDatabaseHas('audit_logs', [
             'actor_id' => $user->id,
             'action' => 'media.uploaded',
         ]);
+    }
+
+    public function test_media_manager_can_list_durable_uploads(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create(['permissions' => ['media.manage']]);
+        $path = $this->actingAs($user)->postJson('/api/cms/uploads', [
+            'kind' => 'image',
+            'file' => $this->fakePng(),
+        ])->assertCreated()->json('data.path');
+
+        $this->actingAs($user)->getJson('/api/cms/uploads')
+            ->assertOk()
+            ->assertJsonPath('data.0.path', $path)
+            ->assertJsonPath('data.0.name', 'header.png');
     }
 
     public function test_upload_is_rejected_when_malware_scanner_fails(): void

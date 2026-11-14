@@ -1,16 +1,4 @@
-import { apiClient } from './client.js'
-import { apiConfig } from './config.js'
-
-async function initializeCsrfCookie() {
-  const url = new URL(apiConfig.baseUrl, window.location.origin)
-  url.pathname = url.pathname.replace(/\/api\/?$/, '/sanctum/csrf-cookie')
-  url.search = ''
-  const response = await fetch(url, {
-    credentials: apiConfig.credentials,
-    headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-  })
-  if (!response.ok) throw new Error('The secure login session could not be initialized.')
-}
+import { apiClient, initializeCsrfCookie } from './client.js'
 
 async function postWithCsrf(path, values, options) {
   await initializeCsrfCookie()

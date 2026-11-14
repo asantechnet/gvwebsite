@@ -33,6 +33,7 @@ function UnsavedChangesBar({ language = 'prs', sidebarCollapsed = false }) {
       if (
         event.target.closest?.('#dashboard-content')
         && !event.target.closest?.('[data-cms-draft-ignore]')
+        && !event.target.closest?.('[role="dialog"]')
         && event.target.type !== 'search'
       ) {
         setDirty(true)

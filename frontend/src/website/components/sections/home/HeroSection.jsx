@@ -3,21 +3,36 @@ import Container from "@ui/Container.jsx";
 import Section from "@ui/Section.jsx";
 
 function HeroVisual({ content }) {
+  const media = content.media;
+  const mediaUrl = media?.url || "/assets/images/home/hero-globe.webp";
+
   return (
     <div className="relative mx-auto flex w-full max-w-xl items-center justify-center">
       <div
         aria-hidden="true"
         className="absolute size-72 rounded-full bg-primary/10 blur-3xl sm:size-96"
       />
-      <img
-        src="/assets/images/home/hero-globe.webp"
-        alt={content.imageAlt}
-        width="1536"
-        height="1536"
-        fetchPriority="high"
-        decoding="async"
-        className="relative z-10 h-auto w-full object-contain drop-shadow-xl"
-      />
+      {media?.type === "video" ? (
+        <video
+          src={mediaUrl}
+          aria-label={content.imageAlt}
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="relative z-10 h-auto w-full object-contain drop-shadow-xl"
+        />
+      ) : (
+        <img
+          src={mediaUrl}
+          alt={content.imageAlt}
+          width="1536"
+          height="1536"
+          fetchPriority="high"
+          decoding="async"
+          className="relative z-10 h-auto w-full object-contain drop-shadow-xl"
+        />
+      )}
     </div>
   );
 }
@@ -61,7 +76,7 @@ function HeroSection({ content }) {
         </div>
 
         <div className="order-1 -mb-16 py-4 md:-mb-10 md:py-0 lg:order-2 lg:mb-0">
-          <HeroVisual content={content.visual} />
+          <HeroVisual content={{ ...content.visual, media: content.media }} />
         </div>
       </Container>
     </Section>

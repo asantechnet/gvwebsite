@@ -1,5 +1,7 @@
 import { Quote, Star } from "lucide-react";
 
+const defaultTestimonialAvatar = "/assets/images/avatar.png";
+
 function TestimonialCard({ quote, name, role, avatar, avatarAlt }) {
   return (
     <figure className="group flex h-full flex-col rounded-3xl border border-border bg-surface p-5 shadow-sm transition-colors duration-300 hover:border-primary/40 hover:bg-primary/[0.015] dark:border-gray-600 dark:bg-gray-700 dark:hover:border-primary/60 dark:hover:bg-gray-700/70 sm:p-6">
@@ -20,8 +22,13 @@ function TestimonialCard({ quote, name, role, avatar, avatarAlt }) {
 
       <figcaption className="mt-6 flex items-center gap-3 border-t border-border pt-4 dark:border-gray-600">
         <img
-          src={avatar}
-          alt={avatarAlt}
+          src={avatar || defaultTestimonialAvatar}
+          alt={avatarAlt || name}
+          onError={(event) => {
+            if (event.currentTarget.getAttribute("src") !== defaultTestimonialAvatar) {
+              event.currentTarget.src = defaultTestimonialAvatar;
+            }
+          }}
           width="40"
           height="40"
           loading="lazy"

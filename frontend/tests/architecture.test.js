@@ -36,7 +36,7 @@ test('new CMS collection and branding labels have locale parity', () => {
   }
 })
 
-test('CMS card data cannot override public home icon components', async () => {
+test('CMS card icons are resolved through the shared trusted icon allowlist', async () => {
   const sections = [
     '../src/website/components/sections/home/OpportunitySection.jsx',
     '../src/website/components/sections/home/ProcessSection.jsx',
@@ -45,6 +45,61 @@ test('CMS card data cannot override public home icon components', async () => {
 
   for (const section of sections) {
     const source = await readFile(new URL(section, import.meta.url), 'utf8')
-    assert.ok(source.indexOf('{...item}') < source.indexOf('icon={'), `${section} must apply its trusted icon after CMS item props`)
+    assert.match(source, /resolveContentIcon\(item\.icon, /, `${section} must resolve its saved CMS icon`)
   }
+
+  const picker = await readFile(new URL('../src/cms/components/IconPicker.jsx', import.meta.url), 'utf8')
+  const registry = await readFile(new URL('../src/shared/icons/contentIcons.js', import.meta.url), 'utf8')
+  assert.match(picker, /contentIconOptions/)
+  assert.match(registry, /new Map\(contentIconOptions\)/)
+})
+
+test('CMS collection cards preserve complete records and public home collections normalize legacy labels', async () => {
+  const modal = await readFile(new URL('../src/cms/components/CollectionItemModal.jsx', import.meta.url), 'utf8')
+  const loader = await readFile(new URL('../src/website/data/loadWebsiteContent.js', import.meta.url), 'utf8')
+
+  assert.match(modal, /structuredClone\(localizedItem\)/)
+  assert.match(modal, /if \(isCountry\).*savedItem\.name = languageDraft\.title/)
+  assert.match(loader, /name: country\.name \|\| country\.title/)
+  assert.match(loader, /title: item\.title \|\| item\.name/)
+})
+
+test('published CMS snapshots remain authoritative on public collection routes', async () => {
+  const loader = await readFile(new URL('../src/website/data/loadWebsiteContent.js', import.meta.url), 'utf8')
+  const snapshotsApi = await readFile(new URL('../src/shared/services/api/snapshots.js', import.meta.url), 'utf8')
+  const websiteApp = await readFile(new URL('../src/website/WebsiteApp.jsx', import.meta.url), 'utf8')
+
+  assert.match(loader, /cards: opportunities\.filter\(\(record\) => record\.type === type\)/)
+  assert.match(loader, /cmsManaged: true/)
+  assert.match(loader, /!managedTypes\.has\(type\)/)
+  assert.match(loader, /content\.guides\.exams = exams\.map/)
+  assert.doesNotMatch(loader, /fallbackWhatsApp/)
+  assert.match(snapshotsApi, /cache: 'no-store'/)
+  assert.match(websiteApp, /loadId === latestLoad\.current/)
+
+  const blogPost = await readFile(new URL('../src/website/components/pages/BlogPostPage.jsx', import.meta.url), 'utf8')
+  assert.match(blogPost, /usesCmsRecordContent/)
+  assert.match(blogPost, /html=\{post\.content \|\| ''\}/)
+})
+
+test('public reload restoration does not use staged proportional scrolling', async () => {
+  const layout = await readFile(new URL('../src/website/components/layout/WebsiteLayout.jsx', import.meta.url), 'utf8')
+  const restoration = await readFile(new URL('../src/website/utils/scrollRestoration.js', import.meta.url), 'utf8')
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8')
+
+  assert.doesNotMatch(layout, /restoreScrollPosition\('proportional'\)/)
+  assert.match(layout, /<ScrollRestorationFinalizer \/>/)
+  assert.match(restoration, /finishReloadScrollRestoration/)
+  assert.match(restoration, /sectionIndex/)
+  assert.match(restoration, /data-route-skeleton/)
+  assert.match(html, /data-restoring-scroll/)
+  assert.doesNotMatch(html, /data-restoring-scroll[^}]+visibility:\s*hidden/)
+  assert.match(html, /data-restoring-scroll[^}]+overflow-anchor:\s*none/)
+})
+
+test('testimonial cards use the shared profile avatar only as a missing or failed image fallback', async () => {
+  const card = await readFile(new URL('../src/website/components/ui/TestimonialCard.jsx', import.meta.url), 'utf8')
+  assert.match(card, /avatar \|\| defaultTestimonialAvatar/)
+  assert.match(card, /\/assets\/images\/avatar\.png/)
+  assert.match(card, /onError=/)
 })

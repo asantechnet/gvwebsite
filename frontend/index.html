@@ -10,6 +10,7 @@
       html.dark, html.dark body { background: #1f2937; }
       html[data-application="cms"], html[data-application="cms"] body { background: #edf1f6; }
       html[data-application="cms"].dark, html[data-application="cms"].dark body { background: #0a1019; }
+      html[data-restoring-scroll="true"] { overflow-anchor: none; }
     </style>
     <script>
       (() => {
@@ -28,6 +29,41 @@
           document.documentElement.lang = language
           document.documentElement.dir = language === 'en' ? 'ltr' : 'rtl'
         } else {
+          if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'
+          const navigationType = window.performance.getEntriesByType('navigation')[0]?.type
+          if (navigationType === 'reload') {
+            try {
+              const scrollKey = `globalvision-scroll:${window.location.pathname}${window.location.search}`
+              const storedScroll = window.sessionStorage.getItem(scrollKey)
+              const parsedScroll = storedScroll ? JSON.parse(storedScroll) : null
+              const savedTop = typeof parsedScroll === 'number' ? parsedScroll : Number(parsedScroll?.top)
+              if (Number.isFinite(savedTop) && savedTop > 0) {
+                document.documentElement.dataset.restoringScroll = 'true'
+                document.documentElement.style.minHeight = `${Math.ceil(savedTop + window.innerHeight)}px`
+                const restoreBeforePaint = () => window.scrollTo({ top: savedTop, behavior: 'auto' })
+                restoreBeforePaint()
+                window.addEventListener('DOMContentLoaded', restoreBeforePaint, { once: true })
+                if (Number.isInteger(parsedScroll?.sectionIndex) && Number.isFinite(parsedScroll?.sectionProgress)) {
+                  const observer = new MutationObserver(() => {
+                    const section = document.querySelectorAll('[data-route-skeleton] > section')[parsedScroll.sectionIndex]
+                    if (!section) return
+                    window.scrollTo(0, section.getBoundingClientRect().top + window.scrollY + (parsedScroll.sectionProgress * section.offsetHeight))
+                    observer.disconnect()
+                  })
+                  observer.observe(document.documentElement, { childList: true, subtree: true })
+                }
+                window.__globalVisionScrollRestoreFallback = window.setTimeout(() => {
+                  restoreBeforePaint()
+                  delete document.documentElement.dataset.restoringScroll
+                  document.documentElement.style.removeProperty('min-height')
+                }, 5000)
+              }
+            } catch {
+              delete document.documentElement.dataset.restoringScroll
+              document.documentElement.style.removeProperty('min-height')
+            }
+          }
+
           const possibleLanguage = window.location.pathname.split('/')[1]
           const language = ['dr', 'ps', 'en'].includes(possibleLanguage) ? possibleLanguage : 'dr'
           const languageSettings = {

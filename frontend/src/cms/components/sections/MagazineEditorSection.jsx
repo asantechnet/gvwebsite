@@ -31,7 +31,7 @@ const normalizeMagazineTranslations = (translations) => Object.fromEntries(Objec
 function MagazineEditorSection({ content, initialTranslations }) {
   const [selectedSection, setSelectedSection] = useEditorTabs({ defaultTab: 'hero', storageKey: 'globalvision-cms-magazine-tab', tabs: Object.keys(sectionIcons) })
   const [contentLanguage, setContentLanguage] = useCmsContentLanguage()
-  const [drafts, setDrafts] = useCmsDraftState('magazine', () => normalizeMagazineTranslations(structuredClone(initialTranslations)), {
+  const [drafts, setDrafts, { saveImmediate }] = useCmsDraftState('magazine', () => normalizeMagazineTranslations(structuredClone(initialTranslations)), {
     commit: (value) => Object.fromEntries(Object.entries(value).map(([language, page]) => [language, {
       ...page,
       categories: getMagazineCategories(page),
@@ -45,7 +45,7 @@ function MagazineEditorSection({ content, initialTranslations }) {
   const categories = getMagazineCategories(draft)
   const updateSection = (key, value) => setDrafts((current) => ({ ...current, [contentLanguage]: { ...current[contentLanguage], [selectedSection]: { ...current[contentLanguage][selectedSection], [key]: value } } }))
   const itemTranslations = (section, index) => Object.fromEntries(languages.map((language) => [language, drafts[language][section].items[index]]))
-  const saveItem = (localizedItems, section, index) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
+  const saveItem = (localizedItems, section, index) => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
     const items = [...page[section].items]
     if (index < items.length) items[index] = localizedItems[language]
     else items.push(localizedItems[language])
@@ -54,12 +54,12 @@ function MagazineEditorSection({ content, initialTranslations }) {
   const removeItem = async (section, index) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: content.deletePost || 'حذف نوشته', description: content.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })
     if (!confirmed) return
-    setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => [language, { ...page, [section]: { ...page[section], items: page[section].items.filter((_, itemIndex) => itemIndex !== index) } }])))
+    await saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => [language, { ...page, [section]: { ...page[section], items: page[section].items.filter((_, itemIndex) => itemIndex !== index) } }])))
     setViewing(null)
     showRecordToast('recordDeleted')
   }
-  const toggleStatus = (section, index) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => [language, { ...page, [section]: { ...page[section], items: page[section].items.map((item, itemIndex) => itemIndex === index ? { ...item, status: item.status === 'draft' ? 'published' : 'draft', savedStatus: item.savedStatus ?? (item.status === 'draft' ? 'draft' : 'published') } : item) } }])))
-  const saveCategories = (localizedCategories, index = null) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
+  const toggleStatus = (section, index) => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => [language, { ...page, [section]: { ...page[section], items: page[section].items.map((item, itemIndex) => itemIndex === index ? { ...item, status: item.status === 'draft' ? 'published' : 'draft' } : item) } }])))
+  const saveCategories = (localizedCategories, index = null) => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
     const currentCategories = getMagazineCategories(page)
     const nextCategory = localizedCategories[language]
     const categories = index === null ? [...currentCategories, nextCategory] : currentCategories.map((category, categoryIndex) => categoryIndex === index ? { ...category, ...nextCategory } : category)
@@ -69,7 +69,7 @@ function MagazineEditorSection({ content, initialTranslations }) {
   const deleteCategory = async (index) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: content.deleteCategory, description: content.deleteCategoryDescription })
     if (!confirmed) return
-    setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
+    await saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
       const currentCategories = getMagazineCategories(page)
       const removedName = currentCategories[index]?.name
       return [language, { ...page, categories: currentCategories.filter((_, categoryIndex) => categoryIndex !== index), articles: { ...page.articles, items: page.articles.items.map((item) => item.category === removedName ? { ...item, category: '' } : item) } }]
@@ -86,8 +86,8 @@ function MagazineEditorSection({ content, initialTranslations }) {
           ? <MagazineCategoryManager categories={categories} content={content} contentLanguage={contentLanguage} onLanguageChange={setContentLanguage} onCreate={() => setEditing({ categoryIndex: null, translations: Object.fromEntries(languages.map((language) => [language, { id: `magazine-category-${Date.now()}`, name: '' }])) })} onEdit={(index) => setEditing({ categoryIndex: index, translations: Object.fromEntries(languages.map((language) => [language, getMagazineCategories(drafts[language])[index] || { id: categories[index]?.id, name: '' }])) })} onDelete={deleteCategory} />
           : <MagazineCollection section={selectedSection} items={draft[selectedSection].items} categories={categories} title={draft[selectedSection].title} sectionVisible={draft[selectedSection].visible !== false} content={content} contentLanguage={contentLanguage} onLanguageChange={setContentLanguage} onVisibleChange={(value) => updateSection('visible', value)} onTitleChange={(value) => updateSection('title', value)} onCreate={() => setEditing({ section: selectedSection, index: draft[selectedSection].items.length, translations: Object.fromEntries(languages.map((language) => [language, emptyItem()])) })} onEdit={(index) => setEditing({ section: selectedSection, index, translations: itemTranslations(selectedSection, index) })} onView={(index) => setViewing({ section: selectedSection, index, translations: itemTranslations(selectedSection, index) })} onDelete={removeItem} onToggleStatus={toggleStatus} />}
     </section>
-    {editing?.section && <MagazineItemModal section={editing.section} content={content} initialLanguage={contentLanguage} initialTranslations={editing.translations} categoryOptions={Object.fromEntries(languages.map((language) => [language, getMagazineCategories(drafts[language]).map((category) => category.name)]))} onClose={() => setEditing(null)} onSave={(items) => { const isNew = editing.index >= drafts[contentLanguage][editing.section].items.length; saveItem(items, editing.section, editing.index); setEditing(null); if (isNew) showRecordToast('recordAdded') }} />}
-    {editing && editing.categoryIndex !== undefined && <MagazineCategoryModal content={content} initialLanguage={contentLanguage} initialTranslations={editing.translations} onClose={() => setEditing(null)} onSave={(categories) => { const isNew = editing.categoryIndex === null; saveCategories(categories, editing.categoryIndex); setEditing(null); showRecordToast(isNew ? 'recordAdded' : 'recordUpdated') }} />}
+    {editing?.section && <MagazineItemModal section={editing.section} content={content} initialLanguage={contentLanguage} initialTranslations={editing.translations} categoryOptions={Object.fromEntries(languages.map((language) => [language, getMagazineCategories(drafts[language]).map((category) => category.name)]))} onClose={() => setEditing(null)} onSave={async (items) => { const isNew = editing.index >= drafts[contentLanguage][editing.section].items.length; await saveItem(items, editing.section, editing.index); setEditing(null); if (isNew) showRecordToast('recordAdded') }} />}
+    {editing && editing.categoryIndex !== undefined && <MagazineCategoryModal content={content} initialLanguage={contentLanguage} initialTranslations={editing.translations} onClose={() => setEditing(null)} onSave={async (categories) => { const isNew = editing.categoryIndex === null; await saveCategories(categories, editing.categoryIndex); setEditing(null); showRecordToast(isNew ? 'recordAdded' : 'recordUpdated') }} />}
     {viewing && <MagazinePreviewModal content={content} initialLanguage={contentLanguage} translations={viewing.translations} onClose={() => setViewing(null)} onEdit={() => { setEditing(viewing); setViewing(null) }} onDelete={() => removeItem(viewing.section, viewing.index)} />}
   </PageContainer>
 }
@@ -113,7 +113,7 @@ function MagazineActions({ item, content, size, buttonSize, onEdit, onDelete }) 
 
 function MagazineStatusBadge({ item, content, onToggle }) {
   const isDraft = item.status === 'draft'
-  return <button type="button" onClick={(event) => { event.stopPropagation(); onToggle(); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`mt-2 inline-block rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition lg:mt-0 ${isDraft ? 'bg-admin-brand-soft text-admin-brand-text hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'}`}>{isDraft ? content.draft : content.published}</button>
+  return <button type="button" onClick={(event) => { event.stopPropagation(); onToggle() }} className={`mt-2 inline-block rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition lg:mt-0 ${isDraft ? 'bg-admin-brand-soft text-admin-brand-text hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'}`}>{isDraft ? content.draft : content.published}</button>
 }
 
 function MagazineCategorySelect({ value, onChange, options, content, includeAll = false, compact = false }) {

@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, GraduationCap, Plane } from "lucide-react";
+import { resolveContentIcon } from "@/shared/icons/contentIcons.js";
 import ActionLink from "@ui/ActionLink.jsx";
 import Container from "@ui/Container.jsx";
 import OpportunityCard from "@ui/OpportunityCard.jsx";
@@ -6,9 +6,9 @@ import Section from "@ui/Section.jsx";
 import SectionHeading from "@ui/SectionHeading.jsx";
 
 const opportunityIcons = {
-  study: GraduationCap,
-  migration: Plane,
-  work: BriefcaseBusiness,
+  study: "GraduationCap",
+  migration: "Plane",
+  work: "BriefcaseBusiness",
 };
 
 function OpportunitySection({ content }) {
@@ -28,7 +28,7 @@ function OpportunitySection({ content }) {
 
         <div className="mx-auto mt-10 grid w-full max-w-6xl justify-items-center gap-5 md:grid-cols-3">
           {content.cards.map((item) => (
-            <OpportunityCard key={item.id} {...item} icon={opportunityIcons[item.id]} />
+            <OpportunityCard key={item.id} {...item} icon={resolveContentIcon(item.icon, opportunityIcons[item.id])} />
           ))}
         </div>
 

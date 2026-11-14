@@ -2,12 +2,14 @@ import BlogPostPage from '@pages/BlogPostPage.jsx'
 
 function ScholarshipPostPage({ scholarship, content, postShell }) {
   const post = {
+    ...scholarship,
     slug: scholarship.slug,
     category: content.detail.parentLabel,
     title: scholarship.title,
     description: scholarship.summary,
     image: scholarship.image,
     imageAlt: scholarship.title,
+    content: scholarship.overview || '',
     facts: [
       { label: content.filters.degree, value: scholarship.degree },
       { label: content.filters.funding, value: scholarship.funding },

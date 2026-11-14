@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import WebsiteLayout from '@layout/WebsiteLayout.jsx'
 import MaintenanceProgress from '@/shared/components/MaintenanceProgress.jsx'
@@ -9,12 +9,16 @@ import { SNAPSHOT_UPDATED_EVENT, SNAPSHOT_UPDATED_STORAGE_KEY } from '@/shared/s
 
 function WebsiteApp({ language }) {
   const [content, setContent] = useState(null)
+  const latestLoad = useRef(0)
 
   useEffect(() => {
     let active = true
-    const load = (fresh = false) => loadWebsiteContent(language, { fresh }).then((loadedContent) => {
-      if (active) setContent(loadedContent)
-    })
+    const load = (fresh = false) => {
+      const loadId = ++latestLoad.current
+      return loadWebsiteContent(language, { fresh }).then((loadedContent) => {
+        if (active && loadId === latestLoad.current) setContent(loadedContent)
+      })
+    }
     const refresh = () => load(true)
     const refreshFromStorage = (event) => {
       if (event.key === SNAPSHOT_UPDATED_STORAGE_KEY) refresh()

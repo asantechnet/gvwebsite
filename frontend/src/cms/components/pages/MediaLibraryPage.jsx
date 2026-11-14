@@ -5,11 +5,10 @@ import PageContainer from '@cms/components/PageContainer.jsx'
 import PageHeading from '@cms/components/PageHeading.jsx'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import { createLocalUpload, revokeLocalUpload } from '@/shared/uploads/files.js'
-import { removeUpload, uploadFile } from '@/shared/services/api/uploads.js'
-import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
+import { listUploads, removeUpload, uploadFile } from '@/shared/services/api/uploads.js'
 import { showRecordToast } from '@cms/utils/toast.js'
 import { closeCmsModal } from '@cms/utils/modalTransition.js'
-import { formatMediaBytes as formatBytes, getMediaType, seedMedia } from '@cms/data/mediaLibrary.js'
+import { formatMediaBytes as formatBytes, getMediaType, mergeManagedMedia, seedMedia } from '@cms/data/mediaLibrary.js'
 
 function MediaPreviewModal({ item, content, onClose }) {
   const dialogRef = useModalFocus({ onClose })
@@ -35,7 +34,7 @@ function MediaPreviewModal({ item, content, onClose }) {
 
 function MediaLibraryPage({ content }) {
   const inputRef = useRef(null)
-  const [items, setItems] = useCmsDraftState('media', seedMedia)
+  const [items, setItems] = useState(seedMedia)
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
   const [selectedIds, setSelectedIds] = useState(() => new Set())
@@ -45,6 +44,15 @@ function MediaLibraryPage({ content }) {
   const allVisibleSelected = filtered.length > 0 && filtered.every((item) => selectedIds.has(item.id))
 
   useEffect(() => () => { items.filter((item) => item.local).forEach(revokeLocalUpload) }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    let active = true
+    listUploads().then((uploads) => {
+      if (!active) return
+      setItems((current) => mergeManagedMedia(uploads, current))
+    }).catch(() => { if (active) setUploadError(content.uploadError) })
+    return () => { active = false }
+  }, [content.uploadError, setItems])
 
   const upload = async (event) => {
     const files = [...(event.target.files || [])]
@@ -61,7 +69,7 @@ function MediaLibraryPage({ content }) {
       }))
       setItems((current) => [...uploaded, ...current])
       if (uploaded.length) showRecordToast('recordAdded')
-    } catch (error) { accepted.forEach(revokeLocalUpload); setUploadError(error.message) }
+    } catch { accepted.forEach(revokeLocalUpload); setUploadError(content.uploadError) }
   }
   const toggleSelection = (id) => setSelectedIds((current) => { const next = new Set(current); if (next.has(id)) next.delete(id); else next.add(id); return next })
   const toggleAll = () => setSelectedIds((current) => { const next = new Set(current); filtered.forEach(({ id }) => { if (allVisibleSelected) next.delete(id); else next.add(id) }); return next })
@@ -69,7 +77,7 @@ function MediaLibraryPage({ content }) {
     const confirmed = await window.cmsConfirmDelete?.({ title: ids.length === 1 ? content.deleteTitle : content.bulkDeleteTitle.replace('{count}', ids.length), description: content.deleteDescription })
     if (!confirmed) return
     const removable = items.filter((item) => ids.includes(item.id) && !String(item.id).startsWith('seed-'))
-    try { await Promise.all(removable.map((item) => removeUpload(item.id))) } catch (error) { setUploadError(error.message); return }
+    try { await Promise.all(removable.map((item) => removeUpload(item.id))) } catch { setUploadError(content.uploadError); return }
     setItems((current) => { current.filter((item) => ids.includes(item.id) && item.local).forEach(revokeLocalUpload); return current.filter((item) => !ids.includes(item.id)) })
     setSelectedIds((current) => { const next = new Set(current); ids.forEach((id) => next.delete(id)); return next })
     if (preview && ids.includes(preview.id)) setPreview(null)
@@ -78,7 +86,7 @@ function MediaLibraryPage({ content }) {
 
   return <PageContainer className="max-w-[78rem]">
     <PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.dashboard }, { label: content.title }]} action={<button type="button" onClick={() => inputRef.current?.click()} className="mb-2 inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-xl border border-admin-border bg-(--primary-action-bg) px-3 py-2 text-[.6875rem] font-semibold text-(--primary-action-text) shadow-[0_8px_20px_rgba(15,23,42,.07)] transition hover:-translate-y-0.5 hover:border-admin-brand hover:text-admin-brand-text hover:shadow-[0_12px_26px_rgba(15,23,42,.11)] sm:w-auto"><ImagePlus size={15} />{content.upload}</button>} />
-    <input ref={inputRef} type="file" multiple accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.mp4,.webm,.ogg,.mov,.mp3,.wav,.m4a,.flac" className="hidden" onChange={upload} />
+    <input ref={inputRef} type="file" multiple accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.mp4,.webm,.ogv,.mov,.mp3,.wav,.m4a,.ogg,.flac" className="hidden" onChange={upload} />
     {uploadError && <p role="alert" className="-mt-4 rounded-xl border border-red-500/25 bg-red-500/10 px-3 py-2 text-xs text-red-600 dark:text-red-300">{uploadError}</p>}
     <section className="grid gap-2 rounded-2xl border border-admin-border bg-admin-card p-2 shadow-[0_12px_34px_rgb(15_23_42_/.055)] md:grid-cols-[minmax(15rem,.7fr)_minmax(18rem,1fr)]">
       <label className="order-2 flex h-9 min-w-0 items-center gap-2 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3 text-admin-muted transition focus-within:border-admin-brand md:order-1"><Search size={15} /><input value={query} onChange={(event) => setQuery(event.target.value)} className="search-field min-w-0 flex-1 bg-transparent text-xs text-admin-heading outline-none" placeholder={content.search} /></label>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import {
   announceCmsDraftChange,
@@ -31,6 +31,7 @@ function useCmsDraftState(scope, initialValue, { commit } = {}) {
   const [savedInitialValue] = useState(() => structuredClone(initial.recovered ? resolveInitialValue(initialValue) : initial.value))
   const savedValue = useRef(savedInitialValue)
   const dirty = useRef(initial.recovered)
+  const immediateSaveQueue = useRef(Promise.resolve())
 
   useEffect(() => {
     let active = true
@@ -46,11 +47,38 @@ function useCmsDraftState(scope, initialValue, { commit } = {}) {
     return () => { active = false }
   }, [initial.recovered, scope])
 
-  const setDraft = (update) => {
+  const setDraft = useCallback((update) => {
     dirty.current = true
     announceCmsDraftChange()
     setDraftState(update)
-  }
+  }, [])
+
+  const saveImmediate = useCallback((update) => {
+    const applyUpdate = (value) => typeof update === 'function'
+      ? update(structuredClone(value))
+      : structuredClone(update)
+
+    const save = immediateSaveQueue.current
+      .catch(() => {})
+      .then(async () => {
+        let persistedSnapshot
+        try {
+          persistedSnapshot = await dataSource.snapshots.get(scope)
+        } catch {
+          persistedSnapshot = null
+        }
+        const baseline = persistedSnapshot?.payload ?? savedValue.current
+        const updatedBaseline = applyUpdate(baseline)
+        const committed = commit ? commit(updatedBaseline) : updatedBaseline
+        await dataSource.snapshots.save(scope, committed)
+        savedValue.current = structuredClone(committed)
+        setDraftState((current) => applyUpdate(current))
+        return committed
+      })
+
+    immediateSaveQueue.current = save
+    return save
+  }, [commit, scope])
 
   useEffect(() => {
     if (!dirty.current) return
@@ -90,7 +118,7 @@ function useCmsDraftState(scope, initialValue, { commit } = {}) {
     return () => window.removeEventListener(CMS_CHANGES_DISCARDED_EVENT, discardDraft)
   }, [storageKey])
 
-  return [draft, setDraft, { recovered: initial.recovered }]
+  return [draft, setDraft, { recovered: initial.recovered, saveImmediate }]
 }
 
 export default useCmsDraftState

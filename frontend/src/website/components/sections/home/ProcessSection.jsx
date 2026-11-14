@@ -1,19 +1,14 @@
-import {
-  BadgeCheck,
-  ClipboardCheck,
-  Compass,
-  MessagesSquare,
-} from "lucide-react";
+import { resolveContentIcon } from "@/shared/icons/contentIcons.js";
 import Container from "@ui/Container.jsx";
 import ProcessStep from "@ui/ProcessStep.jsx";
 import Section from "@ui/Section.jsx";
 import SectionHeading from "@ui/SectionHeading.jsx";
 
 const processIcons = {
-  consultation: MessagesSquare,
-  assessment: Compass,
-  preparation: ClipboardCheck,
-  followUp: BadgeCheck,
+  consultation: "MessagesSquare",
+  assessment: "Compass",
+  preparation: "ClipboardCheck",
+  followUp: "BadgeCheck",
 };
 
 function ProcessSection({ content }) {
@@ -38,7 +33,7 @@ function ProcessSection({ content }) {
           />
           <ol className="grid gap-5 sm:grid-cols-2 md:grid-cols-4">
             {content.steps.map((item) => (
-              <ProcessStep key={item.id} {...item} icon={processIcons[item.id]} />
+              <ProcessStep key={item.id} {...item} icon={resolveContentIcon(item.icon, processIcons[item.id])} />
             ))}
           </ol>
         </div>

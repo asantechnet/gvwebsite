@@ -18,7 +18,7 @@ import { applyTourismCategories, getTourismCategories } from '../src/cms/utils/t
 import { normalizeContentRecord, serializeContentRecord } from '../src/shared/models/content.js'
 import { normalizeMessage, serializeMessageState } from '../src/shared/models/message.js'
 import { isSafeContentUrl } from '../src/shared/security/sanitizeRichText.js'
-import { getUploadKind, validateUploadFile } from '../src/shared/uploads/files.js'
+import { getMediaPolicy, getUploadKind, validateUploadFile } from '../src/shared/uploads/files.js'
 import { validateContactForm, validatePasswordChange } from '../src/shared/utils/validation.js'
 
 test('content records expose stable language-neutral and translated fields', () => {
@@ -72,12 +72,18 @@ test('rich-text URL policy rejects executable schemes', () => {
 test('upload policy uses MIME type and per-kind limits instead of extensions', () => {
   const image = new File(['image'], 'photo.jpg', { type: 'image/jpeg' })
   const disguisedSvg = new File(['<svg/>'], 'photo.jpg', { type: 'image/svg+xml' })
+  const browserUnknownMp4 = new File(['video'], 'clip.mp4', { type: '' })
   const oversizedImage = new File([new Uint8Array(5 * 1024 * 1024 + 1)], 'large.jpg', { type: 'image/jpeg' })
 
   assert.equal(getUploadKind(image), 'image')
+  assert.equal(getUploadKind(browserUnknownMp4), 'video')
   assert.equal(validateUploadFile(image, ['image']).valid, true)
   assert.equal(validateUploadFile(disguisedSvg, ['image']).code, 'type')
   assert.equal(validateUploadFile(oversizedImage, ['image']).code, 'size')
+  assert.equal(getMediaPolicy('image').maxBytes, 2 * 1024 * 1024)
+  assert.equal(getMediaPolicy('audio').maxBytes, 10 * 1024 * 1024)
+  assert.equal(getMediaPolicy('document').maxBytes, 10 * 1024 * 1024)
+  assert.equal(getMediaPolicy('video').maxBytes, 500 * 1024 * 1024)
 })
 
 test('Phase 4 interface labels retain locale parity', () => {

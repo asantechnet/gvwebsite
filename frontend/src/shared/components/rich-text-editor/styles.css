@@ -29,12 +29,12 @@
   --editor-field-border: #45546c;
 }
 
-.gv-rich-text-editor .cms-opportunity-prose :where(h2, h3) { margin-block: 1rem .5rem; color: var(--admin-heading); font-family: var(--font-heading); font-weight: 800; line-height: 1.5; }
-.gv-rich-text-editor .cms-opportunity-prose h2 { font-size: 1.35rem; }
-.gv-rich-text-editor .cms-opportunity-prose h3 { font-size: 1.1rem; }
+.gv-rich-text-editor .cms-opportunity-prose > :where(h2, h3) { margin-block: 1rem .5rem; color: var(--admin-heading); font-family: var(--font-heading); font-weight: 800; line-height: 1.5; }
+.gv-rich-text-editor .cms-opportunity-prose > h2 { font-size: 1.35rem; }
+.gv-rich-text-editor .cms-opportunity-prose > h3 { font-size: 1.1rem; }
 .gv-rich-text-editor .cms-opportunity-prose em { font-style: oblique 12deg !important; font-synthesis: style; }
 .gv-rich-text-editor .cms-opportunity-prose a { color: var(--admin-brand); font-weight: 600; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 3px; }
-.gv-rich-text-editor .cms-opportunity-prose :where(h2, h3)[data-icon]::before { content: attr(data-icon); display: inline-grid; width: 2.5rem; height: 2.5rem; margin-inline-end: .65rem; place-items: center; border: 1px solid color-mix(in srgb, var(--admin-brand) 36%, var(--admin-border)); border-radius: .75rem; background: color-mix(in srgb, var(--admin-brand) 19%, var(--admin-card)); box-shadow: 0 5px 14px color-mix(in srgb, var(--admin-brand) 14%, transparent); color: var(--admin-brand); font-family: sans-serif; font-size: 1.15rem; vertical-align: middle; }
+.gv-rich-text-editor .cms-opportunity-prose > :where(h2, h3)[data-icon]::before { content: attr(data-icon); display: inline-grid; width: 2.5rem; height: 2.5rem; margin-inline-end: .65rem; place-items: center; border: 1px solid color-mix(in srgb, var(--admin-brand) 36%, var(--admin-border)); border-radius: .75rem; background: color-mix(in srgb, var(--admin-brand) 19%, var(--admin-card)); box-shadow: 0 5px 14px color-mix(in srgb, var(--admin-brand) 14%, transparent); color: var(--admin-brand); font-family: sans-serif; font-size: 1.15rem; vertical-align: middle; }
 .gv-rich-text-editor .cms-heading-content { display: inline; }
 .gv-rich-text-editor .cms-heading-icon { position: relative; display: inline-grid; width: 2.5rem; height: 2.5rem; place-items: center; border: 1px solid color-mix(in srgb, var(--admin-brand) 36%, var(--admin-border)); border-radius: .75rem; background: color-mix(in srgb, var(--admin-brand) 19%, var(--admin-card)); box-shadow: 0 5px 14px color-mix(in srgb, var(--admin-brand) 14%, transparent); color: var(--admin-brand); font-family: sans-serif; font-size: 1.15rem; vertical-align: middle; }
 .gv-rich-text-editor .cms-heading-icon[hidden], .gv-rich-text-editor .cms-heading-icon-spacer[hidden] { display: none; }

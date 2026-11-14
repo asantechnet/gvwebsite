@@ -48,13 +48,13 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
     ? { afghanistan: labels.tourismAfghanistan, world: labels.tourismWorld, typeLabel: label }
     : labels.manager || {}
   const typeSections = Object.fromEntries(sectionTypes.map((type) => [type, typeLabels[type] || type]))
-  const visibleCards = isServices ? cards : isTourism ? cards.filter((card) => card.type === activeType) : cards.filter((card) => card.id === activeType)
+  const visibleCards = isServices ? cards : cards.filter((card) => card.type === activeType)
   const filteredCards = useMemo(() => visibleCards.filter((card) => { const filterStatus = card.savedStatus ?? card.status; return (status === 'all' || filterStatus === status) && `${card.title} ${card.description} ${card.category || ''}`.toLocaleLowerCase().includes(query.toLocaleLowerCase()) }), [visibleCards, query, status])
   const modalContent = { ...content, editItem: labels.editPost || 'ویرایش نوشته', editItemTitle: labels.editPostTitle || 'ویرایش نوشته فرصت', close: labels.close || 'بستن', itemTitle: labels.postTitle || 'عنوان نوشته', itemAction: labels.postAction || 'متن دکمه', itemLink: labels.postLink || 'پیوند نوشته', cancel: labels.cancel || 'انصراف', save: labels.save || 'ذخیره' }
   const requestRemove = async (card) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: labels.deletePost || 'حذف نوشته', description: labels.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })
     if (confirmed) {
-      removePost(card)
+      await removePost(card)
       showRecordToast('recordDeleted')
     }
   }
@@ -125,8 +125,8 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 </div>
 </article>)}</section>
     {!filteredCards.length && <div className="grid min-h-44 place-items-center rounded-2xl border border-admin-border bg-admin-card text-sm text-admin-muted">{labels.empty || 'نوشته‌ای پیدا نشد.'}</div>}
-    {viewing && <OpportunityPostPreviewModal post={viewing} content={modalContent} isServices={isServices} serviceUi={serviceUi} onClose={() => setViewing(null)} onDelete={() => { removePost(viewing); setViewing(null); showRecordToast('recordDeleted') }} onEdit={() => { setViewing(null); setEditing(viewing) }} />}
-    {editing && <OpportunityPostModal post={editing} content={modalContent} isServices={isServices} isOpportunities={pageKey === 'opportunities'} isWorldTourism={isTourism && activeType === 'world'} isAfghanistanTourism={isTourism && activeType === 'afghanistan'} onClose={() => setEditing(null)} onSave={(savedPost) => { const isNew = String(editing.id).startsWith('new-'); savePost(savedPost, activeType); setEditing(null); if (isNew) showRecordToast('recordAdded') }} />}
+    {viewing && <OpportunityPostPreviewModal post={viewing} content={modalContent} isServices={isServices} serviceUi={serviceUi} onClose={() => setViewing(null)} onDelete={async () => { await removePost(viewing); setViewing(null); showRecordToast('recordDeleted') }} onEdit={() => { setViewing(null); setEditing(viewing) }} />}
+    {editing && <OpportunityPostModal post={editing} content={modalContent} isServices={isServices} isOpportunities={pageKey === 'opportunities'} isWorldTourism={isTourism && activeType === 'world'} isAfghanistanTourism={isTourism && activeType === 'afghanistan'} onClose={() => setEditing(null)} onSave={async (savedPost) => { const isNew = String(editing.id).startsWith('new-'); await savePost(savedPost, activeType); setEditing(null); if (isNew) showRecordToast('recordAdded') }} />}
   </PageContainer>
 }
 
@@ -145,7 +145,7 @@ function StatusSelect({ value, onChange, labels, compact = false }) {
 
 function ServiceStatusBadge({ card, labels, onToggle }) {
   const isDraft = card.status === 'draft'
-  return <button type="button" onClick={(event) => { event.stopPropagation(); onToggle(); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`mt-2 inline-block rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition lg:mt-0 ${isDraft ? 'bg-admin-brand-soft text-admin-brand-text hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'}`}>{isDraft ? (labels.draft || 'پیش‌نویس') : (labels.published || 'منتشرشده')}</button>
+  return <button type="button" onClick={(event) => { event.stopPropagation(); onToggle() }} className={`mt-2 inline-block rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition lg:mt-0 ${isDraft ? 'bg-admin-brand-soft text-admin-brand-text hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'}`}>{isDraft ? (labels.draft || 'پیش‌نویس') : (labels.published || 'منتشرشده')}</button>
 }
 
 function FeaturedToggle({ label, checked, onChange, full = true }) {

@@ -62,6 +62,7 @@ function AuthPage({ auth, content, language, theme, themeLabel, companyName, bra
         const session = await auth.login({
           email: form.get("email"),
           password: form.get("password"),
+          remember: form.get("remember") === "on",
         });
         const destination = session.user.role === "super_user"
           ? "/dashboard/super"
@@ -211,10 +212,18 @@ function AuthPage({ auth, content, language, theme, themeLabel, companyName, bra
                 content={content}
                 current
               />
-              <div className="flex justify-end">
+              <div className="flex items-center justify-between gap-4">
+                <label className="inline-flex min-h-10 cursor-pointer items-center gap-2 text-xs font-semibold text-admin-muted">
+                  <input
+                    className="size-4 shrink-0 cursor-pointer rounded border-admin-border accent-(--admin-brand) focus-visible:shadow-[0_0_0_3px_color-mix(in_srgb,var(--admin-brand)_28%,transparent)]"
+                    type="checkbox"
+                    name="remember"
+                  />
+                  <span>{content.remember}</span>
+                </label>
                 <button
                   type="button"
-                  className="!text-[12px] font-semibold leading-none text-admin-brand-text transition-colors hover:text-admin-heading hover:underline"
+                  className="min-h-10 shrink-0 !text-[12px] font-semibold leading-none text-admin-brand-text transition-colors hover:text-admin-heading hover:underline"
                   onClick={() => navigate("/dashboard/forgot-password")}
                 >
                   {content.forgotPassword}
