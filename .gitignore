@@ -20,7 +20,7 @@ service-account*.json
 
 # JavaScript / Vite
 node_modules/
-dist/
+# dist/
 dist-ssr/
 .vite/
 coverage/

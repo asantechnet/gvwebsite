@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="fa-AF" dir="rtl" data-language="dr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#fffaf5" />
+    <title>فرصت های مهاجرت در ایتالیا | گلوبل ویژن</title>
+    <style>html,body{background:#fffaf5}html.dark,html.dark body{background:#1f2937}html[data-application=cms],html[data-application=cms] body{background:#edf1f6}html[data-application=cms].dark,html[data-application=cms].dark body{background:#0a1019}</style>
+    <script>
+      (() => {
+        const isDashboard = window.location.pathname === '/dashboard' || window.location.pathname.startsWith('/dashboard/')
+        const theme = window.localStorage.getItem('globalvision-theme') || 'light'
+        document.documentElement.dataset.application = isDashboard ? 'cms' : 'website'
+        document.documentElement.classList.add(theme === 'dark' ? 'dark' : 'light')
+        document.querySelector('meta[name="theme-color"]').setAttribute('content', isDashboard
+          ? theme === 'dark' ? '#0a1019' : '#edf1f6'
+          : theme === 'dark' ? '#1f2937' : '#fffaf5')
+
+        if (isDashboard) {
+          const savedLanguage = window.sessionStorage.getItem('globalvision-language')
+          const language = ['prs', 'ps', 'en'].includes(savedLanguage) ? savedLanguage : 'prs'
+          document.documentElement.dataset.language = language
+          document.documentElement.lang = language
+          document.documentElement.dir = language === 'en' ? 'ltr' : 'rtl'
+        } else {
+          const possibleLanguage = window.location.pathname.split('/')[1]
+          const language = ['dr', 'ps', 'en'].includes(possibleLanguage) ? possibleLanguage : 'dr'
+          const languageSettings = {
+            dr: { htmlLang: 'fa-AF', direction: 'rtl' },
+            ps: { htmlLang: 'ps-AF', direction: 'rtl' },
+            en: { htmlLang: 'en', direction: 'ltr' },
+          }[language]
+
+          document.documentElement.dataset.language = language
+          document.documentElement.lang = languageSettings.htmlLang
+          document.documentElement.dir = languageSettings.direction
+
+          const titles = {
+            dr: {
+              brand: 'گلوبل ویژن',
+              pages: { home: 'صفحه اصلی', about: 'در باره ما', contact: 'تماس با ما', services: 'خدمات', scholarships: 'بورسیه‌ها', magazine: 'مجله', search: 'جستجو', study: 'فرصت های تحصیلی', work: 'فرصت های کاری', migration: 'فرصت های مهاجرت', investment: 'فرصت های سرمایه گذاری', tourismAfghanistan: 'سیاحت در افغانستان', tourismWorld: 'سیاحت در جهان' },
+            },
+            ps: {
+              brand: 'ګلوبل ویژن',
+              pages: { home: 'اصلي پاڼه', about: 'زموږ په اړه', contact: 'له موږ سره اړیکه', services: 'خدمتونه', scholarships: 'بورسیې', magazine: 'مجله', search: 'لټون', study: 'تحصیلي فرصتونه', work: 'کاري فرصتونه', migration: 'د مهاجرت فرصتونه', investment: 'د پانګونې فرصتونه', tourismAfghanistan: 'په افغانستان کې سیاحت', tourismWorld: 'په نړۍ کې سیاحت' },
+            },
+            en: {
+              brand: 'Global Vision',
+              pages: { home: 'Home', about: 'About Us', contact: 'Contact Us', services: 'Services', scholarships: 'Scholarships', magazine: 'Magazine', search: 'Search', study: 'Study Opportunities', work: 'Work Opportunities', migration: 'Migration Opportunities', investment: 'Investment Opportunities', tourismAfghanistan: 'Tourism in Afghanistan', tourismWorld: 'Tourism Around the World' },
+            },
+          }
+          const pagePath = `/${window.location.pathname.split('/').slice(2).filter(Boolean).join('/')}`
+          const pageKey = pagePath === '/' ? 'home'
+            : pagePath === '/about' ? 'about'
+              : pagePath === '/contact' ? 'contact'
+                : pagePath.startsWith('/services') ? 'services'
+                  : pagePath.startsWith('/scholarships') ? 'scholarships'
+                    : pagePath.startsWith('/magazine') ? 'magazine'
+                      : pagePath === '/search' ? 'search'
+                        : pagePath.startsWith('/opportunities/study') ? 'study'
+                          : pagePath.startsWith('/opportunities/work') ? 'work'
+                            : pagePath.startsWith('/opportunities/migration') ? 'migration'
+                              : pagePath.startsWith('/opportunities/investment') ? 'investment'
+                                : pagePath.startsWith('/tourism/afghanistan') ? 'tourismAfghanistan'
+                                  : pagePath.startsWith('/tourism/world') ? 'tourismWorld'
+                                    : 'home'
+          const titleContent = titles[language]
+          document.title = `${titleContent.pages[pageKey]} | ${titleContent.brand}`
+        }
+      })()
+    </script>
+    <link rel="icon" type="image/webp" href="/assets/branding/icon.webp" />
+    <script>
+      if (window.location.pathname === '/dashboard' || window.location.pathname.startsWith('/dashboard/')) {
+        const language = window.sessionStorage.getItem('globalvision-language')
+        document.title = language === 'en'
+          ? 'Global Vision Website Management'
+          : language === 'ps'
+            ? 'د ګلوبل ویژن وېب‌سایټ مدیریت'
+            : 'مدیریت وبسایت گلوبل ویژن'
+      }
+    </script>
+    <script type="module" crossorigin src="/assets/index-CaoJlf8r.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-hePW80VL.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-CR5VJ85Q.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-COew5oxL.css">
+      <meta name="description" content="ایتالیا برنامه‌های انگلیسی و ایتالیایی دارد. برای هر منطقه، شهریه، کمک‌هزینه و شرایط زندگی را جداگانه مقایسه کنید." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href="https://globalvision.af/dr/opportunities/migration/italy" />
+    <link rel="alternate" hreflang="fa-AF" href="https://globalvision.af/dr/opportunities/migration/italy" />
+    <link rel="alternate" hreflang="ps-AF" href="https://globalvision.af/ps/opportunities/migration/italy" />
+    <link rel="alternate" hreflang="en" href="https://globalvision.af/en/opportunities/migration/italy" />
+    <link rel="alternate" hreflang="x-default" href="https://globalvision.af/dr/opportunities/migration/italy" />
+    <meta property="og:title" content="فرصت های مهاجرت در ایتالیا | گلوبل ویژن" />
+    <meta property="og:description" content="ایتالیا برنامه‌های انگلیسی و ایتالیایی دارد. برای هر منطقه، شهریه، کمک‌هزینه و شرایط زندگی را جداگانه مقایسه کنید." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://globalvision.af/dr/opportunities/migration/italy" />
+    <meta property="og:image" content="https://globalvision.af/assets/images/destinations/italy.webp" />
+    <meta property="og:locale" content="fa_AF" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="فرصت های مهاجرت در ایتالیا | گلوبل ویژن" />
+    <meta name="twitter:description" content="ایتالیا برنامه‌های انگلیسی و ایتالیایی دارد. برای هر منطقه، شهریه، کمک‌هزینه و شرایط زندگی را جداگانه مقایسه کنید." />
+    <meta name="twitter:image" content="https://globalvision.af/assets/images/destinations/italy.webp" />
+    <script type="application/ld+json" data-globalvision-schema>{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://globalvision.af/#organization","name":"گلوبل ویژن","url":"https://globalvision.af/","logo":{"@type":"ImageObject","url":"https://globalvision.af/assets/branding/new%20logo.webp"}},{"@type":"WebSite","@id":"https://globalvision.af/#website","name":"گلوبل ویژن","url":"https://globalvision.af/","inLanguage":"fa-AF","publisher":{"@id":"https://globalvision.af/#organization"}},{"@type":"WebPage","@id":"https://globalvision.af/dr/opportunities/migration/italy#webpage","name":"فرصت های مهاجرت در ایتالیا","description":"ایتالیا برنامه‌های انگلیسی و ایتالیایی دارد. برای هر منطقه، شهریه، کمک‌هزینه و شرایط زندگی را جداگانه مقایسه کنید.","url":"https://globalvision.af/dr/opportunities/migration/italy","inLanguage":"fa-AF","isPartOf":{"@id":"https://globalvision.af/#website"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"صفحه اصلی","item":"https://globalvision.af/dr"},{"@type":"ListItem","position":2,"name":"فرصت های مهاجرت در ایتالیا","item":"https://globalvision.af/dr/opportunities/migration/italy"}]}]}</script>
+  </head>
+  <body>
+    <div id="root"></div><noscript><main><h1>فرصت های مهاجرت در ایتالیا</h1><p>ایتالیا برنامه‌های انگلیسی و ایتالیایی دارد. برای هر منطقه، شهریه، کمک‌هزینه و شرایط زندگی را جداگانه مقایسه کنید.</p></main></noscript>
+  </body>
+</html>

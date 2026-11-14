@@ -1,0 +1,1 @@
+import{t as e}from"./react-vendor-CR5VJ85Q.js";var t=e();function n({className:e=``,padded:n=!0,children:r,...i}){return(0,t.jsx)(`section`,{className:`${n?`py-12.5`:``} ${e}`.trim(),...i,children:r})}export{n as t};

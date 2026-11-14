@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /dr/search
+Disallow: /ps/search
+Disallow: /en/search
+
+Sitemap: https://globalvision.af/sitemap.xml
