@@ -21,7 +21,7 @@ class RichTextSanitizer
         'target', 'title', 'type', 'style', 'data-highlight-box', 'data-icon', 'data-columns',
         'data-editor-media', 'data-src', 'data-media-type', 'data-name', 'data-title',
         'data-caption', 'data-alt', 'data-author', 'data-avatar', 'data-poster',
-        'data-mime-type', 'data-media-grid', 'data-layout', 'data-items',
+        'data-mime-type', 'data-youtube-id', 'data-media-grid', 'data-layout', 'data-items',
         'data-editor-button', 'data-label', 'data-href',
     ];
 
@@ -102,6 +102,7 @@ class RichTextSanitizer
 
                 if (! in_array($name, self::ALLOWED_ATTRIBUTES, true)
                     || (in_array($name, self::URL_ATTRIBUTES, true) && ! $this->isSafeUrl($value))
+                    || ($name === 'data-youtube-id' && ! preg_match('/^[A-Za-z0-9_-]{11}$/', $value))
                     || ($name === 'style' && ! preg_match('/^\s*text-align\s*:\s*(left|center|right)\s*;?\s*$/i', $value))
                     || ($name === 'target' && $value !== '_blank')) {
                     $node->removeAttribute($attribute->name);
@@ -160,6 +161,9 @@ class RichTextSanitizer
                 if (isset($item[$key]) && ! $this->isSafeUrl((string) $item[$key])) {
                     $item[$key] = '';
                 }
+            }
+            if (isset($item['youtubeId']) && ! preg_match('/^[A-Za-z0-9_-]{11}$/', (string) $item['youtubeId'])) {
+                $item['youtubeId'] = '';
             }
         }
 

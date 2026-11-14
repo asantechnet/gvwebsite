@@ -28,6 +28,7 @@ function mediaItemFromElement(element) {
   return {
     mediaType: element.dataset.mediaType || 'image',
     src: element.dataset.src || '',
+    youtubeId: element.dataset.youtubeId || '',
     name: element.dataset.name || '',
     title: element.dataset.title || '',
     caption: element.dataset.caption || '',
@@ -41,7 +42,7 @@ function mediaItemFromElement(element) {
 
 function MediaTemplate({ item, fill = false, compact = false }) {
   const displayTitle = item.title || item.name
-  if (item.mediaType === 'video') return <VideoMedia fill={fill} post={{ image: '' }} media={{ video: { src: item.src, title: displayTitle, playLabel: displayTitle, poster: item.poster } }} />
+  if (item.mediaType === 'video') return <VideoMedia fill={fill} post={{ image: '' }} media={{ video: { src: item.src, youtubeId: item.youtubeId, title: displayTitle, playLabel: displayTitle, poster: item.poster } }} />
   if (item.mediaType === 'audio') return <AudioMedia compact={compact} media={{ audio: { src: item.src, type: item.mimeType, title: displayTitle, speaker: item.author, speakerLabel: '', avatar: item.avatar || '/assets/images/team/erfan.webp' } }} />
   return <ImageMedia fill={fill} post={{ image: item.src }} media={{ imageAlt: item.alt || displayTitle, imageLabel: item.caption || displayTitle }} />
 }
@@ -50,7 +51,7 @@ function MediaGridTemplate({ layout, items }) {
   const layoutClass = layout === 'two' ? 'sm:grid-cols-2 sm:auto-rows-[15rem]' : layout === 'three' ? 'sm:grid-cols-3 sm:auto-rows-[13rem]' : layout === 'four' ? 'sm:grid-cols-2 sm:auto-rows-[12rem]' : 'sm:grid-cols-3 sm:auto-rows-[10rem]'
   const featured = layout === 'featured-right' || layout === 'featured-left'
   return <div className={`grid w-full min-w-0 gap-3 ${layoutClass}`}>{items.map((item, index) => {
-    if (!item?.src) return null
+    if (!item?.src && !item?.youtubeId) return null
     const isFeatured = featured && index === 0
     const featuredPosition = !featured ? 'sm:h-full' : isFeatured ? (layout === 'featured-left' ? 'sm:col-start-1 sm:col-span-2 sm:row-start-1 sm:row-span-2' : 'sm:col-start-2 sm:col-span-2 sm:row-start-1 sm:row-span-2') : `${layout === 'featured-left' ? 'sm:col-start-3' : 'sm:col-start-1'} ${index === 1 ? 'sm:row-start-1' : 'sm:row-start-2'} sm:h-full`
     return <div key={index} className={`min-h-40 min-w-0 max-w-full overflow-hidden rounded-2xl bg-background/70 ${featuredPosition}`}><div className="size-full min-h-0 min-w-0 overflow-hidden"><MediaTemplate item={item} fill compact={item.mediaType === 'audio'} /></div></div>

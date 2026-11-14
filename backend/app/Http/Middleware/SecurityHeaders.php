@@ -36,7 +36,7 @@ class SecurityHeaders
                 "font-src 'self' data:",
                 "form-action 'self'",
                 "frame-ancestors 'none'",
-                'frame-src https://www.youtube.com https://player.vimeo.com',
+                'frame-src https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com',
                 "img-src 'self' data: blob: https:",
                 "media-src 'self' blob: https:",
                 "object-src 'none'",

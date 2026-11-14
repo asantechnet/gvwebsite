@@ -33,4 +33,17 @@ class RichTextSanitizerTest extends TestCase
 
         $this->assertSame('<h2 data-icon="✓">Title</h2>', $result['overview']);
     }
+
+    public function test_it_preserves_only_valid_youtube_video_ids(): void
+    {
+        $sanitizer = new RichTextSanitizer;
+
+        $result = $sanitizer->sanitize(
+            '<figure data-editor-media data-media-type="video" data-youtube-id="dQw4w9WgXcQ"></figure>'
+            .'<figure data-editor-media data-media-type="video" data-youtube-id="bad/value"></figure>',
+        );
+
+        $this->assertStringContainsString('data-youtube-id="dQw4w9WgXcQ"', $result);
+        $this->assertStringNotContainsString('bad/value', $result);
+    }
 }

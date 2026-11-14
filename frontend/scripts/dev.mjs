@@ -34,8 +34,8 @@ if (storageLink.status !== 0) {
 }
 
 const processes = [
-  spawn('php', ['-d', 'upload_max_filesize=500M', '-d', 'post_max_size=501M', 'artisan', 'serve', '--host=127.0.0.1', '--port=8000'], {
-    cwd: backendDirectory,
+  spawn('php', ['-d', 'upload_max_filesize=500M', '-d', 'post_max_size=501M', '-S', '127.0.0.1:8000', '../vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php'], {
+    cwd: path.join(backendDirectory, 'public'),
     stdio: 'inherit',
   }),
   spawn(path.join(frontendDirectory, 'node_modules/.bin/vite'), ['--host=127.0.0.1', '--port=5173', '--strictPort'], {
