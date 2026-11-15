@@ -27,7 +27,7 @@ function PageHero({
       <Container>
         <div className="relative isolate flex min-h-32 flex-col items-center justify-center overflow-hidden rounded-4xl border border-border bg-surface px-6 py-3 dark:border-gray-600 dark:bg-[#2b3442] md:min-h-36 md:px-10 md:py-4 lg:px-16">
           <div className="pointer-events-none absolute -right-16 -top-16 z-0 size-40 rounded-full bg-brand-orange/20 md:-right-16 md:-top-24 md:size-64" />
-          <div className="pointer-events-none absolute -bottom-24 -left-16 z-0 size-48 rounded-full bg-brand-red/15 dark:bg-[#3b364b] md:-bottom-32 md:-left-16 md:size-72" />
+          <div className="pointer-events-none absolute -bottom-24 -left-16 z-0 size-48 rounded-full bg-brand-red/15 md:-bottom-32 md:-left-16 md:size-72" />
 
           {image && (
             <img

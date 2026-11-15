@@ -20,16 +20,9 @@ import { SCHOLARSHIPS_PER_PAGE } from "@website/utils/cardCounts.js";
 import { useLocalizedHref } from "@website/hooks/useWebsiteLanguage.js";
 import useModalFocus from "@/shared/hooks/useModalFocus.js";
 import { getCountries, getCountryCode, normalizeCountrySearch } from "@/shared/utils/countries.js";
+import { formatScholarshipDeadline } from "@website/utils/scholarshipDate.js";
 
 const initialFilters = { country: "", degree: "", funding: "", deadline: "" };
-const pashtoDeadlineDates = {
-  "د ټاکل شوي پروګرام له مخې": "25 لړم 1405",
-  "د رسمي غوښتنلیک دورې مطابق": "3 لیندۍ 1405",
-  "د کلني اعلان مطابق": "10 مرغومی 1405",
-  "د رسمي اعلان مطابق": "18 سلواغه 1405",
-  "د څېړنیز اعلان مطابق": "15 وری 1406",
-};
-
 function FilterModal({ open, onClose, title, children }) {
   const dialogRef = useModalFocus({ active: open, onClose });
   useEffect(() => {
@@ -149,8 +142,7 @@ function FilterSelect({
 
 function ScholarshipCard({ scholarship, language }) {
   const scholarshipHref = useLocalizedHref(`/scholarships/${scholarship.slug}`);
-  const deadline =
-    pashtoDeadlineDates[scholarship.deadline] || scholarship.deadline;
+  const deadline = formatScholarshipDeadline(scholarship.deadline, language, scholarship.slug);
 
   return (
     <article dir={language === "en" ? "ltr" : "rtl"} className="group rounded-3xl border border-[#eadfce] bg-[#fffaf5] p-3 text-center shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-[0_12px_28px_rgba(54,69,77,0.1)] dark:border-gray-700 dark:bg-[#2b3442] md:p-4">

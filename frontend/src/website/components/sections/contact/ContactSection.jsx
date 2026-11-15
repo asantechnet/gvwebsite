@@ -80,9 +80,9 @@ function ContactSection({ content, language }) {
                 const Icon = icons[social.type] || Music2
 
                 return (
-                  <span key={social.type} title={social.label} className="flex size-10 items-center justify-center rounded-full border border-border text-foreground-muted transition-all duration-200 hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 hover:text-accent-text dark:border-gray-600">
+                  <a key={`${social.type}-${social.href}`} href={social.href} target="_blank" rel="noopener noreferrer" title={social.label} aria-label={social.label} className="flex size-10 items-center justify-center rounded-full border border-border text-foreground-muted transition-all duration-200 hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 hover:text-accent-text dark:border-gray-600">
                     <Icon aria-hidden="true" size={17} />
-                  </span>
+                  </a>
                 )
               })}
             </div>}
@@ -109,7 +109,7 @@ function ContactSection({ content, language }) {
                 <textarea required minLength={10} maxLength={5000} name="message" placeholder={content.form.messagePlaceholder} className="min-h-32 resize-y rounded-xl border border-border bg-surface-muted px-3 py-2 text-start text-sm font-light leading-7 text-foreground outline-none transition-colors focus:border-primary focus-visible:shadow-none! dark:border-gray-600 dark:bg-[#2b3442]" />
               </label>
             </div>
-            <Button type="submit" icon={Send} disabled={formStatus === 'sending'} aria-busy={formStatus === 'sending'} className="mt-6 min-h-10 w-full border-brand-orange bg-brand-orange px-4 text-center text-sm shadow-md shadow-brand-orange/20 hover:border-primary-hover hover:bg-primary-hover hover:shadow-lg hover:shadow-brand-orange/30 disabled:cursor-wait disabled:opacity-70 sm:w-32">
+            <Button type="submit" icon={Send} disabled={formStatus === 'sending'} aria-busy={formStatus === 'sending'} className="mt-6 min-h-10 w-full whitespace-nowrap border-brand-orange bg-brand-orange px-4 text-center text-sm shadow-md shadow-brand-orange/20 hover:border-primary-hover hover:bg-primary-hover hover:shadow-lg hover:shadow-brand-orange/30 disabled:cursor-wait disabled:opacity-70 sm:w-auto sm:min-w-32">
               {formStatus === 'sending' ? content.form.sendingLabel : content.form.submitLabel}
             </Button>
             <p aria-live="polite" className={`mt-4 text-sm ${formStatus === 'error' ? 'text-brand-red' : 'text-accent-text'}`}>{formStatus === 'success' ? content.form.successMessage : formStatus === 'error' ? content.form.requiredMessage : ''}</p>

@@ -21,7 +21,7 @@ const publicRichTextClasses = `
   [&>:is(ul,ol)[data-columns]]:grid [&>:is(ul,ol)[data-columns]]:gap-x-5 [&>:is(ul,ol)[data-columns]]:gap-y-1 [&>:is(ul,ol)[data-columns="2"]]:sm:grid-cols-2 [&>:is(ul,ol)[data-columns="3"]]:sm:grid-cols-3
   [&_[data-editor-media]]:my-5 [&_[data-editor-media]]:block [&_[data-editor-media]]:w-full
   [&_[data-editor-button]]:my-5 [&_[data-editor-button]_a]:inline-flex [&_[data-editor-button]_a]:min-h-11 [&_[data-editor-button]_a]:items-center [&_[data-editor-button]_a]:justify-center [&_[data-editor-button]_a]:rounded-xl [&_[data-editor-button]_a]:border [&_[data-editor-button]_a]:border-primary [&_[data-editor-button]_a]:bg-primary [&_[data-editor-button]_a]:px-5 [&_[data-editor-button]_a]:py-2.5 [&_[data-editor-button]_a]:font-bold [&_[data-editor-button]_a]:text-[#2a170a] [&_[data-editor-button]_a]:no-underline [&_[data-editor-button]_a]:shadow-[0_7px_18px_rgba(244,126,38,0.24)] [&_[data-editor-button]_a]:transition-colors [&_[data-editor-button]_a:hover]:bg-primary-hover
-  [&_[data-media-grid]]:my-5 [&_[data-media-grid]]:block [&_[data-media-grid]]:w-full [&_[data-media-grid]]:rounded-[1.4rem] [&_[data-media-grid]]:border [&_[data-media-grid]]:border-border [&_[data-media-grid]]:p-2
+  [&_[data-media-grid]]:my-5 [&_[data-media-grid]]:block [&_[data-media-grid]]:w-full [&_[data-media-grid]]:rounded-[1.4rem] [&_[data-media-grid]]:p-2
 `.replace(/\s+/g, ' ').trim()
 
 function mediaItemFromElement(element) {

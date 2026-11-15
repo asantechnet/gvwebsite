@@ -29,6 +29,7 @@
   "socialSettings": "Social networks",
   "addSocial": "Add social network",
   "deleteSocial": "Delete the social network",
+  "deleteSocialDescription": "Are you sure you want to delete this social network?",
   "socialModalDescription": "Enter the social network and its link.",
   "socialPlatform": "Social network",
   "socialUrl": "Social network link",

@@ -82,8 +82,8 @@ function OpportunityDirectorySkeleton({ count = 0 }) {
   return <section className="bg-background px-4 py-6 md:px-6 md:py-10 lg:py-14"><div className="mx-auto max-w-6xl"><div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:p-8"><main className="order-1 h-fit min-w-0 self-start"><SkeletonBlock className="mb-4 h-7 w-56" /><div className="grid grid-cols-2 gap-2 md:grid-cols-3">{list(collectionSkeletonCount(count)).map((item) => <SkeletonBlock key={item} className="aspect-video rounded-2xl border border-border" />)}</div></main><ContentSidebarSkeleton className="border-t border-border pt-5 lg:border-t-0 lg:pt-0" /></div></div></section>
 }
 
-function ContactSkeleton() {
-  return <><PageHero /><section className="bg-background px-4 pb-12 pt-0 md:px-6"><div className="mx-auto max-w-5xl"><div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-24"><div><SkeletonBlock className="h-9 w-52" /><div className="mt-10 grid gap-6 sm:grid-cols-3 lg:grid-cols-1">{list(3).map((item) => <div key={item} className="flex gap-4"><SkeletonBlock className="size-12 shrink-0 rounded-full bg-primary/15" /><div className="flex-1 space-y-2"><SkeletonBlock className="h-3 w-20" /><SkeletonBlock className="h-5 w-full max-w-44" /></div></div>)}</div><div className="mt-10 flex gap-3">{list(4).map((item) => <SkeletonBlock key={item} className="size-10 rounded-full" />)}</div></div><div className="space-y-5">{list(3).map((item) => <div key={item} className="space-y-2"><SkeletonBlock className="h-4 w-24" /><SkeletonBlock className="h-12" /></div>)}<div className="space-y-2"><SkeletonBlock className="h-4 w-24" /><SkeletonBlock className="h-32" /></div><SkeletonBlock className="h-10 w-full sm:w-32" /></div></div><SkeletonBlock className="mt-12 h-72 w-full rounded-3xl sm:h-96" /></div></section></>
+function ContactSkeleton({ socialCount = 0 }) {
+  return <><PageHero /><section className="bg-background px-4 pb-12 pt-0 md:px-6"><div className="mx-auto max-w-5xl"><div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-24"><div><SkeletonBlock className="h-9 w-52" /><div className="mt-10 grid gap-6 sm:grid-cols-3 lg:grid-cols-1">{list(3).map((item) => <div key={item} className="flex gap-4"><SkeletonBlock className="size-12 shrink-0 rounded-full bg-primary/15" /><div className="flex-1 space-y-2"><SkeletonBlock className="h-3 w-20" /><SkeletonBlock className="h-5 w-full max-w-44" /></div></div>)}</div>{socialCount > 0 && <div className="mt-10 flex gap-3">{list(socialCount).map((item) => <SkeletonBlock key={item} className="size-10 rounded-full" />)}</div>}</div><div className="space-y-5">{list(3).map((item) => <div key={item} className="space-y-2"><SkeletonBlock className="h-4 w-24" /><SkeletonBlock className="h-12" /></div>)}<div className="space-y-2"><SkeletonBlock className="h-4 w-24" /><SkeletonBlock className="h-32" /></div><SkeletonBlock className="h-10 w-full sm:w-32" /></div></div><SkeletonBlock className="mt-12 h-72 w-full rounded-3xl sm:h-96" /></div></section></>
 }
 
 function MagazineCardSkeleton() {
@@ -92,17 +92,17 @@ function MagazineCardSkeleton() {
 
 function MagazineNewsSkeleton({ count }) {
   const dotCount = count <= 10 ? count : Math.ceil(collectionSkeletonCount(count) / getCarouselVisibleCount())
-  return <section className="-mt-4 bg-background pb-12.5 pt-0"><div className="mx-auto w-full max-w-7xl px-4 sm:px-6 xl:px-8"><SkeletonBlock className="mx-auto mb-8 h-7 w-52 md:h-9 md:w-60" /><div className="relative px-12"><SkeletonBlock className="absolute start-0 top-1/2 size-10 -translate-y-1/2 rounded-full border border-border bg-surface shadow-md" /><div className="overflow-hidden px-2"><div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">{list(getVisibleCardCount(count, getCarouselVisibleCount())).map((item) => <MagazineCardSkeleton key={item} />)}</div></div><SkeletonBlock className="absolute end-0 top-1/2 size-10 -translate-y-1/2 rounded-full border border-border bg-surface shadow-md" /></div><div className="mt-5 flex items-center justify-center gap-2">{list(dotCount).map((dot) => <SkeletonBlock key={dot} className={dot === 0 ? 'h-2 w-7 rounded-full bg-primary/40' : 'h-2 w-2 rounded-full'} />)}</div></div></section>
+  return <section className="-mt-4 bg-background pb-12.5 pt-0"><div className="mx-auto w-full max-w-7xl px-4 sm:px-6 xl:px-8"><SkeletonBlock className="mx-auto mb-8 h-7 w-52 md:h-9 md:w-60" /><div className="px-12"><div className="overflow-hidden px-2"><div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">{list(getVisibleCardCount(count, getCarouselVisibleCount())).map((item) => <MagazineCardSkeleton key={item} />)}</div></div></div><div className="mt-5 flex items-center justify-center gap-2">{list(dotCount).map((dot) => <SkeletonBlock key={dot} className={dot === 0 ? 'h-2 w-7 rounded-full bg-primary/40' : 'h-2 w-2 rounded-full'} />)}</div></div></section>
 }
 
 function MagazinePageSkeleton({ active = false }) {
   return <SkeletonBlock className={`size-8 rounded-lg${active ? ' bg-primary/30' : ''}`} />
 }
 
-function MagazineSkeleton({ count }) {
-  const articleCount = getVisibleCardCount(count, getMagazinePostsPerPage())
-  const magazineTotalPages = Math.ceil(collectionSkeletonCount(count) / getMagazinePostsPerPage())
-  return <><PageHero /><MagazineNewsSkeleton count={count} /><section className="bg-surface-muted pb-12.5 pt-8 dark:bg-[#182230]"><div className="mx-auto w-full max-w-7xl px-4 sm:px-6 xl:px-8"><SkeletonBlock className="mx-auto mb-8 h-7 w-48 md:h-9 md:w-56" /><div className="grid grid-cols-2 items-start gap-3 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">{list(articleCount).map((item) => <MagazineCardSkeleton key={item} />)}</div>{magazineTotalPages > 1 && <nav className="mt-8 flex max-w-full flex-wrap items-center justify-center gap-1 sm:gap-2"><MagazinePageSkeleton /><MagazinePageSkeleton /><MagazinePageSkeleton active /><MagazinePageSkeleton /><SkeletonBlock className="h-2 w-4 rounded-full" /><MagazinePageSkeleton /><MagazinePageSkeleton /><MagazinePageSkeleton /><MagazinePageSkeleton /></nav>}</div></section></>
+function MagazineSkeleton({ newsCount, articleCount }) {
+  const visibleArticleCount = getVisibleCardCount(articleCount, getMagazinePostsPerPage())
+  const magazineTotalPages = Math.ceil(collectionSkeletonCount(articleCount) / getMagazinePostsPerPage())
+  return <><PageHero /><MagazineNewsSkeleton count={newsCount} /><section className="bg-surface-muted pb-12.5 pt-8 dark:bg-[#182230]"><div className="mx-auto w-full max-w-7xl px-4 sm:px-6 xl:px-8"><SkeletonBlock className="mx-auto mb-8 h-7 w-48 md:h-9 md:w-56" /><div className="grid grid-cols-2 items-start gap-3 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5">{list(visibleArticleCount).map((item) => <MagazineCardSkeleton key={item} />)}</div>{magazineTotalPages > 1 && <nav className="mt-8 flex max-w-full flex-wrap items-center justify-center gap-1 px-1 sm:gap-2 sm:px-0"><MagazinePageSkeleton /><MagazinePageSkeleton /><MagazinePageSkeleton active /><MagazinePageSkeleton /><MagazinePageSkeleton /><MagazinePageSkeleton /><MagazinePageSkeleton /></nav>}</div></section></>
 }
 
 function SearchSkeleton({ hasQuery, resultCount }) {
@@ -117,12 +117,12 @@ function NotFoundSkeleton() {
   return <section className="bg-background px-4 py-16 md:px-6 lg:py-24"><div className="mx-auto flex max-w-2xl flex-col items-center rounded-4xl border border-border bg-surface p-10"><SkeletonBlock className="h-20 w-36 bg-primary/15" /><SkeletonBlock className="mt-5 h-10 w-3/4" /><SkeletonBlock className="mt-4 h-4 w-full" /><SkeletonBlock className="mt-2 h-4 w-2/3" /><SkeletonBlock className="mt-7 h-12 w-36" /></div></section>
 }
 
-function Content({ path, hasSearchQuery, searchResultCount, directoryItemCount, scholarshipItemCount, magazineItemCount }) {
+function Content({ path, hasSearchQuery, searchResultCount, directoryItemCount, scholarshipItemCount, magazineNewsCount, magazineArticleCount, contactSocialCount }) {
   if (path === '/') return <HomeSkeleton />
   if (path === '/about') return <AboutSkeleton />
-  if (path === '/contact') return <ContactSkeleton />
+  if (path === '/contact') return <ContactSkeleton socialCount={contactSocialCount} />
   if (path === '/scholarships') return <ScholarshipDirectorySkeleton count={scholarshipItemCount} />
-  if (path === '/magazine') return <MagazineSkeleton count={magazineItemCount} />
+  if (path === '/magazine') return <MagazineSkeleton newsCount={magazineNewsCount} articleCount={magazineArticleCount} />
   if (path === '/services') return <OpportunityDirectorySkeleton count={directoryItemCount} />
   if (path === '/tourism/afghanistan' || path === '/tourism/world') return <OpportunityDirectorySkeleton count={directoryItemCount} />
   if (path === '/search') return <SearchSkeleton hasQuery={hasSearchQuery} resultCount={searchResultCount} />
@@ -132,6 +132,6 @@ function Content({ path, hasSearchQuery, searchResultCount, directoryItemCount, 
   return <NotFoundSkeleton />
 }
 
-export default function RouteProgress({ path, hasSearchQuery = false, searchResultCount = 0, directoryItemCount = 0, scholarshipItemCount = 0, magazineItemCount = 0 }) {
-  return <div className="overflow-hidden bg-background" role="status" aria-live="polite" aria-busy="true" aria-label="در حال بارگذاری محتوای وب‌سایت"><span className="sr-only">در حال بارگذاری محتوای وب‌سایت</span><HeaderSkeleton /><div data-route-skeleton><Content path={path} hasSearchQuery={hasSearchQuery} searchResultCount={searchResultCount} directoryItemCount={directoryItemCount} scholarshipItemCount={scholarshipItemCount} magazineItemCount={magazineItemCount} /></div><FooterSkeleton /></div>
+export default function RouteProgress({ path, hasSearchQuery = false, searchResultCount = 0, directoryItemCount = 0, scholarshipItemCount = 0, magazineNewsCount = 9, magazineArticleCount = 9, contactSocialCount = 0 }) {
+  return <div className="overflow-hidden bg-background" role="status" aria-live="polite" aria-busy="true" aria-label="در حال بارگذاری محتوای وب‌سایت"><span className="sr-only">در حال بارگذاری محتوای وب‌سایت</span><HeaderSkeleton /><div data-route-skeleton><Content path={path} hasSearchQuery={hasSearchQuery} searchResultCount={searchResultCount} directoryItemCount={directoryItemCount} scholarshipItemCount={scholarshipItemCount} magazineNewsCount={magazineNewsCount} magazineArticleCount={magazineArticleCount} contactSocialCount={contactSocialCount} /></div><FooterSkeleton /></div>
 }

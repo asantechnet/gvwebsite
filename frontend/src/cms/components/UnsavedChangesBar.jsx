@@ -6,6 +6,7 @@ import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import { showToast } from '@cms/utils/toast.js'
 import { navigateCms } from '@cms/navigation.js'
 import {
+  CMS_CHANGES_COMMITTED_EVENT,
   CMS_CHANGES_DISCARDED_EVENT,
   CMS_DRAFT_DIRTY_EVENT,
   hasRecoverableCmsDraft,
@@ -55,6 +56,15 @@ function UnsavedChangesBar({ language = 'prs', sidebarCollapsed = false }) {
     }
     window.addEventListener(CMS_DRAFT_DIRTY_EVENT, markDirty)
     return () => window.removeEventListener(CMS_DRAFT_DIRTY_EVENT, markDirty)
+  }, [])
+
+  useEffect(() => {
+    const markCommitted = () => {
+      setDirty(false)
+      setSaving(false)
+    }
+    window.addEventListener(CMS_CHANGES_COMMITTED_EVENT, markCommitted)
+    return () => window.removeEventListener(CMS_CHANGES_COMMITTED_EVENT, markCommitted)
   }, [])
 
   useEffect(() => {

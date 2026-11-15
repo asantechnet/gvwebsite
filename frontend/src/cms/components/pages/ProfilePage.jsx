@@ -21,9 +21,9 @@ import {
 import { announceCmsDraftChange } from "@cms/utils/draftEvents.js";
 import useModalFocus from "@/shared/hooks/useModalFocus.js";
 import { validatePasswordChange } from "@/shared/utils/validation.js";
-import { BRANDING_UPDATED_EVENT, readBrandIcon, readCompanyNames } from "@cms/utils/branding.js";
+import { BRANDING_UPDATED_EVENT, readCompanyNames } from "@cms/utils/branding.js";
 
-function ProfilePage({ content, theme }) {
+function ProfilePage({ content, brandIcon }) {
   const resetAction =
     content.resetAction ||
     (content.resetPassword?.startsWith("Password")
@@ -76,7 +76,7 @@ function ProfilePage({ content, theme }) {
     return () => window.removeEventListener("cms:changes-saved", save);
   }, [companyNames, profileImage]);
   const companyName = companyNames[contentLanguage];
-  const defaultProfileImage = readBrandIcon(theme);
+  const defaultProfileImage = brandIcon;
   const card =
     "profile-card overflow-hidden rounded-2xl border border-admin-border bg-admin-card shadow-[0_1px_2px_rgb(15_23_42_/.04),0_12px_34px_rgb(15_23_42_/.055)]";
   const heading =

@@ -118,7 +118,15 @@ function useManagedCollection({ pageKey, label, services, tourism, opportunities
       : item)
   })
 
-  return { cards, isServices, isTourism, removePost, savePost, toggleStatus }
+  const restorePost = (card, index) => saveImmediate((current) => {
+    const matches = (item) => item.id === card.id || (item.type === card.type && item.slug === card.slug) || (isServices && item.slug === card.slug)
+    if (current.some(matches)) return current.map((item) => matches(item) ? { ...card } : item)
+    const restored = [...current]
+    restored.splice(Math.min(index, restored.length), 0, { ...card })
+    return restored
+  })
+
+  return { cards, isServices, isTourism, removePost, restorePost, savePost, toggleStatus }
 }
 
 export default useManagedCollection

@@ -20,6 +20,7 @@ test('country choices use the curated study-destination catalogue', () => {
   assert.equal(codes.has('BR'), true)
   assert.equal(codes.has('AU'), true)
   assert.equal(codes.has('NZ'), true)
+  assert.equal(codes.has('IR'), true)
 })
 
 test('country choices remain alphabetized in every supported language', () => {
@@ -43,9 +44,11 @@ test('Dari and Pashto use Afghanistan-localized country names', () => {
   assert.equal(dari.HU, 'هنگری')
   assert.equal(dari.ES, 'هسپانیا')
   assert.equal(dari.NZ, 'نیوزیلند')
+  assert.equal(dari.IR, 'ایران')
   assert.equal(pashto.AU, 'استرالیا')
   assert.equal(pashto.DE, 'جرمني')
   assert.equal(pashto.NL, 'هالنډ')
   assert.equal(pashto.SE, 'سویډن')
   assert.equal(pashto.NZ, 'نیوزیلنډ')
+  assert.equal(pashto.IR, 'ایران')
 })

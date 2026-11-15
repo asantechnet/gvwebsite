@@ -64,6 +64,97 @@ test('CMS collection cards preserve complete records and public home collections
   assert.match(loader, /title: item\.title \|\| item\.name/)
 })
 
+test('persisted CMS card and record deletions use the shared confirmation dialog', async () => {
+  const deletionSources = [
+    '../src/cms/components/sections/ContactEditorSection.jsx',
+    '../src/cms/components/sections/AboutEditorSection.jsx',
+    '../src/cms/components/sections/HomeEditorSection.jsx',
+    '../src/cms/components/sections/MagazineEditorSection.jsx',
+    '../src/cms/components/sections/ScholarshipsEditorSection.jsx',
+    '../src/cms/components/pages/OpportunitiesPage.jsx',
+    '../src/cms/components/pages/MediaLibraryPage.jsx',
+    '../src/cms/components/sections/MessagesSection.jsx',
+  ]
+
+  for (const sourcePath of deletionSources) {
+    const source = await readFile(new URL(sourcePath, import.meta.url), 'utf8')
+    assert.match(source, /cmsConfirmDelete/, `${sourcePath} must confirm destructive record deletion`)
+  }
+
+  const contactEditor = await readFile(new URL('../src/cms/components/sections/ContactEditorSection.jsx', import.meta.url), 'utf8')
+  assert.match(contactEditor, /const deleteSocial = async[\s\S]+cmsConfirmDelete[\s\S]+deleteCollectionItemWithUndo/)
+})
+
+test('contact social links stay shared, clickable, and reflected by the loading skeleton', async () => {
+  const contactEditor = await readFile(new URL('../src/cms/components/sections/ContactEditorSection.jsx', import.meta.url), 'utf8')
+  const contactSection = await readFile(new URL('../src/website/components/sections/contact/ContactSection.jsx', import.meta.url), 'utf8')
+  const routeProgress = await readFile(new URL('../src/website/components/shared/RouteProgress.jsx', import.meta.url), 'utf8')
+  const websiteLayout = await readFile(new URL('../src/website/components/layout/WebsiteLayout.jsx', import.meta.url), 'utf8')
+
+  assert.match(contactEditor, /const updateSharedSocials = \(update\) => setDrafts/)
+  assert.match(contactEditor, /Object\.entries\(current\).*socials: socials\.map/)
+  assert.match(contactSection, /<a key=\{`\$\{social\.type\}-\$\{social\.href\}`\} href=\{social\.href\}/)
+  assert.match(routeProgress, /ContactSkeleton\(\{ socialCount = 0 \}\)/)
+  assert.match(routeProgress, /list\(socialCount\)/)
+  assert.match(websiteLayout, /contactSocialCount=\{contactContent\.contact\.visibility\?\.social === false \? 0 : contactContent\.contact\.socials\.length\}/)
+})
+
+test('saved theme branding drives every public and CMS brand surface', async () => {
+  const branding = await readFile(new URL('../src/shared/utils/branding.js', import.meta.url), 'utf8')
+  const settings = await readFile(new URL('../src/cms/components/sections/SettingsSection.jsx', import.meta.url), 'utf8')
+  const dashboard = await readFile(new URL('../src/cms/components/layout/DashboardLayout.jsx', import.meta.url), 'utf8')
+  const sidebar = await readFile(new URL('../src/cms/components/layout/DashboardSidebar.jsx', import.meta.url), 'utf8')
+  const topbar = await readFile(new URL('../src/cms/components/layout/DashboardTopbar.jsx', import.meta.url), 'utf8')
+  const maintenance = await readFile(new URL('../src/website/components/MaintenancePage.jsx', import.meta.url), 'utf8')
+  const website = await readFile(new URL('../src/website/components/layout/WebsiteLayout.jsx', import.meta.url), 'utf8')
+
+  assert.match(branding, /export function readBrandLogo/)
+  assert.match(branding, /export function applyBrandFavicon/)
+  assert.match(branding, /export function readBrandColors/)
+  assert.match(branding, /export function applyBrandColors/)
+  assert.match(settings, /dispatchEvent\(new Event\(BRANDING_UPDATED_EVENT\)\)/)
+  assert.match(dashboard, /brandIcon=\{brandIcon\}/)
+  assert.match(dashboard, /logo=\{brandLogo\}/)
+  assert.match(sidebar, /src=\{brandIcon\}/)
+  assert.match(topbar, /src=\{brandIcon\}/)
+  assert.doesNotMatch(sidebar, /assets\/branding\/icon/)
+  assert.doesNotMatch(topbar, /assets\/branding\/icon/)
+  assert.match(maintenance, /src=\{logo\}/)
+  assert.match(website, /logo=\{activeLogo\}/)
+  assert.match(website, /applyBrandFavicon\(activeIcon\)/)
+
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8')
+  assert.match(html, /<link rel="icon" href="data:,"/)
+  assert.match(html, /document\.title = ''/)
+  assert.doesNotMatch(html, /Global Vision Website Management/)
+  assert.match(dashboard, /document\.title = cmsDocumentTitle\(language, companyName\)/)
+})
+
+test('saved branding colors survive reloads and drive both website themes', async () => {
+  const dashboard = await readFile(new URL('../src/cms/components/layout/DashboardLayout.jsx', import.meta.url), 'utf8')
+  const styles = await readFile(new URL('../src/index.css', import.meta.url), 'utf8')
+  const cmsStyles = await readFile(new URL('../src/cms/styles.css', import.meta.url), 'utf8')
+
+  assert.match(dashboard, /snapshots\.get\("settings"\)/)
+  assert.match(dashboard, /applyBrandColors\(readBrandColors\(\)\)/)
+  assert.match(dashboard, /snapshots\.get\("settings"\)/)
+  assert.match(styles, /--theme-primary: var\(--brand-orange\)/)
+  assert.match(styles, /--theme-secondary: var\(--brand-red\)/)
+  assert.doesNotMatch(cmsStyles, /--admin-brand: #f7a33a/)
+  assert.match(cmsStyles, /--admin-secondary: var\(--brand-red\)/)
+
+  const draftEvents = await readFile(new URL('../src/cms/utils/draftEvents.js', import.meta.url), 'utf8')
+  const unsavedChanges = await readFile(new URL('../src/cms/components/UnsavedChangesBar.jsx', import.meta.url), 'utf8')
+  assert.match(draftEvents, /if \(!detail\.handled\) reject/)
+  assert.match(unsavedChanges, /CMS_CHANGES_COMMITTED_EVENT/)
+  assert.match(unsavedChanges, /const markCommitted = \(\) =>/)
+
+  const draftState = await readFile(new URL('../src/cms/hooks/useCmsDraftState.js', import.meta.url), 'utf8')
+  assert.match(draftState, /const draftRef = useRef\(initial\.value\)/)
+  assert.match(draftState, /const latestDraft = draftRef\.current/)
+  assert.doesNotMatch(draftState, /\[commit, draft, scope, storageKey\]/)
+})
+
 test('published CMS snapshots remain authoritative on public collection routes', async () => {
   const loader = await readFile(new URL('../src/website/data/loadWebsiteContent.js', import.meta.url), 'utf8')
   const snapshotsApi = await readFile(new URL('../src/shared/services/api/snapshots.js', import.meta.url), 'utf8')
@@ -74,12 +165,64 @@ test('published CMS snapshots remain authoritative on public collection routes',
   assert.match(loader, /!managedTypes\.has\(type\)/)
   assert.match(loader, /content\.guides\.exams = exams\.map/)
   assert.doesNotMatch(loader, /fallbackWhatsApp/)
+  assert.doesNotMatch(loader, /catch\s*[{(]/)
+  assert.match(loader, /const snapshots = await snapshotsApi\.publicList\(\)[\s\S]*return applySnapshots/)
   assert.match(snapshotsApi, /cache: 'no-store'/)
   assert.match(websiteApp, /loadId === latestLoad\.current/)
+  assert.match(websiteApp, /if \(!content\)[\s\S]*<RouteProgress/)
 
   const blogPost = await readFile(new URL('../src/website/components/pages/BlogPostPage.jsx', import.meta.url), 'utf8')
   assert.match(blogPost, /usesCmsRecordContent/)
   assert.match(blogPost, /html=\{post\.content \|\| ''\}/)
+})
+
+test('mobile magazine loading shapes mirror the live carousel and article grid', async () => {
+  const progress = await readFile(new URL('../src/website/components/shared/RouteProgress.jsx', import.meta.url), 'utf8')
+  const layout = await readFile(new URL('../src/website/components/layout/WebsiteLayout.jsx', import.meta.url), 'utf8')
+
+  assert.match(progress, /magazineNewsCount = 9, magazineArticleCount = 9/)
+  assert.match(progress, /MagazineSkeleton newsCount=\{magazineNewsCount\} articleCount=\{magazineArticleCount\}/)
+  assert.match(progress, /getVisibleCardCount\(articleCount, getMagazinePostsPerPage\(\)\)/)
+  assert.match(layout, /magazineNewsCount=\{magazineContent\.news\.items\.length\}/)
+  assert.match(layout, /magazineArticleCount=\{magazineContent\.articles\.items\.length\}/)
+})
+
+test('opening an unread CMS message persists it as read', async () => {
+  const messages = await readFile(new URL('../src/cms/components/sections/MessagesSection.jsx', import.meta.url), 'utf8')
+
+  assert.match(messages, /const openMessage = \(message\) =>/)
+  assert.match(messages, /message\.unread && !isPending\(message\.id\)[^\n]+setUnread\(message\.id, false\)/)
+  assert.match(messages, /onClick=\{\(\) => openMessage\(message\)\}/)
+})
+
+test('CMS record and media deletions provide a five-second undo window', async () => {
+  const toast = await readFile(new URL('../src/cms/utils/toast.js', import.meta.url), 'utf8')
+  const undoDelete = await readFile(new URL('../src/cms/utils/undoDelete.js', import.meta.url), 'utf8')
+  const media = await readFile(new URL('../src/cms/components/pages/MediaLibraryPage.jsx', import.meta.url), 'utf8')
+  const opportunities = await readFile(new URL('../src/cms/components/pages/OpportunitiesPage.jsx', import.meta.url), 'utf8')
+
+  assert.match(toast, /showDeleteUndoToast/)
+  assert.match(toast, /remaining = 5/)
+  assert.match(toast, /setTimeout[\s\S]*5000/)
+  assert.match(undoDelete, /deleteLocalizedSnapshotItemWithUndo/)
+  assert.match(undoDelete, /showDeleteUndoToast\(\{ onUndo: restore, onCommit: commit \}\)/)
+  assert.match(media, /deleteWithUndo\(\{[\s\S]*commit:[\s\S]*removeUpload/)
+  assert.match(opportunities, /deleteWithUndo\(\{ remove: \(\) => removePost\(card\), restore: \(\) => restorePost/)
+  assert.deepEqual(Object.keys(dariDashboard.operationNotifications).sort(), Object.keys(pashtoDashboard.operationNotifications).sort())
+  assert.deepEqual(Object.keys(dariDashboard.operationNotifications).sort(), Object.keys(englishDashboard.operationNotifications).sort())
+})
+
+test('CMS record action groups share their dark-mode edit treatment', async () => {
+  const actions = await readFile(new URL('../src/cms/components/RecordActionButtons.jsx', import.meta.url), 'utf8')
+  const consumers = await Promise.all([
+    '../src/cms/components/pages/OpportunitiesPage.jsx',
+    '../src/cms/components/sections/ScholarshipsEditorSection.jsx',
+    '../src/cms/components/sections/MagazineEditorSection.jsx',
+  ].map((path) => readFile(new URL(path, import.meta.url), 'utf8')))
+
+  assert.match(actions, /dark:text-\[color-mix\(in_srgb,var\(--admin-brand\)_55%,white\)\]/)
+  assert.match(actions, /dark:hover:text-\[color-mix\(in_srgb,var\(--admin-brand\)_30%,white\)\]/)
+  consumers.forEach((source) => assert.match(source, /RecordActionButtons/))
 })
 
 test('public reload restoration does not use staged proportional scrolling', async () => {

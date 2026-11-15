@@ -1,21 +1,25 @@
 import BlogPostPage from '@pages/BlogPostPage.jsx'
+import useWebsiteLanguage from '@website/hooks/useWebsiteLanguage.js'
+import { formatScholarshipDeadline } from '@website/utils/scholarshipDate.js'
 
 function ScholarshipPostPage({ scholarship, content, postShell }) {
+  const language = useWebsiteLanguage()
+  const isCmsManaged = Boolean(scholarship.cmsManaged)
   const post = {
     ...scholarship,
     slug: scholarship.slug,
     category: content.detail.parentLabel,
     title: scholarship.title,
-    description: scholarship.summary,
+    description: isCmsManaged ? '' : scholarship.summary,
     image: scholarship.image,
     imageAlt: scholarship.title,
     content: scholarship.overview || '',
     facts: [
       { label: content.filters.degree, value: scholarship.degree },
       { label: content.filters.funding, value: scholarship.funding },
-      { label: content.filters.deadline, value: scholarship.deadline },
+      { label: content.filters.deadline, value: formatScholarshipDeadline(scholarship.deadline, language, scholarship.slug) },
       { label: content.filters.country, value: scholarship.country },
-    ],
+    ].filter((fact) => fact.value),
   }
   const detailContent = {
     ...postShell,
@@ -26,7 +30,7 @@ function ScholarshipPostPage({ scholarship, content, postShell }) {
     backHref: '/scholarships',
     backLabel: content.detail.backLabel,
     highlight: content.detail.highlight,
-    sections: [
+    sections: isCmsManaged ? [] : [
       {
         title: content.detail.overview,
         body: scholarship.overview,
@@ -38,10 +42,10 @@ function ScholarshipPostPage({ scholarship, content, postShell }) {
     ],
     sourcesTitle: content.detail.officialSources,
     sourcesNote: content.detail.officialNote,
-    sources: [{ label: `${scholarship.provider}؛ ${content.detail.officialSite}`, href: scholarship.officialHref }],
+    sources: isCmsManaged ? [] : [{ label: `${scholarship.provider}؛ ${content.detail.officialSite}`, href: scholarship.officialHref }],
   }
 
-  return <BlogPostPage post={post} content={detailContent} />
+  return <BlogPostPage post={post} content={detailContent} hideSidebar={isCmsManaged} />
 }
 
 export default ScholarshipPostPage

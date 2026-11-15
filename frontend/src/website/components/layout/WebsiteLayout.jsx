@@ -12,7 +12,7 @@ import { applySeoMetadata, buildStructuredData, getSiteOrigin, toAbsoluteUrl } f
 import { lazyWithSkeletonPreview } from '@/shared/utils/loading.js'
 import { finishReloadScrollRestoration, saveScrollPosition } from '@website/utils/scrollRestoration.js'
 import { STUDY_DIRECTORY_CARD_LIMIT, getVisibleCardCount } from '@website/utils/cardCounts.js'
-import { BRANDING_UPDATED_EVENT, readCompanyNames } from '@/shared/utils/branding.js'
+import { applyBrandColors, applyBrandFavicon, BRANDING_UPDATED_EVENT, readBrandIcon, readBrandLogo, readCompanyNames } from '@/shared/utils/branding.js'
 
 const delayed = (importer) => lazy(() => lazyWithSkeletonPreview(importer))
 const HomePage = delayed(() => import('@pages/HomePage.jsx'))
@@ -65,8 +65,8 @@ function WebsiteLayout({ children = null, content }) {
   const contentLocale = language === 'dr' ? 'prs' : language
   const companyName = content.profile?.[contentLocale] || companyNames[contentLocale]
   const page = parsedRoute.pagePath
-  const activeLogo = theme === 'dark' ? siteSettings?.branding?.darkLogo : siteSettings?.branding?.lightLogo
-  const activeIcon = theme === 'dark' ? siteSettings?.branding?.darkIcon : siteSettings?.branding?.lightIcon
+  const activeLogo = (theme === 'dark' ? siteSettings?.branding?.darkLogo : siteSettings?.branding?.lightLogo) || readBrandLogo(theme)
+  const activeIcon = (theme === 'dark' ? siteSettings?.branding?.darkIcon : siteSettings?.branding?.lightIcon) || readBrandIcon(theme)
 
   useEffect(() => {
     const syncCompanyNames = () => setCompanyNames(readCompanyNames())
@@ -81,15 +81,13 @@ function WebsiteLayout({ children = null, content }) {
     }
   }, [])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!siteSettings) return
-    if (siteSettings.branding?.primary) document.documentElement.style.setProperty('--brand-orange', siteSettings.branding.primary)
-    if (siteSettings.branding?.secondary) document.documentElement.style.setProperty('--brand-red', siteSettings.branding.secondary)
+    if (siteSettings.branding?.primary && siteSettings.branding?.secondary) applyBrandColors(siteSettings.branding)
   }, [siteSettings])
 
-  useEffect(() => {
-    if (!activeIcon) return
-    document.querySelector('link[rel="icon"]')?.setAttribute('href', activeIcon)
+  useLayoutEffect(() => {
+    applyBrandFavicon(activeIcon)
   }, [activeIcon])
 
   useLayoutEffect(() => {
@@ -293,7 +291,7 @@ function WebsiteLayout({ children = null, content }) {
     return () => window.removeEventListener('storage', syncMaintenanceMode)
   }, [])
 
-  if (maintenanceMode) return <MaintenancePage language={language} theme={theme} companyName={companyName} contactEmail={contactContent.contact.details.find((detail) => detail.type === 'email')?.value || ''} onLanguageChange={(nextLanguage) => window.location.assign(localizeHref(`${page}${window.location.search}${window.location.hash}`, nextLanguage))} onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))} />
+  if (maintenanceMode) return <MaintenancePage language={language} theme={theme} companyName={companyName} contactEmail={contactContent.contact.details.find((detail) => detail.type === 'email')?.value || ''} logo={activeLogo} onLanguageChange={(nextLanguage) => window.location.assign(localizeHref(`${page}${window.location.search}${window.location.hash}`, nextLanguage))} onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))} />
 
   const directoryItemCount = page === '/services'
     ? servicesContent.services.length
@@ -306,7 +304,7 @@ function WebsiteLayout({ children = null, content }) {
           : 0
 
   return (
-    <Suspense fallback={<RouteProgress path={page} hasSearchQuery={Boolean(searchQuery)} searchResultCount={searchResults.length} directoryItemCount={directoryItemCount} scholarshipItemCount={scholarshipsContent.items.length} magazineItemCount={magazinePosts.length} />}><WebsiteLanguageContext.Provider value={language}>
+    <Suspense fallback={<RouteProgress path={page} hasSearchQuery={Boolean(searchQuery)} searchResultCount={searchResults.length} directoryItemCount={directoryItemCount} scholarshipItemCount={scholarshipsContent.items.length} magazineNewsCount={magazineContent.news.items.length} magazineArticleCount={magazineContent.articles.items.length} contactSocialCount={contactContent.contact.visibility?.social === false ? 0 : contactContent.contact.socials.length} />}><WebsiteLanguageContext.Provider value={language}>
       <div className="website-root flex min-h-screen flex-col bg-background text-foreground">
         <ScrollProgress />
         <Header

@@ -40,8 +40,6 @@ class SiteSnapshotSanitizer
                 $value = $this->richTextSanitizer->sanitize($value);
             } elseif (in_array($normalizedKey, self::URL_KEYS, true) && ! $this->richTextSanitizer->isSafeUrl($value)) {
                 $value = '';
-            } elseif (in_array($normalizedKey, ['primary', 'secondary'], true) && ! preg_match('/^#[0-9a-f]{6}$/i', $value)) {
-                $value = $normalizedKey === 'primary' ? '#f47e26' : '#80027f';
             }
         }
 

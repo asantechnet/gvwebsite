@@ -7,6 +7,8 @@ import { loadWebsiteContent } from '@website/data/loadWebsiteContent.js'
 import { parseLocalizedPathname } from '@website/utils/language.js'
 import { SNAPSHOT_UPDATED_EVENT, SNAPSHOT_UPDATED_STORAGE_KEY } from '@/shared/services/api/snapshots.js'
 
+const contactSocialCountKey = (language) => `globalvision-contact-social-count:${language}`
+
 function WebsiteApp({ language }) {
   const [content, setContent] = useState(null)
   const latestLoad = useRef(0)
@@ -16,15 +18,19 @@ function WebsiteApp({ language }) {
     const load = (fresh = false) => {
       const loadId = ++latestLoad.current
       return loadWebsiteContent(language, { fresh }).then((loadedContent) => {
-        if (active && loadId === latestLoad.current) setContent(loadedContent)
+        if (active && loadId === latestLoad.current) {
+          const socialCount = loadedContent.contact.contact.visibility?.social === false ? 0 : loadedContent.contact.contact.socials.length
+          window.localStorage.setItem(contactSocialCountKey(language), String(socialCount))
+          setContent(loadedContent)
+        }
       })
     }
-    const refresh = () => load(true)
+    const refresh = () => { load(true).catch(() => {}) }
     const refreshFromStorage = (event) => {
       if (event.key === SNAPSHOT_UPDATED_STORAGE_KEY) refresh()
     }
 
-    load()
+    load().catch(() => {})
     window.addEventListener(SNAPSHOT_UPDATED_EVENT, refresh)
     window.addEventListener('storage', refreshFromStorage)
     window.addEventListener('focus', refresh)
@@ -39,9 +45,10 @@ function WebsiteApp({ language }) {
 
   if (!content) {
     const maintenanceModeHint = window.localStorage.getItem('globalvision-maintenance-mode') === 'true'
+    const socialCountHint = Number.parseInt(window.localStorage.getItem(contactSocialCountKey(language)) || '0', 10)
     return maintenanceModeHint
       ? <MaintenanceProgress />
-      : <RouteProgress path={parseLocalizedPathname(window.location.pathname).pagePath} />
+      : <RouteProgress path={parseLocalizedPathname(window.location.pathname).pagePath} contactSocialCount={socialCountHint} />
   }
 
   return <WebsiteLayout content={content} />

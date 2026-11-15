@@ -1,5 +1,6 @@
 export const CMS_DRAFT_DIRTY_EVENT = 'cms:draft-dirty'
 export const CMS_CHANGES_SAVED_EVENT = 'cms:changes-saved'
+export const CMS_CHANGES_COMMITTED_EVENT = 'cms:changes-committed'
 export const CMS_CHANGES_DISCARDED_EVENT = 'cms:changes-discarded'
 export const CMS_DRAFT_STORAGE_PREFIX = 'globalvision-cms-draft:'
 
@@ -11,7 +12,7 @@ export function requestCmsSave() {
   return new Promise((resolve, reject) => {
     const detail = { handled: false, resolve, reject }
     window.dispatchEvent(new CustomEvent(CMS_CHANGES_SAVED_EVENT, { detail }))
-    if (!detail.handled) resolve()
+    if (!detail.handled) reject(new Error('No active CMS draft was available to save.'))
   })
 }
 

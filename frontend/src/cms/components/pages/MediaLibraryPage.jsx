@@ -7,6 +7,7 @@ import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import { createLocalUpload, revokeLocalUpload } from '@/shared/uploads/files.js'
 import { listUploads, removeUpload, uploadFile } from '@/shared/services/api/uploads.js'
 import { showRecordToast } from '@cms/utils/toast.js'
+import { deleteWithUndo } from '@cms/utils/undoDelete.js'
 import { closeCmsModal } from '@cms/utils/modalTransition.js'
 import { formatMediaBytes as formatBytes, getMediaType, mergeManagedMedia, seedMedia } from '@cms/data/mediaLibrary.js'
 
@@ -76,12 +77,26 @@ function MediaLibraryPage({ content }) {
   const remove = async (ids) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: ids.length === 1 ? content.deleteTitle : content.bulkDeleteTitle.replace('{count}', ids.length), description: content.deleteDescription })
     if (!confirmed) return
-    const removable = items.filter((item) => ids.includes(item.id) && !String(item.id).startsWith('seed-'))
-    try { await Promise.all(removable.map((item) => removeUpload(item.id))) } catch { setUploadError(content.uploadError); return }
-    setItems((current) => { current.filter((item) => ids.includes(item.id) && item.local).forEach(revokeLocalUpload); return current.filter((item) => !ids.includes(item.id)) })
-    setSelectedIds((current) => { const next = new Set(current); ids.forEach((id) => next.delete(id)); return next })
-    if (preview && ids.includes(preview.id)) setPreview(null)
-    if (ids.length) showRecordToast('recordDeleted')
+    const deleted = items.map((item, index) => ({ item, index })).filter(({ item }) => ids.includes(item.id))
+    const removable = deleted.map(({ item }) => item).filter((item) => !String(item.id).startsWith('seed-'))
+    if (ids.length) await deleteWithUndo({
+      remove: () => setItems((current) => current.filter((item) => !ids.includes(item.id))),
+      restore: () => setItems((current) => { const restored = [...current]; deleted.forEach(({ item, index }) => restored.splice(Math.min(index, restored.length), 0, item)); return restored }),
+      afterRemove: () => {
+        setSelectedIds((current) => { const next = new Set(current); ids.forEach((id) => next.delete(id)); return next })
+        if (preview && ids.includes(preview.id)) setPreview(null)
+      },
+      commit: async () => {
+        try {
+          await Promise.all(removable.filter((item) => !item.local).map((item) => removeUpload(item.id)))
+          removable.filter((item) => item.local).forEach(revokeLocalUpload)
+        } catch (error) {
+          setItems((current) => { const restored = [...current]; deleted.forEach(({ item, index }) => { if (!restored.some((entry) => entry.id === item.id)) restored.splice(Math.min(index, restored.length), 0, item) }); return restored })
+          setUploadError(content.uploadError)
+          throw error
+        }
+      },
+    })
   }
 
   return <PageContainer className="max-w-[78rem]">

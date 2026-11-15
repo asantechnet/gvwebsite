@@ -12,7 +12,7 @@
   "provinceName": "د ولایت نوم",
   "provinceSearch": "ولایتونه ولټوئ...",
   "provinceEmpty": "ولایت پیدا نه شو.",
-  "operationNotifications": { "recordAdded": "نوی مورد اضافه شو.", "recordDeleted": "مورد ړنګ شو." },
+  "operationNotifications": { "recordAdded": "نوی مورد اضافه شو.", "recordDeleted": "مورد ړنګ شو.", "recordRestored": "ړنګول بېرته وګرځول شول.", "undo": "بېرته راګرځول", "undoCountdown": "د بېرته راګرځولو لپاره {seconds} ثانیې پاتې دي.", "undoFailed": "مورد بېرته راونه ګرځېد.", "deleteFailed": "مورد ړنګ نه شو." },
   "overview": "عمومي کتنه",
   "expand": "اړخیزه پټه پرانیستل",
   "collapse": "اړخیزه پټه بندول",

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { BookOpenCheck, BriefcaseBusiness, ChartNoAxesCombined, Check, ChevronDown, ExternalLink, FileCheck2, Globe2, GraduationCap, MapPinned, Pencil, PlaneTakeoff, Plus, Search, Trash2, WalletCards, X } from 'lucide-react'
+import { BookOpenCheck, BriefcaseBusiness, ChartNoAxesCombined, Check, ChevronDown, FileCheck2, Globe2, GraduationCap, MapPinned, Pencil, PlaneTakeoff, Plus, Search, Trash2, WalletCards, X } from 'lucide-react'
 
 import PageContainer from '@cms/components/PageContainer.jsx'
 import PageHeading from '@cms/components/PageHeading.jsx'
@@ -13,8 +13,10 @@ import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import SafeRichText from '@/shared/components/SafeRichText.jsx'
 import SeoFields from '@cms/components/SeoFields.jsx'
 import { showRecordToast } from '@cms/utils/toast.js'
+import { deleteWithUndo } from '@cms/utils/undoDelete.js'
 import ContentLanguageSwitcher from '@cms/components/ContentLanguageSwitcher.jsx'
 import CountryPicker from '@cms/components/CountryPicker.jsx'
+import RecordActionButtons from '@cms/components/RecordActionButtons.jsx'
 import { getCountryCode } from '@/shared/utils/countries.js'
 import { getAfghanistanProvinceCode, getAfghanistanProvinces } from '@/shared/utils/afghanistanProvinces.js'
 import { useCmsContentLanguage, useCmsInterfaceLanguage } from '@cms/hooks/useCmsLanguage.js'
@@ -42,7 +44,7 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
   const [status, setStatus] = useState('all')
   const [editing, setEditing] = useState(null)
   const [viewing, setViewing] = useState(null)
-  const { cards, removePost, savePost, toggleStatus } = useManagedCollection({ pageKey, label, services, tourism, opportunities, exams })
+  const { cards, removePost, restorePost, savePost, toggleStatus } = useManagedCollection({ pageKey, label, services, tourism, opportunities, exams })
   const labels = { ...content.opportunities, ...content.opportunities.collection }
   const typeLabels = isTourism
     ? { afghanistan: labels.tourismAfghanistan, world: labels.tourismWorld, typeLabel: label }
@@ -51,11 +53,14 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
   const visibleCards = isServices ? cards : cards.filter((card) => card.type === activeType)
   const filteredCards = useMemo(() => visibleCards.filter((card) => { const filterStatus = card.savedStatus ?? card.status; return (status === 'all' || filterStatus === status) && `${card.title} ${card.description} ${card.category || ''}`.toLocaleLowerCase().includes(query.toLocaleLowerCase()) }), [visibleCards, query, status])
   const modalContent = { ...content, editItem: labels.editPost || 'ویرایش نوشته', editItemTitle: labels.editPostTitle || 'ویرایش نوشته فرصت', close: labels.close || 'بستن', itemTitle: labels.postTitle || 'عنوان نوشته', itemAction: labels.postAction || 'متن دکمه', itemLink: labels.postLink || 'پیوند نوشته', cancel: labels.cancel || 'انصراف', save: labels.save || 'ذخیره' }
+  const deletePostWithUndo = async (card) => {
+    const index = cards.findIndex((item) => item.id === card.id)
+    await deleteWithUndo({ remove: () => removePost(card), restore: () => restorePost(card, index < 0 ? cards.length : index) })
+  }
   const requestRemove = async (card) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: labels.deletePost || 'حذف نوشته', description: labels.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })
     if (confirmed) {
-      await removePost(card)
-      showRecordToast('recordDeleted')
+      await deletePostWithUndo(card)
     }
   }
   return <PageContainer className="max-[1023px]:gap-2 min-[701px]:max-[1023px]:!gap-1.5"><PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.groups?.[0]?.label || content.overview }, { label }]} action={<EditorPreviewLink>{content.topbar.visitPage}</EditorPreviewLink>} />
@@ -92,15 +97,7 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 </td>
 <td className="ps-5 p-4 text-right" onClick={(event) => event.stopPropagation()}>
 <div className="flex justify-end gap-1">
-<a className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" href={card.href} target="_blank" rel="noreferrer" aria-label={labels.preview || 'پیش‌نمایش'}>
-<ExternalLink size={16} />
-</a>
-<button type="button" className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft" onClick={() => setEditing(card)} aria-label={labels.editPost || 'ویرایش'}>
-<Pencil size={16} />
-</button>
-<button type="button" className="grid size-9 place-items-center rounded-xl border border-red-500/25 dark:border-red-500/50 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" onClick={() => requestRemove(card)} aria-label={labels.deletePost || 'حذف'}>
-<Trash2 size={16} />
-</button>
+<RecordActionButtons href={card.href} previewLabel={labels.preview || 'پیش‌نمایش'} editLabel={labels.editPost || 'ویرایش'} deleteLabel={labels.deletePost || 'حذف'} onEdit={() => setEditing(card)} onDelete={() => requestRemove(card)} />
 </div>
 </td>
 </tr>)}</tbody>
@@ -112,20 +109,12 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 <strong className="line-clamp-2 max-w-full text-sm leading-5 text-admin-heading">{card.title}</strong>
 <ServiceStatusBadge card={card} labels={labels} onToggle={() => toggleStatus(card)} />
     <div className="absolute bottom-3 left-3 flex flex-col gap-1" onClick={(event) => event.stopPropagation()}>
-<a className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-muted hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" href={card.href} target="_blank" rel="noreferrer" aria-label={labels.preview || 'پیش‌نمایش'}>
-<ExternalLink size={15} />
-</a>
-<button type="button" className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-brand-text hover:border-admin-brand hover:bg-admin-brand-soft" onClick={() => setEditing(card)} aria-label={labels.editPost || 'ویرایش'}>
-<Pencil size={15} />
-</button>
-<button type="button" className="grid size-8 place-items-center rounded-xl border border-red-500/25 dark:border-red-500/50 text-red-500 hover:border-red-500 hover:bg-red-500/10" onClick={() => requestRemove(card)} aria-label={labels.deletePost || 'حذف'}>
-<Trash2 size={15} />
-</button>
+<RecordActionButtons href={card.href} previewLabel={labels.preview || 'پیش‌نمایش'} editLabel={labels.editPost || 'ویرایش'} deleteLabel={labels.deletePost || 'حذف'} onEdit={() => setEditing(card)} onDelete={() => requestRemove(card)} iconSize={15} buttonSize="size-8" />
 </div>
 </div>
 </article>)}</section>
     {!filteredCards.length && <div className="grid min-h-44 place-items-center rounded-2xl border border-admin-border bg-admin-card text-sm text-admin-muted">{labels.empty || 'نوشته‌ای پیدا نشد.'}</div>}
-    {viewing && <OpportunityPostPreviewModal post={viewing} content={modalContent} isServices={isServices} serviceUi={serviceUi} onClose={() => setViewing(null)} onDelete={async () => { await removePost(viewing); setViewing(null); showRecordToast('recordDeleted') }} onEdit={() => { setViewing(null); setEditing(viewing) }} />}
+    {viewing && <OpportunityPostPreviewModal post={viewing} content={modalContent} isServices={isServices} serviceUi={serviceUi} onClose={() => setViewing(null)} onDelete={async () => { await deletePostWithUndo(viewing); setViewing(null) }} onEdit={() => { setViewing(null); setEditing(viewing) }} />}
     {editing && <OpportunityPostModal post={editing} content={modalContent} isServices={isServices} isOpportunities={pageKey === 'opportunities'} isWorldTourism={isTourism && activeType === 'world'} isAfghanistanTourism={isTourism && activeType === 'afghanistan'} onClose={() => setEditing(null)} onSave={async (savedPost) => { const isNew = String(editing.id).startsWith('new-'); await savePost(savedPost, activeType); setEditing(null); if (isNew) showRecordToast('recordAdded') }} />}
   </PageContainer>
 }

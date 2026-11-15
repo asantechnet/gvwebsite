@@ -11,6 +11,7 @@ import useEditorTabs from '@cms/hooks/useEditorTabs.js'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import { showRecordToast } from '@cms/utils/toast.js'
+import { deleteLocalizedSnapshotItemWithUndo } from '@cms/utils/undoDelete.js'
 import { closeCmsModal } from '@cms/utils/modalTransition.js'
 import { useCmsContentLanguage } from '@cms/hooks/useCmsLanguage.js'
 
@@ -39,8 +40,9 @@ function AboutEditorSection({ content, initialTranslations }) {
   const deleteCollectionItem = async (index) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: content.deleteItemTitle, description: content.deleteItemDescription })
     if (confirmed) {
-      await saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, [selectedSection]: { ...languageDraft[selectedSection], [collectionKey]: languageDraft[selectedSection][collectionKey].filter((_, itemIndex) => itemIndex !== index) } }])))
-      showRecordToast('recordDeleted')
+      const section = selectedSection
+      const key = collectionKey
+      await deleteLocalizedSnapshotItemWithUndo({ drafts, index, saveImmediate, getItems: (languageDraft) => languageDraft[section][key], setItems: (languageDraft, items) => ({ ...languageDraft, [section]: { ...languageDraft[section], [key]: items } }) })
     }
   }
 

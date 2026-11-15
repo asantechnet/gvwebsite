@@ -39,6 +39,11 @@ function MessagesSection({ content, language = 'prs', messageState }) {
     await setUnread(message.id, !message.unread)
   }
 
+  const openMessage = (message) => {
+    setSelectedId(message.id)
+    if (message.unread && !isPending(message.id)) void setUnread(message.id, false)
+  }
+
   const deleteMessage = async (message) => {
     const confirmed = await window.cmsConfirmDelete?.({
       title: content.deleteTitle,
@@ -66,8 +71,8 @@ function MessagesSection({ content, language = 'prs', messageState }) {
         {status === 'loading' && <MessageListSkeleton />}
         {status === 'error' && <div role="alert" className="grid justify-items-center gap-3 px-4 py-8 text-center"><p className="m-0 text-xs leading-relaxed text-red-600">{content.loadError}</p><button type="button" onClick={refresh} className="min-h-9 rounded-lg border border-admin-brand bg-admin-brand-soft px-4 text-xs font-semibold text-admin-brand-text transition hover:bg-admin-brand hover:text-white">{content.retry}</button></div>}
         {status === 'ready' && visible.map((message) => <div key={message.id} className="flex items-center border-t border-admin-border">
-          <button type="button" onClick={() => setSelectedId(message.id)} aria-current={selectedId === message.id ? 'true' : undefined} className={`grid min-w-0 flex-1 grid-cols-[.45rem_1fr] gap-2 border-0 px-4 py-[.9rem] text-start ${selectedId === message.id ? 'bg-admin-card shadow-[inset_3px_0_var(--admin-brand)] rtl:shadow-[inset_-3px_0_var(--admin-brand)]' : 'bg-transparent hover:bg-admin-control'}`}><span className={`mt-[.38rem] size-[.42rem] rounded-full ${message.unread ? 'bg-admin-brand shadow-[0_0_0_3px_var(--admin-brand-soft)]' : ''}`} /><span className="min-w-0"><span className="flex items-center justify-between gap-2"><strong className="truncate text-[.75rem] text-admin-heading">{message.title}</strong><time dateTime={message.createdAt} className="shrink-0 text-[.625rem] text-admin-muted">{formatMessageDate(message.createdAt, language)}</time></span><small className="mt-[.2rem] block truncate text-[.6875rem] text-admin-brand-text">{message.service}</small><span className="mt-[.45rem] block overflow-hidden text-[.6875rem] leading-[1.45] text-ellipsis whitespace-nowrap text-admin-muted">{message.body}</span></span></button>
-          <button type="button" disabled={isPending(message.id)} onClick={() => toggleUnread(message)} className={`${messageActionClass} me-2`} aria-label={message.unread ? content.markRead : content.markUnread}>{message.unread ? <MailOpen size={17} /> : <Mail size={17} />}</button>
+          <button type="button" onClick={() => openMessage(message)} aria-current={selectedId === message.id ? 'true' : undefined} className={`grid min-w-0 flex-1 grid-cols-[.45rem_1fr] gap-2 border-0 px-4 py-[.9rem] text-start ${selectedId === message.id ? 'bg-admin-card shadow-[inset_3px_0_var(--admin-brand)] rtl:shadow-[inset_-3px_0_var(--admin-brand)]' : 'bg-transparent hover:bg-admin-control'}`}><span className={`mt-[.38rem] size-[.42rem] rounded-full ${message.unread ? 'bg-admin-brand shadow-[0_0_0_3px_var(--admin-brand-soft)]' : ''}`} /><span className="min-w-0"><span className="flex items-center justify-between gap-2"><strong className="truncate text-[.75rem] text-admin-heading">{message.title}</strong><time dateTime={message.createdAt} className="shrink-0 text-[.625rem] text-admin-muted">{formatMessageDate(message.createdAt, language)}</time></span><small className="mt-[.2rem] block truncate text-[.6875rem] text-admin-brand-text">{message.service}</small><span className="mt-[.45rem] block overflow-hidden text-[.6875rem] leading-[1.45] text-ellipsis whitespace-nowrap text-admin-muted">{message.body}</span></span></button>
+          <button type="button" disabled={isPending(message.id)} onClick={() => toggleUnread(message)} className={`${messageActionClass} mx-2`} aria-label={message.unread ? content.markRead : content.markUnread}>{message.unread ? <MailOpen size={17} /> : <Mail size={17} />}</button>
         </div>)}
         {status === 'ready' && visible.length === 0 && <p className="px-4 py-8 text-center text-xs leading-relaxed text-admin-muted">{normalizedQuery ? content.noMatches : filter === 'all' ? content.empty : content.filterEmpty}</p>}
       </aside>

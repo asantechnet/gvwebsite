@@ -76,7 +76,7 @@ import CmsRouteProgress, {
   CmsPageProgress,
   SuperUserSkeleton,
 } from "@cms/components/CmsRouteProgress.jsx";
-import { BRANDING_UPDATED_EVENT, readBrandIcon, readCompanyNames } from "@cms/utils/branding.js";
+import { applyBrandColors, applyBrandFavicon, BRANDING_UPDATED_EVENT, readBrandColors, readBrandIcon, readBrandLogo, readCompanyNames } from "@cms/utils/branding.js";
 import { dataSource } from "@/shared/services/data/index.js";
 import { hasCmsSessionHint } from "@cms/auth/sessionHint.js";
 import { navigateCms } from "@cms/navigation.js";
@@ -112,6 +112,12 @@ const MediaLibraryPage = delayed(
 const SettingsPage = delayed(
   () => import("@cms/components/pages/SettingsPage.jsx"),
 );
+
+function cmsDocumentTitle(language, companyName) {
+  if (language === "en") return `Managing the ${companyName} website`;
+  if (language === "ps") return `د ${companyName} وېب‌سایټ مدیریت`;
+  return `مدیریت وبسایت ${companyName}`;
+}
 const SuperUserPage = delayed(
   () => import("@cms/components/pages/SuperUserPage.jsx"),
 );
@@ -136,9 +142,12 @@ function DashboardLayout() {
     return ["prs", "ps", "en"].includes(savedLanguage) ? savedLanguage : "prs";
   });
   useEffect(() => {
-    const syncCompanyNames = (event) => setCompanyNames(event.detail || readCompanyNames());
+    const syncCompanyNames = (event) => {
+      setCompanyNames(event.detail?.companyNames || event.detail || readCompanyNames());
+      applyBrandColors(readBrandColors());
+    };
     const syncStoredCompanyNames = (event) => {
-      if (event.key === "globalvision-company-names") setCompanyNames(readCompanyNames());
+      if (event.key === "globalvision-company-names" || event.key?.startsWith("globalvision-brand-")) syncCompanyNames(event);
     };
     window.addEventListener(BRANDING_UPDATED_EVENT, syncCompanyNames);
     window.addEventListener("storage", syncStoredCompanyNames);
@@ -147,6 +156,19 @@ function DashboardLayout() {
       window.removeEventListener("storage", syncStoredCompanyNames);
     };
   }, []);
+  useEffect(() => {
+    applyBrandColors(readBrandColors());
+    if (auth.status !== "authenticated") return undefined;
+    let active = true;
+    dataSource.snapshots.get("settings").then((snapshot) => {
+      const colors = snapshot?.payload?.branding;
+      if (!active || !colors) return;
+      if (colors.primary) window.localStorage.setItem("globalvision-brand-primary", colors.primary);
+      if (colors.secondary) window.localStorage.setItem("globalvision-brand-secondary", colors.secondary);
+      applyBrandColors(readBrandColors());
+    }).catch(() => {});
+    return () => { active = false; };
+  }, [auth.status]);
   const select = (dari, pashto, english) =>
     language === "en" ? english : language === "ps" ? pashto : dari;
   const content = select(dariContent, pashtoContent, englishContent);
@@ -221,6 +243,7 @@ function DashboardLayout() {
   );
   const companyName = companyNames[language];
   const brandIcon = readBrandIcon(theme);
+  const brandLogo = readBrandLogo(theme);
   const canManageMessages =
     auth.status === "authenticated" &&
     auth.can(CMS_PERMISSIONS.MANAGE_MESSAGES);
@@ -313,7 +336,7 @@ function DashboardLayout() {
     document
       .querySelector('meta[name="theme-color"]')
       ?.setAttribute("content", theme === "dark" ? "#0a1019" : "#edf1f6");
-    document.title = content.documentTitle;
+    document.title = cmsDocumentTitle(language, companyName);
     let robots = document.querySelector('meta[name="robots"]');
     if (!robots) {
       robots = document.createElement("meta");
@@ -323,7 +346,8 @@ function DashboardLayout() {
     robots.content = "noindex, nofollow, noarchive";
     window.localStorage.setItem("globalvision-theme", theme);
     window.sessionStorage.setItem("globalvision-language", language);
-  }, [content.documentTitle, language, theme]);
+    applyBrandFavicon(brandIcon);
+  }, [brandIcon, companyName, language, theme]);
 
   useEffect(() => {
     if (!sidebarOpen) return undefined;
@@ -507,7 +531,7 @@ function DashboardLayout() {
         language={language}
       />
     ),
-    profile: <ProfilePage content={profileContent} theme={theme} />,
+    profile: <ProfilePage content={profileContent} brandIcon={brandIcon} />,
   };
   const accessLabels = content.auth || {};
   if (auth.status === "unauthenticated" || (isMockDataSource && authPath))
@@ -543,7 +567,7 @@ function DashboardLayout() {
           </div>
         }
       >
-        <SuperUserPage auth={auth} content={content} language={language} theme={theme} onThemeToggle={() => setTheme((current) => current === "light" ? "dark" : "light")} onLanguageChange={setLanguage} />
+        <SuperUserPage auth={auth} content={content} language={language} theme={theme} logo={brandLogo} onThemeToggle={() => setTheme((current) => current === "light" ? "dark" : "light")} onLanguageChange={setLanguage} />
       </Suspense>
     );
 
@@ -589,6 +613,7 @@ function DashboardLayout() {
             content={content}
             companyName={companyName}
             theme={theme}
+            brandIcon={brandIcon}
             open={sidebarOpen}
             collapsed={sidebarCollapsed}
             canAccess={canAccess}
@@ -604,6 +629,7 @@ function DashboardLayout() {
               searchItems={content.groups.flatMap((group) => group.items)}
               language={language}
               theme={theme}
+              brandIcon={brandIcon}
               unreadCount={messageState.unreadCount}
               canAccessMessages={canManageMessages}
               onMenuOpen={() => setSidebarOpen(true)}

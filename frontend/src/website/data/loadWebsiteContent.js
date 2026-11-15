@@ -150,12 +150,8 @@ export function loadWebsiteContent(language, { fresh = false } = {}) {
       normalizedLanguage,
       contentLoaders[normalizedLanguage]().then(async (module) => {
         if (dataSourceMode !== 'api') return module.default
-        try {
-          const snapshots = await snapshotsApi.publicList()
-          return applySnapshots(module.default, snapshots, normalizedLanguage)
-        } catch {
-          return module.default
-        }
+        const snapshots = await snapshotsApi.publicList()
+        return applySnapshots(module.default, snapshots, normalizedLanguage)
       }),
     )
   }

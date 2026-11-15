@@ -43,6 +43,22 @@ class UpdateSiteSnapshotRequest extends FormRequest
             if ($encoded === false || mb_strlen($encoded, '8bit') > 2 * 1024 * 1024) {
                 $validator->errors()->add('payload', 'The site snapshot may not exceed 2 MB.');
             }
+
+            $validateColors = function (mixed $value, string $path = 'payload') use (&$validateColors, $validator): void {
+                if (! is_array($value)) {
+                    return;
+                }
+
+                foreach ($value as $key => $item) {
+                    $itemPath = $path.'.'.$key;
+                    if (in_array(mb_strtolower((string) $key), ['primary', 'secondary'], true) && (! is_string($item) || ! preg_match('/^#[0-9a-f]{6}$/i', $item))) {
+                        $validator->errors()->add($itemPath, 'Brand colors must use a six-digit hexadecimal value.');
+                    } elseif (is_array($item)) {
+                        $validateColors($item, $itemPath);
+                    }
+                }
+            };
+            $validateColors($this->input('payload'));
         }];
     }
 }

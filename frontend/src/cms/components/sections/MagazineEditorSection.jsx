@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Check, ChevronDown, ExternalLink, FileText, LayoutTemplate, Newspaper, Pencil, Plus, Search, Tags, Trash2, X } from 'lucide-react'
+import { Check, ChevronDown, FileText, LayoutTemplate, Newspaper, Pencil, Plus, Search, Tags, Trash2, X } from 'lucide-react'
 
 import ContentLanguageSwitcher from '@cms/components/ContentLanguageSwitcher.jsx'
 import { EditorField, EditorFieldGroup, EditorNumberedCard, EditorPreviewLink, EditorSectionHeader, EditorVisibilityToggle } from '@cms/components/EditorPrimitives.jsx'
@@ -9,10 +9,12 @@ import PageHeading from '@cms/components/PageHeading.jsx'
 import RichTextEditor from '@cms/components/RichTextEditor.jsx'
 import SectionTabBar from '@cms/components/SectionTabBar.jsx'
 import SeoFields from '@cms/components/SeoFields.jsx'
+import RecordActionButtons from '@cms/components/RecordActionButtons.jsx'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 import useEditorTabs from '@cms/hooks/useEditorTabs.js'
 import { useCmsContentLanguage, useCmsInterfaceLanguage } from '@cms/hooks/useCmsLanguage.js'
 import { showRecordToast } from '@cms/utils/toast.js'
+import { deleteLocalizedSnapshotItemWithUndo, deleteWithUndo } from '@cms/utils/undoDelete.js'
 import SafeRichText from '@/shared/components/SafeRichText.jsx'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
 
@@ -54,9 +56,7 @@ function MagazineEditorSection({ content, initialTranslations }) {
   const removeItem = async (section, index) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: content.deletePost || 'حذف نوشته', description: content.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })
     if (!confirmed) return
-    await saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => [language, { ...page, [section]: { ...page[section], items: page[section].items.filter((_, itemIndex) => itemIndex !== index) } }])))
-    setViewing(null)
-    showRecordToast('recordDeleted')
+    await deleteLocalizedSnapshotItemWithUndo({ drafts, index, saveImmediate, getItems: (page) => page[section].items, setItems: (page, items) => ({ ...page, [section]: { ...page[section], items } }), afterRemove: () => setViewing(null) })
   }
   const toggleStatus = (section, index) => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => [language, { ...page, [section]: { ...page[section], items: page[section].items.map((item, itemIndex) => itemIndex === index ? { ...item, status: item.status === 'draft' ? 'published' : 'draft' } : item) } }])))
   const saveCategories = (localizedCategories, index = null) => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
@@ -69,12 +69,15 @@ function MagazineEditorSection({ content, initialTranslations }) {
   const deleteCategory = async (index) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: content.deleteCategory, description: content.deleteCategoryDescription })
     if (!confirmed) return
-    await saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
-      const currentCategories = getMagazineCategories(page)
-      const removedName = currentCategories[index]?.name
-      return [language, { ...page, categories: currentCategories.filter((_, categoryIndex) => categoryIndex !== index), articles: { ...page.articles, items: page.articles.items.map((item) => item.category === removedName ? { ...item, category: '' } : item) } }]
-    })))
-    showRecordToast('recordDeleted')
+    const previous = structuredClone(drafts)
+    await deleteWithUndo({
+      remove: () => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
+        const currentCategories = getMagazineCategories(page)
+        const removedName = currentCategories[index]?.name
+        return [language, { ...page, categories: currentCategories.filter((_, categoryIndex) => categoryIndex !== index), articles: { ...page.articles, items: page.articles.items.map((item) => item.category === removedName ? { ...item, category: '' } : item) } }]
+      }))),
+      restore: () => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => [language, { ...page, categories: previous[language].categories, articles: previous[language].articles }]))),
+    })
   }
 
   return <PageContainer>
@@ -108,7 +111,7 @@ function MagazineCollection({ section, items, categories, title, sectionVisible,
 }
 
 function MagazineActions({ item, content, size, buttonSize, onEdit, onDelete }) {
-  return <><a className={`grid ${buttonSize} place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text`} href={item.href || '/magazine'} target="_blank" rel="noreferrer" aria-label={content.preview}><ExternalLink size={size} /></a><button type="button" className={`grid ${buttonSize} place-items-center rounded-xl border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft`} onClick={onEdit} aria-label={content.editItem}><Pencil size={size} /></button><button type="button" className={`grid ${buttonSize} place-items-center rounded-xl border border-red-500/25 dark:border-red-500/50 text-red-500 transition hover:border-red-500 hover:bg-red-500/10`} onClick={onDelete} aria-label={content.deletePost}><Trash2 size={size} /></button></>
+  return <RecordActionButtons href={item.href || '/magazine'} previewLabel={content.preview} editLabel={content.editItem} deleteLabel={content.deletePost} onEdit={onEdit} onDelete={onDelete} iconSize={size} buttonSize={buttonSize} />
 }
 
 function MagazineStatusBadge({ item, content, onToggle }) {

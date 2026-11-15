@@ -12,7 +12,7 @@
   "provinceName": "نام ولایت",
   "provinceSearch": "جستجوی ولایت‌ها...",
   "provinceEmpty": "ولایتی پیدا نشد.",
-  "operationNotifications": { "recordAdded": "مورد جدید افزوده شد.", "recordDeleted": "مورد حذف شد." },
+  "operationNotifications": { "recordAdded": "مورد جدید افزوده شد.", "recordDeleted": "مورد حذف شد.", "recordRestored": "حذف لغو شد.", "undo": "بازگردانی", "undoCountdown": "تا {seconds} ثانیه فرصت بازگردانی دارید.", "undoFailed": "بازگردانی مورد انجام نشد.", "deleteFailed": "حذف مورد انجام نشد." },
   "overview": "نمای کلی",
   "expand": "باز کردن نوار کناری",
   "collapse": "بستن نوار کناری",

@@ -12,6 +12,7 @@ import useEditorTabs from '@cms/hooks/useEditorTabs.js'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 import { revokeLocalUpload } from '@/shared/uploads/files.js'
 import { showRecordToast } from '@cms/utils/toast.js'
+import { deleteLocalizedSnapshotItemWithUndo } from '@cms/utils/undoDelete.js'
 import { useCmsContentLanguage } from '@cms/hooks/useCmsLanguage.js'
 import englishMedia from '@cms/locales/en/media.json'
 import dariMedia from '@cms/locales/prs/media.json'
@@ -56,8 +57,9 @@ function HomeEditorSection({ content, initialTranslations, interfaceLanguage }) 
     return [language, { ...languageDraft, [selectedSection]: { ...languageDraft[selectedSection], [collectionKey]: index === null ? [...items, item] : items.map((entry, itemIndex) => itemIndex === index ? { ...entry, ...item } : entry) } }]
   })))
   const deleteCollectionItem = async (index) => {
-    await saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, [selectedSection]: { ...languageDraft[selectedSection], [collectionKey]: languageDraft[selectedSection][collectionKey].filter((_, itemIndex) => itemIndex !== index) } }])))
-    showRecordToast('recordDeleted')
+    const section = selectedSection
+    const key = collectionKey
+    await deleteLocalizedSnapshotItemWithUndo({ drafts, index, saveImmediate, getItems: (languageDraft) => languageDraft[section][key], setItems: (languageDraft, items) => ({ ...languageDraft, [section]: { ...languageDraft[section], [key]: items } }) })
   }
 
   return <PageContainer>

@@ -40,6 +40,7 @@ html.cms-scroll-locked body { overflow: hidden !important; overscroll-behavior: 
   --color-admin-brand: var(--admin-brand);
   --color-admin-brand-text: var(--admin-brand-text);
   --color-admin-brand-soft: var(--admin-brand-soft);
+  --color-admin-secondary: var(--admin-secondary);
   --color-admin-heading: var(--admin-heading);
   --color-admin-muted: var(--admin-muted);
   --color-admin-border: var(--admin-border);
@@ -64,14 +65,14 @@ html.cms-scroll-locked body { overflow: hidden !important; overscroll-behavior: 
   --theme-foreground-muted: #715d55;
   --theme-border: #ead5c9;
   --theme-primary: var(--brand-orange);
-  --theme-primary-hover: #d96512;
+  --theme-primary-hover: color-mix(in srgb, var(--brand-orange) 82%, black);
   --theme-on-primary: #2b1700;
   --theme-secondary: var(--brand-red);
-  --theme-secondary-hover: #650264;
+  --theme-secondary-hover: color-mix(in srgb, var(--brand-red) 82%, black);
   --theme-on-secondary: var(--brand-white);
   --theme-link: #a91319;
-  --theme-focus: #b6530d;
-  --theme-accent-text: #b6530d;
+  --theme-focus: color-mix(in srgb, var(--brand-orange) 72%, black);
+  --theme-accent-text: color-mix(in srgb, var(--brand-orange) 72%, black);
 }
 
 .dark {
@@ -82,15 +83,15 @@ html.cms-scroll-locked body { overflow: hidden !important; overscroll-behavior: 
   --theme-foreground: #fff8f3;
   --theme-foreground-muted: #d7bdb2;
   --theme-border: #55312b;
-  --theme-primary: #f47e26;
-  --theme-primary-hover: #ff9a4d;
+  --theme-primary: var(--brand-orange);
+  --theme-primary-hover: color-mix(in srgb, var(--brand-orange) 82%, white);
   --theme-on-primary: #2b1700;
-  --theme-secondary: #a52aa3;
-  --theme-secondary-hover: #c348c0;
+  --theme-secondary: var(--brand-red);
+  --theme-secondary-hover: color-mix(in srgb, var(--brand-red) 82%, white);
   --theme-on-secondary: #ffffff;
   --theme-link: #ff9a4d;
-  --theme-focus: #ff963f;
-  --theme-accent-text: #ff963f;
+  --theme-focus: color-mix(in srgb, var(--brand-orange) 82%, white);
+  --theme-accent-text: color-mix(in srgb, var(--brand-orange) 82%, white);
 }
 
 :lang(fa),

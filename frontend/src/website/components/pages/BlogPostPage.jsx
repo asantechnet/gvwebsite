@@ -114,7 +114,7 @@ function CountryCards({ content }) {
   </section>
 }
 
-function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideHero = false, hideBreadcrumb = false }) {
+function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideHero = false, hideBreadcrumb = false, hideSidebar = false }) {
   const language = useWebsiteLanguage()
   const localizedHref = (href) => localizeHref(href, language)
   const [isShareMenuOpen, setIsShareMenuOpen] = useState(false)
@@ -191,7 +191,7 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
             <span className="rounded-full bg-primary/10 px-3 py-1 font-semibold text-accent-text">{post.category}</span>
           </div>
 
-          <div className="grid gap-6 p-3 md:p-6 lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-6 lg:p-8">
+          <div className={`grid gap-6 p-3 md:p-6 lg:gap-6 lg:p-8 ${hideSidebar ? '' : 'lg:grid-cols-[minmax(0,1fr)_17rem]'}`}>
             <div className="order-1 min-w-0 text-start lg:order-1">
               {!usesCmsRecordContent && content.countries?.length > 0 ? <CountryCards content={content} /> : <>
               {post.description && <p className="text-lg font-medium leading-9 text-foreground-muted">{post.description}</p>}
@@ -222,7 +222,7 @@ function BlogPostPage({ post, content, relatedPosts = [], guideLinks = [], hideH
               </>}
             </div>
 
-            <ContentSidebar content={content} category={post.category} relatedPosts={relatedPosts} className="border-b border-border pb-5 dark:border-gray-600 lg:border-b-0 lg:pb-0" />
+            {!hideSidebar && <ContentSidebar content={content} category={post.category} relatedPosts={relatedPosts} className="border-b border-border pb-5 dark:border-gray-600 lg:border-b-0 lg:pb-0" />}
           </div>
         </article>
       </Container>
