@@ -22,7 +22,7 @@ Confirmed CMS deletions of content cards, post records, and media-library items 
 
 CMS record lists with preview, edit, and delete controls use `src/cms/components/RecordActionButtons.jsx`. Keep their interaction styling centralized there; the edit action uses the canonical brighter admin brand color only in dark mode.
 
-Localized company names, theme-aware logo/icon fallbacks, and primary/secondary brand colors saved from CMS settings are resolved through `src/shared/utils/branding.js`. Public header, footer, maintenance, favicon, and CMS authentication, profile, sidebar, topbar, super-user, favicon, and semantic color tokens must use these shared branding values instead of hardcoded paths or theme-specific brand colors; saved changes synchronize within the active tab and across open tabs.
+Localized company names, theme-aware logo/icon fallbacks, and primary/secondary brand colors saved from CMS settings are resolved through `src/shared/utils/branding.js`. Public header, footer, maintenance, favicon, and CMS authentication, profile, sidebar, topbar, super-user, favicon, and semantic color tokens must use these shared branding values instead of hardcoded paths or theme-specific brand colors; saved changes synchronize within the active tab and across open tabs. Browser-tab favicons alone follow the browser/OS `prefers-color-scheme` preference and update when it changes, independently from the manually selected website or CMS theme; in-page logos and icons continue to follow the application theme.
 
 The repository currently contains:
 
@@ -365,6 +365,7 @@ Use `bg-primary` / `bg-admin-brand` and matching border tokens for canonical ora
 
 - Give meaningful images descriptive alternative text and decorative images empty alt text.
 - Give icon only controls accessible labels.
+- Directional Lucide arrows, chevrons, and external-link icons must resolve their orientation from the icon's own computed `:dir()` value, never from an ancestor selector tied specifically to the root `html` direction. This keeps locally scoped RTL/LTR interfaces consistent before and after deployment.
 - Make every interaction keyboard accessible.
 - Use `useModalFocus` for modal dialogs so focus enters the modal, remains contained, Escape closes it, and focus returns to its trigger.
 - Use semantic `header`, `nav`, `main`, `section`, `article`, and `footer` elements.

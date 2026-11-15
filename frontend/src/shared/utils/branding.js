@@ -55,6 +55,15 @@ export function applyBrandFavicon(icon) {
   if (favicon && icon) favicon.setAttribute('href', icon)
 }
 
+export function watchBrowserBrandFavicon(lightIcon, darkIcon) {
+  const colorScheme = window.matchMedia('(prefers-color-scheme: dark)')
+  const update = () => applyBrandFavicon(colorScheme.matches ? darkIcon : lightIcon)
+
+  update()
+  colorScheme.addEventListener('change', update)
+  return () => colorScheme.removeEventListener('change', update)
+}
+
 export function readBrandColors() {
   return {
     primary: normalizeBrandColor(window.localStorage.getItem('globalvision-brand-primary'), defaultBrandColors.primary),

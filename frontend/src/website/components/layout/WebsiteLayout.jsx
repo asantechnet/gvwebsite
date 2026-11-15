@@ -12,7 +12,7 @@ import { applySeoMetadata, buildStructuredData, getSiteOrigin, toAbsoluteUrl } f
 import { lazyWithSkeletonPreview } from '@/shared/utils/loading.js'
 import { finishReloadScrollRestoration, saveScrollPosition } from '@website/utils/scrollRestoration.js'
 import { STUDY_DIRECTORY_CARD_LIMIT, getVisibleCardCount } from '@website/utils/cardCounts.js'
-import { applyBrandColors, applyBrandFavicon, BRANDING_UPDATED_EVENT, readBrandIcon, readBrandLogo, readCompanyNames } from '@/shared/utils/branding.js'
+import { applyBrandColors, BRANDING_UPDATED_EVENT, readBrandIcon, readBrandLogo, readCompanyNames, watchBrowserBrandFavicon } from '@/shared/utils/branding.js'
 
 const delayed = (importer) => lazy(() => lazyWithSkeletonPreview(importer))
 const HomePage = delayed(() => import('@pages/HomePage.jsx'))
@@ -66,7 +66,8 @@ function WebsiteLayout({ children = null, content }) {
   const companyName = content.profile?.[contentLocale] || companyNames[contentLocale]
   const page = parsedRoute.pagePath
   const activeLogo = (theme === 'dark' ? siteSettings?.branding?.darkLogo : siteSettings?.branding?.lightLogo) || readBrandLogo(theme)
-  const activeIcon = (theme === 'dark' ? siteSettings?.branding?.darkIcon : siteSettings?.branding?.lightIcon) || readBrandIcon(theme)
+  const lightFavicon = siteSettings?.branding?.lightIcon || readBrandIcon('light')
+  const darkFavicon = siteSettings?.branding?.darkIcon || readBrandIcon('dark')
 
   useEffect(() => {
     const syncCompanyNames = () => setCompanyNames(readCompanyNames())
@@ -87,8 +88,8 @@ function WebsiteLayout({ children = null, content }) {
   }, [siteSettings])
 
   useLayoutEffect(() => {
-    applyBrandFavicon(activeIcon)
-  }, [activeIcon])
+    return watchBrowserBrandFavicon(lightFavicon, darkFavicon)
+  }, [darkFavicon, lightFavicon])
 
   useLayoutEffect(() => {
     if (!maintenanceMode) return

@@ -116,12 +116,14 @@ html {
 html:dir(rtl) { direction: rtl; }
 html:dir(ltr) { direction: ltr; }
 html:dir(ltr) .font-heading { font-family: var(--font-english); }
-html:dir(ltr) .lucide-arrow-left,
-html:dir(ltr) .lucide-arrow-right,
-html:dir(ltr) .lucide-chevron-left,
-html:dir(ltr) .lucide-chevron-right { transform: rotate(180deg); }
-html:dir(ltr) .cms-root .lucide-arrow-up-left { transform: scaleX(-1); }
-html:dir(rtl) .cms-root .lucide-external-link { transform: scaleX(-1); }
+.lucide-arrow-left:dir(ltr),
+.lucide-arrow-right:dir(ltr),
+.lucide-chevron-left:dir(ltr),
+.lucide-chevron-right:dir(ltr),
+.lucide-chevrons-left:dir(ltr),
+.lucide-chevrons-right:dir(ltr) { rotate: 180deg; }
+.cms-root .lucide-arrow-up-left:dir(ltr) { scale: -1 1; }
+.cms-root .lucide-external-link:dir(rtl) { scale: -1 1; }
 html:dir(ltr) .cms-root .text-right { text-align: left; }
 @media (min-width: 1024px) { html:dir(ltr) .cms-root .lg\:text-right { text-align: left; } }
 

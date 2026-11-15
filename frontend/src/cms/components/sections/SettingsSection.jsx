@@ -63,7 +63,7 @@ function SettingsSection({ content }) {
       if (committedBranding.lightIcon) window.localStorage.setItem('globalvision-brand-icon-light', committedBranding.lightIcon); else window.localStorage.removeItem('globalvision-brand-icon-light')
       if (committedBranding.darkIcon) window.localStorage.setItem('globalvision-brand-icon-dark', committedBranding.darkIcon); else window.localStorage.removeItem('globalvision-brand-icon-dark')
       applyBrandColors(committedBranding)
-      applyBrandFavicon(readBrandIcon(document.documentElement.classList.contains('dark') ? 'dark' : 'light'))
+      applyBrandFavicon(readBrandIcon(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
       window.dispatchEvent(new Event(BRANDING_UPDATED_EVENT))
     }
     window.addEventListener(CMS_CHANGES_COMMITTED_EVENT, save)

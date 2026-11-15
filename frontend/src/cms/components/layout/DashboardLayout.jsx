@@ -76,7 +76,7 @@ import CmsRouteProgress, {
   CmsPageProgress,
   SuperUserSkeleton,
 } from "@cms/components/CmsRouteProgress.jsx";
-import { applyBrandColors, applyBrandFavicon, BRANDING_UPDATED_EVENT, readBrandColors, readBrandIcon, readBrandLogo, readCompanyNames } from "@cms/utils/branding.js";
+import { applyBrandColors, BRANDING_UPDATED_EVENT, readBrandColors, readBrandIcon, readBrandLogo, readCompanyNames, watchBrowserBrandFavicon } from "@cms/utils/branding.js";
 import { dataSource } from "@/shared/services/data/index.js";
 import { hasCmsSessionHint } from "@cms/auth/sessionHint.js";
 import { navigateCms } from "@cms/navigation.js";
@@ -244,6 +244,8 @@ function DashboardLayout() {
   const companyName = companyNames[language];
   const brandIcon = readBrandIcon(theme);
   const brandLogo = readBrandLogo(theme);
+  const lightFavicon = readBrandIcon("light");
+  const darkFavicon = readBrandIcon("dark");
   const canManageMessages =
     auth.status === "authenticated" &&
     auth.can(CMS_PERMISSIONS.MANAGE_MESSAGES);
@@ -346,8 +348,9 @@ function DashboardLayout() {
     robots.content = "noindex, nofollow, noarchive";
     window.localStorage.setItem("globalvision-theme", theme);
     window.sessionStorage.setItem("globalvision-language", language);
-    applyBrandFavicon(brandIcon);
-  }, [brandIcon, companyName, language, theme]);
+  }, [companyName, language, theme]);
+
+  useEffect(() => watchBrowserBrandFavicon(lightFavicon, darkFavicon), [darkFavicon, lightFavicon]);
 
   useEffect(() => {
     if (!sidebarOpen) return undefined;

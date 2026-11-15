@@ -110,6 +110,8 @@ test('saved theme branding drives every public and CMS brand surface', async () 
 
   assert.match(branding, /export function readBrandLogo/)
   assert.match(branding, /export function applyBrandFavicon/)
+  assert.match(branding, /export function watchBrowserBrandFavicon/)
+  assert.match(branding, /matchMedia\('\(prefers-color-scheme: dark\)'\)/)
   assert.match(branding, /export function readBrandColors/)
   assert.match(branding, /export function applyBrandColors/)
   assert.match(settings, /dispatchEvent\(new Event\(BRANDING_UPDATED_EVENT\)\)/)
@@ -121,7 +123,8 @@ test('saved theme branding drives every public and CMS brand surface', async () 
   assert.doesNotMatch(topbar, /assets\/branding\/icon/)
   assert.match(maintenance, /src=\{logo\}/)
   assert.match(website, /logo=\{activeLogo\}/)
-  assert.match(website, /applyBrandFavicon\(activeIcon\)/)
+  assert.match(website, /watchBrowserBrandFavicon\(lightFavicon, darkFavicon\)/)
+  assert.match(dashboard, /watchBrowserBrandFavicon\(lightFavicon, darkFavicon\)/)
 
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8')
   assert.match(html, /<link rel="icon" href="data:,"/)
@@ -153,6 +156,15 @@ test('saved branding colors survive reloads and drive both website themes', asyn
   assert.match(draftState, /const draftRef = useRef\(initial\.value\)/)
   assert.match(draftState, /const latestDraft = draftRef\.current/)
   assert.doesNotMatch(draftState, /\[commit, draft, scope, storageKey\]/)
+})
+
+test('directional icons follow their own resolved text direction', async () => {
+  const styles = await readFile(new URL('../src/index.css', import.meta.url), 'utf8')
+
+  assert.match(styles, /\.lucide-arrow-right:dir\(ltr\)/)
+  assert.match(styles, /\.lucide-chevrons-right:dir\(ltr\)/)
+  assert.match(styles, /\.cms-root \.lucide-external-link:dir\(rtl\)/)
+  assert.doesNotMatch(styles, /html:dir\((?:ltr|rtl)\) \.lucide-(?:arrow|chevron|external-link)/)
 })
 
 test('published CMS snapshots remain authoritative on public collection routes', async () => {
