@@ -188,6 +188,20 @@ test('CMS clickable controls use focus borders without faded glow rings', async 
   assert.match(auth, /focus-visible:shadow-none!/)
 })
 
+test('CMS record overview dialogs keep complete content scrollable', async () => {
+  const styles = await readFile(new URL('../src/cms/styles.css', import.meta.url), 'utf8')
+  const opportunities = await readFile(new URL('../src/cms/components/pages/OpportunitiesPage.jsx', import.meta.url), 'utf8')
+  const scholarships = await readFile(new URL('../src/cms/components/sections/ScholarshipsEditorSection.jsx', import.meta.url), 'utf8')
+  const magazine = await readFile(new URL('../src/cms/components/sections/MagazineEditorSection.jsx', import.meta.url), 'utf8')
+
+  assert.match(styles, /\.cms-overview-modal \{ display: flex; flex-direction: column;/)
+  assert.match(styles, /\.cms-overview-modal-content \{[^}]*display: block;[^}]*height: 0;[^}]*flex: 1 1 0%;[^}]*overflow-y: auto;/)
+  for (const preview of [opportunities, scholarships, magazine]) {
+    assert.match(preview, /cms-overview-modal /)
+    assert.match(preview, /cms-overview-modal-content/)
+  }
+})
+
 test('saved branding colors survive reloads and drive both website themes', async () => {
   const branding = await readFile(new URL('../src/shared/utils/branding.js', import.meta.url), 'utf8')
   const dashboard = await readFile(new URL('../src/cms/components/layout/DashboardLayout.jsx', import.meta.url), 'utf8')
