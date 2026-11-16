@@ -1,1 +1,0 @@
-import{t as e}from"./react-vendor-CR5VJ85Q.js";import{t}from"./OpportunityDirectorySection-Cal9Ulq1.js";var n=e();function r({content:e,sidebarContent:r,type:i}){let a=e.cards.map(e=>({...e,href:`/tourism/${i}/${e.slug}`}));return(0,n.jsx)(t,{content:r,cards:a,title:e.cardsTitle})}export{r as t};
