@@ -5,11 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#fffaf5" />
     <title>GRE | Global Vision</title>
-    <style>html,body{background:#fffaf5}html.dark,html.dark body{background:#1f2937}html[data-application=cms],html[data-application=cms] body{background:#edf1f6}html[data-application=cms].dark,html[data-application=cms].dark body{background:#0a1019}</style>
+    <style>html,body{background:color-mix(in srgb, var(--brand-orange,#f47e26) 3%, white)}html.dark,html.dark body{background:color-mix(in srgb, var(--brand-red,#80027f) 8%, #111827)}html[data-application=cms],html[data-application=cms] body{background:#edf1f6}html[data-application=cms].dark,html[data-application=cms].dark body{background:#0a1019}html[data-restoring-scroll=true]{overflow-anchor:none}</style>
+    <link rel="icon" href="data:," />
     <script>
       (() => {
+        const publishedBranding = null /*__GLOBALVISION_PUBLISHED_BRANDING__*/
+        const validBrandColor = (value) => /^#[0-9a-f]{6}$/i.test(value || '') ? value.toUpperCase() : null
+        const primary = validBrandColor(publishedBranding?.primary) || validBrandColor(window.localStorage.getItem('globalvision-brand-primary'))
+        const secondary = validBrandColor(publishedBranding?.secondary) || validBrandColor(window.localStorage.getItem('globalvision-brand-secondary'))
+        if (primary) {
+          document.documentElement.style.setProperty('--brand-orange', primary)
+          window.localStorage.setItem('globalvision-brand-primary', primary)
+        }
+        if (secondary) {
+          document.documentElement.style.setProperty('--brand-red', secondary)
+          window.localStorage.setItem('globalvision-brand-secondary', secondary)
+        }
+
         const isDashboard = window.location.pathname === '/dashboard' || window.location.pathname.startsWith('/dashboard/')
         const theme = window.localStorage.getItem('globalvision-theme') || 'light'
+        document.title = ''
         document.documentElement.dataset.application = isDashboard ? 'cms' : 'website'
         document.documentElement.classList.add(theme === 'dark' ? 'dark' : 'light')
         document.querySelector('meta[name="theme-color"]').setAttribute('content', isDashboard
@@ -23,6 +38,41 @@
           document.documentElement.lang = language
           document.documentElement.dir = language === 'en' ? 'ltr' : 'rtl'
         } else {
+          if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'
+          const navigationType = window.performance.getEntriesByType('navigation')[0]?.type
+          if (navigationType === 'reload') {
+            try {
+              const scrollKey = `globalvision-scroll:${window.location.pathname}${window.location.search}`
+              const storedScroll = window.sessionStorage.getItem(scrollKey)
+              const parsedScroll = storedScroll ? JSON.parse(storedScroll) : null
+              const savedTop = typeof parsedScroll === 'number' ? parsedScroll : Number(parsedScroll?.top)
+              if (Number.isFinite(savedTop) && savedTop > 0) {
+                document.documentElement.dataset.restoringScroll = 'true'
+                document.documentElement.style.minHeight = `${Math.ceil(savedTop + window.innerHeight)}px`
+                const restoreBeforePaint = () => window.scrollTo({ top: savedTop, behavior: 'auto' })
+                restoreBeforePaint()
+                window.addEventListener('DOMContentLoaded', restoreBeforePaint, { once: true })
+                if (Number.isInteger(parsedScroll?.sectionIndex) && Number.isFinite(parsedScroll?.sectionProgress)) {
+                  const observer = new MutationObserver(() => {
+                    const section = document.querySelectorAll('[data-route-skeleton] > section')[parsedScroll.sectionIndex]
+                    if (!section) return
+                    window.scrollTo(0, section.getBoundingClientRect().top + window.scrollY + (parsedScroll.sectionProgress * section.offsetHeight))
+                    observer.disconnect()
+                  })
+                  observer.observe(document.documentElement, { childList: true, subtree: true })
+                }
+                window.__globalVisionScrollRestoreFallback = window.setTimeout(() => {
+                  restoreBeforePaint()
+                  delete document.documentElement.dataset.restoringScroll
+                  document.documentElement.style.removeProperty('min-height')
+                }, 5000)
+              }
+            } catch {
+              delete document.documentElement.dataset.restoringScroll
+              document.documentElement.style.removeProperty('min-height')
+            }
+          }
+
           const possibleLanguage = window.location.pathname.split('/')[1]
           const language = ['dr', 'ps', 'en'].includes(possibleLanguage) ? possibleLanguage : 'dr'
           const languageSettings = {
@@ -35,55 +85,13 @@
           document.documentElement.lang = languageSettings.htmlLang
           document.documentElement.dir = languageSettings.direction
 
-          const titles = {
-            dr: {
-              brand: 'گلوبل ویژن',
-              pages: { home: 'صفحه اصلی', about: 'در باره ما', contact: 'تماس با ما', services: 'خدمات', scholarships: 'بورسیه‌ها', magazine: 'مجله', search: 'جستجو', study: 'فرصت های تحصیلی', work: 'فرصت های کاری', migration: 'فرصت های مهاجرت', investment: 'فرصت های سرمایه گذاری', tourismAfghanistan: 'سیاحت در افغانستان', tourismWorld: 'سیاحت در جهان' },
-            },
-            ps: {
-              brand: 'ګلوبل ویژن',
-              pages: { home: 'اصلي پاڼه', about: 'زموږ په اړه', contact: 'له موږ سره اړیکه', services: 'خدمتونه', scholarships: 'بورسیې', magazine: 'مجله', search: 'لټون', study: 'تحصیلي فرصتونه', work: 'کاري فرصتونه', migration: 'د مهاجرت فرصتونه', investment: 'د پانګونې فرصتونه', tourismAfghanistan: 'په افغانستان کې سیاحت', tourismWorld: 'په نړۍ کې سیاحت' },
-            },
-            en: {
-              brand: 'Global Vision',
-              pages: { home: 'Home', about: 'About Us', contact: 'Contact Us', services: 'Services', scholarships: 'Scholarships', magazine: 'Magazine', search: 'Search', study: 'Study Opportunities', work: 'Work Opportunities', migration: 'Migration Opportunities', investment: 'Investment Opportunities', tourismAfghanistan: 'Tourism in Afghanistan', tourismWorld: 'Tourism Around the World' },
-            },
-          }
-          const pagePath = `/${window.location.pathname.split('/').slice(2).filter(Boolean).join('/')}`
-          const pageKey = pagePath === '/' ? 'home'
-            : pagePath === '/about' ? 'about'
-              : pagePath === '/contact' ? 'contact'
-                : pagePath.startsWith('/services') ? 'services'
-                  : pagePath.startsWith('/scholarships') ? 'scholarships'
-                    : pagePath.startsWith('/magazine') ? 'magazine'
-                      : pagePath === '/search' ? 'search'
-                        : pagePath.startsWith('/opportunities/study') ? 'study'
-                          : pagePath.startsWith('/opportunities/work') ? 'work'
-                            : pagePath.startsWith('/opportunities/migration') ? 'migration'
-                              : pagePath.startsWith('/opportunities/investment') ? 'investment'
-                                : pagePath.startsWith('/tourism/afghanistan') ? 'tourismAfghanistan'
-                                  : pagePath.startsWith('/tourism/world') ? 'tourismWorld'
-                                    : 'home'
-          const titleContent = titles[language]
-          document.title = `${titleContent.pages[pageKey]} | ${titleContent.brand}`
         }
       })()
     </script>
-    <link rel="icon" type="image/webp" href="/assets/branding/icon.webp" />
-    <script>
-      if (window.location.pathname === '/dashboard' || window.location.pathname.startsWith('/dashboard/')) {
-        const language = window.sessionStorage.getItem('globalvision-language')
-        document.title = language === 'en'
-          ? 'Global Vision Website Management'
-          : language === 'ps'
-            ? 'د ګلوبل ویژن وېب‌سایټ مدیریت'
-            : 'مدیریت وبسایت گلوبل ویژن'
-      }
-    </script>
-    <script type="module" crossorigin src="/assets/index-BEjYv4qY.js"></script>
+    <script type="module" crossorigin src="/assets/index-Bgln1JGZ.js"></script>
     <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-hePW80VL.js">
     <link rel="modulepreload" crossorigin href="/assets/react-vendor-CR5VJ85Q.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-9aLBoZEI.css">
+    <link rel="stylesheet" crossorigin href="/assets/index-BUkSaK8w.css">
       <meta name="description" content="GRE is used in admission to some graduate courses. Confirm the need for the test from the destination program." />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="canonical" href="https://globalvision.af/en/opportunities/exams/gre" />
