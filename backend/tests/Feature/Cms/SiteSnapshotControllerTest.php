@@ -66,12 +66,17 @@ class SiteSnapshotControllerTest extends TestCase
             'payload' => [
                 'content' => '<p>Safe</p><script>alert(1)</script>',
                 'href' => 'javascript:alert(1)',
-                'primary' => 'not-a-color',
+                'primary' => '#123ABC',
             ],
             'published' => true,
         ])->assertCreated()
             ->assertJsonPath('data.payload.content', '<p>Safe</p>')
             ->assertJsonPath('data.payload.href', '')
-            ->assertJsonPath('data.payload.primary', '#f47e26');
+            ->assertJsonPath('data.payload.primary', '#123ABC');
+
+        $this->actingAs($user)->putJson('/api/cms/snapshots/home', [
+            'payload' => ['primary' => 'not-a-color'],
+            'published' => true,
+        ])->assertUnprocessable()->assertJsonValidationErrors(['payload.primary']);
     }
 }

@@ -14,10 +14,13 @@ import useEditorTabs from '@cms/hooks/useEditorTabs.js'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import SeoFields from '@cms/components/SeoFields.jsx'
+import RecordActionButtons from '@cms/components/RecordActionButtons.jsx'
 import SafeRichText from '@/shared/components/SafeRichText.jsx'
 import { showRecordToast } from '@cms/utils/toast.js'
+import { deleteLocalizedSnapshotItemWithUndo } from '@cms/utils/undoDelete.js'
 import { closeCmsModal } from '@cms/utils/modalTransition.js'
 import { useCmsContentLanguage, useCmsInterfaceLanguage } from '@cms/hooks/useCmsLanguage.js'
+import { formatScholarshipDeadline } from '@website/utils/scholarshipDate.js'
 
 const sectionIcons = { hero: LayoutTemplate, scholarships: GraduationCap }
 
@@ -25,19 +28,18 @@ function ScholarshipsEditorSection({ content, initialTranslations }) {
   const [selectedSection, setSelectedSection] = useEditorTabs({ defaultTab: 'hero', storageKey: 'globalvision-cms-scholarships-tab', tabs: Object.keys(sectionIcons) })
   const [contentLanguage, setContentLanguage] = useCmsContentLanguage()
   const commitDrafts = useCallback((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, items: languageDraft.items.map((item) => { const next = { ...item }; delete next.savedStatus; return next }) }])), [])
-  const [drafts, setDrafts] = useCmsDraftState('scholarships', () => structuredClone(initialTranslations), { commit: commitDrafts })
+  const [drafts, setDrafts, { saveImmediate }] = useCmsDraftState('scholarships', () => structuredClone(initialTranslations), { commit: commitDrafts })
   const draft = drafts[contentLanguage]
   const setDraft = (update) => setDrafts((current) => ({ ...current, [contentLanguage]: typeof update === 'function' ? update(current[contentLanguage]) : update }))
   const [editing, setEditing] = useState(null)
   const selectedVisible = draft.visibility?.[selectedSection] !== false
   const toggleVisibility = () => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, visibility: { ...languageDraft.visibility, [selectedSection]: !selectedVisible } }])))
   const updateHero = (key, value) => setDraft((current) => ({ ...current, hero: { ...current.hero, [key]: value } }))
-  const saveItemTranslations = (localizedItems) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, items: editing.index === null ? [...languageDraft.items, localizedItems[language]] : languageDraft.items.map((entry, index) => index === editing.index ? localizedItems[language] : entry) }])))
+  const saveItemTranslations = (localizedItems) => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, items: editing.index === null ? [...languageDraft.items, localizedItems[language]] : languageDraft.items.map((entry, index) => index === editing.index ? localizedItems[language] : entry) }])))
   const deleteItem = async (index) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: content.deleteTitle, description: content.deleteDescription })
     if (confirmed) {
-      setDraft((current) => ({ ...current, items: current.items.filter((_, itemIndex) => itemIndex !== index) }))
-      showRecordToast('recordDeleted')
+      await deleteLocalizedSnapshotItemWithUndo({ drafts, index, saveImmediate, getItems: (languageDraft) => languageDraft.items, setItems: (languageDraft, items) => ({ ...languageDraft, items }) })
     }
     return Boolean(confirmed)
   }
@@ -49,10 +51,10 @@ function ScholarshipsEditorSection({ content, initialTranslations }) {
       <EditorSectionHeader icon={sectionIcons[selectedSection]} title={content.sections[selectedSection].label} action={<div className="grid w-full grid-cols-2 items-center justify-items-stretch gap-2 sm:flex sm:w-auto sm:flex-nowrap sm:justify-start">{selectedSection === 'scholarships' && <button type="button" onClick={() => setEditing({ index: null, item: null })} className="order-3 col-span-2 box-border inline-flex h-[35px] min-h-[35px] max-h-[35px] w-full shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl border border-admin-brand bg-admin-brand px-3 py-0 text-[.6875rem] leading-none font-semibold text-white transition hover:bg-orange-500 sm:order-none sm:col-span-1 sm:w-auto sm:min-w-32"><Plus size={14} />{content.add}</button>}<EditorVisibilityToggle label={content.visible || 'نمایش داده شود'} checked={selectedVisible} onChange={toggleVisibility} /><ContentLanguageSwitcher label={content.language || 'زبان محتوا'} value={contentLanguage} onChange={setContentLanguage} /></div>} />
       <div className={`grid gap-6 ${selectedSection === 'scholarships' ? 'bg-transparent p-0 lg:p-6' : 'p-5 sm:p-6'}`}>
         {selectedSection === 'hero' && <EditorField label={content.fields.heroEyebrow} value={draft.hero.eyebrow} onChange={(value) => updateHero('eyebrow', value)} />}
-        {selectedSection === 'scholarships' && <ScholarshipList items={draft.items} translations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, languageDraft.items]))} initialLanguage={contentLanguage} options={draft.options} content={content} onEdit={(index) => setEditing({ index, item: draft.items[index] })} onDelete={deleteItem} onToggleStatus={(index) => setDraft((current) => ({ ...current, items: current.items.map((entry, itemIndex) => itemIndex === index ? { ...entry, status: entry.status === 'draft' ? 'published' : 'draft', savedStatus: entry.savedStatus ?? entry.status } : entry) }))} />}
+        {selectedSection === 'scholarships' && <ScholarshipList items={draft.items} translations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, languageDraft.items]))} initialLanguage={contentLanguage} options={draft.options} content={content} onEdit={(index) => setEditing({ index, item: draft.items[index] })} onDelete={deleteItem} onToggleStatus={(index) => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, items: languageDraft.items.map((entry, itemIndex) => itemIndex === index ? { ...entry, status: entry.status === 'draft' ? 'published' : 'draft' } : entry) }])))} />}
       </div>
     </section>
-    {editing && <ScholarshipModal content={content} initialLanguage={contentLanguage} initialTranslations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, editing.index === null ? null : languageDraft.items[editing.index] || null]))} optionsByLanguage={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, languageDraft.options]))} onClose={() => closeCmsModal(() => setEditing(null))} onSave={(localizedItems) => closeCmsModal(() => { const isNew = editing.index === null; saveItemTranslations(localizedItems); setEditing(null); if (isNew) showRecordToast('recordAdded') })} />}
+    {editing && <ScholarshipModal content={content} initialLanguage={contentLanguage} initialTranslations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, editing.index === null ? null : languageDraft.items[editing.index] || null]))} optionsByLanguage={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, languageDraft.options]))} onClose={() => closeCmsModal(() => setEditing(null))} onSave={async (localizedItems) => { const isNew = editing.index === null; await saveItemTranslations(localizedItems); closeCmsModal(() => { setEditing(null); if (isNew) showRecordToast('recordAdded') }) }} />}
   </PageContainer>
 }
 
@@ -122,19 +124,11 @@ function ScholarshipList({ items, translations, initialLanguage, options, conten
 <td className="p-4 text-xs text-admin-muted">{item.country}</td>
 <td className="p-4 text-xs text-admin-muted">{item.degree}</td>
 <td className="p-4" onClick={(event) => event.stopPropagation()}>
-<button type="button" onClick={(event) => { onToggleStatus(index); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition ${statusTone}`}>{statusLabel}</button>
+<button type="button" onClick={() => onToggleStatus(index)} className={`rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition ${statusTone}`}>{statusLabel}</button>
 </td>
 <td className="p-4" onClick={(event) => event.stopPropagation()}>
 <div className="flex gap-1">
-<a className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" href={item.officialHref} target="_blank" rel="noreferrer" aria-label={content.preview}>
-<ExternalLink size={16} />
-</a>
-<button type="button" onClick={() => onEdit(index)} aria-label={content.edit} className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft">
-<Pencil size={16} />
-</button>
-<button type="button" onClick={() => onDelete(index)} aria-label={content.delete} className="grid size-9 place-items-center rounded-xl border border-red-500/25 dark:border-red-500/50 text-red-500 transition hover:border-red-500 hover:bg-red-500/10">
-<Trash2 size={16} />
-</button>
+<RecordActionButtons href={item.officialHref} previewLabel={content.preview} editLabel={content.edit} deleteLabel={content.delete} onEdit={() => onEdit(index)} onDelete={() => onDelete(index)} />
 </div>
 </td>
 </tr> })}</tbody>
@@ -145,17 +139,9 @@ function ScholarshipList({ items, translations, initialLanguage, options, conten
 <div className="min-w-0">
 <strong className={`block truncate text-sm text-admin-heading ${isEnglish ? '!font-normal' : ''}`}>{item.title}</strong>
 <span className="mt-1 block truncate text-xs text-admin-muted">{item.country} · {item.degree}</span>
-<button type="button" onClick={(event) => { event.stopPropagation(); onToggleStatus(index); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`mt-2 inline-block rounded-full px-2 py-1 text-[.65rem] font-semibold transition ${statusTone}`}>{statusLabel}</button>
+<button type="button" onClick={(event) => { event.stopPropagation(); onToggleStatus(index) }} className={`mt-2 inline-block rounded-full px-2 py-1 text-[.65rem] font-semibold transition ${statusTone}`}>{statusLabel}</button>
 <div className="mt-2 flex justify-end gap-1" onClick={(event) => event.stopPropagation()}>
-<a className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-muted hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" href={item.officialHref} target="_blank" rel="noreferrer" aria-label={content.preview}>
-<ExternalLink size={15} />
-</a>
-<button type="button" onClick={() => onEdit(index)} aria-label={content.edit} className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-brand-text hover:border-admin-brand hover:bg-admin-brand-soft">
-<Pencil size={15} />
-</button>
-<button type="button" onClick={() => onDelete(index)} aria-label={content.delete} className="grid size-8 place-items-center rounded-xl border border-red-500/25 dark:border-red-500/50 text-red-500 hover:border-red-500 hover:bg-red-500/10">
-<Trash2 size={15} />
-</button>
+<RecordActionButtons href={item.officialHref} previewLabel={content.preview} editLabel={content.edit} deleteLabel={content.delete} onEdit={() => onEdit(index)} onDelete={() => onDelete(index)} iconSize={15} buttonSize="size-8" />
 </div>
 </div>
 </article> })}</section>{filteredItems.length === 0 && <div className="grid min-h-32 place-items-center rounded-2xl border border-dashed border-admin-border text-sm text-admin-muted">{content.empty}</div>}{viewing && <ScholarshipPreviewModal item={viewing.item} index={viewing.index} translations={translations} initialLanguage={initialLanguage} content={content} onClose={() => closeCmsModal(() => setViewing(null))} onEdit={() => closeCmsModal(() => { setViewing(null); onEdit(viewing.index) })} onDelete={async () => { if (await onDelete(viewing.index)) closeCmsModal(() => setViewing(null)) }} />}</div>
@@ -174,7 +160,7 @@ function ScholarshipPreviewModal({ item, index, translations, initialLanguage, c
     document.addEventListener('keydown', closeOnEscape)
     return () => { document.body.style.overflow = previousBodyOverflow; document.removeEventListener('keydown', closeOnEscape) }
   }, [onClose])
-  const facts = [[content.fields.provider, displayItem.provider], [content.fields.country, displayItem.country], [content.fields.degree, displayItem.degree], [content.fields.funding, displayItem.funding], [content.fields.deadline, displayItem.deadline]]
+  const facts = [[content.fields.provider, displayItem.provider], [content.fields.country, displayItem.country], [content.fields.degree, displayItem.degree], [content.fields.funding, displayItem.funding], [content.fields.deadline, formatScholarshipDeadline(displayItem.deadline, contentLanguage, displayItem.slug)]]
   const detailSections = [[content.fields.eligibility, displayItem.eligibility], [content.fields.benefits, displayItem.benefits], [content.fields.documents, displayItem.documents]].filter(([, items]) => Array.isArray(items) && items.length)
   return <div className="cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-3 sm:p-4" onMouseDown={onClose}>
     <section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="scholarship-preview-title" className="cms-overview-modal relative z-10 w-full max-w-5xl overflow-hidden rounded-xl border border-admin-border bg-admin-page shadow-2xl sm:max-w-2xl sm:rounded-2xl lg:max-w-5xl" onMouseDown={(event) => event.stopPropagation()}>
@@ -186,7 +172,7 @@ function ScholarshipPreviewModal({ item, index, translations, initialLanguage, c
           <button type="button" onClick={onClose} className="grid size-9 shrink-0 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" aria-label={content.close}><X size={17} /></button>
         </div>
       </header>
-      <div className="cms-overview-modal-content grid gap-3 p-2.5 sm:gap-5 sm:p-6" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
+      <div className="cms-overview-modal-content p-2.5 sm:p-6" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
         <article className="mx-auto w-full max-w-6xl overflow-hidden rounded-xl border border-admin-border bg-admin-card sm:rounded-[2rem]">
           {displayItem.image && <div className="relative aspect-[16/9] overflow-hidden sm:aspect-[16/8] md:aspect-[16/5]"><img src={displayItem.image} alt={displayItem.imageAlt || displayItem.title || ''} className="absolute inset-0 size-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" aria-hidden="true" /><h3 className="absolute inset-x-4 bottom-4 text-start font-heading text-xl font-extrabold leading-tight text-white sm:inset-x-5 sm:bottom-5 sm:text-2xl md:inset-x-10 md:bottom-10 md:text-4xl">{displayItem.title}</h3></div>}
           <div className="grid gap-5 p-4 sm:p-6"><p className="text-sm leading-7 text-admin-muted">{displayItem.summary}</p><dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">{facts.map(([label, value]) => <div key={label} className="rounded-xl border border-admin-border bg-(--editor-field) p-3"><dt className="text-[.65rem] font-semibold text-admin-muted">{label}</dt><dd className="mt-1 text-xs font-bold text-admin-heading">{value}</dd></div>)}</dl>{displayItem.overview && <div><h4 className="mb-2 text-sm font-bold text-admin-heading">{content.fields.overview}</h4><SafeRichText className="gv-public-post-content text-sm leading-7 text-admin-muted" html={displayItem.overview} /></div>}{detailSections.length > 0 && <div className="grid gap-4 md:grid-cols-3">{detailSections.map(([title, items]) => <section key={title} className="rounded-2xl border border-admin-border bg-(--editor-field) p-4"><h4 className="text-sm font-bold text-admin-heading">{title}</h4><ul className="mt-3 grid list-disc gap-2 ps-5 text-sm leading-7 text-admin-muted">{items.map((item) => <li key={item}>{item}</li>)}</ul></section>)}</div>}{displayItem.officialHref && <a href={displayItem.officialHref} target="_blank" rel="noreferrer" className="inline-flex min-h-11 w-fit items-center gap-2 rounded-xl border border-admin-brand bg-admin-brand px-4 text-xs font-semibold text-white"><ExternalLink size={15} />{content.fields.officialSource}</a>}</div>
@@ -224,6 +210,13 @@ function ScholarshipModal({ content, initialLanguage, initialTranslations, optio
   const options = optionsByLanguage[contentLanguage] || {}
   const update = (key, value) => setPopupDrafts((current) => ({ ...current, [contentLanguage]: { ...current[contentLanguage], [key]: value } }))
   const updateShared = (key, value) => setPopupDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, [key]: value }])))
+  const updateLocalizedOption = (key, value, optionKey) => {
+    const selectedIndex = (optionsByLanguage[contentLanguage]?.[optionKey] || []).indexOf(value)
+    setPopupDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => {
+      const localizedValue = optionsByLanguage[language]?.[optionKey]?.[selectedIndex]
+      return [language, { ...languageDraft, [key]: localizedValue || value }]
+    })))
+  }
   const updateCountry = (country) => setPopupDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, country: country.names?.[language] || country.name }])))
   const save = (event) => { event.preventDefault(); const fallbackTitle = popupDrafts.prs.title || popupDrafts.en.title || popupDrafts.ps.title; const slug = draft.slug || fallbackTitle.trim().toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, ''); onSave(Object.fromEntries(Object.entries(popupDrafts).map(([language, languageDraft]) => [language, { ...languageDraft, slug }]))) }
   const isEditing = Object.values(initialTranslations).some(Boolean)
@@ -241,8 +234,8 @@ function ScholarshipModal({ content, initialLanguage, initialTranslations, optio
 <section className="grid gap-4 rounded-2xl border border-admin-border bg-admin-card p-4 sm:grid-cols-2 sm:p-5">
 <EditorField label={content.fields.itemTitle} value={draft.title} dir={contentLanguage === 'en' ? 'ltr' : 'rtl'} full onChange={(value) => update('title', value)} />
 <label className="block min-w-0 text-xs font-semibold text-admin-heading"><span className="mb-2 block">{content.fields.country}</span><CountryPicker label={content.fields.country} language={contentLanguage} value={draft.country} searchPlaceholder={content.countrySearch} emptyLabel={content.countryEmpty} onChange={updateCountry} /></label>
-<ScholarshipSelect label={content.fields.degree} value={draft.degree} onChange={(value) => update('degree', value)} options={content.programOptions} />
-<ScholarshipSelect label={content.fields.funding} value={draft.funding} onChange={(value) => update('funding', value)} options={options.funding} />
+<ScholarshipSelect label={content.fields.degree} value={draft.degree} onChange={(value) => updateLocalizedOption('degree', value, 'degrees')} options={options.degrees} />
+<ScholarshipSelect label={content.fields.funding} value={draft.funding} onChange={(value) => updateLocalizedOption('funding', value, 'funding')} options={options.funding} />
 <EditorField label={content.fields.deadline} value={draft.deadline} type="date" onChange={(value) => updateShared('deadline', value)} />
 <label className="block min-w-0 text-xs font-semibold text-admin-heading">
 <span className="mb-2 block">{content.fields.status}</span>

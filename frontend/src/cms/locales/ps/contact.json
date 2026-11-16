@@ -29,6 +29,7 @@
   "socialSettings": "ټولنیزې رسنۍ",
   "addSocial": "ټولنیزه رسنۍ زیاتول",
   "deleteSocial": "ټولنیزه رسنۍ ړنګول",
+  "deleteSocialDescription": "ایا ډاډه یاست چې دا ټولنیزه رسنۍ ړنګه کړئ؟",
   "socialModalDescription": "ټولنیزه رسنۍ او لینک یې ولیکئ.",
   "socialPlatform": "ټولنیزه رسنۍ",
   "socialUrl": "د ټولنیزې رسنۍ لینک",

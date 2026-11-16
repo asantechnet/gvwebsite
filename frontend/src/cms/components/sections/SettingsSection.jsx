@@ -4,53 +4,76 @@ import { Check, ChevronDown, Globe2, ImagePlus, Palette, ShieldCheck } from 'luc
 import { EditorVisibilityToggle } from '@cms/components/EditorPrimitives.jsx'
 import MediaUploadField from '@cms/components/MediaUploadField.jsx'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
+import { applyBrandColors, applyBrandFavicon, BRANDING_UPDATED_EVENT, normalizeBrandColor, readBrandColors, readBrandIcon } from '@cms/utils/branding.js'
+import { CMS_CHANGES_COMMITTED_EVENT } from '@cms/utils/draftEvents.js'
 const cardClass = 'relative rounded-2xl border border-admin-border bg-admin-card shadow-[0_12px_34px_rgb(15_23_42_/.055)]'
 
+function formatBrandColorInput(value) {
+  const raw = value.trim().replace(/^#/, '')
+  if (!/^[0-9a-f]{0,6}$/i.test(raw)) return null
+  return `#${raw.toUpperCase()}`
+}
+
+const commitSettings = (draft) => {
+  const savedColors = readBrandColors()
+  return {
+    ...draft,
+    branding: {
+      ...draft.branding,
+      primary: normalizeBrandColor(draft.branding.primary, savedColors.primary),
+      secondary: normalizeBrandColor(draft.branding.secondary, savedColors.secondary),
+    },
+  }
+}
+
 function SettingsSection({ content }) {
+  const savedColors = readBrandColors()
   const [draft, setDraft] = useCmsDraftState('settings', () => ({
     settings: {
       defaultLanguage: window.localStorage.getItem('globalvision-default-language') || 'prs',
       maintenanceMode: window.localStorage.getItem('globalvision-maintenance-mode') === 'true',
     },
     branding: {
-      primary: window.localStorage.getItem('globalvision-brand-primary') || '#f47e26',
-      secondary: window.localStorage.getItem('globalvision-brand-secondary') || '#80027f',
+      primary: savedColors.primary,
+      secondary: savedColors.secondary,
       lightLogo: window.localStorage.getItem('globalvision-brand-logo-light') || '',
       darkLogo: window.localStorage.getItem('globalvision-brand-logo-dark') || '',
       lightIcon: window.localStorage.getItem('globalvision-brand-icon-light') || '',
       darkIcon: window.localStorage.getItem('globalvision-brand-icon-dark') || '',
     },
-  }))
+  }), { commit: commitSettings })
   const { settings, branding } = draft
   const setSettings = (update) => setDraft((current) => ({ ...current, settings: typeof update === 'function' ? update(current.settings) : update }))
   const setBranding = (update) => setDraft((current) => ({ ...current, branding: typeof update === 'function' ? update(current.branding) : update }))
   const update = (key, value) => setSettings((current) => ({ ...current, [key]: value }))
   const copy = content.branding
   useEffect(() => {
-    const applyColors = (primary, secondary) => {
-      document.documentElement.style.setProperty('--brand-orange', primary)
-      document.documentElement.style.setProperty('--brand-red', secondary)
-      document.querySelectorAll('.cms-root').forEach((root) => { root.style.setProperty('--admin-brand', primary); root.style.setProperty('--brand-orange', primary); root.style.setProperty('--brand-red', secondary) })
+    applyBrandColors(readBrandColors())
+    const save = (event) => {
+      if (event.detail?.scope !== 'settings') return
+      const committed = event.detail.value
+      const committedSettings = committed.settings
+      const committedBranding = committed.branding
+      window.localStorage.setItem('globalvision-default-language', committedSettings.defaultLanguage)
+      window.localStorage.setItem('globalvision-maintenance-mode', String(committedSettings.maintenanceMode))
+      window.localStorage.setItem('globalvision-brand-primary', committedBranding.primary)
+      window.localStorage.setItem('globalvision-brand-secondary', committedBranding.secondary)
+      if (committedBranding.lightLogo) window.localStorage.setItem('globalvision-brand-logo-light', committedBranding.lightLogo); else window.localStorage.removeItem('globalvision-brand-logo-light')
+      if (committedBranding.darkLogo) window.localStorage.setItem('globalvision-brand-logo-dark', committedBranding.darkLogo); else window.localStorage.removeItem('globalvision-brand-logo-dark')
+      if (committedBranding.lightIcon) window.localStorage.setItem('globalvision-brand-icon-light', committedBranding.lightIcon); else window.localStorage.removeItem('globalvision-brand-icon-light')
+      if (committedBranding.darkIcon) window.localStorage.setItem('globalvision-brand-icon-dark', committedBranding.darkIcon); else window.localStorage.removeItem('globalvision-brand-icon-dark')
+      applyBrandColors(committedBranding)
+      applyBrandFavicon(readBrandIcon(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))
+      window.dispatchEvent(new Event(BRANDING_UPDATED_EVENT))
     }
-    applyColors(window.localStorage.getItem('globalvision-brand-primary') || '#f47e26', window.localStorage.getItem('globalvision-brand-secondary') || '#80027f')
-    const save = () => {
-      window.localStorage.setItem('globalvision-default-language', settings.defaultLanguage)
-      window.localStorage.setItem('globalvision-maintenance-mode', String(settings.maintenanceMode))
-      window.localStorage.setItem('globalvision-brand-primary', branding.primary)
-      window.localStorage.setItem('globalvision-brand-secondary', branding.secondary)
-      if (branding.lightLogo) window.localStorage.setItem('globalvision-brand-logo-light', branding.lightLogo); else window.localStorage.removeItem('globalvision-brand-logo-light')
-      if (branding.darkLogo) window.localStorage.setItem('globalvision-brand-logo-dark', branding.darkLogo); else window.localStorage.removeItem('globalvision-brand-logo-dark')
-      if (branding.lightIcon) window.localStorage.setItem('globalvision-brand-icon-light', branding.lightIcon); else window.localStorage.removeItem('globalvision-brand-icon-light')
-      if (branding.darkIcon) window.localStorage.setItem('globalvision-brand-icon-dark', branding.darkIcon); else window.localStorage.removeItem('globalvision-brand-icon-dark')
-      applyColors(branding.primary, branding.secondary)
-    }
-    window.addEventListener('cms:changes-saved', save)
-    return () => window.removeEventListener('cms:changes-saved', save)
-  }, [branding, settings])
+    window.addEventListener(CMS_CHANGES_COMMITTED_EVENT, save)
+    return () => window.removeEventListener(CMS_CHANGES_COMMITTED_EVENT, save)
+  }, [])
   const handleLogo = (key, logo) => setBranding((current) => ({ ...current, [key]: logo }))
+  const handleColor = (key, value) => setBranding((current) => ({ ...current, [key]: value }))
 
   return <div className="grid items-stretch gap-5">
-    <div className="grid gap-5 lg:grid-cols-2"><BrandingLogo copy={copy} branding={branding} onLogo={handleLogo} /><BrandingColors copy={copy} branding={branding} onChange={(key, value) => setBranding((current) => ({ ...current, [key]: value }))} /></div>
+    <div className="grid gap-5 lg:grid-cols-2"><BrandingLogo copy={copy} branding={branding} onLogo={handleLogo} /><BrandingColors copy={copy} branding={branding} onChange={handleColor} /></div>
     <div className="grid items-stretch gap-5 md:grid-cols-2">
     <SettingsCard icon={Globe2} eyebrow={content.regional.eyebrow} title={content.regional.title} description={content.regional.description}>
       <div className="mt-auto"><LanguageSelect label={content.regional.defaultLanguage} value={settings.defaultLanguage} onChange={(value) => update('defaultLanguage', value)} options={[{ value: 'prs', label: content.languages.prs }, { value: 'ps', label: content.languages.ps }, { value: 'en', label: content.languages.en }]} /></div>
@@ -63,7 +86,7 @@ function SettingsSection({ content }) {
 }
 
 function BrandingLogo({ copy, branding, onLogo }) { const uploadContent = { countryImage: '', choose: copy.choose, drop: '', replace: copy.replace, remove: copy.remove }; return <section className={`${cardClass} p-4 sm:p-5`}><div className="flex items-center gap-3"><span className="grid size-10 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text"><ImagePlus size={19} /></span><h2 className="font-heading text-base text-admin-heading">{copy.logo}</h2></div><div className="mt-5 grid gap-4 sm:grid-cols-2"><div className="grid content-start gap-4"><div><span className="text-xs font-semibold text-admin-heading">{copy.lightLogo}</span><MediaUploadField iconOnly imageFit="contain" value={branding.lightLogo || '/assets/branding/new%20logo.webp'} onChange={(logo) => onLogo('lightLogo', logo)} content={uploadContent} /></div><div><span className="text-xs font-semibold text-admin-heading">{copy.lightIcon}</span><MediaUploadField iconOnly previewShape="icon" imageFit="contain" value={branding.lightIcon || '/assets/branding/icon.webp'} onChange={(icon) => onLogo('lightIcon', icon)} content={uploadContent} /></div></div><div className="grid content-start gap-4"><div><span className="text-xs font-semibold text-admin-heading">{copy.darkLogo}</span><MediaUploadField iconOnly imageFit="contain" value={branding.darkLogo || '/assets/branding/new%20logo%20white.webp'} onChange={(logo) => onLogo('darkLogo', logo)} content={uploadContent} /></div><div><span className="text-xs font-semibold text-admin-heading">{copy.darkIcon}</span><MediaUploadField iconOnly previewShape="icon" imageFit="contain" value={branding.darkIcon || '/assets/branding/icon%20white.webp'} onChange={(icon) => onLogo('darkIcon', icon)} content={uploadContent} /></div></div></div></section> }
-function BrandingColors({ copy, branding, onChange }) { return <section className={`${cardClass} p-4 sm:p-5`}><div className="flex items-center gap-3"><span className="grid size-10 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text"><Palette size={19} /></span><h2 className="font-heading text-base text-admin-heading">{copy.colors}</h2></div><div className="mt-5 grid gap-3">{[['primary', copy.primary], ['secondary', copy.secondary]].map(([key, label]) => <label key={key} className="flex min-h-11 items-center gap-3 rounded-xl border border-admin-border bg-(--editor-field) px-3 text-xs font-semibold text-admin-heading"><span className="size-7 shrink-0 rounded-lg border border-white/20 shadow-inner" style={{ backgroundColor: branding[key] }} /><span className="flex-1">{label}</span><input dir="ltr" type="text" inputMode="text" spellCheck="false" aria-label={label} value={branding[key].toUpperCase()} onChange={(event) => { const value = event.target.value.trim(); onChange(key, value) }} className="h-8 w-24 rounded-lg border border-(--editor-field-border) bg-(--editor-input) px-2 text-left text-[.6875rem] font-normal uppercase text-admin-heading outline-none focus:border-admin-brand" /></label>)}</div></section> }
+function BrandingColors({ copy, branding, onChange }) { return <section className={`${cardClass} p-4 sm:p-5`}><div className="flex items-center gap-3"><span className="grid size-10 place-items-center rounded-xl bg-admin-brand-soft text-admin-brand-text"><Palette size={19} /></span><h2 className="font-heading text-base text-admin-heading">{copy.colors}</h2></div><div className="mt-5 grid gap-3">{[['primary', copy.primary], ['secondary', copy.secondary]].map(([key, label]) => { const valid = normalizeBrandColor(branding[key]); return <label key={key} className="flex min-h-11 items-center gap-3 rounded-xl border border-admin-border bg-(--editor-field) px-3 text-xs font-semibold text-admin-heading"><span className="size-7 shrink-0 rounded-lg border border-white/20 shadow-inner" style={{ backgroundColor: valid || readBrandColors()[key] }} /><span className="flex-1">{label}</span><input dir="ltr" type="text" inputMode="text" maxLength={7} spellCheck="false" aria-label={label} aria-invalid={!valid} value={branding[key].toUpperCase()} onChange={(event) => { const value = formatBrandColorInput(event.target.value); if (value !== null) onChange(key, value) }} onBlur={() => { if (!valid) onChange(key, readBrandColors()[key]) }} className={`h-8 w-24 rounded-lg border bg-(--editor-input) px-2 text-left text-[.6875rem] font-normal uppercase text-admin-heading outline-none focus:border-admin-brand ${valid ? 'border-(--editor-field-border)' : 'border-red-500'}`} /></label> })}</div></section> }
 
 function SettingsCard({ icon: Icon, title, children }) {
   return <section className={`${cardClass} flex h-full flex-col`}>

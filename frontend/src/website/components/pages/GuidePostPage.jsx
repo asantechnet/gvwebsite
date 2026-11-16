@@ -3,12 +3,13 @@ import examImages from '@website/data/examImages.js'
 
 function GuidePostPage({ guide, content, postShell }) {
   const post = {
+    ...guide,
     slug: guide.slug,
     category: content.breadcrumbs.exams,
     title: guide.name,
     description: guide.summary,
-    image: examImages[guide.slug] || guide.image,
-    imageAlt: guide.name,
+    image: guide.cmsManaged ? guide.image : examImages[guide.slug] || guide.image,
+    imageAlt: guide.imageAlt || guide.name,
   }
   const guideContent = {
     ...postShell,

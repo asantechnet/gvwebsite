@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Check, ChevronDown, ExternalLink, FileText, LayoutTemplate, Newspaper, Pencil, Plus, Search, Tags, Trash2, X } from 'lucide-react'
+import { Check, ChevronDown, FileText, LayoutTemplate, Newspaper, Pencil, Plus, Search, Tags, Trash2, X } from 'lucide-react'
 
 import ContentLanguageSwitcher from '@cms/components/ContentLanguageSwitcher.jsx'
 import { EditorField, EditorFieldGroup, EditorNumberedCard, EditorPreviewLink, EditorSectionHeader, EditorVisibilityToggle } from '@cms/components/EditorPrimitives.jsx'
@@ -9,16 +9,19 @@ import PageHeading from '@cms/components/PageHeading.jsx'
 import RichTextEditor from '@cms/components/RichTextEditor.jsx'
 import SectionTabBar from '@cms/components/SectionTabBar.jsx'
 import SeoFields from '@cms/components/SeoFields.jsx'
+import { getDefaultContentCategory } from '@/shared/utils/contentCategories.js'
+import RecordActionButtons from '@cms/components/RecordActionButtons.jsx'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 import useEditorTabs from '@cms/hooks/useEditorTabs.js'
 import { useCmsContentLanguage, useCmsInterfaceLanguage } from '@cms/hooks/useCmsLanguage.js'
 import { showRecordToast } from '@cms/utils/toast.js'
+import { deleteLocalizedSnapshotItemWithUndo, deleteWithUndo } from '@cms/utils/undoDelete.js'
 import SafeRichText from '@/shared/components/SafeRichText.jsx'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
 
 const languages = ['prs', 'ps', 'en']
 const sectionIcons = { hero: LayoutTemplate, news: Newspaper, articles: FileText, categories: Tags }
-const newsCategoryByLanguage = { prs: 'خبر', ps: 'خبر', en: 'News' }
+const newsCategoryByLanguage = Object.fromEntries(languages.map((language) => [language, getDefaultContentCategory('news', language)]))
 const emptyItem = () => ({ slug: '', title: '', description: '', category: '', status: 'draft', featured: false, image: '', imageAlt: '', content: '', seoTitle: '', metaDescription: '', href: '/magazine' })
 const removeSavedStatus = (item) => { const committed = { ...item }; delete committed.savedStatus; return committed }
 const categoryId = (index) => `magazine-category-${index + 1}`
@@ -31,7 +34,7 @@ const normalizeMagazineTranslations = (translations) => Object.fromEntries(Objec
 function MagazineEditorSection({ content, initialTranslations }) {
   const [selectedSection, setSelectedSection] = useEditorTabs({ defaultTab: 'hero', storageKey: 'globalvision-cms-magazine-tab', tabs: Object.keys(sectionIcons) })
   const [contentLanguage, setContentLanguage] = useCmsContentLanguage()
-  const [drafts, setDrafts] = useCmsDraftState('magazine', () => normalizeMagazineTranslations(structuredClone(initialTranslations)), {
+  const [drafts, setDrafts, { saveImmediate }] = useCmsDraftState('magazine', () => normalizeMagazineTranslations(structuredClone(initialTranslations)), {
     commit: (value) => Object.fromEntries(Object.entries(value).map(([language, page]) => [language, {
       ...page,
       categories: getMagazineCategories(page),
@@ -45,7 +48,7 @@ function MagazineEditorSection({ content, initialTranslations }) {
   const categories = getMagazineCategories(draft)
   const updateSection = (key, value) => setDrafts((current) => ({ ...current, [contentLanguage]: { ...current[contentLanguage], [selectedSection]: { ...current[contentLanguage][selectedSection], [key]: value } } }))
   const itemTranslations = (section, index) => Object.fromEntries(languages.map((language) => [language, drafts[language][section].items[index]]))
-  const saveItem = (localizedItems, section, index) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
+  const saveItem = (localizedItems, section, index) => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
     const items = [...page[section].items]
     if (index < items.length) items[index] = localizedItems[language]
     else items.push(localizedItems[language])
@@ -54,12 +57,10 @@ function MagazineEditorSection({ content, initialTranslations }) {
   const removeItem = async (section, index) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: content.deletePost || 'حذف نوشته', description: content.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })
     if (!confirmed) return
-    setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => [language, { ...page, [section]: { ...page[section], items: page[section].items.filter((_, itemIndex) => itemIndex !== index) } }])))
-    setViewing(null)
-    showRecordToast('recordDeleted')
+    await deleteLocalizedSnapshotItemWithUndo({ drafts, index, saveImmediate, getItems: (page) => page[section].items, setItems: (page, items) => ({ ...page, [section]: { ...page[section], items } }), afterRemove: () => setViewing(null) })
   }
-  const toggleStatus = (section, index) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => [language, { ...page, [section]: { ...page[section], items: page[section].items.map((item, itemIndex) => itemIndex === index ? { ...item, status: item.status === 'draft' ? 'published' : 'draft', savedStatus: item.savedStatus ?? (item.status === 'draft' ? 'draft' : 'published') } : item) } }])))
-  const saveCategories = (localizedCategories, index = null) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
+  const toggleStatus = (section, index) => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => [language, { ...page, [section]: { ...page[section], items: page[section].items.map((item, itemIndex) => itemIndex === index ? { ...item, status: item.status === 'draft' ? 'published' : 'draft' } : item) } }])))
+  const saveCategories = (localizedCategories, index = null) => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
     const currentCategories = getMagazineCategories(page)
     const nextCategory = localizedCategories[language]
     const categories = index === null ? [...currentCategories, nextCategory] : currentCategories.map((category, categoryIndex) => categoryIndex === index ? { ...category, ...nextCategory } : category)
@@ -69,12 +70,15 @@ function MagazineEditorSection({ content, initialTranslations }) {
   const deleteCategory = async (index) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: content.deleteCategory, description: content.deleteCategoryDescription })
     if (!confirmed) return
-    setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
-      const currentCategories = getMagazineCategories(page)
-      const removedName = currentCategories[index]?.name
-      return [language, { ...page, categories: currentCategories.filter((_, categoryIndex) => categoryIndex !== index), articles: { ...page.articles, items: page.articles.items.map((item) => item.category === removedName ? { ...item, category: '' } : item) } }]
-    })))
-    showRecordToast('recordDeleted')
+    const previous = structuredClone(drafts)
+    await deleteWithUndo({
+      remove: () => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => {
+        const currentCategories = getMagazineCategories(page)
+        const removedName = currentCategories[index]?.name
+        return [language, { ...page, categories: currentCategories.filter((_, categoryIndex) => categoryIndex !== index), articles: { ...page.articles, items: page.articles.items.map((item) => item.category === removedName ? { ...item, category: '' } : item) } }]
+      }))),
+      restore: () => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, page]) => [language, { ...page, categories: previous[language].categories, articles: previous[language].articles }]))),
+    })
   }
 
   return <PageContainer>
@@ -86,8 +90,8 @@ function MagazineEditorSection({ content, initialTranslations }) {
           ? <MagazineCategoryManager categories={categories} content={content} contentLanguage={contentLanguage} onLanguageChange={setContentLanguage} onCreate={() => setEditing({ categoryIndex: null, translations: Object.fromEntries(languages.map((language) => [language, { id: `magazine-category-${Date.now()}`, name: '' }])) })} onEdit={(index) => setEditing({ categoryIndex: index, translations: Object.fromEntries(languages.map((language) => [language, getMagazineCategories(drafts[language])[index] || { id: categories[index]?.id, name: '' }])) })} onDelete={deleteCategory} />
           : <MagazineCollection section={selectedSection} items={draft[selectedSection].items} categories={categories} title={draft[selectedSection].title} sectionVisible={draft[selectedSection].visible !== false} content={content} contentLanguage={contentLanguage} onLanguageChange={setContentLanguage} onVisibleChange={(value) => updateSection('visible', value)} onTitleChange={(value) => updateSection('title', value)} onCreate={() => setEditing({ section: selectedSection, index: draft[selectedSection].items.length, translations: Object.fromEntries(languages.map((language) => [language, emptyItem()])) })} onEdit={(index) => setEditing({ section: selectedSection, index, translations: itemTranslations(selectedSection, index) })} onView={(index) => setViewing({ section: selectedSection, index, translations: itemTranslations(selectedSection, index) })} onDelete={removeItem} onToggleStatus={toggleStatus} />}
     </section>
-    {editing?.section && <MagazineItemModal section={editing.section} content={content} initialLanguage={contentLanguage} initialTranslations={editing.translations} categoryOptions={Object.fromEntries(languages.map((language) => [language, getMagazineCategories(drafts[language]).map((category) => category.name)]))} onClose={() => setEditing(null)} onSave={(items) => { const isNew = editing.index >= drafts[contentLanguage][editing.section].items.length; saveItem(items, editing.section, editing.index); setEditing(null); if (isNew) showRecordToast('recordAdded') }} />}
-    {editing && editing.categoryIndex !== undefined && <MagazineCategoryModal content={content} initialLanguage={contentLanguage} initialTranslations={editing.translations} onClose={() => setEditing(null)} onSave={(categories) => { const isNew = editing.categoryIndex === null; saveCategories(categories, editing.categoryIndex); setEditing(null); showRecordToast(isNew ? 'recordAdded' : 'recordUpdated') }} />}
+    {editing?.section && <MagazineItemModal section={editing.section} content={content} initialLanguage={contentLanguage} initialTranslations={editing.translations} categoryOptions={Object.fromEntries(languages.map((language) => [language, getMagazineCategories(drafts[language]).map((category) => category.name)]))} onClose={() => setEditing(null)} onSave={async (items) => { const isNew = editing.index >= drafts[contentLanguage][editing.section].items.length; await saveItem(items, editing.section, editing.index); setEditing(null); if (isNew) showRecordToast('recordAdded') }} />}
+    {editing && editing.categoryIndex !== undefined && <MagazineCategoryModal content={content} initialLanguage={contentLanguage} initialTranslations={editing.translations} onClose={() => setEditing(null)} onSave={async (categories) => { const isNew = editing.categoryIndex === null; await saveCategories(categories, editing.categoryIndex); setEditing(null); showRecordToast(isNew ? 'recordAdded' : 'recordUpdated') }} />}
     {viewing && <MagazinePreviewModal content={content} initialLanguage={contentLanguage} translations={viewing.translations} onClose={() => setViewing(null)} onEdit={() => { setEditing(viewing); setViewing(null) }} onDelete={() => removeItem(viewing.section, viewing.index)} />}
   </PageContainer>
 }
@@ -108,12 +112,12 @@ function MagazineCollection({ section, items, categories, title, sectionVisible,
 }
 
 function MagazineActions({ item, content, size, buttonSize, onEdit, onDelete }) {
-  return <><a className={`grid ${buttonSize} place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text`} href={item.href || '/magazine'} target="_blank" rel="noreferrer" aria-label={content.preview}><ExternalLink size={size} /></a><button type="button" className={`grid ${buttonSize} place-items-center rounded-xl border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft`} onClick={onEdit} aria-label={content.editItem}><Pencil size={size} /></button><button type="button" className={`grid ${buttonSize} place-items-center rounded-xl border border-red-500/25 dark:border-red-500/50 text-red-500 transition hover:border-red-500 hover:bg-red-500/10`} onClick={onDelete} aria-label={content.deletePost}><Trash2 size={size} /></button></>
+  return <RecordActionButtons href={item.href || '/magazine'} previewLabel={content.preview} editLabel={content.editItem} deleteLabel={content.deletePost} onEdit={onEdit} onDelete={onDelete} iconSize={size} buttonSize={buttonSize} />
 }
 
 function MagazineStatusBadge({ item, content, onToggle }) {
   const isDraft = item.status === 'draft'
-  return <button type="button" onClick={(event) => { event.stopPropagation(); onToggle(); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`mt-2 inline-block rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition lg:mt-0 ${isDraft ? 'bg-admin-brand-soft text-admin-brand-text hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'}`}>{isDraft ? content.draft : content.published}</button>
+  return <button type="button" onClick={(event) => { event.stopPropagation(); onToggle() }} className={`mt-2 inline-block rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition lg:mt-0 ${isDraft ? 'bg-admin-brand-soft text-admin-brand-text hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'}`}>{isDraft ? content.draft : content.published}</button>
 }
 
 function MagazineCategorySelect({ value, onChange, options, content, includeAll = false, compact = false }) {
@@ -177,7 +181,7 @@ function MagazinePreviewModal({ content, initialLanguage, translations, onClose,
   const item = translations[language] || translations.prs
   const closeButton = <button type="button" onClick={close} className="grid size-9 shrink-0 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text dark:bg-admin-control" aria-label={content.close}><X size={17} /></button>
   const actionButtons = <div className="flex shrink-0 items-center gap-1 sm:gap-2" dir={interfaceLanguage === 'en' ? 'rtl' : 'ltr'}><button type="button" onClick={onEdit} className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft" aria-label={content.editItem}><Pencil size={16} /></button><button type="button" onClick={onDelete} className="grid size-9 place-items-center rounded-xl border border-red-500/25 text-red-500 transition hover:border-red-500 hover:bg-red-500/10 dark:border-red-500/50" aria-label={content.deletePost}><Trash2 size={16} /></button></div>
-  return <div className={`cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-3 sm:p-4 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onMouseDown={close}><section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="magazine-preview-title" onMouseDown={(event) => event.stopPropagation()} className={`cms-overview-modal relative z-10 w-full max-w-5xl overflow-hidden rounded-xl border border-admin-border bg-admin-page shadow-2xl sm:max-w-2xl sm:rounded-2xl lg:max-w-5xl ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`}><header dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'} className="grid min-w-0 grid-cols-1 gap-2 border-b border-admin-border bg-admin-card px-2 py-2.5 sm:flex sm:flex-nowrap sm:items-center sm:gap-3 sm:px-6 sm:py-3"><div className="order-2 min-w-0 w-full overflow-hidden text-start sm:order-none sm:flex-1"><h2 id="magazine-preview-title" className="block w-full truncate font-heading text-base text-admin-heading sm:text-xl">{item.title}</h2></div><div className="order-1 grid min-w-0 w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-1 sm:ms-auto sm:flex sm:w-auto sm:shrink-0 sm:gap-2"><ContentLanguageSwitcher className="!w-full !min-w-0 sm:!w-auto" label={content.language || 'زبان محتوا'} value={language} onChange={setLanguage} />{actionButtons}{closeButton}</div></header><div className="cms-overview-modal-content grid gap-3 p-2.5 sm:gap-5 sm:p-6" dir={language === 'en' ? 'ltr' : 'rtl'}><article className="mx-auto w-full max-w-6xl overflow-hidden rounded-xl border border-admin-border bg-admin-card shadow-sm sm:rounded-[2rem]">{item.image && <div className="relative aspect-[16/9] overflow-hidden sm:aspect-[16/8] md:aspect-[16/5]"><img src={item.image} alt={item.imageAlt || item.title} className="absolute inset-0 size-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" /><div className="absolute inset-x-4 bottom-4 text-start text-white sm:inset-x-6 sm:bottom-6 md:inset-x-10 md:bottom-10"><h3 className="w-full font-heading text-xl font-extrabold leading-tight sm:text-2xl md:text-4xl">{item.title}</h3></div></div>}<SafeRichText className="gv-public-post-content p-3 text-sm leading-7 text-admin-muted sm:p-6 sm:leading-8 lg:p-8" html={item.content || `<p>${item.description || ''}</p>`} /></article></div></section></div>
+  return <div className={`cms-modal-backdrop fixed inset-0 z-[80] isolate grid place-items-center p-3 sm:p-4 ${closing ? 'animate-cms-modal-backdrop-out' : 'animate-cms-modal-backdrop-in'}`} onMouseDown={close}><section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="magazine-preview-title" onMouseDown={(event) => event.stopPropagation()} className={`cms-overview-modal relative z-10 w-full max-w-5xl overflow-hidden rounded-xl border border-admin-border bg-admin-page shadow-2xl sm:max-w-2xl sm:rounded-2xl lg:max-w-5xl ${closing ? 'animate-cms-modal-panel-out' : 'animate-cms-modal-panel-in'}`}><header dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'} className="grid min-w-0 grid-cols-1 gap-2 border-b border-admin-border bg-admin-card px-2 py-2.5 sm:flex sm:flex-nowrap sm:items-center sm:gap-3 sm:px-6 sm:py-3"><div className="order-2 min-w-0 w-full overflow-hidden text-start sm:order-none sm:flex-1"><h2 id="magazine-preview-title" className="block w-full truncate font-heading text-base text-admin-heading sm:text-xl">{item.title}</h2></div><div className="order-1 grid min-w-0 w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-1 sm:ms-auto sm:flex sm:w-auto sm:shrink-0 sm:gap-2"><ContentLanguageSwitcher className="!w-full !min-w-0 sm:!w-auto" label={content.language || 'زبان محتوا'} value={language} onChange={setLanguage} />{actionButtons}{closeButton}</div></header><div className="cms-overview-modal-content p-2.5 sm:p-6" dir={language === 'en' ? 'ltr' : 'rtl'}><article className="mx-auto w-full max-w-6xl overflow-hidden rounded-xl border border-admin-border bg-admin-card shadow-sm sm:rounded-[2rem]">{item.image && <div className="relative aspect-[16/9] overflow-hidden sm:aspect-[16/8] md:aspect-[16/5]"><img src={item.image} alt={item.imageAlt || item.title} className="absolute inset-0 size-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" /><div className="absolute inset-x-4 bottom-4 text-start text-white sm:inset-x-6 sm:bottom-6 md:inset-x-10 md:bottom-10"><h3 className="w-full font-heading text-xl font-extrabold leading-tight sm:text-2xl md:text-4xl">{item.title}</h3></div></div>}<SafeRichText className="gv-public-post-content p-3 text-sm leading-7 text-admin-muted sm:p-6 sm:leading-8 lg:p-8" html={item.content || `<p>${item.description || ''}</p>`} /></article></div></section></div>
 }
 
 export default MagazineEditorSection

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { BookOpenCheck, BriefcaseBusiness, ChartNoAxesCombined, Check, ChevronDown, ExternalLink, FileCheck2, Globe2, GraduationCap, MapPinned, Pencil, PlaneTakeoff, Plus, Search, Trash2, WalletCards, X } from 'lucide-react'
+import { BookOpenCheck, BriefcaseBusiness, ChartNoAxesCombined, Check, ChevronDown, FileCheck2, Globe2, GraduationCap, MapPinned, Pencil, PlaneTakeoff, Plus, Search, Trash2, WalletCards, X } from 'lucide-react'
 
 import PageContainer from '@cms/components/PageContainer.jsx'
 import PageHeading from '@cms/components/PageHeading.jsx'
@@ -13,8 +13,10 @@ import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import SafeRichText from '@/shared/components/SafeRichText.jsx'
 import SeoFields from '@cms/components/SeoFields.jsx'
 import { showRecordToast } from '@cms/utils/toast.js'
+import { deleteWithUndo } from '@cms/utils/undoDelete.js'
 import ContentLanguageSwitcher from '@cms/components/ContentLanguageSwitcher.jsx'
 import CountryPicker from '@cms/components/CountryPicker.jsx'
+import RecordActionButtons from '@cms/components/RecordActionButtons.jsx'
 import { getCountryCode } from '@/shared/utils/countries.js'
 import { getAfghanistanProvinceCode, getAfghanistanProvinces } from '@/shared/utils/afghanistanProvinces.js'
 import { useCmsContentLanguage, useCmsInterfaceLanguage } from '@cms/hooks/useCmsLanguage.js'
@@ -42,20 +44,23 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
   const [status, setStatus] = useState('all')
   const [editing, setEditing] = useState(null)
   const [viewing, setViewing] = useState(null)
-  const { cards, removePost, savePost, toggleStatus } = useManagedCollection({ pageKey, label, services, tourism, opportunities, exams })
+  const { cards, removePost, restorePost, savePost, toggleStatus } = useManagedCollection({ pageKey, label, services, tourism, opportunities, exams })
   const labels = { ...content.opportunities, ...content.opportunities.collection }
   const typeLabels = isTourism
     ? { afghanistan: labels.tourismAfghanistan, world: labels.tourismWorld, typeLabel: label }
     : labels.manager || {}
   const typeSections = Object.fromEntries(sectionTypes.map((type) => [type, typeLabels[type] || type]))
-  const visibleCards = isServices ? cards : isTourism ? cards.filter((card) => card.type === activeType) : cards.filter((card) => card.id === activeType)
+  const visibleCards = isServices ? cards : cards.filter((card) => card.type === activeType)
   const filteredCards = useMemo(() => visibleCards.filter((card) => { const filterStatus = card.savedStatus ?? card.status; return (status === 'all' || filterStatus === status) && `${card.title} ${card.description} ${card.category || ''}`.toLocaleLowerCase().includes(query.toLocaleLowerCase()) }), [visibleCards, query, status])
   const modalContent = { ...content, editItem: labels.editPost || 'ویرایش نوشته', editItemTitle: labels.editPostTitle || 'ویرایش نوشته فرصت', close: labels.close || 'بستن', itemTitle: labels.postTitle || 'عنوان نوشته', itemAction: labels.postAction || 'متن دکمه', itemLink: labels.postLink || 'پیوند نوشته', cancel: labels.cancel || 'انصراف', save: labels.save || 'ذخیره' }
+  const deletePostWithUndo = async (card) => {
+    const index = cards.findIndex((item) => item.id === card.id)
+    await deleteWithUndo({ remove: () => removePost(card), restore: () => restorePost(card, index < 0 ? cards.length : index) })
+  }
   const requestRemove = async (card) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: labels.deletePost || 'حذف نوشته', description: labels.deletePostDescription || 'آیا از حذف این نوشته مطمئن هستید؟' })
     if (confirmed) {
-      removePost(card)
-      showRecordToast('recordDeleted')
+      await deletePostWithUndo(card)
     }
   }
   return <PageContainer className="max-[1023px]:gap-2 min-[701px]:max-[1023px]:!gap-1.5"><PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.groups?.[0]?.label || content.overview }, { label }]} action={<EditorPreviewLink>{content.topbar.visitPage}</EditorPreviewLink>} />
@@ -92,15 +97,7 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 </td>
 <td className="ps-5 p-4 text-right" onClick={(event) => event.stopPropagation()}>
 <div className="flex justify-end gap-1">
-<a className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" href={card.href} target="_blank" rel="noreferrer" aria-label={labels.preview || 'پیش‌نمایش'}>
-<ExternalLink size={16} />
-</a>
-<button type="button" className="grid size-9 place-items-center rounded-xl border border-admin-border text-admin-brand-text transition hover:border-admin-brand hover:bg-admin-brand-soft" onClick={() => setEditing(card)} aria-label={labels.editPost || 'ویرایش'}>
-<Pencil size={16} />
-</button>
-<button type="button" className="grid size-9 place-items-center rounded-xl border border-red-500/25 dark:border-red-500/50 text-red-500 transition hover:border-red-500 hover:bg-red-500/10" onClick={() => requestRemove(card)} aria-label={labels.deletePost || 'حذف'}>
-<Trash2 size={16} />
-</button>
+<RecordActionButtons href={card.href} previewLabel={labels.preview || 'پیش‌نمایش'} editLabel={labels.editPost || 'ویرایش'} deleteLabel={labels.deletePost || 'حذف'} onEdit={() => setEditing(card)} onDelete={() => requestRemove(card)} />
 </div>
 </td>
 </tr>)}</tbody>
@@ -112,21 +109,13 @@ function ManagedCollectionPage({ content, opportunities, exams, services, touris
 <strong className="line-clamp-2 max-w-full text-sm leading-5 text-admin-heading">{card.title}</strong>
 <ServiceStatusBadge card={card} labels={labels} onToggle={() => toggleStatus(card)} />
     <div className="absolute bottom-3 left-3 flex flex-col gap-1" onClick={(event) => event.stopPropagation()}>
-<a className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-muted hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text" href={card.href} target="_blank" rel="noreferrer" aria-label={labels.preview || 'پیش‌نمایش'}>
-<ExternalLink size={15} />
-</a>
-<button type="button" className="grid size-8 place-items-center rounded-xl border border-admin-border text-admin-brand-text hover:border-admin-brand hover:bg-admin-brand-soft" onClick={() => setEditing(card)} aria-label={labels.editPost || 'ویرایش'}>
-<Pencil size={15} />
-</button>
-<button type="button" className="grid size-8 place-items-center rounded-xl border border-red-500/25 dark:border-red-500/50 text-red-500 hover:border-red-500 hover:bg-red-500/10" onClick={() => requestRemove(card)} aria-label={labels.deletePost || 'حذف'}>
-<Trash2 size={15} />
-</button>
+<RecordActionButtons href={card.href} previewLabel={labels.preview || 'پیش‌نمایش'} editLabel={labels.editPost || 'ویرایش'} deleteLabel={labels.deletePost || 'حذف'} onEdit={() => setEditing(card)} onDelete={() => requestRemove(card)} iconSize={15} buttonSize="size-8" />
 </div>
 </div>
 </article>)}</section>
     {!filteredCards.length && <div className="grid min-h-44 place-items-center rounded-2xl border border-admin-border bg-admin-card text-sm text-admin-muted">{labels.empty || 'نوشته‌ای پیدا نشد.'}</div>}
-    {viewing && <OpportunityPostPreviewModal post={viewing} content={modalContent} isServices={isServices} serviceUi={serviceUi} onClose={() => setViewing(null)} onDelete={() => { removePost(viewing); setViewing(null); showRecordToast('recordDeleted') }} onEdit={() => { setViewing(null); setEditing(viewing) }} />}
-    {editing && <OpportunityPostModal post={editing} content={modalContent} isServices={isServices} isOpportunities={pageKey === 'opportunities'} isWorldTourism={isTourism && activeType === 'world'} isAfghanistanTourism={isTourism && activeType === 'afghanistan'} onClose={() => setEditing(null)} onSave={(savedPost) => { const isNew = String(editing.id).startsWith('new-'); savePost(savedPost, activeType); setEditing(null); if (isNew) showRecordToast('recordAdded') }} />}
+    {viewing && <OpportunityPostPreviewModal post={viewing} content={modalContent} isServices={isServices} serviceUi={serviceUi} onClose={() => setViewing(null)} onDelete={async () => { await deletePostWithUndo(viewing); setViewing(null) }} onEdit={() => { setViewing(null); setEditing(viewing) }} />}
+    {editing && <OpportunityPostModal post={editing} content={modalContent} isServices={isServices} isOpportunities={pageKey === 'opportunities'} isWorldTourism={isTourism && activeType === 'world'} isAfghanistanTourism={isTourism && activeType === 'afghanistan'} onClose={() => setEditing(null)} onSave={async (savedPost) => { const isNew = String(editing.id).startsWith('new-'); await savePost(savedPost, activeType); setEditing(null); if (isNew) showRecordToast('recordAdded') }} />}
   </PageContainer>
 }
 
@@ -145,7 +134,7 @@ function StatusSelect({ value, onChange, labels, compact = false }) {
 
 function ServiceStatusBadge({ card, labels, onToggle }) {
   const isDraft = card.status === 'draft'
-  return <button type="button" onClick={(event) => { event.stopPropagation(); onToggle(); event.currentTarget.dispatchEvent(new Event('input', { bubbles: true })) }} className={`mt-2 inline-block rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition lg:mt-0 ${isDraft ? 'bg-admin-brand-soft text-admin-brand-text hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'}`}>{isDraft ? (labels.draft || 'پیش‌نویس') : (labels.published || 'منتشرشده')}</button>
+  return <button type="button" onClick={(event) => { event.stopPropagation(); onToggle() }} className={`mt-2 inline-block rounded-full px-2.5 py-1 text-[.65rem] font-semibold transition lg:mt-0 ${isDraft ? 'bg-admin-brand-soft text-admin-brand-text hover:bg-admin-brand/20' : 'bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/15 dark:text-emerald-300'}`}>{isDraft ? (labels.draft || 'پیش‌نویس') : (labels.published || 'منتشرشده')}</button>
 }
 
 function FeaturedToggle({ label, checked, onChange, full = true }) {
@@ -202,7 +191,7 @@ function OpportunityPostPreviewModal({ post, content, isServices = false, servic
         <div className="order-2 min-w-0 w-full overflow-hidden text-start sm:order-none sm:flex-1" dir={interfaceLanguage === 'en' ? 'ltr' : 'rtl'}><h2 id="post-preview-title" className="block w-full truncate font-heading text-base text-admin-heading sm:text-xl">{translation.title || content.postTitle || 'نوشته'}</h2></div>
         <div className="order-1 grid min-w-0 w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-1 sm:ms-auto sm:flex sm:w-auto sm:shrink-0 sm:gap-2">{languageSwitcher}{actionButtons}{closeButton}</div>
       </header>
-      <div className="cms-overview-modal-content grid gap-3 p-2.5 sm:gap-5 sm:p-6" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
+      <div className="cms-overview-modal-content p-2.5 sm:p-6" dir={contentLanguage === 'en' ? 'ltr' : 'rtl'}>
         <article className="mx-auto w-full max-w-6xl overflow-hidden rounded-xl border border-border bg-surface text-foreground shadow-sm sm:rounded-[2rem] dark:border-gray-700 dark:bg-[#2b3442]">
           {post.image && <div className="relative aspect-[16/9] overflow-hidden sm:aspect-[16/8] md:aspect-[16/5]"><img src={post.image} alt={translation.imageAlt || translation.title} className="absolute inset-0 size-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" aria-hidden="true" /><div className="absolute inset-x-4 bottom-4 text-start text-white sm:inset-x-6 sm:bottom-6 md:inset-x-10 md:bottom-10"><h1 className="w-full font-heading text-xl font-extrabold leading-tight sm:text-2xl md:text-4xl">{translation.title}</h1></div></div>}
           <div className="grid gap-4 p-3 sm:gap-6 sm:p-6 lg:p-8"><main className="min-w-0 text-start">{isServices ? <div>{(translation.excerpt || post.description || post.excerpt) && <p className="text-sm font-medium leading-7 text-foreground-muted sm:text-lg sm:leading-9">{translation.excerpt || post.description || post.excerpt}</p>}{serviceLabels.important && <div className="my-6 rounded-2xl border-r-4 border-primary bg-primary/10 px-5 py-4 text-sm font-semibold leading-7 text-foreground sm:my-8 sm:text-base sm:leading-8">{serviceLabels.important}</div>}<div className="space-y-7 sm:space-y-8">{serviceSections.map((section, index) => { const Icon = serviceSectionIcons[index % serviceSectionIcons.length]; return <section key={section.title} className="border-b border-border pb-7 dark:border-gray-600 sm:pb-8"><div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:text-start"><span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-accent-text"><Icon aria-hidden="true" size={23} /></span><h2 className="font-heading text-xl font-extrabold text-foreground sm:text-2xl">{section.title}</h2></div>{section.body && <p className="mt-4 text-sm leading-7 text-foreground-muted sm:text-base sm:leading-8">{section.body}</p>}{section.items?.length > 0 && <ul className="mt-4 grid gap-3 sm:grid-cols-2">{section.items.map((item) => <li key={item} className="flex items-start gap-2 rounded-xl bg-background/70 px-3 py-3 text-sm leading-7 text-foreground-muted dark:bg-gray-800"><span className="mt-2 size-2 shrink-0 rounded-full bg-primary" aria-hidden="true" />{item}</li>)}</ul>}</section> })}</div></div> : <>{(translation.excerpt || post.description || post.excerpt) && <p className="text-sm font-medium leading-7 text-foreground-muted sm:text-lg sm:leading-9">{translation.excerpt || post.description || post.excerpt}</p>}<SafeRichText className="gv-public-post-content mt-5 text-sm leading-7 text-foreground-muted sm:mt-8 sm:text-base sm:leading-8 [&_a]:font-semibold [&_a]:text-accent-text [&_a]:underline [&_figure]:my-6 [&_figure]:overflow-hidden [&_figure]:rounded-2xl [&_figure]:border [&_figure]:border-border [&_figure]:bg-surface [&_figure]:p-2 [&_h2]:mb-3 [&_h2]:mt-8 [&_h2]:font-heading [&_h2]:text-xl [&_h2]:font-extrabold [&_h2]:text-foreground [&_h3]:mb-2 [&_h3]:mt-6 [&_h3]:font-heading [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-foreground [&_img]:max-h-[32rem] [&_img]:w-full [&_img]:rounded-xl [&_img]:object-contain [&_li]:mb-2 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:ps-6 [&_p]:mb-5 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:ps-6" html={fullContent} /></>}</main></div>

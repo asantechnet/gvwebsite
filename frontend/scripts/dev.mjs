@@ -19,9 +19,23 @@ if (prepare.status !== 0) {
   process.exit(prepare.status || 1)
 }
 
+const storageLink = spawnSync('php', ['artisan', 'storage:link'], {
+  cwd: backendDirectory,
+  encoding: 'utf8',
+  stdio: 'pipe',
+})
+
+if (storageLink.stdout) process.stdout.write(storageLink.stdout)
+if (storageLink.stderr) process.stderr.write(storageLink.stderr)
+
+if (storageLink.status !== 0) {
+  process.stderr.write('\nDevelopment startup stopped because the public upload storage link could not be prepared.\n')
+  process.exit(storageLink.status || 1)
+}
+
 const processes = [
-  spawn('php', ['artisan', 'serve', '--host=127.0.0.1', '--port=8000'], {
-    cwd: backendDirectory,
+  spawn('php', ['-d', 'upload_max_filesize=500M', '-d', 'post_max_size=501M', '-S', '127.0.0.1:8000', '../vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php'], {
+    cwd: path.join(backendDirectory, 'public'),
     stdio: 'inherit',
   }),
   spawn(path.join(frontendDirectory, 'node_modules/.bin/vite'), ['--host=127.0.0.1', '--port=5173', '--strictPort'], {

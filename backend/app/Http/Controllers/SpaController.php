@@ -35,7 +35,13 @@ class SpaController extends Controller
 
         abort_unless(File::exists($routeFile), 503, 'The frontend build is unavailable.');
 
-        return response(File::get($routeFile), $status, array_filter([
+        $html = str_replace(
+            'null /*__GLOBALVISION_PUBLISHED_BRANDING__*/',
+            json_encode($this->publishedBranding(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT),
+            File::get($routeFile),
+        );
+
+        return response($html, $status, array_filter([
             'Content-Type' => 'text/html; charset=UTF-8',
             'X-Robots-Tag' => $isDashboard || $status === 404 ? 'noindex, nofollow, noarchive' : null,
         ]));
@@ -52,5 +58,31 @@ class SpaController extends Controller
             'ps', 'en' => $configured,
             default => 'dr',
         };
+    }
+
+    /**
+     * @return array{primary: string, secondary: string}|null
+     */
+    private function publishedBranding(): ?array
+    {
+        $payload = SiteSnapshot::query()
+            ->where('key', 'settings')
+            ->whereNotNull('published_at')
+            ->value('payload');
+
+        if (is_string($payload)) {
+            $payload = json_decode($payload, true);
+        }
+
+        $branding = is_array($payload) ? ($payload['branding'] ?? null) : null;
+
+        $primary = strtoupper((string) ($branding['primary'] ?? ''));
+        $secondary = strtoupper((string) ($branding['secondary'] ?? ''));
+
+        if (! preg_match('/^#[0-9A-F]{6}$/', $primary) || ! preg_match('/^#[0-9A-F]{6}$/', $secondary)) {
+            return null;
+        }
+
+        return compact('primary', 'secondary');
     }
 }

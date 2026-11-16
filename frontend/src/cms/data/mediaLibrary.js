@@ -23,3 +23,17 @@ export const getMediaFormat = (name = '', type = '') => {
   const extension = name.match(/\.([a-z0-9]+)$/i)?.[1]
   return (extension || type || 'file').toUpperCase()
 }
+
+export const normalizeManagedMedia = (item) => ({
+  id: item.path,
+  name: item.name,
+  url: item.url,
+  size: item.size,
+  type: item.kind === 'document' ? 'file' : item.kind,
+  local: false,
+})
+
+export const mergeManagedMedia = (uploads, current = []) => [
+  ...uploads.map(normalizeManagedMedia),
+  ...current.filter((item) => String(item.id).startsWith('seed-')),
+]

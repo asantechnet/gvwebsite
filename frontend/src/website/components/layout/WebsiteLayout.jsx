@@ -9,10 +9,10 @@ import { searchCatalog } from '@website/utils/catalog.js'
 import { getLanguageConfig, localizeHref, parseLocalizedPathname, WEBSITE_LANGUAGE_STORAGE_KEY } from '@website/utils/language.js'
 import { WebsiteLanguageContext } from '@website/hooks/useWebsiteLanguage.js'
 import { applySeoMetadata, buildStructuredData, getSiteOrigin, toAbsoluteUrl } from '@website/seo/metadata.js'
-import { lazyWithSkeletonPreview, SKELETON_PREVIEW_DELAY_MS } from '@/shared/utils/loading.js'
-import { isReloadNavigation, restoreScrollPosition, saveScrollPosition } from '@website/utils/scrollRestoration.js'
+import { lazyWithSkeletonPreview } from '@/shared/utils/loading.js'
+import { finishReloadScrollRestoration, saveScrollPosition } from '@website/utils/scrollRestoration.js'
 import { STUDY_DIRECTORY_CARD_LIMIT, getVisibleCardCount } from '@website/utils/cardCounts.js'
-import { BRANDING_UPDATED_EVENT, readCompanyNames } from '@/shared/utils/branding.js'
+import { applyBrandColors, BRANDING_UPDATED_EVENT, readBrandColors, readBrandIcon, readBrandLogo, readCompanyNames, watchBrowserBrandFavicon } from '@/shared/utils/branding.js'
 
 const delayed = (importer) => lazy(() => lazyWithSkeletonPreview(importer))
 const HomePage = delayed(() => import('@pages/HomePage.jsx'))
@@ -40,6 +40,11 @@ function formatPageTitle(pattern, values) {
   return pattern.replace(/\{(\w+)\}/g, (placeholder, key) => values[key] ?? placeholder)
 }
 
+function ScrollRestorationFinalizer() {
+  useLayoutEffect(() => finishReloadScrollRestoration(), [])
+  return null
+}
+
 function WebsiteLayout({ children = null, content }) {
   const siteSettings = content.siteSettings
   const [companyNames, setCompanyNames] = useState(readCompanyNames)
@@ -57,10 +62,12 @@ function WebsiteLayout({ children = null, content }) {
     return hasExplicitLanguage ? parsedRoute.language : ['dr', 'ps', 'en'].includes(savedLanguage) ? savedLanguage : parsedRoute.language
   })
   const language = maintenanceMode ? maintenanceLanguage : parsedRoute.language
-  const companyName = companyNames[language === 'dr' ? 'prs' : language]
+  const contentLocale = language === 'dr' ? 'prs' : language
+  const companyName = content.profile?.[contentLocale] || companyNames[contentLocale]
   const page = parsedRoute.pagePath
-  const activeLogo = theme === 'dark' ? siteSettings?.branding?.darkLogo : siteSettings?.branding?.lightLogo
-  const activeIcon = theme === 'dark' ? siteSettings?.branding?.darkIcon : siteSettings?.branding?.lightIcon
+  const activeLogo = (theme === 'dark' ? siteSettings?.branding?.darkLogo : siteSettings?.branding?.lightLogo) || readBrandLogo(theme)
+  const lightFavicon = siteSettings?.branding?.lightIcon || readBrandIcon('light')
+  const darkFavicon = siteSettings?.branding?.darkIcon || readBrandIcon('dark')
 
   useEffect(() => {
     const syncCompanyNames = () => setCompanyNames(readCompanyNames())
@@ -75,16 +82,14 @@ function WebsiteLayout({ children = null, content }) {
     }
   }, [])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!siteSettings) return
-    if (siteSettings.branding?.primary) document.documentElement.style.setProperty('--brand-orange', siteSettings.branding.primary)
-    if (siteSettings.branding?.secondary) document.documentElement.style.setProperty('--brand-red', siteSettings.branding.secondary)
+    if (siteSettings.branding?.primary && siteSettings.branding?.secondary) applyBrandColors(siteSettings.branding)
   }, [siteSettings])
 
-  useEffect(() => {
-    if (!activeIcon) return
-    document.querySelector('link[rel="icon"]')?.setAttribute('href', activeIcon)
-  }, [activeIcon])
+  useLayoutEffect(() => {
+    return watchBrowserBrandFavicon(lightFavicon, darkFavicon)
+  }, [darkFavicon, lightFavicon])
 
   useLayoutEffect(() => {
     if (!maintenanceMode) return
@@ -117,8 +122,9 @@ function WebsiteLayout({ children = null, content }) {
   const opportunitySlug = page.startsWith('/opportunities/') ? page.slice('/opportunities/'.length) : ''
   const opportunity = opportunitiesContent[opportunitySlug]
   const contextualOpportunityMatch = page.match(/^\/opportunities\/(study|work|migration|investment)\/([^/]+)$/)
-  const contextualOpportunityCountry = contextualOpportunityMatch ? guidesContent.countries.find((country) => country.slug === contextualOpportunityMatch[2]) : null
   const contextualOpportunity = contextualOpportunityMatch ? opportunitiesContent[contextualOpportunityMatch[1]] : null
+  const opportunityCountries = (type) => opportunitiesContent[type]?.cards ?? guidesContent.countries
+  const contextualOpportunityCountry = contextualOpportunityMatch ? opportunityCountries(contextualOpportunityMatch[1]).find((country) => country.slug === contextualOpportunityMatch[2]) : null
   const examMatch = page.match(/^\/opportunities\/exams\/([^/]+)$/)
   const examGuide = examMatch ? guidesContent.exams.find((exam) => exam.slug === examMatch[1]) : null
   const tourismDirectoryMatch = page.match(/^\/tourism\/(afghanistan|world)$/)
@@ -129,11 +135,16 @@ function WebsiteLayout({ children = null, content }) {
   const serviceSlug = page.startsWith('/services/') ? page.slice('/services/'.length) : ''
   const service = servicesContent.services.find((item) => item.slug === serviceSlug || item.aliases?.includes(serviceSlug))
   const serviceSearchItems = servicesContent.services.map((item) => ({ title: `${servicesContent.ui.services} ${item.title}`, description: item.description, image: item.image, href: localizeHref(`/services/${item.slug}`, language) }))
-  const opportunitySearchItems = ['study', 'migration', 'work', 'investment'].map((slug) => ({ title: opportunitiesContent[slug].post.category, description: opportunitiesContent[slug].post.description, image: opportunitiesContent[slug].post.image, href: localizeHref(`/opportunities/${slug}`, language) }))
+  const opportunitySearchItems = ['study', 'migration', 'work', 'investment'].flatMap((type) => {
+    const managedCards = opportunitiesContent[type]?.cards
+    if (managedCards) return managedCards.map((card) => ({ title: card.title || card.name, description: card.description, image: card.image, href: localizeHref(`/opportunities/${type}/${card.slug}`, language) }))
+    const post = opportunitiesContent[type]?.post
+    return post ? [{ title: post.title || post.category, description: post.description, image: post.image, href: localizeHref(`/opportunities/${type}`, language) }] : []
+  })
   const searchQuery = new URLSearchParams(window.location.search).get('q')?.trim() || ''
   const searchableItems = [...opportunitySearchItems, ...Object.entries(tourismContent).map(([slug, item]) => ({ title: item.post.title, description: item.post.description, image: item.post.image, href: localizeHref(`/tourism/${slug}`, language) })), ...serviceSearchItems, ...scholarshipsContent.items.map((item) => ({ title: item.title, description: item.summary, href: localizeHref(`/scholarships/${item.slug}`, language) })), ...guidesContent.countries.map((item) => ({ title: item.name, description: item.summary, href: localizeHref(`/opportunities/study/${item.slug}`, language) })), ...guidesContent.exams.map((item) => ({ title: item.name, description: item.summary, href: localizeHref(`/opportunities/exams/${item.slug}`, language) })), ...magazinePosts.map((item) => ({ title: item.title, description: item.description, href: localizeHref(`/magazine/post/${item.slug}`, language) }))]
   const searchResults = searchCatalog(searchableItems, searchQuery, language)
-  const opportunityPageTitle = contextualOpportunity?.post.category || opportunity?.post.category || null
+  const opportunityPageTitle = contextualOpportunity?.post?.category || opportunity?.post?.category || null
   const countryOpportunityTitle = contextualOpportunityCountry && opportunityPageTitle
     ? formatPageTitle(headerContent.pageTitles.opportunityInCountry, {
         opportunity: opportunityPageTitle,
@@ -191,7 +202,7 @@ function WebsiteLayout({ children = null, content }) {
     || examGuide?.summary
     || contextualOpportunityCountry?.summary
     || tourism?.post.description
-    || opportunity?.post.description
+    || opportunity?.post?.description
     || selectedPost?.description
     || (page === '/' ? homeContent.hero.description : null)
     || (page === '/about' ? aboutContent.introduction.description : null)
@@ -205,7 +216,7 @@ function WebsiteLayout({ children = null, content }) {
     || selectedScholarship?.image
     || examGuide?.image
     || tourism?.post.image
-    || opportunity?.post.image
+    || opportunity?.post?.image
     || selectedPost?.image
   const canonicalPage = service ? `/services/${service.slug}` : page
   const seoBreadcrumbs = useMemo(() => {
@@ -232,27 +243,9 @@ function WebsiteLayout({ children = null, content }) {
   }, [])
 
   useLayoutEffect(() => {
-    const shouldRestore = isReloadNavigation()
-    let frame = 0
-    if (shouldRestore) restoreScrollPosition('proportional')
-
-    const timeout = window.setTimeout(() => {
-      frame = window.requestAnimationFrame(() => {
-        if (shouldRestore) restoreScrollPosition('exact')
-        document.documentElement.style.removeProperty('scroll-behavior')
-      })
-    }, SKELETON_PREVIEW_DELAY_MS + 100)
-
-    return () => {
-      window.clearTimeout(timeout)
-      if (frame) window.cancelAnimationFrame(frame)
-    }
-  }, [])
-
-  useLayoutEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
     document.documentElement.classList.toggle('light', theme === 'light')
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#1f2937' : '#fffaf5')
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? siteSettings?.branding?.secondary || readBrandColors().secondary : siteSettings?.branding?.primary || readBrandColors().primary)
     window.localStorage.setItem('globalvision-theme', theme)
   }, [theme])
 
@@ -299,20 +292,20 @@ function WebsiteLayout({ children = null, content }) {
     return () => window.removeEventListener('storage', syncMaintenanceMode)
   }, [])
 
-  if (maintenanceMode) return <MaintenancePage language={language} theme={theme} companyName={companyName} contactEmail={contactContent.contact.details.find((detail) => detail.type === 'email')?.value || 'info@globalvision.af'} onLanguageChange={(nextLanguage) => window.location.assign(localizeHref(`${page}${window.location.search}${window.location.hash}`, nextLanguage))} onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))} />
+  if (maintenanceMode) return <MaintenancePage language={language} theme={theme} companyName={companyName} contactEmail={contactContent.contact.details.find((detail) => detail.type === 'email')?.value || ''} logo={activeLogo} onLanguageChange={(nextLanguage) => window.location.assign(localizeHref(`${page}${window.location.search}${window.location.hash}`, nextLanguage))} onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))} />
 
   const directoryItemCount = page === '/services'
     ? servicesContent.services.length
     : page === '/tourism/afghanistan' || page === '/tourism/world'
       ? tourism?.cards.length || 0
       : page === '/opportunities/study'
-        ? getVisibleCardCount(guidesContent.countries.length, STUDY_DIRECTORY_CARD_LIMIT)
+        ? opportunitiesContent.study.cards?.length ?? getVisibleCardCount(guidesContent.countries.length, STUDY_DIRECTORY_CARD_LIMIT)
         : ['/opportunities/work', '/opportunities/migration', '/opportunities/investment'].includes(page)
-          ? guidesContent.countries.length
+          ? opportunityCountries(page.slice('/opportunities/'.length)).length
           : 0
 
   return (
-    <Suspense fallback={<RouteProgress path={page} hasSearchQuery={Boolean(searchQuery)} searchResultCount={searchResults.length} directoryItemCount={directoryItemCount} scholarshipItemCount={scholarshipsContent.items.length} magazineItemCount={magazinePosts.length} />}><WebsiteLanguageContext.Provider value={language}>
+    <Suspense fallback={<RouteProgress path={page} hasSearchQuery={Boolean(searchQuery)} searchResultCount={searchResults.length} directoryItemCount={directoryItemCount} scholarshipItemCount={scholarshipsContent.items.length} magazineNewsCount={magazineContent.news.items.length} magazineArticleCount={magazineContent.articles.items.length} contactSocialCount={contactContent.contact.visibility?.social === false ? 0 : contactContent.contact.socials.length} />}><WebsiteLanguageContext.Provider value={language}>
       <div className="website-root flex min-h-screen flex-col bg-background text-foreground">
         <ScrollProgress />
         <Header
@@ -324,9 +317,10 @@ function WebsiteLayout({ children = null, content }) {
           onThemeToggle={() => setTheme((currentTheme) => (currentTheme === 'light' ? 'dark' : 'light'))}
         />
         <main key={language} className="flex-1 pt-8 md:pt-16 xl:pt-14">
-          {children ?? (page === '/' ? <HomePage content={homeContent} /> : page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} language={language} /> : selectedScholarship ? <ScholarshipPostPage scholarship={selectedScholarship} content={scholarshipsContent} postShell={opportunitiesContent.migration.postDetail} /> : page === '/scholarships' ? <ScholarshipsPage key={language} content={scholarshipsContent} language={language} /> : page === '/search' ? <SearchPage content={searchContent} query={searchQuery} results={searchResults} /> : page === '/services' ? <ServicesPage content={servicesContent} sidebarContent={opportunitiesContent.migration.postDetail} /> : tourismCard ? <TourismPage content={tourismDetail} card={tourismCard} /> : tourism?.id === 'afghanistan' ? <AfghanistanTourismPage content={tourism} sidebarContent={opportunitiesContent.migration.postDetail} /> : tourism?.id === 'world' ? <WorldTourismPage content={tourism} sidebarContent={opportunitiesContent.migration.postDetail} /> : service ? <ServicePostPage service={service} content={servicesContent} postShell={opportunitiesContent.migration.postDetail} /> : contextualOpportunityCountry && contextualOpportunity ? <OpportunityCountryPostPage country={contextualOpportunityCountry} opportunity={contextualOpportunity} type={contextualOpportunityMatch[1]} /> : examGuide ? <GuidePostPage guide={examGuide} content={guidesContent} type="exam" postShell={opportunitiesContent.exams.postDetail} /> : opportunitySlug === 'study' ? <StudyOpportunityPage content={opportunitiesContent.study.postDetail} countries={guidesContent.countries} title={language === 'en' ? 'Choose your preferred country' : language === 'ps' ? 'خپل مطلوب هېواد وټاکئ' : 'کشور مورد نظرتان را انتخاب کنید'} /> : opportunitySlug === 'work' ? <WorkOpportunityPage content={opportunitiesContent.work.postDetail} countries={guidesContent.countries} title={opportunitiesContent.work.post.category} /> : opportunitySlug === 'migration' ? <MigrationOpportunityPage content={opportunitiesContent.migration.postDetail} countries={guidesContent.countries} title={opportunitiesContent.migration.post.category} /> : opportunitySlug === 'investment' ? <InvestmentOpportunityPage content={opportunitiesContent.investment.postDetail} countries={guidesContent.countries} title={opportunitiesContent.investment.post.category} /> : isBlogPost && selectedPost ? <BlogPostPage post={selectedPost} content={magazineContent.postDetail} relatedPosts={magazinePosts.filter((relatedPost) => relatedPost.slug !== selectedPost.slug && relatedPost.category === selectedPost.category).slice(0, 5)} /> : page === '/magazine' ? <MagazinePage content={magazineContent} language={language} /> : <NotFoundPage content={searchContent} />)}
+          {children ?? (page === '/' ? <HomePage content={homeContent} /> : page === '/about' ? <AboutPage content={aboutContent} /> : page === '/contact' ? <ContactPage content={contactContent} language={language} /> : selectedScholarship ? <ScholarshipPostPage scholarship={selectedScholarship} content={scholarshipsContent} postShell={opportunitiesContent.migration.postDetail} /> : page === '/scholarships' ? <ScholarshipsPage key={language} content={scholarshipsContent} language={language} /> : page === '/search' ? <SearchPage content={searchContent} query={searchQuery} results={searchResults} /> : page === '/services' ? <ServicesPage content={servicesContent} sidebarContent={opportunitiesContent.migration.postDetail} /> : tourismCard ? <TourismPage content={tourismDetail} card={tourismCard} /> : tourism?.id === 'afghanistan' ? <AfghanistanTourismPage content={tourism} sidebarContent={opportunitiesContent.migration.postDetail} /> : tourism?.id === 'world' ? <WorldTourismPage content={tourism} sidebarContent={opportunitiesContent.migration.postDetail} /> : service ? <ServicePostPage service={service} content={servicesContent} postShell={opportunitiesContent.migration.postDetail} /> : contextualOpportunityCountry && contextualOpportunity?.post ? <OpportunityCountryPostPage country={contextualOpportunityCountry} opportunity={contextualOpportunity} type={contextualOpportunityMatch[1]} /> : examGuide ? <GuidePostPage guide={examGuide} content={guidesContent} type="exam" postShell={opportunitiesContent.exams.postDetail} /> : opportunitySlug === 'study' && opportunitiesContent.study.post ? <StudyOpportunityPage content={opportunitiesContent.study.postDetail} countries={opportunityCountries('study')} cmsManaged={Boolean(opportunitiesContent.study.cards)} title={language === 'en' ? 'Choose your preferred country' : language === 'ps' ? 'خپل مطلوب هېواد وټاکئ' : 'کشور مورد نظرتان را انتخاب کنید'} /> : opportunitySlug === 'work' && opportunitiesContent.work.post ? <WorkOpportunityPage content={opportunitiesContent.work.postDetail} countries={opportunityCountries('work')} title={opportunitiesContent.work.post.category} /> : opportunitySlug === 'migration' && opportunitiesContent.migration.post ? <MigrationOpportunityPage content={opportunitiesContent.migration.postDetail} countries={opportunityCountries('migration')} title={opportunitiesContent.migration.post.category} /> : opportunitySlug === 'investment' && opportunitiesContent.investment.post ? <InvestmentOpportunityPage content={opportunitiesContent.investment.postDetail} countries={opportunityCountries('investment')} title={opportunitiesContent.investment.post.category} /> : isBlogPost && selectedPost ? <BlogPostPage post={selectedPost} content={magazineContent.postDetail} relatedPosts={magazinePosts.filter((relatedPost) => relatedPost.slug !== selectedPost.slug && relatedPost.category === selectedPost.category).slice(0, 5)} /> : page === '/magazine' ? <MagazinePage content={magazineContent} language={language} /> : <NotFoundPage content={searchContent} />)}
         </main>
         <Footer content={footerContent} navigationContent={headerContent} language={language} theme={theme} logo={activeLogo} />
+        <ScrollRestorationFinalizer />
       </div>
     </WebsiteLanguageContext.Provider></Suspense>
   )

@@ -20,16 +20,9 @@ import { SCHOLARSHIPS_PER_PAGE } from "@website/utils/cardCounts.js";
 import { useLocalizedHref } from "@website/hooks/useWebsiteLanguage.js";
 import useModalFocus from "@/shared/hooks/useModalFocus.js";
 import { getCountries, getCountryCode, normalizeCountrySearch } from "@/shared/utils/countries.js";
+import { formatScholarshipDeadline } from "@website/utils/scholarshipDate.js";
 
 const initialFilters = { country: "", degree: "", funding: "", deadline: "" };
-const pashtoDeadlineDates = {
-  "د ټاکل شوي پروګرام له مخې": "25 لړم 1405",
-  "د رسمي غوښتنلیک دورې مطابق": "3 لیندۍ 1405",
-  "د کلني اعلان مطابق": "10 مرغومی 1405",
-  "د رسمي اعلان مطابق": "18 سلواغه 1405",
-  "د څېړنیز اعلان مطابق": "15 وری 1406",
-};
-
 function FilterModal({ open, onClose, title, children }) {
   const dialogRef = useModalFocus({ active: open, onClose });
   useEffect(() => {
@@ -95,7 +88,7 @@ function FilterSelect({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         onClick={() => onToggle(!isOpen)}
-        className={`flex min-h-9 w-full items-center justify-between gap-2 rounded-xl border bg-white/90 px-2.5 text-start text-[11px] shadow-[0_2px_8px_rgba(54,69,77,0.05)] transition-all hover:border-primary/60 hover:shadow-[0_4px_12px_rgba(244,126,38,0.1)] focus:outline-none focus:shadow-[0_0_0_3px_rgba(244,126,38,0.18)] dark:bg-gray-700/90 ${language === "en" ? "font-medium" : "font-bold"} ${isOpen ? "border-primary" : "border-[#eadfce] dark:border-gray-600"}`}
+        className={`flex min-h-9 w-full items-center justify-between gap-2 rounded-xl border bg-surface/90 px-2.5 text-start text-[11px] shadow-[0_2px_8px_rgba(54,69,77,0.05)] transition-all hover:border-primary/60 hover:shadow-lg hover:shadow-primary/10 focus:outline-none focus:shadow-[0_0_0_3px_color-mix(in_srgb,var(--theme-primary)_18%,transparent)] ${language === "en" ? "font-medium" : "font-bold"} ${isOpen ? "border-primary" : "border-border"}`}
       >
         <span className={value ? "text-foreground" : "text-foreground-muted"}>
           {selectedLabel}
@@ -149,11 +142,10 @@ function FilterSelect({
 
 function ScholarshipCard({ scholarship, language }) {
   const scholarshipHref = useLocalizedHref(`/scholarships/${scholarship.slug}`);
-  const deadline =
-    pashtoDeadlineDates[scholarship.deadline] || scholarship.deadline;
+  const deadline = formatScholarshipDeadline(scholarship.deadline, language, scholarship.slug);
 
   return (
-    <article dir={language === "en" ? "ltr" : "rtl"} className="group rounded-3xl border border-[#eadfce] bg-[#fffaf5] p-3 text-center shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-[0_12px_28px_rgba(54,69,77,0.1)] dark:border-gray-700 dark:bg-[#2b3442] md:p-4">
+    <article dir={language === "en" ? "ltr" : "rtl"} className="group rounded-3xl border border-border bg-background p-3 text-center shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-[0_12px_28px_rgba(54,69,77,0.1)] dark:border-gray-700 dark:bg-surface md:p-4">
       <a href={scholarshipHref} className="block">
         <div className="grid gap-4 rounded-2xl bg-surface-muted/55 p-4 text-center dark:bg-gray-800/55 md:min-h-32 md:grid-cols-[7rem_minmax(0,1fr)] md:items-stretch md:text-start">
           <div className="flex min-h-28 items-center justify-center overflow-hidden rounded-xl bg-white shadow-sm dark:bg-gray-700 md:min-h-0">
@@ -245,7 +237,7 @@ function ScholarshipsSection({ content, language = "dr" }) {
   return (
     <div className="relative overflow-x-clip bg-background text-foreground dark:bg-gray-800 dark:text-[#fff8f3]">
       <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_8%,rgba(244,126,38,0.2),transparent_30%),radial-gradient(circle_at_85%_38%,rgba(128,2,127,0.08),transparent_28%)] dark:bg-[radial-gradient(circle_at_15%_8%,rgba(244,126,38,0.22),transparent_30%),radial-gradient(circle_at_85%_38%,rgba(128,2,127,0.14),transparent_28%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_8%,color-mix(in_srgb,var(--theme-primary)_20%,transparent),transparent_30%),radial-gradient(circle_at_85%_38%,color-mix(in_srgb,var(--theme-primary)_8%,transparent),transparent_28%)] dark:bg-[radial-gradient(circle_at_15%_8%,color-mix(in_srgb,var(--theme-primary)_22%,transparent),transparent_30%),radial-gradient(circle_at_85%_38%,color-mix(in_srgb,var(--theme-primary)_14%,transparent),transparent_28%)]"
         aria-hidden="true"
       />
       {visibility.hero !== false && <Section
@@ -286,7 +278,7 @@ function ScholarshipsSection({ content, language = "dr" }) {
               ))}
             </div>
           ) : (
-            <div className="rounded-3xl border border-dashed border-border bg-surface px-6 py-16 text-center dark:border-gray-700 dark:bg-[#2b3442]">
+            <div className="rounded-3xl border border-dashed border-border bg-surface px-6 py-16 text-center">
               <Search
                 aria-hidden="true"
                 className="mx-auto text-accent-text"
@@ -308,7 +300,7 @@ function ScholarshipsSection({ content, language = "dr" }) {
               </button>
             </div>
           )}
-          <div className="mt-4 flex min-h-9 flex-col items-center justify-between gap-2 border-t border-[#eadfce] px-2 pt-1 dark:border-gray-700 md:flex-row md:gap-4">
+          <div className="mt-4 flex min-h-9 flex-col items-center justify-between gap-2 border-t border-border px-2 pt-1 md:flex-row md:gap-4">
             <PostPagination
               currentPage={currentPage}
               totalPages={totalPages}

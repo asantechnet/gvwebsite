@@ -12,7 +12,7 @@
   "provinceName": "Province name",
   "provinceSearch": "Search provinces...",
   "provinceEmpty": "No provinces found.",
-  "operationNotifications": { "recordAdded": "New record added.", "recordDeleted": "Record deleted." },
+  "operationNotifications": { "recordAdded": "New record added.", "recordDeleted": "Record deleted.", "recordRestored": "Deletion undone.", "undo": "Undo", "undoCountdown": "Undo available for {seconds}s.", "undoFailed": "The deletion could not be undone.", "deleteFailed": "The item could not be deleted." },
   "overview": "Overview",
   "expand": "Open the sidebar",
   "collapse": "Close the sidebar",

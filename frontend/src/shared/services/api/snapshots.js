@@ -24,5 +24,5 @@ export const snapshotsApi = Object.freeze({
     announceSnapshotUpdate(key)
     return snapshot
   },
-  publicList: (options) => apiClient.get('/site/snapshots', options),
+  publicList: (options = {}) => apiClient.get('/site/snapshots', { cache: 'no-store', ...options }),
 })

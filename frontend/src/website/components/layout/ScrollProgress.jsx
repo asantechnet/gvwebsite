@@ -41,7 +41,7 @@ function ScrollProgress() {
       className="pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5 overflow-hidden rounded-full bg-transparent"
     >
       <div
-        className="absolute inset-y-0 inset-s-0 rounded-full bg-primary transition-[width] duration-100 ease-out"
+        className="absolute inset-y-0 inset-s-0 rounded-full bg-linear-to-r from-primary to-secondary transition-[width] duration-100 ease-out"
         style={{ width: `${progress * 100}%` }}
       />
     </div>

@@ -1,7 +1,7 @@
 import BlogPostPage from '@pages/BlogPostPage.jsx'
 
 function ServicePostPage({ service, content, postShell }) {
-  const post = { slug: service.slug, category: content.ui.services, title: service.title, description: service.description, image: service.image, imageAlt: service.title }
+  const post = { ...service, category: content.ui.services, imageAlt: service.imageAlt || service.title }
   const postContent = {
     ...postShell,
     countries: undefined,

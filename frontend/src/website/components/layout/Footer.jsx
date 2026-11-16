@@ -53,7 +53,7 @@ function Footer({ content, navigationContent, language, theme, logo, className =
             <a
               href={localizeHref('/', language)}
               aria-label={navigationContent.homeLabel}
-              className={`rounded-xl border border-border bg-white p-2 shadow-sm dark:border-gray-600 dark:bg-[#1d2a3a] ${focusClasses}`}
+              className={`rounded-xl border border-border bg-white px-10 py-2 shadow-sm dark:border-gray-600 dark:bg-[#1d2a3a] ${focusClasses}`}
             >
               <img
                 src={logo || (theme === "dark" ? "/assets/branding/new%20logo%20white.webp" : "/assets/branding/new%20logo.webp")}

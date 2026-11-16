@@ -29,6 +29,7 @@
   "socialSettings": "شبکه‌های اجتماعی",
   "addSocial": "افزودن شبکه اجتماعی",
   "deleteSocial": "حذف شبکه اجتماعی",
+  "deleteSocialDescription": "آیا از حذف این شبکه اجتماعی مطمئن هستید؟",
   "socialModalDescription": "شبکه اجتماعی و لینک آن را وارد کنید.",
   "socialPlatform": "شبکه اجتماعی",
   "socialUrl": "لینک شبکه اجتماعی",

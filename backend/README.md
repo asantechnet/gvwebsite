@@ -10,7 +10,7 @@ composer install
 php artisan key:generate
 php artisan migrate --seed
 php artisan storage:link
-php artisan serve
+composer run dev
 ```
 
 Before seeding, configure the MariaDB connection, administrator credentials, and `GLOBALVISION_SUPER_USER_EMAIL` / `GLOBALVISION_SUPER_USER_PASSWORD` in `.env`. Passwords are never supplied by application defaults. The super user enters `/dashboard/super` and manages administrator credentials without content access. Set the frontend to API mode with `VITE_DATA_SOURCE=api` and ensure `FRONTEND_URL`, `SANCTUM_STATEFUL_DOMAINS`, session cookie settings, and `VITE_API_BASE_URL` describe the actual deployment domains.

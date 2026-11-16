@@ -24,16 +24,18 @@ class StoreUploadRequest extends FormRequest
      */
     public function rules(): array
     {
+        $largestLimitKilobytes = (int) ceil(max(config('globalvision.upload_limits')) / 1024);
+
         return [
             'kind' => ['nullable', 'string', 'in:image,video,audio,document'],
             'file' => [
                 'required',
                 File::types([
                     'jpg', 'jpeg', 'png', 'webp', 'gif',
-                    'mp4', 'webm', 'mov',
-                    'mp3', 'wav', 'ogg', 'm4a',
+                    'mp4', 'webm', 'ogv', 'mov',
+                    'mp3', 'wav', 'ogg', 'm4a', 'flac',
                     'pdf',
-                ])->max(500 * 1024),
+                ])->max($largestLimitKilobytes),
             ],
         ];
     }
@@ -60,12 +62,7 @@ class StoreUploadRequest extends FormRequest
                 $validator->errors()->add('kind', 'The selected upload kind does not match the file.');
             }
 
-            $limits = [
-                'image' => 2 * 1024 * 1024,
-                'video' => 500 * 1024 * 1024,
-                'audio' => 10 * 1024 * 1024,
-                'document' => 10 * 1024 * 1024,
-            ];
+            $limits = config('globalvision.upload_limits');
 
             if ($actualKind && $file->getSize() > $limits[$actualKind]) {
                 $validator->errors()->add('file', 'The file exceeds the maximum size for its media type.');

@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::delete('/cms/messages/{message}', [MessageController::class, 'destroy']);
     Route::post('/cms/map-link', MapLinkController::class);
 
+    Route::get('/cms/uploads', [UploadController::class, 'index']);
     Route::post('/cms/uploads', UploadController::class);
     Route::delete('/cms/uploads', [UploadController::class, 'destroy']);
     Route::get('/cms/snapshots/{key}', [SiteSnapshotController::class, 'show']);

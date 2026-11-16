@@ -62,6 +62,7 @@ function AuthPage({ auth, content, language, theme, themeLabel, companyName, bra
         const session = await auth.login({
           email: form.get("email"),
           password: form.get("password"),
+          remember: form.get("remember") === "on",
         });
         const destination = session.user.role === "super_user"
           ? "/dashboard/super"
@@ -193,7 +194,7 @@ function AuthPage({ auth, content, language, theme, themeLabel, companyName, bra
             </a>
             <div className="flex shrink-0 items-center gap-2">
               <LanguageSwitcher language={language} onChange={onLanguageChange} />
-              <button type="button" aria-label={themeLabel || "Change theme"} aria-pressed={theme === "dark"} onClick={onThemeToggle} className="grid size-10 shrink-0 place-items-center rounded-xl border border-(--header-control-border) bg-(--header-control) text-admin-muted outline-none transition hover:border-admin-brand hover:bg-(--header-control-hover) hover:text-admin-heading focus:outline-none focus-visible:border-admin-brand focus-visible:shadow-[0_0_0_3px_color-mix(in_srgb,var(--admin-brand)_28%,transparent)]">
+              <button type="button" aria-label={themeLabel || "Change theme"} aria-pressed={theme === "dark"} onClick={onThemeToggle} className="grid size-10 shrink-0 place-items-center rounded-xl border border-(--header-control-border) bg-(--header-control) text-admin-muted outline-none transition hover:border-admin-brand hover:bg-(--header-control-hover) hover:text-admin-heading focus:outline-none focus-visible:border-admin-brand focus-visible:shadow-none!">
                 {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
               </button>
             </div>
@@ -211,10 +212,18 @@ function AuthPage({ auth, content, language, theme, themeLabel, companyName, bra
                 content={content}
                 current
               />
-              <div className="flex justify-end">
+              <div className="flex items-center justify-between gap-4">
+                <label className="inline-flex min-h-10 cursor-pointer items-center gap-2 text-xs font-semibold text-admin-muted">
+                  <input
+                    className="size-4 shrink-0 cursor-pointer rounded border-admin-border accent-(--admin-brand) focus-visible:shadow-[0_0_0_3px_color-mix(in_srgb,var(--admin-brand)_28%,transparent)]"
+                    type="checkbox"
+                    name="remember"
+                  />
+                  <span>{content.remember}</span>
+                </label>
                 <button
                   type="button"
-                  className="!text-[12px] font-semibold leading-none text-admin-brand-text transition-colors hover:text-admin-heading hover:underline"
+                  className="min-h-10 shrink-0 !text-[12px] font-semibold leading-none text-admin-brand-text transition-colors hover:text-admin-heading hover:underline"
                   onClick={() => navigate("/dashboard/forgot-password")}
                 >
                   {content.forgotPassword}

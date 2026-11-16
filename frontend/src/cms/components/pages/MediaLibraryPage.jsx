@@ -5,11 +5,11 @@ import PageContainer from '@cms/components/PageContainer.jsx'
 import PageHeading from '@cms/components/PageHeading.jsx'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import { createLocalUpload, revokeLocalUpload } from '@/shared/uploads/files.js'
-import { removeUpload, uploadFile } from '@/shared/services/api/uploads.js'
-import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
+import { listUploads, removeUpload, uploadFile } from '@/shared/services/api/uploads.js'
 import { showRecordToast } from '@cms/utils/toast.js'
+import { deleteWithUndo } from '@cms/utils/undoDelete.js'
 import { closeCmsModal } from '@cms/utils/modalTransition.js'
-import { formatMediaBytes as formatBytes, getMediaType, seedMedia } from '@cms/data/mediaLibrary.js'
+import { formatMediaBytes as formatBytes, getMediaType, mergeManagedMedia, seedMedia } from '@cms/data/mediaLibrary.js'
 
 function MediaPreviewModal({ item, content, onClose }) {
   const dialogRef = useModalFocus({ onClose })
@@ -17,15 +17,23 @@ function MediaPreviewModal({ item, content, onClose }) {
   const size = item.size ? formatBytes(item.size) : '—'
 
   useEffect(() => {
-    const previousOverflow = document.body.style.overflow
+    const previousBodyOverflow = document.body.style.overflow
+    const previousDocumentOverflow = document.documentElement.style.overflow
     const closeOnEscape = (event) => { if (event.key === 'Escape') onClose() }
     document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    document.documentElement.classList.add('cms-modal-open')
     document.addEventListener('keydown', closeOnEscape)
-    return () => { document.body.style.overflow = previousOverflow; document.removeEventListener('keydown', closeOnEscape) }
+    return () => {
+      document.body.style.overflow = previousBodyOverflow
+      document.documentElement.style.overflow = previousDocumentOverflow
+      document.documentElement.classList.remove('cms-modal-open')
+      document.removeEventListener('keydown', closeOnEscape)
+    }
   }, [onClose])
 
   return <div className="cms-modal-backdrop fixed inset-0 z-[140] isolate grid place-items-center p-4" role="presentation">
-    <button type="button" className="absolute inset-0 border-0 bg-black/70 backdrop-blur-md" aria-label={content.close} onClick={onClose} />
+    <button type="button" className="absolute inset-0 border-0 bg-transparent" aria-label={content.close} onClick={onClose} />
     <section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="media-preview-title" className="relative z-10 flex max-h-[calc(100svh-2rem)] w-fit max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-admin-border bg-admin-card shadow-2xl">
       <header className="flex min-w-0 items-center justify-between gap-3 border-b border-admin-border px-3 py-1.5 sm:px-4"><div className="min-w-0"><div className="flex items-center gap-1.5"><h2 id="media-preview-title" className="truncate font-heading text-sm text-admin-heading">{item.name}</h2><span className="shrink-0 rounded-md bg-admin-brand-soft px-1.5 py-0.5 text-[.6rem] font-semibold text-admin-brand-text">{size}</span><span className="shrink-0 rounded-md bg-admin-brand-soft px-1.5 py-0.5 text-[.6rem] font-semibold text-admin-brand-text">{dimensions.id === item.id ? dimensions.value : '—'}</span></div></div><button type="button" onClick={onClose} aria-label={content.close} className="grid size-7 shrink-0 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text"><X size={14} /></button></header>
       <div className="grid min-h-0 max-h-[calc(100svh-7rem)] place-items-center overflow-hidden bg-[#0d1118] p-0">{item.type === 'video' ? <video src={item.url} controls autoPlay onLoadedMetadata={(event) => setDimensions({ id: item.id, value: `${event.currentTarget.videoWidth} × ${event.currentTarget.videoHeight}` })} className="block max-h-[calc(100svh-7rem)] max-w-[calc(100vw-2rem)] object-contain" /> : item.type === 'audio' ? <audio src={item.url} controls autoPlay className="w-[min(32rem,calc(100vw-3rem))]" /> : item.type === 'file' ? <div className="grid place-items-center gap-4 p-8 text-center text-white"><FileImage size={52} className="text-admin-brand-text" /><strong>{item.name}</strong><a href={item.url} target="_blank" rel="noreferrer" className="rounded-xl bg-admin-brand px-4 py-2 text-sm font-semibold text-white">{content.openFile}</a></div> : <img src={item.url} alt={item.name} onLoad={(event) => setDimensions({ id: item.id, value: `${event.currentTarget.naturalWidth} × ${event.currentTarget.naturalHeight}` })} className="block max-h-[calc(100svh-7rem)] max-w-[calc(100vw-2rem)] object-contain" />}</div>
@@ -35,7 +43,7 @@ function MediaPreviewModal({ item, content, onClose }) {
 
 function MediaLibraryPage({ content }) {
   const inputRef = useRef(null)
-  const [items, setItems] = useCmsDraftState('media', seedMedia)
+  const [items, setItems] = useState(seedMedia)
   const [query, setQuery] = useState('')
   const [filter, setFilter] = useState('all')
   const [selectedIds, setSelectedIds] = useState(() => new Set())
@@ -45,6 +53,15 @@ function MediaLibraryPage({ content }) {
   const allVisibleSelected = filtered.length > 0 && filtered.every((item) => selectedIds.has(item.id))
 
   useEffect(() => () => { items.filter((item) => item.local).forEach(revokeLocalUpload) }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    let active = true
+    listUploads().then((uploads) => {
+      if (!active) return
+      setItems((current) => mergeManagedMedia(uploads, current))
+    }).catch(() => { if (active) setUploadError(content.uploadError) })
+    return () => { active = false }
+  }, [content.uploadError, setItems])
 
   const upload = async (event) => {
     const files = [...(event.target.files || [])]
@@ -61,24 +78,38 @@ function MediaLibraryPage({ content }) {
       }))
       setItems((current) => [...uploaded, ...current])
       if (uploaded.length) showRecordToast('recordAdded')
-    } catch (error) { accepted.forEach(revokeLocalUpload); setUploadError(error.message) }
+    } catch { accepted.forEach(revokeLocalUpload); setUploadError(content.uploadError) }
   }
   const toggleSelection = (id) => setSelectedIds((current) => { const next = new Set(current); if (next.has(id)) next.delete(id); else next.add(id); return next })
   const toggleAll = () => setSelectedIds((current) => { const next = new Set(current); filtered.forEach(({ id }) => { if (allVisibleSelected) next.delete(id); else next.add(id) }); return next })
   const remove = async (ids) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: ids.length === 1 ? content.deleteTitle : content.bulkDeleteTitle.replace('{count}', ids.length), description: content.deleteDescription })
     if (!confirmed) return
-    const removable = items.filter((item) => ids.includes(item.id) && !String(item.id).startsWith('seed-'))
-    try { await Promise.all(removable.map((item) => removeUpload(item.id))) } catch (error) { setUploadError(error.message); return }
-    setItems((current) => { current.filter((item) => ids.includes(item.id) && item.local).forEach(revokeLocalUpload); return current.filter((item) => !ids.includes(item.id)) })
-    setSelectedIds((current) => { const next = new Set(current); ids.forEach((id) => next.delete(id)); return next })
-    if (preview && ids.includes(preview.id)) setPreview(null)
-    if (ids.length) showRecordToast('recordDeleted')
+    const deleted = items.map((item, index) => ({ item, index })).filter(({ item }) => ids.includes(item.id))
+    const removable = deleted.map(({ item }) => item).filter((item) => !String(item.id).startsWith('seed-'))
+    if (ids.length) await deleteWithUndo({
+      remove: () => setItems((current) => current.filter((item) => !ids.includes(item.id))),
+      restore: () => setItems((current) => { const restored = [...current]; deleted.forEach(({ item, index }) => restored.splice(Math.min(index, restored.length), 0, item)); return restored }),
+      afterRemove: () => {
+        setSelectedIds((current) => { const next = new Set(current); ids.forEach((id) => next.delete(id)); return next })
+        if (preview && ids.includes(preview.id)) setPreview(null)
+      },
+      commit: async () => {
+        try {
+          await Promise.all(removable.filter((item) => !item.local).map((item) => removeUpload(item.id)))
+          removable.filter((item) => item.local).forEach(revokeLocalUpload)
+        } catch (error) {
+          setItems((current) => { const restored = [...current]; deleted.forEach(({ item, index }) => { if (!restored.some((entry) => entry.id === item.id)) restored.splice(Math.min(index, restored.length), 0, item) }); return restored })
+          setUploadError(content.uploadError)
+          throw error
+        }
+      },
+    })
   }
 
   return <PageContainer className="max-w-[78rem]">
-    <PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.dashboard }, { label: content.title }]} action={<button type="button" onClick={() => inputRef.current?.click()} className="mb-2 inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-xl border border-admin-border bg-(--primary-action-bg) px-3 py-2 text-[.6875rem] font-semibold text-(--primary-action-text) shadow-[0_8px_20px_rgba(15,23,42,.07)] transition hover:-translate-y-0.5 hover:border-admin-brand hover:text-admin-brand-text hover:shadow-[0_12px_26px_rgba(15,23,42,.11)] sm:w-auto"><ImagePlus size={15} />{content.upload}</button>} />
-    <input ref={inputRef} type="file" multiple accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.mp4,.webm,.ogg,.mov,.mp3,.wav,.m4a,.flac" className="hidden" onChange={upload} />
+    <PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.dashboard }, { label: content.title }]} action={<button type="button" onClick={() => inputRef.current?.click()} className="mb-2 inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-xl border border-admin-brand bg-admin-brand px-3 py-2 text-[.6875rem] font-semibold text-white shadow-[0_8px_20px_color-mix(in_srgb,var(--admin-brand)_18%,transparent)] transition hover:-translate-y-0.5 hover:bg-admin-brand-hover hover:shadow-[0_12px_26px_color-mix(in_srgb,var(--admin-brand)_24%,transparent)] sm:w-auto"><ImagePlus size={15} />{content.upload}</button>} />
+    <input ref={inputRef} type="file" multiple accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.mp4,.webm,.ogv,.mov,.mp3,.wav,.m4a,.ogg,.flac" className="hidden" onChange={upload} />
     {uploadError && <p role="alert" className="-mt-4 rounded-xl border border-red-500/25 bg-red-500/10 px-3 py-2 text-xs text-red-600 dark:text-red-300">{uploadError}</p>}
     <section className="grid gap-2 rounded-2xl border border-admin-border bg-admin-card p-2 shadow-[0_12px_34px_rgb(15_23_42_/.055)] md:grid-cols-[minmax(15rem,.7fr)_minmax(18rem,1fr)]">
       <label className="order-2 flex h-9 min-w-0 items-center gap-2 rounded-xl border border-(--editor-field-border) bg-(--editor-input) px-3 text-admin-muted transition focus-within:border-admin-brand md:order-1"><Search size={15} /><input value={query} onChange={(event) => setQuery(event.target.value)} className="search-field min-w-0 flex-1 bg-transparent text-xs text-admin-heading outline-none" placeholder={content.search} /></label>

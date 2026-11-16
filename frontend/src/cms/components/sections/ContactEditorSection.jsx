@@ -12,6 +12,7 @@ import useEditorTabs from '@cms/hooks/useEditorTabs.js'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import { showRecordToast } from '@cms/utils/toast.js'
+import { deleteCollectionItemWithUndo } from '@cms/utils/undoDelete.js'
 import { useCmsContentLanguage, useCmsInterfaceLanguage } from '@cms/hooks/useCmsLanguage.js'
 
 const tabIcons = { hero: FileText, details: ContactRound, form: MessageSquareText, connections: MapPinned, social: Globe2 }
@@ -58,9 +59,17 @@ function ContactEditorSection({ content, initialTranslations }) {
   const updateMapUrl = (value) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, translation]) => [language, { ...translation, contact: { ...translation.contact, mapUrl: value } }])))
   const updateForm = (key, value) => setDraft((current) => ({ ...current, contact: { ...current.contact, form: { ...current.contact.form, [key]: value } } }))
   const updateDetail = (type, key, value) => setDraft((current) => { const exists = current.contact.details.some((detail) => detail.type === type); return { ...current, contact: { ...current.contact, details: exists ? current.contact.details.map((detail) => detail.type === type ? { ...detail, [key]: value } : detail) : [...current.contact.details, { ...fallbackWhatsApp, [key]: value }] } } })
-  const updateSocial = (index, key, value) => setDraft((current) => ({ ...current, contact: { ...current.contact, socials: current.contact.socials.map((social, socialIndex) => socialIndex === index ? { ...social, [key]: value } : social) } }))
-  const addSocial = (social) => { setDraft((current) => ({ ...current, contact: { ...current.contact, socials: [...current.contact.socials, social] } })); showRecordToast('recordAdded') }
-  const deleteSocial = (index) => { setDraft((current) => ({ ...current, contact: { ...current.contact, socials: current.contact.socials.filter((_, socialIndex) => socialIndex !== index) } })); showRecordToast('recordDeleted') }
+  const updateSharedSocials = (update) => setDrafts((current) => {
+    const socials = update(current[contentLanguage].contact.socials)
+    return Object.fromEntries(Object.entries(current).map(([language, translation]) => [language, { ...translation, contact: { ...translation.contact, socials: socials.map((social) => ({ ...social })) } }]))
+  })
+  const updateSocial = (index, key, value) => updateSharedSocials((socials) => socials.map((social, socialIndex) => socialIndex === index ? { ...social, [key]: value } : social))
+  const addSocial = (social) => { updateSharedSocials((socials) => [...socials, social]); showRecordToast('recordAdded') }
+  const deleteSocial = async (index) => {
+    const confirmed = await window.cmsConfirmDelete?.({ title: content.deleteSocial, description: content.deleteSocialDescription })
+    if (!confirmed) return
+    await deleteCollectionItemWithUndo({ items: draft.contact.socials, index, updateItems: updateSharedSocials })
+  }
   const CurrentIcon = tabIcons[selectedTab]
 
 

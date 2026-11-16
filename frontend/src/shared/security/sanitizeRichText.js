@@ -6,10 +6,10 @@ const allowedTags = [
 ]
 
 const allowedAttributes = [
-  'alt', 'controls', 'dir', 'href', 'loading', 'preload', 'poster', 'rel', 'src', 'target', 'title', 'type',
+  'alt', 'controls', 'dir', 'href', 'loading', 'preload', 'poster', 'rel', 'src', 'target', 'title', 'type', 'style',
   'data-highlight-box', 'data-icon', 'data-columns', 'data-editor-media', 'data-src', 'data-media-type',
   'data-name', 'data-title', 'data-caption', 'data-alt', 'data-author', 'data-avatar', 'data-poster',
-  'data-mime-type', 'data-media-grid', 'data-layout', 'data-items', 'data-editor-button', 'data-label', 'data-href',
+  'data-mime-type', 'data-youtube-id', 'data-media-grid', 'data-layout', 'data-items', 'data-editor-button', 'data-label', 'data-href',
 ]
 
 const urlAttributes = new Set(['href', 'src', 'poster', 'data-src', 'data-avatar', 'data-poster', 'data-href'])
@@ -40,6 +40,7 @@ function sanitizeMediaItems(value) {
       for (const key of ['src', 'avatar', 'poster']) {
         if (!isSafeContentUrl(clean[key], { image: key !== 'src' || clean.mediaType === 'image' })) clean[key] = ''
       }
+      if (clean.youtubeId && !/^[A-Za-z0-9_-]{11}$/.test(clean.youtubeId)) clean.youtubeId = ''
       return clean
     }))
   } catch {
@@ -53,7 +54,13 @@ export function sanitizeRichText(html) {
   const attributeHook = (_node, data) => {
     if (urlAttributes.has(data.attrName) && !isSafeContentUrl(data.attrValue, { image: ['src', 'poster', 'data-avatar', 'data-poster'].includes(data.attrName) })) data.keepAttr = false
     if (data.attrName === 'data-items') data.attrValue = sanitizeMediaItems(data.attrValue)
+    if (data.attrName === 'data-youtube-id' && !/^[A-Za-z0-9_-]{11}$/.test(data.attrValue)) data.keepAttr = false
     if (data.attrName === 'target' && data.attrValue !== '_blank') data.keepAttr = false
+    if (data.attrName === 'style') {
+      const alignment = data.attrValue.match(/^\s*text-align\s*:\s*(left|center|right)\s*;?\s*$/i)
+      if (alignment) data.attrValue = `text-align: ${alignment[1].toLowerCase()}`
+      else data.keepAttr = false
+    }
   }
   const elementHook = (node) => {
     if (node.tagName === 'A' && node.getAttribute('target') === '_blank') node.setAttribute('rel', 'noopener noreferrer')

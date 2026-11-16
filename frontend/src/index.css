@@ -19,8 +19,8 @@ html.cms-scroll-locked body { overflow: hidden !important; overscroll-behavior: 
   --font-pashto: "Vazirmatn", Tahoma, Arial, sans-serif;
   --font-english: "Poppins", Arial, Helvetica, sans-serif;
   --font-heading: "Vazirmatn", Tahoma, Arial, sans-serif;
-  --color-brand-orange: var(--brand-orange);
-  --color-brand-red: var(--brand-red);
+  --color-brand-orange: var(--active-brand);
+  --color-brand-red: var(--active-brand);
   --color-brand-white: var(--brand-white);
   --color-background: var(--theme-background);
   --color-surface: var(--theme-surface);
@@ -38,8 +38,10 @@ html.cms-scroll-locked body { overflow: hidden !important; overscroll-behavior: 
   --color-focus: var(--theme-focus);
   --color-accent-text: var(--theme-accent-text);
   --color-admin-brand: var(--admin-brand);
+  --color-admin-brand-hover: var(--admin-brand-hover);
   --color-admin-brand-text: var(--admin-brand-text);
   --color-admin-brand-soft: var(--admin-brand-soft);
+  --color-admin-secondary: var(--admin-secondary);
   --color-admin-heading: var(--admin-heading);
   --color-admin-muted: var(--admin-muted);
   --color-admin-border: var(--admin-border);
@@ -57,40 +59,42 @@ html.cms-scroll-locked body { overflow: hidden !important; overscroll-behavior: 
   --brand-red: #80027f;
   --brand-red-hsl: 301 97% 26%;
   --brand-white: #ffffff;
-  --theme-background: #fffaf5;
+  --active-brand: var(--brand-orange);
+  --theme-background: color-mix(in srgb, var(--active-brand) 3%, white);
   --theme-surface: #ffffff;
-  --theme-surface-muted: #fff1e2;
+  --theme-surface-muted: color-mix(in srgb, var(--active-brand) 9%, white);
   --theme-foreground: #333333;
-  --theme-foreground-muted: #715d55;
-  --theme-border: #ead5c9;
-  --theme-primary: var(--brand-orange);
-  --theme-primary-hover: #d96512;
+  --theme-foreground-muted: color-mix(in srgb, var(--active-brand) 14%, #5f6368);
+  --theme-border: color-mix(in srgb, var(--active-brand) 20%, white);
+  --theme-primary: var(--active-brand);
+  --theme-primary-hover: color-mix(in srgb, var(--active-brand) 82%, white);
   --theme-on-primary: #2b1700;
-  --theme-secondary: var(--brand-red);
-  --theme-secondary-hover: #650264;
+  --theme-secondary: var(--active-brand);
+  --theme-secondary-hover: color-mix(in srgb, var(--active-brand) 82%, white);
   --theme-on-secondary: var(--brand-white);
-  --theme-link: #a91319;
-  --theme-focus: #b6530d;
-  --theme-accent-text: #b6530d;
+  --theme-link: color-mix(in srgb, var(--active-brand) 76%, black);
+  --theme-focus: color-mix(in srgb, var(--active-brand) 72%, black);
+  --theme-accent-text: color-mix(in srgb, var(--active-brand) 72%, black);
 }
 
 .dark {
   color-scheme: dark;
-  --theme-background: #1f2937;
-  --theme-surface: #221515;
-  --theme-surface-muted: #432b23;
+  --active-brand: var(--brand-red);
+  --theme-background: color-mix(in srgb, var(--active-brand) 8%, #111827);
+  --theme-surface: color-mix(in srgb, var(--active-brand) 11%, #18212e);
+  --theme-surface-muted: color-mix(in srgb, var(--active-brand) 19%, #1f2937);
   --theme-foreground: #fff8f3;
-  --theme-foreground-muted: #d7bdb2;
-  --theme-border: #55312b;
-  --theme-primary: #f47e26;
-  --theme-primary-hover: #ff9a4d;
+  --theme-foreground-muted: color-mix(in srgb, var(--active-brand) 14%, #d7dee8);
+  --theme-border: color-mix(in srgb, var(--active-brand) 30%, #334155);
+  --theme-primary: var(--active-brand);
+  --theme-primary-hover: color-mix(in srgb, var(--active-brand) 82%, black);
   --theme-on-primary: #2b1700;
-  --theme-secondary: #a52aa3;
-  --theme-secondary-hover: #c348c0;
+  --theme-secondary: var(--active-brand);
+  --theme-secondary-hover: color-mix(in srgb, var(--active-brand) 82%, black);
   --theme-on-secondary: #ffffff;
-  --theme-link: #ff9a4d;
-  --theme-focus: #ff963f;
-  --theme-accent-text: #ff963f;
+  --theme-link: color-mix(in srgb, var(--active-brand) 78%, white);
+  --theme-focus: color-mix(in srgb, var(--active-brand) 82%, white);
+  --theme-accent-text: color-mix(in srgb, var(--active-brand) 82%, white);
 }
 
 :lang(fa),
@@ -112,15 +116,23 @@ html {
   font-family: var(--font-dari);
   scroll-behavior: smooth;
 }
+@media (hover: hover) {
+  :where(button, a, [role="button"]).bg-primary:not(:disabled):hover,
+  :where(button, a, [role="button"]).bg-secondary:not(:disabled):hover {
+    background-color: var(--theme-primary-hover) !important;
+  }
+}
 html:dir(rtl) { direction: rtl; }
 html:dir(ltr) { direction: ltr; }
 html:dir(ltr) .font-heading { font-family: var(--font-english); }
-html:dir(ltr) .lucide-arrow-left,
-html:dir(ltr) .lucide-arrow-right,
-html:dir(ltr) .lucide-chevron-left,
-html:dir(ltr) .lucide-chevron-right { transform: rotate(180deg); }
-html:dir(ltr) .cms-root .lucide-arrow-up-left { transform: scaleX(-1); }
-html:dir(rtl) .cms-root .lucide-external-link { transform: scaleX(-1); }
+.lucide-arrow-left:dir(ltr),
+.lucide-arrow-right:dir(ltr),
+.lucide-chevron-left:dir(ltr),
+.lucide-chevron-right:dir(ltr),
+.lucide-chevrons-left:dir(ltr),
+.lucide-chevrons-right:dir(ltr) { rotate: 180deg; }
+.cms-root .lucide-arrow-up-left:dir(ltr) { scale: -1 1; }
+.cms-root .lucide-external-link:dir(rtl) { scale: -1 1; }
 html:dir(ltr) .cms-root .text-right { text-align: left; }
 @media (min-width: 1024px) { html:dir(ltr) .cms-root .lg\:text-right { text-align: left; } }
 
@@ -138,9 +150,9 @@ html:dir(ltr) .cms-root .text-right { text-align: left; }
   --language-switcher-control: #27354a;
   --language-switcher-card: #1d2a3a;
   --language-switcher-heading: #f7f9fd;
-  --language-switcher-brand: #f7a33a;
-  --language-switcher-brand-text: #f7a33a;
-  --language-switcher-brand-soft: #33445e;
+  --language-switcher-brand: var(--theme-primary);
+  --language-switcher-brand-text: var(--theme-accent-text);
+  --language-switcher-brand-soft: color-mix(in srgb, var(--active-brand) 18%, #27354a);
 }
 .cms-root .language-switcher {
   --language-switcher-border: var(--header-control-border);
@@ -161,7 +173,12 @@ body {
   min-width: 0; min-height: 100vh; margin: 0;
   background: var(--theme-background); color: var(--theme-foreground);
 }
-.website-root :where(a, button, [role="button"], input, textarea, select):focus-visible {
+.website-root :where(a, button, [role="button"]):focus-visible {
+  outline: none;
+  border-color: var(--theme-focus);
+  box-shadow: none;
+}
+.website-root :where(input, textarea, select):focus-visible {
   outline: none;
   border-color: var(--theme-focus);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--theme-focus) 28%, transparent);

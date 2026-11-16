@@ -11,6 +11,7 @@ import useEditorTabs from '@cms/hooks/useEditorTabs.js'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import { showRecordToast } from '@cms/utils/toast.js'
+import { deleteLocalizedSnapshotItemWithUndo } from '@cms/utils/undoDelete.js'
 import { closeCmsModal } from '@cms/utils/modalTransition.js'
 import { useCmsContentLanguage } from '@cms/hooks/useCmsLanguage.js'
 
@@ -20,7 +21,7 @@ const collectionKeys = { introduction: 'values', story: 'milestones', faq: 'item
 function AboutEditorSection({ content, initialTranslations }) {
   const [selectedSection, setSelectedSection] = useEditorTabs({ defaultTab: 'hero', storageKey: 'globalvision-cms-about-tab', tabs: Object.keys(sectionIcons) })
   const [contentLanguage, setContentLanguage] = useCmsContentLanguage()
-  const [drafts, setDrafts] = useCmsDraftState('about', () => structuredClone(initialTranslations))
+  const [drafts, setDrafts, { saveImmediate }] = useCmsDraftState('about', () => structuredClone(initialTranslations))
   const draft = drafts[contentLanguage]
   const setDraft = (update) => setDrafts((current) => ({ ...current, [contentLanguage]: typeof update === 'function' ? update(current[contentLanguage]) : update }))
   const [editingItem, setEditingItem] = useState(null)
@@ -31,7 +32,7 @@ function AboutEditorSection({ content, initialTranslations }) {
   const updateSection = (field, value) => setDraft((current) => ({ ...current, [selectedSection]: { ...current[selectedSection], [field]: value } }))
   const toggleVisibility = () => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => [language, { ...languageDraft, [selectedSection]: { ...languageDraft[selectedSection], visible: draft[selectedSection].visible === false } }])))
   const updateNested = (group, field, value) => setDraft((current) => ({ ...current, [selectedSection]: { ...current[selectedSection], [group]: { ...current[selectedSection][group], [field]: value } } }))
-  const saveCollectionTranslations = (localizedItems) => setDrafts((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => {
+  const saveCollectionTranslations = (localizedItems) => saveImmediate((current) => Object.fromEntries(Object.entries(current).map(([language, languageDraft]) => {
     const items = languageDraft[selectedSection][collectionKey]
     const item = localizedItems[language]
     return [language, { ...languageDraft, [selectedSection]: { ...languageDraft[selectedSection], [collectionKey]: editingItem === null ? [...items, item] : items.map((entry, index) => index === editingItem ? item : entry) } }]
@@ -39,8 +40,9 @@ function AboutEditorSection({ content, initialTranslations }) {
   const deleteCollectionItem = async (index) => {
     const confirmed = await window.cmsConfirmDelete?.({ title: content.deleteItemTitle, description: content.deleteItemDescription })
     if (confirmed) {
-      setDraft((current) => ({ ...current, [selectedSection]: { ...current[selectedSection], [collectionKey]: current[selectedSection][collectionKey].filter((_, itemIndex) => itemIndex !== index) } }))
-      showRecordToast('recordDeleted')
+      const section = selectedSection
+      const key = collectionKey
+      await deleteLocalizedSnapshotItemWithUndo({ drafts, index, saveImmediate, getItems: (languageDraft) => languageDraft[section][key], setItems: (languageDraft, items) => ({ ...languageDraft, [section]: { ...languageDraft[section], [key]: items } }) })
     }
   }
 
@@ -68,7 +70,7 @@ function AboutEditorSection({ content, initialTranslations }) {
       </div>
     </section>
 
-    {addingItem && <AboutItemModal content={content} type={selectedSection} initialLanguage={contentLanguage} initialTranslations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, editingItem === null ? null : languageDraft[selectedSection][collectionKey]?.[editingItem] || null]))} onClose={() => closeCmsModal(() => setAddingItem(false))} onSave={(localizedItems) => closeCmsModal(() => { saveCollectionTranslations(localizedItems); setAddingItem(false); if (editingItem === null) showRecordToast('recordAdded') })} />}
+    {addingItem && <AboutItemModal content={content} type={selectedSection} initialLanguage={contentLanguage} initialTranslations={Object.fromEntries(Object.entries(drafts).map(([language, languageDraft]) => [language, editingItem === null ? null : languageDraft[selectedSection][collectionKey]?.[editingItem] || null]))} onClose={() => closeCmsModal(() => setAddingItem(false))} onSave={async (localizedItems) => { await saveCollectionTranslations(localizedItems); closeCmsModal(() => { setAddingItem(false); if (editingItem === null) showRecordToast('recordAdded') }) }} />}
   </PageContainer>
 }
 

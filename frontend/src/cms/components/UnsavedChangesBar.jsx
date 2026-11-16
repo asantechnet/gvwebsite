@@ -6,6 +6,7 @@ import useModalFocus from '@/shared/hooks/useModalFocus.js'
 import { showToast } from '@cms/utils/toast.js'
 import { navigateCms } from '@cms/navigation.js'
 import {
+  CMS_CHANGES_COMMITTED_EVENT,
   CMS_CHANGES_DISCARDED_EVENT,
   CMS_DRAFT_DIRTY_EVENT,
   hasRecoverableCmsDraft,
@@ -17,6 +18,8 @@ const copy = {
   ps: { actions: 'د پاڼې کړنې', saving: 'خوندي کېږي…', saveChanges: 'بدلونونه خوندي کړئ', saved: 'بدلونونه په بریالیتوب خوندي شول.', saveError: 'بدلونونه خوندي نه شول.', leave: 'له خوندي کولو پرته ووځئ؟', leaveDescription: 'ستاسو بدلونونه لا نه دي خوندي شوي.', cancel: 'لغوه', discard: 'پرېښودل', save: 'خوندي کول' },
   en: { actions: 'Page actions', saving: 'Saving…', saveChanges: 'Save changes', saved: 'Changes saved successfully.', saveError: 'Changes could not be saved.', leave: 'Leave without saving?', leaveDescription: 'Your changes have not been saved yet.', cancel: 'Cancel', discard: 'Discard', save: 'Save' },
 }
+
+const routeSavesImmediately = () => ['media', 'messages'].includes(getCmsRouteKey(window.location.pathname))
 
 function UnsavedChangesBar({ language = 'prs', sidebarCollapsed = false }) {
   const labels = copy[language] || copy.prs
@@ -30,9 +33,11 @@ function UnsavedChangesBar({ language = 'prs', sidebarCollapsed = false }) {
 
   useEffect(() => {
     const mark = (event) => {
+      if (routeSavesImmediately()) return
       if (
         event.target.closest?.('#dashboard-content')
         && !event.target.closest?.('[data-cms-draft-ignore]')
+        && !event.target.closest?.('[role="dialog"]')
         && event.target.type !== 'search'
       ) {
         setDirty(true)
@@ -54,6 +59,15 @@ function UnsavedChangesBar({ language = 'prs', sidebarCollapsed = false }) {
     }
     window.addEventListener(CMS_DRAFT_DIRTY_EVENT, markDirty)
     return () => window.removeEventListener(CMS_DRAFT_DIRTY_EVENT, markDirty)
+  }, [])
+
+  useEffect(() => {
+    const markCommitted = () => {
+      setDirty(false)
+      setSaving(false)
+    }
+    window.addEventListener(CMS_CHANGES_COMMITTED_EVENT, markCommitted)
+    return () => window.removeEventListener(CMS_CHANGES_COMMITTED_EVENT, markCommitted)
   }, [])
 
   useEffect(() => {
@@ -157,7 +171,7 @@ function UnsavedChangesBar({ language = 'prs', sidebarCollapsed = false }) {
   const promptRef = useModalFocus({ active: leavePrompt, onClose: closePrompt })
   const saveControlVisible = dirty || saving
 
-  if (window.location.pathname.startsWith('/dashboard/messages')) return null
+  if (routeSavesImmediately()) return null
 
   const desktopInset = sidebarCollapsed
     ? 'rtl:lg:right-[calc(5.25rem+1rem)] ltr:lg:left-[calc(5.25rem+1rem)]'
@@ -175,7 +189,7 @@ function UnsavedChangesBar({ language = 'prs', sidebarCollapsed = false }) {
         disabled={!dirty || saving}
         aria-hidden={!saveControlVisible}
         inert={!saveControlVisible}
-        className={`pointer-events-auto inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-admin-brand bg-admin-brand px-4 py-2 text-xs font-semibold text-white shadow-[0_14px_35px_rgb(15_23_42_/.22)] transition-[background-color,filter] duration-200 hover:bg-orange-500 disabled:cursor-wait ${saveControlVisible ? '' : 'pointer-events-none'} ${saveControlAnimation}`}
+        className={`pointer-events-auto inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-admin-brand bg-admin-brand px-4 py-2 text-xs font-semibold text-white shadow-[0_14px_35px_rgb(15_23_42_/.22)] transition-[background-color,filter] duration-200 hover:bg-admin-brand-hover disabled:cursor-wait ${saveControlVisible ? '' : 'pointer-events-none'} ${saveControlAnimation}`}
         onClick={save}
       >
         <Save size={15} />
@@ -191,7 +205,7 @@ function UnsavedChangesBar({ language = 'prs', sidebarCollapsed = false }) {
         <div className="mt-5 grid w-full gap-2 sm:grid-cols-3">
           <button type="button" className="inline-flex min-h-9 items-center justify-center gap-1 rounded-lg border border-admin-border bg-admin-control px-3 text-xs font-semibold text-admin-muted transition hover:border-admin-brand hover:bg-admin-control-soft hover:text-admin-heading" onClick={closePrompt}><CircleX size={14} />{labels.cancel}</button>
           <button type="button" className="inline-flex min-h-9 items-center justify-center gap-1 rounded-lg border border-red-500/60 bg-red-600/20 px-3 text-xs font-semibold text-red-500 transition hover:border-red-500 hover:bg-red-600 hover:text-white" onClick={() => continueNavigation(false)}><RotateCcw size={14} />{labels.discard}</button>
-          <button type="button" className="inline-flex min-h-9 items-center justify-center gap-1 rounded-lg bg-admin-brand px-3 text-xs font-semibold text-white transition hover:bg-orange-500" onClick={() => continueNavigation(true)}><Save size={14} />{labels.save}</button>
+          <button type="button" className="inline-flex min-h-9 items-center justify-center gap-1 rounded-lg bg-admin-brand px-3 text-xs font-semibold text-white transition hover:bg-admin-brand-hover" onClick={() => continueNavigation(true)}><Save size={14} />{labels.save}</button>
         </div>
       </section>
     </div>}

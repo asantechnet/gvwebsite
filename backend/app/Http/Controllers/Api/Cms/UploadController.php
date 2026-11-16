@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Cms\DeleteUploadRequest;
 use App\Http\Requests\Cms\StoreUploadRequest;
 use App\Models\AuditLog;
+use App\Models\MediaUpload;
 use App\Support\UploadScanner;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
@@ -15,6 +16,20 @@ use RuntimeException;
 
 class UploadController extends Controller
 {
+    public function index(): JsonResponse
+    {
+        $uploads = MediaUpload::query()->latest()->get()->map(fn (MediaUpload $upload): array => [
+            'path' => $upload->path,
+            'url' => Storage::disk('public')->url($upload->path),
+            'kind' => $upload->kind,
+            'name' => $upload->original_name,
+            'size' => $upload->size,
+            'mimeType' => $upload->mime_type,
+        ]);
+
+        return response()->json(['data' => $uploads]);
+    }
+
     /**
      * Handle the incoming request.
      */
@@ -33,6 +48,15 @@ class UploadController extends Controller
             Str::uuid().'.'.$file->extension(),
             'public',
         );
+
+        MediaUpload::create([
+            'uploaded_by' => $request->user()->id,
+            'path' => $path,
+            'original_name' => $file->getClientOriginalName(),
+            'kind' => $kind,
+            'mime_type' => $file->getMimeType(),
+            'size' => $file->getSize(),
+        ]);
 
         AuditLog::create([
             'actor_id' => $request->user()->id,
@@ -65,6 +89,7 @@ class UploadController extends Controller
     {
         $path = $request->validated('path');
         Storage::disk('public')->delete($path);
+        MediaUpload::query()->where('path', $path)->delete();
 
         AuditLog::create([
             'actor_id' => $request->user()->id,
