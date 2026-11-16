@@ -7,7 +7,7 @@ const focusClasses =
 function ServiceCard({ icon: Icon, number, title, description, action, href }) {
   const localizedHref = useLocalizedHref(href);
   return (
-    <article className="group relative flex min-h-56 flex-col overflow-hidden rounded-3xl border border-border bg-surface p-5 shadow-sm transition-all duration-300 hover:border-primary/50 hover:shadow-md dark:border-gray-600 dark:bg-gray-700 dark:hover:border-primary/60 sm:p-6">
+    <article className="group relative flex min-h-56 flex-col overflow-hidden rounded-3xl border border-border bg-surface p-5 shadow-sm transition-all duration-300 hover:border-primary/50 hover:shadow-md sm:p-6">
       <span aria-hidden="true" className="absolute -end-8 -top-10 size-24 rounded-full bg-primary/10 blur-2xl transition-colors duration-300 group-hover:bg-primary/20" />
       <div className="relative flex items-start justify-between gap-4">
         <span className="grid size-12 place-items-center rounded-2xl bg-primary/10 text-accent-text transition-colors duration-300 group-hover:bg-primary group-hover:text-brand-white">
@@ -17,10 +17,10 @@ function ServiceCard({ icon: Icon, number, title, description, action, href }) {
           {number}
         </span>
       </div>
-      <h3 className="relative mt-5 font-heading text-lg font-extrabold text-foreground dark:text-gray-100">
+      <h3 className="relative mt-5 font-heading text-lg font-extrabold text-foreground">
         {title}
       </h3>
-      <p className="relative mt-2 text-sm leading-7 text-foreground-muted dark:text-gray-300">
+      <p className="relative mt-2 text-sm leading-7 text-foreground-muted">
         {description}
       </p>
       <a

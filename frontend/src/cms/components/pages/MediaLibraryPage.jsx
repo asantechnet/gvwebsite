@@ -17,15 +17,23 @@ function MediaPreviewModal({ item, content, onClose }) {
   const size = item.size ? formatBytes(item.size) : '—'
 
   useEffect(() => {
-    const previousOverflow = document.body.style.overflow
+    const previousBodyOverflow = document.body.style.overflow
+    const previousDocumentOverflow = document.documentElement.style.overflow
     const closeOnEscape = (event) => { if (event.key === 'Escape') onClose() }
     document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+    document.documentElement.classList.add('cms-modal-open')
     document.addEventListener('keydown', closeOnEscape)
-    return () => { document.body.style.overflow = previousOverflow; document.removeEventListener('keydown', closeOnEscape) }
+    return () => {
+      document.body.style.overflow = previousBodyOverflow
+      document.documentElement.style.overflow = previousDocumentOverflow
+      document.documentElement.classList.remove('cms-modal-open')
+      document.removeEventListener('keydown', closeOnEscape)
+    }
   }, [onClose])
 
   return <div className="cms-modal-backdrop fixed inset-0 z-[140] isolate grid place-items-center p-4" role="presentation">
-    <button type="button" className="absolute inset-0 border-0 bg-black/70 backdrop-blur-md" aria-label={content.close} onClick={onClose} />
+    <button type="button" className="absolute inset-0 border-0 bg-transparent" aria-label={content.close} onClick={onClose} />
     <section ref={dialogRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="media-preview-title" className="relative z-10 flex max-h-[calc(100svh-2rem)] w-fit max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-admin-border bg-admin-card shadow-2xl">
       <header className="flex min-w-0 items-center justify-between gap-3 border-b border-admin-border px-3 py-1.5 sm:px-4"><div className="min-w-0"><div className="flex items-center gap-1.5"><h2 id="media-preview-title" className="truncate font-heading text-sm text-admin-heading">{item.name}</h2><span className="shrink-0 rounded-md bg-admin-brand-soft px-1.5 py-0.5 text-[.6rem] font-semibold text-admin-brand-text">{size}</span><span className="shrink-0 rounded-md bg-admin-brand-soft px-1.5 py-0.5 text-[.6rem] font-semibold text-admin-brand-text">{dimensions.id === item.id ? dimensions.value : '—'}</span></div></div><button type="button" onClick={onClose} aria-label={content.close} className="grid size-7 shrink-0 place-items-center rounded-lg border border-admin-border text-admin-muted transition hover:border-admin-brand hover:bg-admin-brand-soft hover:text-admin-brand-text"><X size={14} /></button></header>
       <div className="grid min-h-0 max-h-[calc(100svh-7rem)] place-items-center overflow-hidden bg-[#0d1118] p-0">{item.type === 'video' ? <video src={item.url} controls autoPlay onLoadedMetadata={(event) => setDimensions({ id: item.id, value: `${event.currentTarget.videoWidth} × ${event.currentTarget.videoHeight}` })} className="block max-h-[calc(100svh-7rem)] max-w-[calc(100vw-2rem)] object-contain" /> : item.type === 'audio' ? <audio src={item.url} controls autoPlay className="w-[min(32rem,calc(100vw-3rem))]" /> : item.type === 'file' ? <div className="grid place-items-center gap-4 p-8 text-center text-white"><FileImage size={52} className="text-admin-brand-text" /><strong>{item.name}</strong><a href={item.url} target="_blank" rel="noreferrer" className="rounded-xl bg-admin-brand px-4 py-2 text-sm font-semibold text-white">{content.openFile}</a></div> : <img src={item.url} alt={item.name} onLoad={(event) => setDimensions({ id: item.id, value: `${event.currentTarget.naturalWidth} × ${event.currentTarget.naturalHeight}` })} className="block max-h-[calc(100svh-7rem)] max-w-[calc(100vw-2rem)] object-contain" />}</div>
@@ -100,7 +108,7 @@ function MediaLibraryPage({ content }) {
   }
 
   return <PageContainer className="max-w-[78rem]">
-    <PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.dashboard }, { label: content.title }]} action={<button type="button" onClick={() => inputRef.current?.click()} className="mb-2 inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-xl border border-admin-border bg-(--primary-action-bg) px-3 py-2 text-[.6875rem] font-semibold text-(--primary-action-text) shadow-[0_8px_20px_rgba(15,23,42,.07)] transition hover:-translate-y-0.5 hover:border-admin-brand hover:text-admin-brand-text hover:shadow-[0_12px_26px_rgba(15,23,42,.11)] sm:w-auto"><ImagePlus size={15} />{content.upload}</button>} />
+    <PageHeading className="!min-h-0 !py-0" breadcrumbs={[{ label: content.dashboard }, { label: content.title }]} action={<button type="button" onClick={() => inputRef.current?.click()} className="mb-2 inline-flex w-full shrink-0 items-center justify-center gap-1.5 rounded-xl border border-admin-brand bg-admin-brand px-3 py-2 text-[.6875rem] font-semibold text-white shadow-[0_8px_20px_color-mix(in_srgb,var(--admin-brand)_18%,transparent)] transition hover:-translate-y-0.5 hover:bg-admin-brand-hover hover:shadow-[0_12px_26px_color-mix(in_srgb,var(--admin-brand)_24%,transparent)] sm:w-auto"><ImagePlus size={15} />{content.upload}</button>} />
     <input ref={inputRef} type="file" multiple accept=".jpg,.jpeg,.png,.webp,.gif,.pdf,.mp4,.webm,.ogv,.mov,.mp3,.wav,.m4a,.ogg,.flac" className="hidden" onChange={upload} />
     {uploadError && <p role="alert" className="-mt-4 rounded-xl border border-red-500/25 bg-red-500/10 px-3 py-2 text-xs text-red-600 dark:text-red-300">{uploadError}</p>}
     <section className="grid gap-2 rounded-2xl border border-admin-border bg-admin-card p-2 shadow-[0_12px_34px_rgb(15_23_42_/.055)] md:grid-cols-[minmax(15rem,.7fr)_minmax(18rem,1fr)]">

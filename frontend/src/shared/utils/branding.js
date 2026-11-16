@@ -75,8 +75,8 @@ export function applyBrandColors({ primary, secondary }) {
   document.documentElement.style.setProperty('--brand-orange', primary)
   document.documentElement.style.setProperty('--brand-red', secondary)
   document.querySelectorAll('.cms-root').forEach((root) => {
-    root.style.setProperty('--brand-orange', primary)
-    root.style.setProperty('--brand-red', secondary)
-    root.style.setProperty('--admin-brand', primary)
+    root.style.removeProperty('--brand-orange')
+    root.style.removeProperty('--brand-red')
+    root.style.removeProperty('--admin-brand')
   })
 }

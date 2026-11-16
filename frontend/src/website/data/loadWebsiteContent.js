@@ -1,6 +1,7 @@
 import { localizeContentHrefs, normalizeLanguage } from '@website/utils/language.js'
 import { dataSourceMode } from '@/shared/services/api/config.js'
 import { snapshotsApi } from '@/shared/services/api/snapshots.js'
+import { getDefaultContentCategory, getTourismCategory } from '@/shared/utils/contentCategories.js'
 
 const contentLoaders = {
   dr: () => import('./localizedContent/dari.js'),
@@ -47,12 +48,12 @@ function mergeSnapshot(base, override) {
   )
 }
 
-function publishedPage(fallback, payload, key) {
+function publishedPage(fallback, payload, key, locale) {
   if (!payload || typeof payload !== 'object') return payload
   const merged = mergeSnapshot(fallback, payload)
   if (key === 'magazine') return {
     ...merged,
-    news: { ...merged.news, items: (merged.news?.items || []).filter((item) => item.status !== 'draft').map((item) => ({ ...item, cmsManaged: true })) },
+    news: { ...merged.news, items: (merged.news?.items || []).filter((item) => item.status !== 'draft').map((item) => ({ ...item, category: getDefaultContentCategory('news', locale), cmsManaged: true })) },
     articles: { ...merged.articles, items: (merged.articles?.items || []).filter((item) => item.status !== 'draft').map((item) => ({ ...item, cmsManaged: true })) },
   }
   if (key === 'scholarships') return { ...merged, items: (merged.items || []).filter((item) => item.status !== 'draft').map((item) => ({ ...item, cmsManaged: true })) }
@@ -82,24 +83,55 @@ function normalizeHomeCollections(home) {
   }
 }
 
+function normalizeDefaultCategories(content, locale) {
+  const servicesCategory = getDefaultContentCategory('services', locale)
+  const newsCategory = getDefaultContentCategory('news', locale)
+
+  return {
+    ...content,
+    services: {
+      ...content.services,
+      services: (content.services?.services || []).map((record) => ({ ...record, category: servicesCategory })),
+    },
+    magazine: {
+      ...content.magazine,
+      news: {
+        ...content.magazine?.news,
+        items: (content.magazine?.news?.items || []).map((record) => ({ ...record, category: newsCategory })),
+      },
+    },
+    opportunities: Object.fromEntries(Object.entries(content.opportunities || {}).map(([type, section]) => {
+      const category = getDefaultContentCategory(type, locale)
+      if (!category) return [type, section]
+      return [type, {
+        ...section,
+        post: section.post ? { ...section.post, category } : section.post,
+        ...(section.cards ? { cards: section.cards.map((record) => ({ ...record, category })) } : {}),
+      }]
+    })),
+  }
+}
+
 export function applySnapshots(staticContent, snapshots, language) {
   const locale = snapshotLocale[language]
   const content = structuredClone(staticContent)
   const byKey = new Map((snapshots || []).map((snapshot) => [snapshot.key, snapshot.payload]))
 
   directSnapshotKeys.forEach((key) => {
-    if (byKey.get(key)?.[locale]) content[key] = publishedPage(content[key], byKey.get(key)[locale], key)
+    if (byKey.get(key)?.[locale]) content[key] = publishedPage(content[key], byKey.get(key)[locale], key, locale)
   })
 
   if (byKey.has('collection:services')) {
-    content.services.services = localizedCollection(byKey.get('collection:services'), locale)
+    const category = getDefaultContentCategory('services', locale)
+    content.services.services = localizedCollection(byKey.get('collection:services'), locale).map((record) => ({ ...record, category }))
   }
 
   if (byKey.has('collection:tourism')) {
     const tourism = localizedCollection(byKey.get('collection:tourism'), locale)
     Object.keys(content.tourism).forEach((type) => {
-    const records = tourism.filter((record) => record.type === type)
-      content.tourism[type].cards = records.map((record) => ({ ...record, name: record.title }))
+      const records = tourism.filter((record) => record.type === type)
+      const category = getTourismCategory(type, locale)
+      content.tourism[type].cards = records.map((record) => ({ ...record, category, name: record.title }))
     })
   }
 
@@ -115,6 +147,7 @@ export function applySnapshots(staticContent, snapshots, language) {
         ...content.opportunities[type],
         cards: opportunities.filter((record) => record.type === type).map((record) => ({
           ...record,
+          category: getDefaultContentCategory(type, locale) || record.category,
           cmsManaged: true,
           name: record.title,
           summary: record.description,
@@ -132,7 +165,7 @@ export function applySnapshots(staticContent, snapshots, language) {
   content.siteSettings = mergeSnapshot(content.siteSettings, byKey.get('settings'))
   content.profile = mergeSnapshot(content.profile, byKey.get('profile'))
   if (content.profile?.[locale]) content.header.brandName = content.profile[locale]
-  return localizeContentHrefs(content, language)
+  return localizeContentHrefs(normalizeDefaultCategories(content, locale), language)
 }
 
 export function invalidateWebsiteContent(language) {
@@ -149,7 +182,7 @@ export function loadWebsiteContent(language, { fresh = false } = {}) {
     contentPromises.set(
       normalizedLanguage,
       contentLoaders[normalizedLanguage]().then(async (module) => {
-        if (dataSourceMode !== 'api') return module.default
+        if (dataSourceMode !== 'api') return normalizeDefaultCategories(module.default, snapshotLocale[normalizedLanguage])
         const snapshots = await snapshotsApi.publicList()
         return applySnapshots(module.default, snapshots, normalizedLanguage)
       }),

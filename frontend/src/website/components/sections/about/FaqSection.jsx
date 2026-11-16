@@ -11,7 +11,7 @@ function FaqSection({ content }) {
   const [openIndex, setOpenIndex] = useState(null)
 
   return (
-    <Section aria-labelledby="about-faq-title" className="bg-surface-muted dark:bg-[#182230]">
+    <Section aria-labelledby="about-faq-title" className="bg-surface-muted">
       <Container>
         <h2 id="about-faq-title" className="text-center font-heading text-xl font-extrabold leading-tight text-foreground md:text-2xl lg:text-3xl">
           {content.title}
@@ -22,7 +22,7 @@ function FaqSection({ content }) {
             const isOpen = openIndex === index
 
             return (
-              <div key={item.question} className={`overflow-hidden rounded-2xl border transition-colors duration-300 ${isOpen ? 'border-primary/60 bg-surface' : 'border-border bg-surface/60 dark:border-gray-600'} dark:bg-[#2b3442]`}>
+              <div key={item.question} className={`overflow-hidden rounded-2xl border transition-colors duration-300 ${isOpen ? 'border-primary/60 bg-surface' : 'border-border bg-surface/60'}`}>
                 <Button
                   unstyled
                   type="button"

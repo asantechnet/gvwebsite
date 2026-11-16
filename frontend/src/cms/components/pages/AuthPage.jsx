@@ -194,7 +194,7 @@ function AuthPage({ auth, content, language, theme, themeLabel, companyName, bra
             </a>
             <div className="flex shrink-0 items-center gap-2">
               <LanguageSwitcher language={language} onChange={onLanguageChange} />
-              <button type="button" aria-label={themeLabel || "Change theme"} aria-pressed={theme === "dark"} onClick={onThemeToggle} className="grid size-10 shrink-0 place-items-center rounded-xl border border-(--header-control-border) bg-(--header-control) text-admin-muted outline-none transition hover:border-admin-brand hover:bg-(--header-control-hover) hover:text-admin-heading focus:outline-none focus-visible:border-admin-brand focus-visible:shadow-[0_0_0_3px_color-mix(in_srgb,var(--admin-brand)_28%,transparent)]">
+              <button type="button" aria-label={themeLabel || "Change theme"} aria-pressed={theme === "dark"} onClick={onThemeToggle} className="grid size-10 shrink-0 place-items-center rounded-xl border border-(--header-control-border) bg-(--header-control) text-admin-muted outline-none transition hover:border-admin-brand hover:bg-(--header-control-hover) hover:text-admin-heading focus:outline-none focus-visible:border-admin-brand focus-visible:shadow-none!">
                 {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
               </button>
             </div>

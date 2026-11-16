@@ -16,7 +16,7 @@ function ServicesSection({ content }) {
   return (
     <Section id="services" aria-labelledby="home-services-heading" className="scroll-mt-24 bg-background">
       <Container>
-        <div className="relative overflow-hidden rounded-4xl border border-border bg-surface-muted/50 p-5 dark:border-gray-600 dark:bg-gray-800/40 sm:p-8 lg:p-10">
+        <div className="relative overflow-hidden rounded-4xl border border-border bg-surface-muted/50 p-5 sm:p-8 lg:p-10">
           <span
             aria-hidden="true"
             className="absolute -inset-s-20 -top-24 size-72 rounded-full bg-primary/10 blur-3xl"
@@ -28,7 +28,7 @@ function ServicesSection({ content }) {
                 titleBefore={content.titleBefore}
                 titleHighlight={content.titleHighlight}
               />
-              <p className="mt-4 text-sm leading-8 text-foreground-muted dark:text-gray-300 sm:text-base">
+              <p className="mt-4 text-sm leading-8 text-foreground-muted sm:text-base">
                 {content.description}
               </p>
               <ActionLink href={content.viewAllHref || "/services/consultation"} className="mt-7 min-h-12">

@@ -15,6 +15,7 @@ import pashtoMessages from '../src/cms/locales/ps/messages.json' with { type: 'j
 import pashtoProfile from '../src/cms/locales/ps/profile.json' with { type: 'json' }
 import { ALL_CMS_PERMISSIONS, CMS_PERMISSIONS, can, canAccessCmsRoute, normalizeSession } from '../src/cms/auth/permissions.js'
 import { applyTourismCategories, getTourismCategories } from '../src/cms/utils/tourismCategories.js'
+import { getDefaultContentCategory, getTourismCategory } from '../src/shared/utils/contentCategories.js'
 import { normalizeContentRecord, serializeContentRecord } from '../src/shared/models/content.js'
 import { normalizeMessage, serializeMessageState } from '../src/shared/models/message.js'
 import { isSafeContentUrl } from '../src/shared/security/sanitizeRichText.js'
@@ -107,11 +108,20 @@ test('tourism posts receive fixed localized categories', () => {
   const categorized = applyTourismCategories(translations, afghanistan)
 
   assert.equal(categorized.prs.category, 'سیاحت در افغانستان')
-  assert.equal(categorized.ps.category, 'د افغانستان سیاحت')
+  assert.equal(categorized.ps.category, 'سیاحت په افغانستان کې')
   assert.equal(categorized.en.category, 'Tourism in Afghanistan')
   assert.equal(translations.prs.category, undefined)
 
   const world = getTourismCategories({ isWorldTourism: true })
   assert.deepEqual(world, { prs: 'سیاحت در جهان', ps: 'نړیوال سیاحت', en: 'World Tourism' })
+  assert.equal(getTourismCategory('afghanistan', 'en'), 'Tourism in Afghanistan')
+  assert.equal(getTourismCategory('afghanistan', 'ps'), 'سیاحت په افغانستان کې')
+  assert.equal(getTourismCategory('world', 'prs'), 'سیاحت در جهان')
+  assert.equal(getDefaultContentCategory('services', 'en'), 'Services')
+  assert.equal(getDefaultContentCategory('scholarships', 'ps'), 'بورسونه')
+  assert.equal(getDefaultContentCategory('exams', 'prs'), 'امتحانات')
+  assert.equal(getDefaultContentCategory('news', 'en'), 'News')
+  assert.equal(getDefaultContentCategory('study', 'ps'), 'تحصیلي فرصتونه')
+  assert.equal(getDefaultContentCategory('migration', 'en'), 'Migration Opportunities')
   assert.equal(getTourismCategories(), null)
 })

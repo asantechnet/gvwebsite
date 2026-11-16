@@ -12,7 +12,7 @@ import { applySeoMetadata, buildStructuredData, getSiteOrigin, toAbsoluteUrl } f
 import { lazyWithSkeletonPreview } from '@/shared/utils/loading.js'
 import { finishReloadScrollRestoration, saveScrollPosition } from '@website/utils/scrollRestoration.js'
 import { STUDY_DIRECTORY_CARD_LIMIT, getVisibleCardCount } from '@website/utils/cardCounts.js'
-import { applyBrandColors, BRANDING_UPDATED_EVENT, readBrandIcon, readBrandLogo, readCompanyNames, watchBrowserBrandFavicon } from '@/shared/utils/branding.js'
+import { applyBrandColors, BRANDING_UPDATED_EVENT, readBrandColors, readBrandIcon, readBrandLogo, readCompanyNames, watchBrowserBrandFavicon } from '@/shared/utils/branding.js'
 
 const delayed = (importer) => lazy(() => lazyWithSkeletonPreview(importer))
 const HomePage = delayed(() => import('@pages/HomePage.jsx'))
@@ -245,7 +245,7 @@ function WebsiteLayout({ children = null, content }) {
   useLayoutEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark')
     document.documentElement.classList.toggle('light', theme === 'light')
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#1f2937' : '#fffaf5')
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? siteSettings?.branding?.secondary || readBrandColors().secondary : siteSettings?.branding?.primary || readBrandColors().primary)
     window.localStorage.setItem('globalvision-theme', theme)
   }, [theme])
 

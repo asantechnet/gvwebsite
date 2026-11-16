@@ -9,6 +9,7 @@ import PageHeading from '@cms/components/PageHeading.jsx'
 import RichTextEditor from '@cms/components/RichTextEditor.jsx'
 import SectionTabBar from '@cms/components/SectionTabBar.jsx'
 import SeoFields from '@cms/components/SeoFields.jsx'
+import { getDefaultContentCategory } from '@/shared/utils/contentCategories.js'
 import RecordActionButtons from '@cms/components/RecordActionButtons.jsx'
 import useCmsDraftState from '@cms/hooks/useCmsDraftState.js'
 import useEditorTabs from '@cms/hooks/useEditorTabs.js'
@@ -20,7 +21,7 @@ import useModalFocus from '@/shared/hooks/useModalFocus.js'
 
 const languages = ['prs', 'ps', 'en']
 const sectionIcons = { hero: LayoutTemplate, news: Newspaper, articles: FileText, categories: Tags }
-const newsCategoryByLanguage = { prs: 'خبر', ps: 'خبر', en: 'News' }
+const newsCategoryByLanguage = Object.fromEntries(languages.map((language) => [language, getDefaultContentCategory('news', language)]))
 const emptyItem = () => ({ slug: '', title: '', description: '', category: '', status: 'draft', featured: false, image: '', imageAlt: '', content: '', seoTitle: '', metaDescription: '', href: '/magazine' })
 const removeSavedStatus = (item) => { const committed = { ...item }; delete committed.savedStatus; return committed }
 const categoryId = (index) => `magazine-category-${index + 1}`

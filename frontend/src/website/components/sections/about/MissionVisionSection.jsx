@@ -5,7 +5,7 @@ import Section from "@ui/Section.jsx";
 
 function MissionVisionSection({ content }) {
   return (
-    <Section aria-labelledby="about-mission-vision-title" className="bg-surface-muted dark:bg-[#182230]">
+    <Section aria-labelledby="about-mission-vision-title" className="bg-surface-muted">
       <Container>
         <h2 id="about-mission-vision-title" className="sr-only">
           {content.sectionTitle}
@@ -17,7 +17,7 @@ function MissionVisionSection({ content }) {
             return (
               <article
                 key={item.title}
-                className={`text-center ${index === 0 ? 'rounded-tr-[10rem] rounded-bl-[10rem] bg-surface dark:bg-[#3a3028]' : 'rounded-tl-[10rem] rounded-br-[10rem] bg-[#ffe3d5] dark:bg-[#3a292d]'} border border-transparent px-8 py-10 md:px-12 md:py-14`}
+                className={`text-center ${index === 0 ? 'rounded-tr-[10rem] rounded-bl-[10rem] bg-surface' : 'rounded-tl-[10rem] rounded-br-[10rem] bg-primary/10'} border border-transparent px-8 py-10 md:px-12 md:py-14`}
               >
                 <div className={`mx-auto flex size-16 items-center justify-center rounded-2xl ${index === 0 ? 'bg-brand-orange/15 text-accent-text' : 'bg-brand-red/15 text-brand-red'}`}>
                   <Icon aria-hidden="true" size={28} strokeWidth={1.8} />

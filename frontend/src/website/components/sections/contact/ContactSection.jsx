@@ -94,19 +94,19 @@ function ContactSection({ content, language }) {
             <div className="grid gap-5">
               <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.nameLabel}
-                <input required minLength={2} maxLength={120} name="name" autoComplete="name" placeholder={content.form.namePlaceholder} className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-start text-sm font-light text-foreground outline-none transition-colors focus:border-primary focus-visible:shadow-none! dark:border-gray-600 dark:bg-[#2b3442]" type="text" />
+                <input required minLength={2} maxLength={120} name="name" autoComplete="name" placeholder={content.form.namePlaceholder} className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-start text-sm font-light text-foreground outline-none transition-colors focus:border-primary focus-visible:shadow-none!" type="text" />
               </label>
               <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.emailLabel}
-                <input required maxLength={254} name="email" autoComplete="email" placeholder={content.form.emailPlaceholder} dir="ltr" className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-start text-sm font-light text-foreground outline-none transition-colors placeholder:text-left rtl:placeholder:text-right focus:border-primary focus-visible:shadow-none! dark:border-gray-600 dark:bg-[#2b3442]" type="email" />
+                <input required maxLength={254} name="email" autoComplete="email" placeholder={content.form.emailPlaceholder} dir="ltr" className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-start text-sm font-light text-foreground outline-none transition-colors placeholder:text-left rtl:placeholder:text-right focus:border-primary focus-visible:shadow-none!" type="email" />
               </label>
               <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.subjectLabel}
-                <input required minLength={2} maxLength={180} name="subject" placeholder={content.form.subjectPlaceholder} className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-start text-sm font-light text-foreground outline-none transition-colors focus:border-primary focus-visible:shadow-none! dark:border-gray-600 dark:bg-[#2b3442]" type="text" />
+                <input required minLength={2} maxLength={180} name="subject" placeholder={content.form.subjectPlaceholder} className="min-h-12 rounded-xl border border-border bg-surface-muted px-3 text-start text-sm font-light text-foreground outline-none transition-colors focus:border-primary focus-visible:shadow-none!" type="text" />
               </label>
               <label className="grid gap-2 text-sm font-medium text-foreground">
                 {content.form.messageLabel}
-                <textarea required minLength={10} maxLength={5000} name="message" placeholder={content.form.messagePlaceholder} className="min-h-32 resize-y rounded-xl border border-border bg-surface-muted px-3 py-2 text-start text-sm font-light leading-7 text-foreground outline-none transition-colors focus:border-primary focus-visible:shadow-none! dark:border-gray-600 dark:bg-[#2b3442]" />
+                <textarea required minLength={10} maxLength={5000} name="message" placeholder={content.form.messagePlaceholder} className="min-h-32 resize-y rounded-xl border border-border bg-surface-muted px-3 py-2 text-start text-sm font-light leading-7 text-foreground outline-none transition-colors focus:border-primary focus-visible:shadow-none!" />
               </label>
             </div>
             <Button type="submit" icon={Send} disabled={formStatus === 'sending'} aria-busy={formStatus === 'sending'} className="mt-6 min-h-10 w-full whitespace-nowrap border-brand-orange bg-brand-orange px-4 text-center text-sm shadow-md shadow-brand-orange/20 hover:border-primary-hover hover:bg-primary-hover hover:shadow-lg hover:shadow-brand-orange/30 disabled:cursor-wait disabled:opacity-70 sm:w-auto sm:min-w-32">

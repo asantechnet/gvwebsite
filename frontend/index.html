@@ -6,8 +6,8 @@
     <meta name="theme-color" content="#fffaf5" />
     <title></title>
     <style>
-      html, body { background: #fffaf5; }
-      html.dark, html.dark body { background: #1f2937; }
+      html, body { background: color-mix(in srgb, var(--brand-orange, #f47e26) 3%, white); }
+      html.dark, html.dark body { background: color-mix(in srgb, var(--brand-red, #80027f) 8%, #111827); }
       html[data-application="cms"], html[data-application="cms"] body { background: #edf1f6; }
       html[data-application="cms"].dark, html[data-application="cms"].dark body { background: #0a1019; }
       html[data-restoring-scroll="true"] { overflow-anchor: none; }
@@ -15,6 +15,19 @@
     <link rel="icon" href="data:," />
     <script>
       (() => {
+        const publishedBranding = null /*__GLOBALVISION_PUBLISHED_BRANDING__*/
+        const validBrandColor = (value) => /^#[0-9a-f]{6}$/i.test(value || '') ? value.toUpperCase() : null
+        const primary = validBrandColor(publishedBranding?.primary) || validBrandColor(window.localStorage.getItem('globalvision-brand-primary'))
+        const secondary = validBrandColor(publishedBranding?.secondary) || validBrandColor(window.localStorage.getItem('globalvision-brand-secondary'))
+        if (primary) {
+          document.documentElement.style.setProperty('--brand-orange', primary)
+          window.localStorage.setItem('globalvision-brand-primary', primary)
+        }
+        if (secondary) {
+          document.documentElement.style.setProperty('--brand-red', secondary)
+          window.localStorage.setItem('globalvision-brand-secondary', secondary)
+        }
+
         const isDashboard = window.location.pathname === '/dashboard' || window.location.pathname.startsWith('/dashboard/')
         const theme = window.localStorage.getItem('globalvision-theme') || 'light'
         document.title = ''

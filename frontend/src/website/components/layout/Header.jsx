@@ -22,7 +22,7 @@ import { headerNavigation } from "@website/data/navigation.js";
 import LanguageSwitcher from "@/shared/components/LanguageSwitcher.jsx";
 import { localizeHref } from "@website/utils/language.js";
 
-const noFocusOutline = "outline-none focus:outline-none focus-visible:border-focus focus-visible:shadow-[0_0_0_3px_rgba(244,126,38,0.28)]";
+const noFocusOutline = "outline-none focus:outline-none focus-visible:border-focus focus-visible:shadow-none!";
 const iconButtonClasses =
   "grid size-10 place-items-center rounded-xl border border-border bg-surface-muted text-foreground transition-colors hover:border-primary hover:bg-primary/20 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-gray-500 dark:hover:bg-gray-700";
 const navIcons = {
@@ -54,12 +54,14 @@ function isNavigationItemActive(item, currentPath) {
   );
 }
 
-function SearchPanel({ id, content, query, onQueryChange, onSubmit }) {
+function SearchPanel({ id, action, content, query, onQueryChange, onSubmit }) {
   return (
     <form
       id={id}
       role="search"
       data-search-popover
+      action={action}
+      method="get"
       onSubmit={onSubmit}
       className="absolute inset-e-0 top-full z-50 mt-2 w-[min(20rem,calc(100vw-2rem))] rounded-2xl border border-border bg-surface p-2.5 shadow-[0_12px_30px_rgba(41,23,18,0.14)] dark:border-gray-600 dark:bg-gray-800 dark:shadow-[0_12px_30px_rgba(0,0,0,0.3)]"
     >
@@ -69,7 +71,10 @@ function SearchPanel({ id, content, query, onQueryChange, onSubmit }) {
       <div className="flex items-center gap-2 rounded-xl border border-border bg-surface-muted p-1.5 transition-colors focus-within:border-primary dark:border-gray-600 dark:bg-gray-700 dark:focus-within:border-gray-400">
         <input
           id={`${id}-input`}
+          name="q"
           type="search"
+          required
+          autoFocus
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
           placeholder={content.searchPlaceholder}
@@ -176,9 +181,11 @@ function Header({
 
   const handleSearchSubmit = (event) => {
     event.preventDefault();
-    const trimmedQuery = searchQuery.trim();
+    const trimmedQuery = String(new FormData(event.currentTarget).get('q') || '').trim();
     if (!trimmedQuery) return;
-    window.location.assign(localizeHref(`/search?q=${encodeURIComponent(trimmedQuery)}`, language));
+    const destination = new URL(localizeHref('/search', language), window.location.origin);
+    destination.searchParams.set('q', trimmedQuery);
+    window.location.assign(destination.href);
   };
 
   const currentPath = window.location.pathname;
@@ -282,6 +289,7 @@ function Header({
                 {isSearchOpen && (
                   <SearchPanel
                     id="desktop-search-panel"
+                    action={localizeHref('/search', language)}
                     content={content}
                     query={searchQuery}
                     onQueryChange={setSearchQuery}
@@ -291,7 +299,7 @@ function Header({
               </div>
               <a
                 href={localizeHref('/contact', language)}
-                className={`hidden h-10 min-h-10 shrink-0 items-center justify-center rounded-xl border-2 border-primary bg-primary px-3 text-xs font-semibold leading-none whitespace-nowrap text-brand-white shadow-[0_8px_20px_rgba(244,126,38,0.2)] transition-colors hover:border-primary-hover hover:bg-primary-hover dark:hover:border-[#d96512] dark:hover:bg-[#d96512] xl:inline-flex 2xl:px-5 2xl:text-sm ${noFocusOutline}`}
+                className={`hidden h-10 min-h-10 shrink-0 items-center justify-center rounded-xl border-2 border-primary bg-primary px-3 text-xs font-semibold leading-none whitespace-nowrap text-brand-white shadow-lg shadow-primary/20 transition-colors hover:border-primary-hover hover:bg-primary-hover xl:inline-flex 2xl:px-5 2xl:text-sm ${noFocusOutline}`}
               >
                 {content.consultationLabel}
               </a>
