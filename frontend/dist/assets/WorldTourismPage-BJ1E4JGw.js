@@ -1,0 +1,1 @@
+import{t as e}from"./react-vendor-CR5VJ85Q.js";import{t}from"./TourismDirectorySection-CFYnmYzp.js";var n=e();function r({content:e,sidebarContent:r}){return(0,n.jsx)(t,{content:e,sidebarContent:r,type:`world`})}function i({content:e,sidebarContent:t}){return(0,n.jsx)(r,{content:e,sidebarContent:t})}export{i as default};

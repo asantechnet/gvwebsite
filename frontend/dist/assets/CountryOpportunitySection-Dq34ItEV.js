@@ -1,1 +1,0 @@
-import{t as e}from"./react-vendor-CR5VJ85Q.js";import{t}from"./OpportunityDirectorySection-CKsCZ9vR.js";var n=e();function r({content:e,countries:r,type:i,title:a}){let o=r.map(e=>({...e,href:`/opportunities/${i}/${e.slug}`}));return(0,n.jsx)(t,{content:e,cards:o,title:a})}export{r as t};

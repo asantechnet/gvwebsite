@@ -1,0 +1,1 @@
+import{t as e}from"./react-vendor-CR5VJ85Q.js";import{t}from"./CountryOpportunitySection-DvfkiJGy.js";var n=e();function r({content:e,countries:r,title:i}){return(0,n.jsx)(t,{content:e,countries:r,type:`migration`,title:i})}export{r as default};
