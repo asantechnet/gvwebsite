@@ -112,6 +112,10 @@ html.dark .cms-root .cms-logout-button:hover { background: rgb(239 68 68 / .2); 
 .cms-root .cms-icon-picker-options::-webkit-scrollbar-track { margin-block: .45rem; border-radius: 999px; background: transparent; }
 .cms-root .cms-icon-picker-options::-webkit-scrollbar-thumb { border: 1px solid transparent; border-radius: 999px; background: color-mix(in srgb, var(--admin-brand) 78%, var(--admin-muted)); background-clip: padding-box; }
 .cms-root .cms-icon-picker-options::-webkit-scrollbar-thumb:hover { background: var(--admin-brand); }
+.cms-root .cms-country-picker-popover { width: max(100%, min(20rem, calc(100vw - 2rem))); max-width: calc(100vw - 2rem); }
+.cms-root .cms-country-picker-popover:dir(rtl) { right: 0; left: auto; }
+.cms-root .cms-country-picker-popover:dir(ltr) { right: auto; left: 0; }
+.cms-root .cms-country-picker-options { scrollbar-gutter: stable both-edges; }
 .cms-root .cms-tabs-scroll > button { direction: inherit; flex: 0 0 auto; }
 .cms-root .cms-tabs-scroll { scrollbar-width: none; }
 .cms-root .cms-tabs-scroll::-webkit-scrollbar { display: none !important; }

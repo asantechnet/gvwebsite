@@ -202,6 +202,24 @@ test('CMS record overview dialogs keep complete content scrollable', async () =>
   }
 })
 
+test('CMS picker lists stay aligned to their trigger in RTL and LTR layouts', async () => {
+  const countryPicker = await readFile(new URL('../src/cms/components/CountryPicker.jsx', import.meta.url), 'utf8')
+  const iconPicker = await readFile(new URL('../src/cms/components/IconPicker.jsx', import.meta.url), 'utf8')
+  const magazine = await readFile(new URL('../src/cms/components/sections/MagazineEditorSection.jsx', import.meta.url), 'utf8')
+  const styles = await readFile(new URL('../src/cms/styles.css', import.meta.url), 'utf8')
+
+  assert.match(countryPicker, /cms-country-picker-popover/)
+  assert.doesNotMatch(countryPicker, /min-w-56/)
+  assert.match(styles, /\.cms-country-picker-popover \{ width: max\(100%, min\(20rem, calc\(100vw - 2rem\)\)\)/)
+  assert.match(styles, /\.cms-country-picker-popover:dir\(rtl\) \{ right: 0; left: auto; \}/)
+  assert.match(styles, /\.cms-country-picker-popover:dir\(ltr\) \{ right: auto; left: 0; \}/)
+  assert.match(countryPicker, /cms-country-picker-options cms-icon-picker-options grid min-h-0 gap-1 overflow-y-auto/)
+  assert.doesNotMatch(countryPicker, /overflow-y-auto pe-1/)
+  assert.match(styles, /\.cms-country-picker-options \{ scrollbar-gutter: stable both-edges; \}/)
+  assert.match(iconPicker, /absolute inset-x-0[^\n]*min-w-0/)
+  assert.match(magazine, /absolute inset-x-0[^\n]*role="listbox"|role="listbox"[^\n]*absolute inset-x-0/)
+})
+
 test('saved branding colors survive reloads and drive both website themes', async () => {
   const branding = await readFile(new URL('../src/shared/utils/branding.js', import.meta.url), 'utf8')
   const dashboard = await readFile(new URL('../src/cms/components/layout/DashboardLayout.jsx', import.meta.url), 'utf8')
